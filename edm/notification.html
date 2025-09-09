@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EDM Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <style>
+    body { background-color: #f8f9fa; }
+    .card-hover:hover { transform: translateY(-5px); transition: 0.3s; }
+    .notification-card { cursor: pointer; }
+    .notification-unread { background-color: #e9f5ff; }
+    .badge-status { font-size: 0.8rem; padding: 0.3em 0.5em; }
+    .filter-row { position: sticky; top: 0; background: #fff; z-index: 10; padding-top: 10px; padding-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+  </style>
+    <style>
+      html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f1f3f6;
+      color: #333;
+      }
+      body {
+      display: flex;
+      flex-direction: column;
+      padding-top: 70px;
+      transition: all 0.3s;
+      }
+      /* Header */
+      nav.navbar {
+      background: linear-gradient(90deg, #4b6cb7, #182848);
+      color: #fff;
+      z-index: 1000;
+      padding: 0.4rem 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      nav.navbar .navbar-brand, nav.navbar .btn, nav.navbar span {
+      color: #fff;
+      }
+      nav.navbar .btn-light {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #fff;
+      }
+      nav.navbar .btn-light:hover {
+      background: rgba(255,255,255,0.25);
+      }
+      /* Sidebar */
+      #sidebar {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 220px;
+      height: calc(100% - 70px);
+      background: #fff;
+      padding-top: 1rem;
+      transition: all 0.3s;
+      overflow-y: auto;
+      border-right: 1px solid #e0e0e0;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+      z-index: 999;
+      }
+      #sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: #495057;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 8px;
+      margin: 4px 10px;
+      transition: all 0.2s ease-in-out;
+      }
+      #sidebar a:hover {
+      background: #4b6cb7;
+      color: #fff;
+      transform: translateX(5px);
+      }
+      #sidebar a.active {
+      background: #182848;
+      color: white;
+      }
+      #sidebar i {
+      margin-right: 12px;
+      font-size: 1.2rem;
+      }
+      .sidebar-collapsed #sidebar a {
+      padding: 12px 0px;
+      } 
+      /* Collapsed sidebar */
+      body.sidebar-collapsed #sidebar {
+      width: 60px;
+      }
+      body.sidebar-collapsed #sidebar a span { display: none; }
+      body.sidebar-collapsed #sidebar a i {
+      margin-right: 0;
+      width: 100%;
+      text-align: center;
+      }
+      /* Main content */
+      #mainContent {
+      margin-left: 220px;
+      padding: 30px;
+      flex: 1;
+      transition: all 0.3s;
+      }
+      body.sidebar-collapsed #mainContent { margin-left: 60px; }
+      /* Cards for main content */
+      .card {
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      }
+      /* Footer */
+      footer {
+      background: #fff;
+      text-align: center;
+      padding: 15px;
+      border-top: 1px solid #ddd;
+      width: 100%;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+      }
+      /* Mobile responsiveness */
+      @media (max-width: 992px) {
+      #sidebar {
+      left: -100%;
+      top: 0;
+      width: 220px;
+      height: 100%;
+      border-right: none;
+      box-shadow: 2px 0 15px rgba(0,0,0,0.2);
+      z-index: 9999; 
+      }
+      #sidebar.show { left: 0; }
+      #mainContent { margin-left: 0; padding: 20px 10px; }
+      body.sidebar-collapsed #mainContent { margin-left: 0; }
+      }
+      @media (max-width: 768px) {
+      #currentDateTime { display: none; }
+      .navbar .fw-bold { font-size: 1.1rem; }
+      #sidebarToggle { padding: 0.35rem 0.6rem; }
+      .dropdown-toggle span { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container-fluid d-flex align-items-center">
+        <button class="btn btn-light" id="sidebarToggle">
+        <i class="bi bi-list fs-4"></i>
+        </button>
+        <span class="fw-bold ms-3 fs-5">EDM Dashboard</span>
+        <div class="ms-auto d-flex align-items-center gap-3">
+          <span id="currentDateTime" class="me-3"></span>
+          <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
+            <i class="bi bi-person-circle fs-4"></i> <span class="d-none d-lg-inline fw-semibold">John</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+              <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+              <li><a class="dropdown-item" href="index.html">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- Sidebar -->
+     <div id="sidebar">
+  <a href="dashboard.html" ><i class="bi bi-speedometer2"></i><span>Dashboard</span></a>
+  <a href="raise-ticket-self.html"><i class="bi bi-person-plus"></i><span>Raise Ticket - Self</span></a>
+  <a href="raise-ticket-behalf.html"><i class="bi bi-people"></i><span>Raise Ticket - Behalf</span></a>
+  <!-- <a href="view-request.html"><i class="bi bi-card-list"></i><span>View Request</span></a> -->
+  <a href="report.html"><i class="bi bi-file-earmark-text"></i><span>Report</span></a>
+  <!-- <a href="notification.html" class="active"><i class="bi bi-bell"></i><span>Notification</span></a> -->
+  <a href="profile.html"><i class="bi bi-person-circle"></i><span>Profile</span></a>
+  <a href="faq.html"><i class="bi bi-person-circle"></i><span>FAQ</span></a>
+</div>
+    <!-- Main Content -->
+    <div id="mainContent">
+      <div class="container py-4">
+
+  <!-- Page Title -->
+  <div class="mb-4" data-aos="fade-down">
+    <h2 class="fw-bold">Notifications & Alerts</h2>
+  </div>
+
+  <!-- Filters -->
+  <div class="row g-3 filter-row mb-4" data-aos="fade-up">
+    <div class="col-md-3">
+      <label for="filterDate" class="form-label">Date</label>
+      <select class="form-select" id="filterDate">
+        <option value="today" selected>Today</option>
+        <option value="yesterday">Yesterday</option>
+        <option value="custom">Custom</option>
+      </select>
+      <input type="date" class="form-control mt-2 d-none" id="customDate">
+    </div>
+    <div class="col-md-3">
+      <label for="filterType" class="form-label">Type</label>
+      <select class="form-select" id="filterType">
+        <option value="all" selected>All</option>
+        <!-- <option value="reminder">Reminder</option> -->
+        <option value="alert">System Alert</option>
+        <option value="escalation">Escalation</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label for="filterStatus" class="form-label">Status</label>
+      <select class="form-select" id="filterStatus">
+        <option value="all" selected>All</option>
+        <option value="unread">Unread</option>
+        <option value="read">Read</option>
+      </select>
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+      <button class="btn btn-primary me-2" id="applyFilters">Apply Filters</button>
+      <button class="btn btn-secondary" id="resetFilters">Reset</button>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3" data-aos="fade-up">
+      <div class="card card-hover text-center">
+        <div class="card-body">
+          <h6>Total Notifications</h6>
+          <h3 id="totalNotifications">50</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
+      <div class="card card-hover text-center">
+        <div class="card-body">
+          <h6>Unread</h6>
+          <h3 id="unreadNotifications">20</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
+      <div class="card card-hover text-center">
+        <div class="card-body">
+          <h6>System Alert</h6>
+          <h3 id="reminderNotifications">15</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3" data-aos="fade-up" data-aos-delay="300">
+      <div class="card card-hover text-center">
+        <div class="card-body">
+          <h6>Escalations</h6>
+          <h3 id="escalationNotifications">5</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notifications List -->
+  <div class="row g-3" id="notificationList">
+   <!--  <div class="col-12" data-aos="fade-up">
+      <div class="card notification-card notification-unread">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h6 class="fw-bold">Server Maintenance Reminder</h6>
+              <p class="mb-1">Reminder: Scheduled server maintenance at 10 PM today.</p>
+              <span class="text-muted small">Date: 27-Aug-2025 09:00 AM | Type: Reminder</span>
+            </div>
+            <div>
+              <span class="badge bg-info badge-status">Unread</span>
+              <button class="btn btn-sm btn-outline-primary ms-2">Mark as Read</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="col-12" data-aos="fade-up" data-aos-delay="100">
+      <div class="card notification-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h6 class="fw-bold">New Ticket Assigned</h6>
+              <p class="mb-1">System Alert: You have been assigned a new ticket #12345.</p>
+              <span class="text-muted small">Date: 27-Aug-2025 10:30 AM | Type: System Alert</span>
+            </div>
+            <div>
+              <span class="badge bg-success badge-status">Read</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12" data-aos="fade-up" data-aos-delay="200">
+      <div class="card notification-card notification-unread">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h6 class="fw-bold">Pending Approval Escalation</h6>
+              <p class="mb-1">Escalation: Ticket #12340 pending approval for more than 24 hours.</p>
+              <span class="text-muted small">Date: 26-Aug-2025 05:15 PM | Type: Escalation</span>
+            </div>
+            <div>
+              <span class="badge bg-info badge-status">Unread</span>
+              <button class="btn btn-sm btn-outline-primary ms-2">Mark as Read</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+    </div>
+    <!-- Footer -->
+    <footer>
+      &copy; 2025 My Dashboard. All rights reserved.
+    </footer>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+      // Sidebar toggle
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const sidebar = document.getElementById('sidebar');
+      
+      sidebarToggle.addEventListener('click', () => {
+        if (window.innerWidth < 992) {
+          // Mobile: slide in/out
+          sidebar.classList.toggle('show');
+        } else {
+          // Desktop: collapse sidebar
+          document.body.classList.toggle('sidebar-collapsed');
+        }
+      });
+      
+      // Close mobile sidebar when clicking outside
+      document.addEventListener('click', function(e) {
+        if (window.innerWidth < 992) {
+          if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+            sidebar.classList.remove('show');
+          }
+        }
+      });
+      
+      // Display current date and time
+      function updateDateTime() {
+        const now = new Date();
+        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('currentDateTime').textContent = now.toLocaleDateString(undefined, options) + ' ' + timeString;
+      }
+      setInterval(updateDateTime, 1000);
+      updateDateTime();
+    </script>
+    <script>
+  AOS.init({ duration: 800, once: true });
+
+  // Show / Hide Custom Date Picker
+  $('#filterDate').change(function() {
+    if ($(this).val() === 'custom') {
+      $('#customDate').removeClass('d-none');
+    } else {
+      $('#customDate').addClass('d-none');
+    }
+  });
+
+  // Apply Filters (static demo)
+  $('#applyFilters').click(function() {
+    alert('Filters applied (demo static page).');
+  });
+
+  // Reset Filters
+  $('#resetFilters').click(function() {
+    $('#filterDate').val('today').trigger('change');
+    $('#filterType').val('all');
+    $('#filterStatus').val('all');
+  });
+
+  // Mark as Read
+  $('.notification-card button').click(function() {
+    const card = $(this).closest('.notification-card');
+    card.removeClass('notification-unread');
+    card.find('.badge-status').removeClass('bg-info').addClass('bg-success').text('Read');
+    $(this).remove();
+  });
+</script>
+  </body>
+</html>

@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EDM Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+      <style>
+    body { background: #f9fafb; }
+    .card { border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+    .step-title { font-size: 1.2rem; font-weight: 600; color: #444; }
+    .btn-primary { border-radius: 30px; padding: 10px 25px; }
+    .hidden { display: none; }
+    .success-check {
+      font-size: 3rem; color: green; display: none;
+      animation: bounceIn 1s forwards;
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+  </style>
+    <style>
+      html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f1f3f6;
+      color: #333;
+      }
+      body {
+      display: flex;
+      flex-direction: column;
+      padding-top: 70px;
+      transition: all 0.3s;
+      }
+      /* Header */
+      nav.navbar {
+      background: linear-gradient(90deg, #4b6cb7, #182848);
+      color: #fff;
+      z-index: 1000;
+      padding: 0.4rem 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      nav.navbar .navbar-brand, nav.navbar .btn, nav.navbar span {
+      color: #fff;
+      }
+      nav.navbar .btn-light {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #fff;
+      }
+      nav.navbar .btn-light:hover {
+      background: rgba(255,255,255,0.25);
+      }
+      /* Sidebar */
+      #sidebar {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 220px;
+      height: calc(100% - 70px);
+      background: #fff;
+      padding-top: 1rem;
+      transition: all 0.3s;
+      overflow-y: auto;
+      border-right: 1px solid #e0e0e0;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+      z-index: 999;
+      }
+      #sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: #495057;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 8px;
+      margin: 4px 10px;
+      transition: all 0.2s ease-in-out;
+      }
+      #sidebar a:hover {
+      background: #4b6cb7;
+      color: #fff;
+      transform: translateX(5px);
+      }
+      #sidebar a.active {
+      background: #182848;
+      color: white;
+      }
+      #sidebar i {
+      margin-right: 12px;
+      font-size: 1.2rem;
+      }
+      .sidebar-collapsed #sidebar a {
+      padding: 12px 0px;
+      } 
+      /* Collapsed sidebar */
+      body.sidebar-collapsed #sidebar {
+      width: 60px;
+      }
+      body.sidebar-collapsed #sidebar a span { display: none; }
+      body.sidebar-collapsed #sidebar a i {
+      margin-right: 0;
+      width: 100%;
+      text-align: center;
+      }
+      /* Main content */
+      #mainContent {
+      margin-left: 220px;
+      padding: 30px;
+      flex: 1;
+      transition: all 0.3s;
+      }
+      body.sidebar-collapsed #mainContent { margin-left: 60px; }
+      /* Cards for main content */
+      .card {
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      }
+      /* Footer */
+      footer {
+      background: #fff;
+      text-align: center;
+      padding: 15px;
+      border-top: 1px solid #ddd;
+      width: 100%;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+      }
+      /* Mobile responsiveness */
+      @media (max-width: 992px) {
+      #sidebar {
+      left: -100%;
+      top: 0;
+      width: 220px;
+      height: 100%;
+      border-right: none;
+      box-shadow: 2px 0 15px rgba(0,0,0,0.2);
+      z-index: 9999; 
+      }
+      #sidebar.show { left: 0; }
+      #mainContent { margin-left: 0; padding: 20px 10px; }
+      body.sidebar-collapsed #mainContent { margin-left: 0; }
+      }
+      @media (max-width: 768px) {
+      #currentDateTime { display: none; }
+      .navbar .fw-bold { font-size: 1.1rem; }
+      #sidebarToggle { padding: 0.35rem 0.6rem; }
+      .dropdown-toggle span { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container-fluid d-flex align-items-center">
+        <button class="btn btn-light" id="sidebarToggle">
+        <i class="bi bi-list fs-4"></i>
+        </button>
+        <span class="fw-bold ms-3 fs-5">EDM Dashboard</span>
+        <div class="ms-auto d-flex align-items-center gap-3">
+          <span id="currentDateTime" class="me-3"></span>
+          <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
+            <i class="bi bi-person-circle fs-4"></i> <span class="d-none d-lg-inline fw-semibold">John</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+              <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+              <li><a class="dropdown-item" href="index.html">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- Sidebar -->
+     <div id="sidebar">
+  <a href="dashboard.html" ><i class="bi bi-speedometer2"></i><span>Dashboard</span></a>
+  <a href="raise-ticket-self.html"><i class="bi bi-person-plus"></i><span>Raise Ticket - Self</span></a>
+  <a href="raise-ticket-behalf.html" class="active"><i class="bi bi-people"></i><span>Raise Ticket - Behalf</span></a>
+  <!-- <a href="view-request.html"><i class="bi bi-card-list"></i><span>View Request</span></a> -->
+  <a href="report.html"><i class="bi bi-file-earmark-text"></i><span>Report</span></a>
+  <!-- <a href="notification.html"><i class="bi bi-bell"></i><span>Notification</span></a> -->
+  <a href="profile.html"><i class="bi bi-person-circle"></i><span>Profile</span></a>
+  <a href="faq.html"><i class="bi bi-person-circle"></i><span>FAQ</span></a>
+</div>
+    <!-- Main Content -->
+    <div id="mainContent">
+
+      <div class="container">
+  <div class="card p-4" data-aos="fade-up">
+    <!-- Step 1: Mobile OTP Verification -->
+    <div id="step1">
+      <h4 class="step-title mb-3">Department User Verification</h4>
+      <div class="row">
+      <div class="mb-3 col-md-4"> 
+        <label class="form-label">Mobile Number</label>
+        <input type="text" class="form-control" id="citizenMobile" placeholder="Enter mobile number">
+      </div>
+      <div class="mb-3 col-md-4 d-flex align-items-center"> 
+      <button class="btn btn-primary mt-4" id="sendOtpBtn">Send OTP</button>
+    </div>
+  </div>
+
+      <div id="otpSection" class="hidden mt-3 col-md-4">
+        <label class="form-label">Enter OTP</label>
+        <input type="text" class="form-control" id="citizenOtp" placeholder="Enter 6-digit OTP">
+        <button class="btn btn-success mt-2" id="verifyOtpBtn">Verify OTP</button>
+        <p id="otpTimer" class="text-muted small mt-2"></p>
+      </div>
+      <div class="success-check text-center mt-3" id="otpSuccess">✔</div>
+    </div>
+
+    <!-- Step 2: Ticket Form -->
+    <div id="step2" class="hidden mt-4">
+      <!-- <h4 class="step-title mb-3">Raise Ticket (On Behalf of Citizen)</h4> -->
+      
+
+        <h2 class="page-title mb-3"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i> Report an Issue (On Behalf of Department User)</h2>
+        <div class="form-section">
+          <!-- Main Form -->
+          <form id="issueForm" class="needs-validation" novalidate>
+            <div class="row g-3">
+
+              <!-- Citizen Details -->
+                <div class="mb-3 col-lg-4">
+                  <label class="form-label">Department User Name</label>
+                  <input type="text" class="form-control" placeholder="Enter Department User Name">
+                </div>
+                <div class="mb-3 col-lg-4">
+                  <label class="form-label">Mobile</label>
+                  <input type="text" class="form-control" value="(Verified Mobile)" readonly>
+                </div>
+
+              <!-- Issue Dropdown -->
+              <div class="mb-3 col-lg-4">
+                <label class="form-label">Issue</label>
+                <select class="form-select" required>
+                  <option selected disabled value="">Select Issue</option>
+                  <option>Road Damage</option>
+                  <option>Water Supply</option>
+                </select>
+                <div class="invalid-feedback">Please select an issue.</div>
+              </div>
+              <!-- Category Dropdown -->
+              <div class="mb-3 col-lg-4">
+                <label class="form-label">Select Category</label>
+                <select class="form-select" required>
+                  <option selected disabled value="">Select Category</option>
+                  <option>eSevai portal and services</option>
+                  <option>eSevai centre related</option>
+                  <option>eSevai officials related</option>
+                </select>
+              </div>
+              <!-- Subcategory Dropdown -->
+              <div class="mb-3 col-lg-4">
+                <label for="subcategory" class="form-label fw-semibold">Select Subcategory</label>
+                <select id="subcategory" class="form-select">
+                  <option value="">-- Select --</option>
+                  <option value="eservice">eService</option>
+                  <option value="grievance">Grievance</option>
+                  <option value="canEdit">CAN Edit</option>
+                  <option value="deleteCan">Delete Duplicate CAN</option>
+                  <option value="savedCancel">Saved Application Cancel</option>
+                  <option value="approvedCancel">Approved Certificate/Application Cancel</option>
+                  <option value="deptPwdReset">Department User - Password Reset</option>
+                  <option value="citizenLoginError">Citizen ID - Login/OTP Issues</option>
+                  <option value="paymentError">Unable to Make Payment</option>
+                  <option value="reprint">Reprint Receipt</option>
+                  <option value="overcharging">Overcharging</option>
+                  <option value="idBlock">ID Block Reactivation</option>
+                  <option value="walletError">Wallet Recharge Error</option>
+                  <option value="operatorUpdate">Operator Details Update</option>
+                  <option value="phoneUpdate">Phone Number Update</option>
+                  <option value="locationUpdate">Location Details Update</option>
+                </select>
+              </div>
+            </div>
+            <!-- Dynamic Fields Container -->
+            <div id="dynamicForm" class="form-section mt-4"></div>
+            <!-- Remarks -->
+            <div class="mb-3 col-lg-8">
+              <label class="form-label">Remarks</label>
+              <textarea class="form-control" rows="3" placeholder="Enter details" required></textarea>
+              <div class="invalid-feedback">Please enter remarks.</div>
+            </div>
+            <!-- Attachments -->
+            <!-- <div class="mb-3 col-lg-4">
+              <label class="form-label">Issue Attachment</label>
+              <input type="file" class="form-control" accept=".jpg,.jpeg,.png,.pdf" required>
+              <small class="text-muted">Allowed: jpg, png, pdf (max 5MB)</small>
+              <div class="invalid-feedback">Please upload a valid file.</div>
+              </div> -->
+            <!-- Submit -->
+            <div class="col-lg-4 d-flex align-items-center">
+              <button type="submit" class="btn btn-primary px-4 py-2">
+              <i class="bi bi-send-fill me-2"></i> Submit Issue
+              </button>
+            </div>
+          </form>
+
+
+    </div>
+  </div>
+</div>
+
+
+    </div>
+
+
+    </div>
+    <!-- Footer -->
+    <footer>
+      &copy; 2025 My Dashboard. All rights reserved.
+    </footer>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+      // Sidebar toggle
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const sidebar = document.getElementById('sidebar');
+      
+      sidebarToggle.addEventListener('click', () => {
+        if (window.innerWidth < 992) {
+          // Mobile: slide in/out
+          sidebar.classList.toggle('show');
+        } else {
+          // Desktop: collapse sidebar
+          document.body.classList.toggle('sidebar-collapsed');
+        }
+      });
+      
+      // Close mobile sidebar when clicking outside
+      document.addEventListener('click', function(e) {
+        if (window.innerWidth < 992) {
+          if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+            sidebar.classList.remove('show');
+          }
+        }
+      });
+      
+      // Display current date and time
+      function updateDateTime() {
+        const now = new Date();
+        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('currentDateTime').textContent = now.toLocaleDateString(undefined, options) + ' ' + timeString;
+      }
+      setInterval(updateDateTime, 1000);
+      updateDateTime();
+    </script>
+   <script>
+AOS.init();
+
+// OTP flow simulation
+let otpTimer;
+$('#sendOtpBtn').click(function(){
+  $('#otpSection').removeClass('hidden');
+  let timeLeft = 120; // 2 min timer
+  $('#otpTimer').text("OTP sent. Expires in 120s");
+  otpTimer = setInterval(function(){
+    timeLeft--;
+    $('#otpTimer').text("OTP sent. Expires in " + timeLeft + "s");
+    if(timeLeft <= 0){ clearInterval(otpTimer); $('#otpTimer').text("OTP expired. Please resend."); }
+  },1000);
+});
+
+$('#verifyOtpBtn').click(function(){
+  let otp = $('#citizenOtp').val();
+  if(otp === "123456"){ // demo OTP
+    clearInterval(otpTimer);
+    $('#otpSuccess').fadeIn();
+    setTimeout(function(){
+      $('#step1').hide();
+      $('#step2').removeClass('hidden').hide().fadeIn();
+    }, 1000);
+  } else {
+    alert("Invalid OTP. Try again.");
+  }
+});
+</script>
+<script>
+      const form = document.getElementById("dynamicForm");
+      const subcategory = document.getElementById("subcategory");
+      
+      // Mapping of subcategories to fields
+      const fieldsMap = {
+        eservice: [
+          { label: "Enter the Acknowledgement Number", type: "text", required: true }
+        ],
+        grievance: [
+          { label: "Enter the Acknowledgement Number", type: "text", required: true }
+        ],
+        canEdit: [
+          { label: "CAN Number to be edited", type: "text", required: true },
+          { label: "Description of changes & reason", type: "textarea", required: true },
+          { label: "Supporting document description", type: "text", required: true },
+          { label: "Attach Supporting Documents", type: "file", multiple: true, required: true }
+        ],
+        deleteCan: [
+          { label: "CAN Number to be deleted", type: "text", required: true },
+          { label: "Reason & details of multiple CANs", type: "textarea", required: true },
+          { label: "Supporting document description", type: "text", required: true },
+          { label: "Attach Supporting Documents", type: "file", multiple: true, required: true }
+        ],
+        savedCancel: [
+          { label: "CAN Number (optional)", type: "text", required: false },
+          { label: "Application Number", type: "text", required: true },
+          { label: "Reason for request", type: "textarea", required: true },
+          { label: "Supporting document description", type: "text", required: false },
+          { label: "Attach Supporting Documents", type: "file", multiple: true, required: false }
+        ],
+        approvedCancel: [
+          { label: "CAN Number (optional)", type: "text", required: false },
+          { label: "Application/Certificate Number", type: "text", required: true },
+          { label: "Reason for request", type: "textarea", required: true },
+          { label: "Supporting document description", type: "text", required: true },
+          { label: "Attach Supporting Documents", type: "file", multiple: true, required: true }
+        ],
+        deptPwdReset: [
+          { label: "eSevai Login ID", type: "text", required: true },
+          { label: "Error Description", type: "textarea", required: true },
+          { label: "Attach Supporting Documents", type: "file", multiple: true, required: false }
+        ],
+        citizenLoginError: [
+          { label: "Citizen eSevai Login ID", type: "text", required: true },
+          { label: "Type of Device", type: "text", required: true },
+          { label: "Model of Device", type: "text", required: true },
+          { label: "Error Description", type: "textarea", required: true },
+          { label: "Attach Supporting Documents", type: "file", multiple: true, required: true }
+        ],
+        paymentError: [
+          { label: "CAN Number (optional)", type: "text", required: false },
+          { label: "Application Number (optional)", type: "text", required: false },
+          { label: "Transaction Number", type: "text", required: true },
+          { label: "Description of Issue", type: "textarea", required: true },
+          { label: "Attach Supporting Documents", type: "file", multiple: true, required: true }
+        ],
+        reprint: [
+          { label: "Application Number", type: "text", required: true },
+          { label: "Description of Issue", type: "textarea", required: true },
+          { label: "Attach Supporting Documents", type: "file", multiple: true, required: false }
+        ],
+        overcharging: [
+          { label: "eSevai Centre ID", type: "text", required: true },
+          { label: "Description of Issue", type: "textarea", required: true },
+          { label: "Attach Supporting Documents", type: "file", multiple: true, required: false }
+        ],
+        idBlock: [
+          { label: "eSevai Centre ID", type: "text", required: true },
+          { label: "Reason for ID block", type: "select", options: ["Zero transactions", "Overcharging issues", "Don't know"], required: true },
+          { label: "Attach Supporting Documents", type: "file", multiple: true, required: false }
+        ],
+        walletError: [
+          { label: "Recharge Amount", type: "number", required: true },
+          { label: "Date of Request", type: "date", required: true },
+          { label: "Error Message", type: "text", required: false },
+          { label: "Attach Supporting Documents", type: "file", multiple: true, required: false }
+        ],
+        operatorUpdate: [
+          { label: "Current Operator Name", type: "text", required: true },
+          { label: "Current Operator Mobile", type: "text", required: true },
+          { label: "Reason for Change", type: "textarea", required: true },
+          { label: "New Operator Name", type: "text", required: true },
+          { label: "New Operator Mobile", type: "text", required: true },
+          { label: "Attach Supporting Documents", type: "file", multiple: true, required: false }
+        ],
+        phoneUpdate: [
+          { label: "Current Mobile Number", type: "text", required: true },
+          { label: "Reason for Change", type: "textarea", required: true },
+          { label: "New Mobile Number", type: "text", required: true },
+          { label: "Attach Supporting Documents", type: "file", multiple: true, required: false }
+        ],
+        locationUpdate: [
+          { label: "Current Address", type: "textarea", required: true },
+          { label: "Reason for Change", type: "textarea", required: true },
+          { label: "New Address", type: "textarea", required: true },
+          { label: "Attach Supporting Documents", type: "file", multiple: true, required: false }
+        ]
+      };
+      
+      // Render fields dynamically
+      subcategory.addEventListener("change", () => {
+        form.innerHTML = "";
+        const fields = fieldsMap[subcategory.value] || [];
+        fields.forEach(field => {
+          let input;
+          if (field.type === "textarea") {
+            input = `<textarea class="form-control" ${field.required ? "required" : ""}></textarea>`;
+          } else if (field.type === "file") {
+            input = `<input type="file" class="form-control" ${field.multiple ? "multiple" : ""} ${field.required ? "required" : ""}>`;
+          } else if (field.type === "select") {
+            input = `<select class="form-select" ${field.required ? "required" : ""}>
+              ${field.options.map(opt => `<option value="${opt}">${opt}</option>`).join("")}
+            </select>`;
+          } else {
+            input = `<input type="${field.type}" class="form-control" ${field.required ? "required" : ""}>`;
+          }
+      
+          form.innerHTML += `
+            <div class="mb-3">
+              <label class="form-label fw-semibold">${field.label}${field.required ? " *" : ""}</label>
+              ${input}
+            </div>
+          `;
+        });
+      
+        // if (fields.length) {
+        //   form.innerHTML += `<button type="submit" class="btn btn-primary w-100">Submit</button>`;
+        // }
+      
+        if (fields.length) {
+          form.innerHTML += ``;
+        }
+      
+      });
+    </script>
+  </body>
+</html>

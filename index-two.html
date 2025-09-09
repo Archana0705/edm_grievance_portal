@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>e-Sevai Grievance Portal — Split Layout</title>
+
+  <!-- Bootstrap 5.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- AOS -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --card-bg: #ffffff;
+      --muted: #6c757d;
+      --primary: #0d6efd;
+      --accent: #4da6ff;
+      --soft: #f7fbff;
+    }
+
+    /* Soft light patterned background using pure CSS (diagonal stripes + subtle dots) */
+    body{
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      background-color: var(--soft);
+      background-image:
+        linear-gradient(135deg, rgba(255,255,255,0.9) 25%, rgba(0,0,0,0.01) 25%, rgba(0,0,0,0.01) 50%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0.9) 75%, rgba(0,0,0,0.01) 75%, rgba(0,0,0,0.01) 100%),
+        radial-gradient(circle at 1px 1px, rgba(0,0,0,0.03) 1px, transparent 1px);
+      background-size: 12px 12px, 8px 8px;
+      padding: 40px 20px;
+    }
+
+    /* Page header */
+    .portal-header {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:18px;
+    }
+    .portal-title {
+      font-weight:700;
+      font-size:1.35rem;
+      color:#0b5ed7;
+      margin:0;
+    }
+    .portal-sub {
+      color:var(--muted);
+      margin:0;
+      font-size:0.95rem;
+    }
+
+    /* Two column layout */
+    .split-row {
+      min-height: 78vh;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media(min-width: 992px){
+      .split-row {
+        grid-template-columns: 1fr 420px;
+        align-items: start;
+      }
+    }
+
+    /* Left card (keeps your existing card look but lighter) */
+    .left-card {
+      border-radius:16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(249,251,255,0.98));
+      box-shadow: 0 8px 30px rgba(15,23,42,0.06);
+      padding: 28px;
+    }
+
+    .card-inner {
+      max-width: 540px;
+      margin: 0 auto;
+    }
+
+    .step-icon {
+      font-size: 38px;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .otp-input {
+      width: 50px; height: 55px;
+      text-align: center;
+      font-size: 22px;
+      margin: 6px;
+      border-radius: 10px;
+    }
+
+    .form-control, .form-select {
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+    }
+
+    .btn {
+      border-radius: 12px;
+      font-weight: 600;
+      padding: 10px 14px;
+    }
+
+    /* Right side brief */
+    .brief-panel {
+      position: sticky;
+      top: 30px;
+      border-radius: 14px;
+      padding: 20px;
+      background: #ffffff;
+      box-shadow: 0 6px 18px rgba(10,20,40,0.04);
+      border: 1px solid rgba(13,110,253,0.04);
+    }
+
+    .brief-heading {
+      color: #07346b;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .brief-sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+
+    .activity-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .activity {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      padding: 10px;
+      border-radius: 10px;
+      transition: transform .18s ease, box-shadow .18s ease;
+      cursor: default;
+    }
+    .activity:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(15,23,42,0.06);
+    }
+
+    .activity .icon {
+      min-width:48px;
+      min-height:48px;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: linear-gradient(135deg, rgba(13,110,253,0.08), rgba(77,166,255,0.06));
+      color: var(--primary);
+      font-size: 20px;
+    }
+    .activity .title {
+      font-weight:600;
+      margin:0;
+      color:#0b5ed7;
+      font-size:0.99rem;
+    }
+    .activity .desc {
+      margin:0;
+      font-size:0.85rem;
+      color:var(--muted);
+    }
+
+    .brief-cta {
+      margin-top: 16px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .help-block {
+      font-size:0.85rem;
+      color:var(--muted);
+    }
+
+    /* Small responsive tweaks */
+    @media(max-width:991px){
+      .card-inner { max-width: 100%; }
+      .brief-panel { position: relative; top: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="portal-header mb-3">
+      <div>
+        <h1 class="portal-title">e-Sevai Grievance Portal</h1>
+        <p class="portal-sub mb-0">Mobile & Aadhaar login • Raise grievances • Track requests</p>
+      </div>
+    </div>
+
+    <div class="split-row">
+
+      <!-- LEFT: your existing screens (keeps inputs unchanged) -->
+      <div class="left-card" data-aos="fade-right">
+        <div class="card-inner">
+
+          <!-- Card content: we keep your exact fields and screens, only restyled container -->
+          <div class="card p-0 text-center">
+
+            <!-- Screen 1 Mobile -->
+            <div class="screen screen1">
+              <i class="fa-solid fa-mobile-screen step-icon"></i>
+              <h4 class="mb-3">Citizen Login – Mobile</h4>
+
+              <div class="mb-3 text-start">
+                <label for="mobileInput" class="form-label fw-semibold">Mobile Number</label>
+                <input type="text" id="mobileInput" class="form-control" placeholder="Enter mobile number">
+                <small class="form-text text-muted">OTP will be sent to mobile number.</small>
+                <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
+              </div>
+
+              <button id="continueBtn" class="btn btn-primary w-100">Continue</button>
+            </div>
+
+            <!-- Screen 2 OTP -->
+            <div class="screen screen2">
+              <i class="fa-solid fa-key step-icon"></i>
+              <h4 class="mb-3">Verify OTP</h4>
+              <div class="d-flex justify-content-center mb-3">
+                <input type="text" maxlength="1" class="otp-input form-control">
+                <input type="text" maxlength="1" class="otp-input form-control">
+                <input type="text" maxlength="1" class="otp-input form-control">
+                <input type="text" maxlength="1" class="otp-input form-control">
+                <input type="text" maxlength="1" class="otp-input form-control">
+                <input type="text" maxlength="1" class="otp-input form-control">
+              </div>
+              <p class="text-muted"><span id="timer">Resend OTP in 02:00</span></p>
+              <button class="btn btn-success w-100 next2">Verify OTP</button>
+            </div>
+
+            <!-- Screen 3 Profile -->
+            <div class="screen screen3">
+              <i class="fa-solid fa-user step-icon"></i>
+              <h4 class="mb-3" id="profileTitle">Citizen Profile Creation</h4>
+
+              <input type="text" id="nameField" class="form-control mb-2" placeholder="Enter your Name" required>
+              <select id="genderField" class="form-select mb-2" required>
+                <option selected>Select Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+              <input type="text" id="mobileField" class="form-control mb-2" value="9876543210" readonly>
+              <select id="districtField" class="form-select mb-2" required>
+                <option selected>Select District</option>
+                <option>Coimbatore</option>
+                <option>Madurai</option>
+              </select>
+              <input type="email" id="emailField" class="form-control mb-3" placeholder="Enter your Email (optional)">
+
+              <button class="btn btn-primary w-100 mb-3 next3">Continue</button>
+            </div>
+
+            <!-- Screen 5 Success -->
+            <div class="screen screen5">
+              <div class="success-icon mb-3">✅</div>
+              <h4>Profile Created Successfully!</h4>
+              <p class="text-muted">You can now raise grievances and track requests.</p>
+              <a href="dashboard.html" class="btn btn-success w-100 mt-3">Go to Dashboard</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: brief / activity panel -->
+      <aside class="brief-panel" data-aos="fade-left">
+        <div>
+          <h3 class="brief-heading">What you can do</h3>
+          <p class="brief-sub">Quick actions & services available to every citizen. Simple steps — faster resolution.</p>
+
+          <div class="activity-list">
+
+            <div class="activity" data-aos="fade-up" data-aos-delay="50">
+              <div class="icon"><i class="fa-solid fa-ticket"></i></div>
+              <div>
+                <p class="title mb-0">Raise a Grievance</p>
+                <p class="desc mb-0">Create a ticket for service issues, apply corrections or report problems.</p>
+              </div>
+            </div>
+
+            <div class="activity" data-aos="fade-up" data-aos-delay="100">
+              <div class="icon"><i class="fa-solid fa-circle-check"></i></div>
+              <div>
+                <p class="title mb-0">Track Ticket Status</p>
+                <p class="desc mb-0">Monitor progress of your requests and get timely updates.</p>
+              </div>
+            </div>
+
+            <div class="activity" data-aos="fade-up" data-aos-delay="150">
+              <div class="icon"><i class="fa-solid fa-phone"></i></div>
+              <div>
+                <p class="title mb-0">Helpline & Support</p>
+                <p class="desc mb-0">Access dedicated helpline numbers and escalation options.</p>
+              </div>
+            </div>
+
+            <div class="activity" data-aos="fade-up" data-aos-delay="200">
+              <div class="icon"><i class="fa-solid fa-file-arrow-up"></i></div>
+              <div>
+                <p class="title mb-0">Upload Documents</p>
+                <p class="desc mb-0">Attach supporting documents for faster verification.</p>
+              </div>
+            </div>
+
+            <div class="activity" data-aos="fade-up" data-aos-delay="250">
+              <div class="icon"><i class="fa-solid fa-users"></i></div>
+              <div>
+                <p class="title mb-0">Community Feedback</p>
+                <p class="desc mb-0">Share suggestions and see community responses.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="brief-cta">
+            <a href="#" class="btn btn-outline-primary w-100"><i class="fa-solid fa-plus me-2"></i>Raise Grievance</a>
+          </div>
+
+          <div class="mt-3 help-block">
+            <strong>Tip:</strong> Keep your mobile active to receive OTPs. For documents, ensure files are under 1MB for faster upload.
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- AOS JS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <script>
+    AOS.init({ duration: 420, once: true });
+
+    // Show first screen (unchanged behavior)
+    $(".screen1").show();
+
+    // Validate mobile number
+    function isValidMobile(number) {
+      return /^[6-9]\d{9}$/.test(number);
+    }
+
+    // Continue button click (mobile)
+    $("#continueBtn").on("click", function(){
+      const mobile = $("#mobileInput").val().trim();
+
+      if(!isValidMobile(mobile)){
+        $("#mobileInput").addClass("is-invalid");
+        return;
+      }
+      $("#mobileInput").removeClass("is-invalid");
+
+      // Show OTP screen
+      $(".screen").hide();
+      $(".screen2").fadeIn();
+      startTimer(120, "#timer");
+    });
+
+    // Remove error instantly on input
+    $("#mobileInput").on("input", function(){
+      if(isValidMobile($(this).val().trim())){
+        $(this).removeClass("is-invalid");
+      }
+    });
+
+    // OTP auto focus
+    $(document).on("keyup", ".otp-input", function(){
+      if(this.value.length === this.maxLength){
+        $(this).next(".otp-input").focus();
+      }
+    });
+
+    // OTP screen flow
+    $(".next2").click(function(){
+      $(".screen").hide();
+      $(".screen3").fadeIn();
+    });
+
+    // Continue button in profile (go directly to success)
+    $(".next3").click(function(){
+      $(".screen").hide();
+      $(".screen5").fadeIn();
+    });
+
+    // Timer function
+    function startTimer(duration, selector) {
+      let timer = duration, minutes, seconds;
+      let interval = setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+        $(selector).text("Resend OTP in " + minutes + ":" + seconds);
+        if (--timer < 0) {
+          clearInterval(interval);
+          $(selector).html("<a href='#' class='resendLink'>Resend OTP</a>");
+        }
+      }, 1000);
+
+      $(document).off("click", ".resendLink").on("click", ".resendLink", function(e){
+        e.preventDefault();
+        startTimer(120, selector);
+      });
+    }
+  </script>
+</body>
+</html>

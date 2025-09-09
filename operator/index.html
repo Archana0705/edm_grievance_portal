@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>eSevai Operator Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #1565c0, #42a5f5);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', sans-serif;
+    }
+    .login-card {
+      background: #fff;
+      border-radius: 1rem;
+      padding: 2.5rem 2rem;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .login-card h3 {
+      font-weight: 700;
+      color: #1565c0;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .form-control {
+      border-radius: 50px;
+      padding: 12px 20px;
+    }
+    .login-btn {
+      border-radius: 50px;
+      padding: 10px 0;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .login-btn:hover { transform: translateY(-2px); }
+    .otp-section { display: none; margin-top: 15px; }
+    .login-footer { text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: #555; }
+    .icon-input { position: relative; }
+    .icon-input i {
+      position: absolute; top: 50%; left: 15px; transform: translateY(-50%); color: #1565c0;
+    }
+    .icon-input input, .icon-input select { padding-left: 40px; }
+    .recovery-link {
+      display: block;
+      margin-top: 10px;
+      text-align: right;
+      font-size: 0.85rem;
+    }
+    .recovery-link a { text-decoration: none; color: #1565c0; font-weight: 500; }
+    .recovery-link a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div class="login-card" data-aos="fade-up">
+  <h3>eSevai Operator Login</h3>
+
+  <!-- Login Form -->
+  <form id="loginForm">
+    <!-- eSevai ID -->
+    <div class="mb-3 icon-input">
+      <i class="fas fa-id-badge"></i>
+      <input type="text" class="form-control" id="esevaiId" placeholder="Enter eSevai ID" required>
+    </div>
+
+    <!-- OTP Delivery Option -->
+    <div class="mb-3 icon-input">
+      <i class="fas fa-envelope"></i>
+      <select class="form-select" id="otpMethod" required>
+        <option value="" disabled selected>Select OTP Delivery Method</option>
+        <option value="mobile">Send OTP to Registered Mobile</option>
+        <option value="email">Send OTP to Registered Email</option>
+      </select>
+    </div>
+
+    <button type="button" class="btn btn-primary w-100 login-btn" id="sendOtpBtn">Send OTP</button>
+
+    <!-- OTP Section -->
+    <div class="otp-section" id="otpSection">
+      <div class="mb-3 icon-input mt-3">
+        <i class="fas fa-key"></i>
+        <input type="text" class="form-control" id="otpInput" placeholder="Enter OTP" required>
+      </div>
+      <button type="submit" class="btn btn-success w-100 login-btn">Login</button>
+    </div>
+
+    <!-- Recovery Option -->
+    <div class="recovery-link">
+      <a href="recovery.html">Change registered mobile/email?</a>
+    </div>
+  </form>
+
+  <div class="login-footer">
+    <p>eSevai Operator Portal</p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init();
+
+  const sendOtpBtn = document.getElementById('sendOtpBtn');
+  const otpSection = document.getElementById('otpSection');
+  const loginForm = document.getElementById('loginForm');
+
+  sendOtpBtn.addEventListener('click', () => {
+    const esevaId = document.getElementById('esevaiId').value;
+    const otpMethod = document.getElementById('otpMethod').value;
+
+    if (!esevaId || !otpMethod) {
+      alert("Please enter eSevai ID and select OTP delivery method.");
+      return;
+    }
+
+    // Simulate sending OTP
+    otpSection.style.display = 'block';
+    sendOtpBtn.disabled = true;
+    sendOtpBtn.innerText = "OTP Sent ✅ (" + otpMethod + ")";
+  });
+
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert('Logged in successfully!');
+    // Here integrate actual OTP verification and login logic
+    window.location.href = 'dashboard.html'; 
+  });
+</script>
+</body>
+</html>

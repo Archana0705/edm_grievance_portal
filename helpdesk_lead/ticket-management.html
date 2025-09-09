@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Helpdesk Lead - Ticket Management</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+     <style>
+      body { background: #f8f9fa; }
+      .kpi-card { border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); transition: 0.3s; }
+      .kpi-card:hover { transform: translateY(-3px); }
+      .filters .form-select, .filters .form-control { border-radius: 8px; }
+      .table-actions button { margin-right: 5px; }
+    </style>
+    <style>
+      html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f1f3f6;
+      color: #333;
+      }
+      body {
+      display: flex;
+      flex-direction: column;
+      padding-top: 70px;
+      transition: all 0.3s;
+      }
+      /* Header */
+      nav.navbar {
+      background: linear-gradient(90deg, #4b6cb7, #182848);
+      color: #fff;
+      z-index: 1000;
+      padding: 0.4rem 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      nav.navbar .navbar-brand, nav.navbar .btn, nav.navbar span {
+      color: #fff;
+      }
+      nav.navbar .btn-light {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #fff;
+      }
+      nav.navbar .btn-light:hover {
+      background: rgba(255,255,255,0.25);
+      }
+      /* Sidebar */
+      #sidebar {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 220px;
+      height: calc(100% - 70px);
+      background: #fff;
+      padding-top: 1rem;
+      transition: all 0.3s;
+      overflow-y: auto;
+      border-right: 1px solid #e0e0e0;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+      z-index: 999;
+      }
+      #sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: #495057;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 8px;
+      margin: 4px 10px;
+      transition: all 0.2s ease-in-out;
+      }
+      #sidebar a:hover {
+      background: #4b6cb7;
+      color: #fff;
+      transform: translateX(5px);
+      }
+      #sidebar a.active {
+      background: #182848;
+      color: white;
+      }
+      #sidebar i {
+      margin-right: 12px;
+      font-size: 1.2rem;
+      }
+      .sidebar-collapsed #sidebar a {
+      padding: 12px 0px;
+      } 
+      /* Collapsed sidebar */
+      body.sidebar-collapsed #sidebar {
+      width: 60px;
+      }
+      body.sidebar-collapsed #sidebar a span { display: none; }
+      body.sidebar-collapsed #sidebar a i {
+      margin-right: 0;
+      width: 100%;
+      text-align: center;
+      }
+      /* Main content */
+      #mainContent {
+      margin-left: 220px;
+      padding: 30px;
+      flex: 1;
+      transition: all 0.3s;
+      }
+      body.sidebar-collapsed #mainContent { margin-left: 60px; }
+      /* Cards for main content */
+      .card {
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      }
+      /* Footer */
+      footer {
+      background: #fff;
+      text-align: center;
+      padding: 15px;
+      border-top: 1px solid #ddd;
+      width: 100%;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+      }
+      /* Mobile responsiveness */
+      @media (max-width: 992px) {
+      #sidebar {
+      left: -100%;
+      top: 0;
+      width: 220px;
+      height: 100%;
+      border-right: none;
+      box-shadow: 2px 0 15px rgba(0,0,0,0.2);
+      z-index: 9999; 
+      }
+      #sidebar.show { left: 0; }
+      #mainContent { margin-left: 0; padding: 20px 10px; }
+      body.sidebar-collapsed #mainContent { margin-left: 0; }
+      }
+      @media (max-width: 768px) {
+      #currentDateTime { display: none; }
+      .navbar .fw-bold { font-size: 1.1rem; }
+      #sidebarToggle { padding: 0.35rem 0.6rem; }
+      .dropdown-toggle span { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container-fluid d-flex align-items-center">
+        <button class="btn btn-light" id="sidebarToggle">
+        <i class="bi bi-list fs-4"></i>
+        </button>
+        <span class="fw-bold ms-3 fs-5">EDM Dashboard</span>
+        <div class="ms-auto d-flex align-items-center gap-3">
+          <span id="currentDateTime" class="me-3"></span>
+          <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
+            <i class="bi bi-person-circle fs-4"></i> <span class="d-none d-lg-inline fw-semibold">John</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+              <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+              <li><a class="dropdown-item" href="index.html">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+   <!-- Sidebar -->
+<div id="sidebar">
+  <a href="dashboard.html" >
+    <i class="bi bi-house"></i><span>Dashboard</span>
+  </a>
+
+  <a href="ticket-management.html" class="active">
+    <i class="bi bi-ticket-detailed"></i><span>Ticket Management</span>
+  </a>
+
+  <a href="user-management.html">
+    <i class="bi bi-people"></i><span>User Management</span>
+  </a>
+
+  <a href="quality-check.html">
+    <i class="bi bi-check2-square"></i><span>Quality Check</span>
+  </a>
+
+  <a href="helpdesk-operator.html">
+    <i class="bi bi-headset"></i><span>Helpdesk Operator</span>
+  </a>
+
+  <a href="report.html">
+    <i class="bi bi-bar-chart-line"></i><span>Report</span>
+  </a>
+
+  <a href="profile.html">
+    <i class="bi bi-person-circle"></i><span>Profile</span>
+  </a>
+</div>
+
+    <!-- Main Content -->
+    <div id="mainContent">
+      <!-- Nav Tabs -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="team-tab"
+          data-bs-toggle="tab" data-bs-target="#team-tab-pane"
+          type="button" role="tab">Team Tickets</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="escalations-tab"
+          data-bs-toggle="tab" data-bs-target="#escalations-tab-pane"
+          type="button" role="tab">Escalations</button>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="team-tab-pane"
+        role="tabpanel" aria-labelledby="team-tab">
+        <!-- KPIs Row -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-3">
+            <div class="card kpi-card text-center text-white bg-primary">
+              <div class="card-body">
+                <h5>Open Tickets</h5>
+                <h2>128</h2>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card kpi-card text-center text-white bg-warning">
+              <div class="card-body">
+                <h5>In Progress</h5>
+                <h2>74</h2>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card kpi-card text-center text-white bg-danger">
+              <div class="card-body">
+                <h5>Escalated</h5>
+                <h2>12</h2>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card kpi-card text-center text-white bg-success">
+              <div class="card-body">
+                <h5>Closed</h5>
+                <h2>340</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Filters -->
+        <div class="card mb-4">
+          <div class="card-body filters">
+            <div class="row g-3 align-items-end">
+              <div class="col-md-2">
+                <label class="form-label">Status</label>
+                <select class="form-select">
+                  <option>All</option>
+                  <option>Open</option>
+                  <option>In Progress</option>
+                  <option>Escalated</option>
+                  <option>Closed</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">Priority</label>
+                <select class="form-select">
+                  <option>All</option>
+                  <option>Low</option>
+                  <option>Medium</option>
+                  <option>High</option>
+                  <option>Critical</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">Category</label>
+                <select class="form-select">
+                  <option>All</option>
+                  <option>Technical</option>
+                  <option>Service</option>
+                  <option>Billing</option>
+                  <option>Others</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">Assignee</label>
+                <select class="form-select">
+                  <option>All</option>
+                  <option>User 1</option>
+                  <option>User 2</option>
+                  <option>User 3</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">Date Range</label>
+                <input type="date" class="form-control">
+              </div>
+              <div class="col-md-2 text-end">
+                <button class="btn btn-primary w-100"><i class="bi bi-funnel"></i> Apply</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Tickets Table -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="mb-3">Tickets List</h5>
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>ID</th>
+                  <th>Subject</th>
+                  <th>Status</th>
+                  <th>Priority</th>
+                  <th>Category</th>
+                  <th>Assignee</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#TK-1023</td>
+                  <td>Unable to access portal</td>
+                  <td><span class="badge bg-primary">Open</span></td>
+                  <td><span class="badge bg-danger">High</span></td>
+                  <td>Technical</td>
+                  <td>John Doe</td>
+                  <td>2025-08-20</td>
+                  <td class="table-actions">
+                    <!-- View Ticket -->
+                    <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target=".ticketDetailsModal">
+                    <i class="bi bi-eye"></i>
+                    </button>
+                    <!-- Assign Ticket -->
+                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target=".ticketAssignModal">
+                    <i class="bi bi-person-plus"></i>
+                    </button>
+                    <!-- Reassign Ticket -->
+                    <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target=".ticketReassignModal">
+                    <i class="bi bi-arrow-repeat"></i>
+                    </button>
+                    <!-- Escalate Ticket -->
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target=".ticketEscalateModal">
+                    <i class="bi bi-arrow-up"></i>
+                    </button>
+                    <!-- Close Ticket -->
+                    <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target=".ticketCloseModal">
+                    <i class="bi bi-check2-circle"></i>
+                    </button>
+                    <!-- Quality Check -->
+                    <button class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target=".ticketQCModal">
+                    <i class="bi bi-clipboard-check"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>#TK-1055</td>
+                  <td>Billing issue not resolved</td>
+                  <td><span class="badge bg-warning text-dark">In Progress</span></td>
+                  <td><span class="badge bg-primary">Medium</span></td>
+                  <td>Billing</td>
+                  <td>Jane Smith</td>
+                  <td>2025-08-22</td>
+                  <td class="table-actions">
+                    <!-- View Ticket -->
+                    <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target=".ticketDetailsModal">
+                    <i class="bi bi-eye"></i>
+                    </button>
+                    <!-- Assign Ticket -->
+                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target=".ticketAssignModal">
+                    <i class="bi bi-person-plus"></i>
+                    </button>
+                    <!-- Reassign Ticket -->
+                    <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target=".ticketReassignModal">
+                    <i class="bi bi-arrow-repeat"></i>
+                    </button>
+                    <!-- Escalate Ticket -->
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target=".ticketEscalateModal">
+                    <i class="bi bi-arrow-up"></i>
+                    </button>
+                    <!-- Close Ticket -->
+                    <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target=".ticketCloseModal">
+                    <i class="bi bi-check2-circle"></i>
+                    </button>
+                    <!-- Quality Check -->
+                    <button class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target=".ticketQCModal">
+                    <i class="bi bi-clipboard-check"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="escalations-tab-pane"
+        role="tabpanel" aria-labelledby="escalations-tab">
+        <!-- Escalations Tab -->
+        <!-- KPIs Row -->
+        <div class="row mb-4 text-center">
+          <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+              <div class="card-body">
+                <h6 class="text-muted">Total Escalations</h6>
+                <h3 class="fw-bold text-danger">45</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+              <div class="card-body">
+                <h6 class="text-muted">Open Escalations</h6>
+                <h3 class="fw-bold text-warning">18</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+              <div class="card-body">
+                <h6 class="text-muted">In-Progress</h6>
+                <h3 class="fw-bold text-primary">12</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+              <div class="card-body">
+                <h6 class="text-muted">Closed Escalations</h6>
+                <h3 class="fw-bold text-success">15</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Filters -->
+        <div class="card shadow-sm border-0 mb-3">
+          <div class="card-body">
+            <form class="row g-3 align-items-end">
+              <div class="col-md-3">
+                <label class="form-label">Status</label>
+                <select class="form-select">
+                  <option>All</option>
+                  <option>Open</option>
+                  <option>In-Progress</option>
+                  <option>Closed</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Priority</label>
+                <select class="form-select">
+                  <option>All</option>
+                  <option>High</option>
+                  <option>Medium</option>
+                  <option>Low</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Assignee</label>
+                <select class="form-select">
+                  <option>All</option>
+                  <option>Helpdesk User 1</option>
+                  <option>Helpdesk User 2</option>
+                  <option>Helpdesk User 3</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Date Range</label>
+                <input type="date" class="form-control">
+              </div>
+              <div class="col-md-12 text-end">
+                <button class="btn btn-primary btn-sm">Apply Filters</button>
+                <button class="btn btn-secondary btn-sm">Reset</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0">Escalated Tickets</h5>
+          <span class="badge bg-danger">5 Escalated</span>
+        </div>
+        <!-- Escalations Table -->
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Ticket ID</th>
+                <th>Issue Summary</th>
+                <th>Reported By</th>
+                <th>Assigned To</th>
+                <th>Escalation Level</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#TCKT1009</td>
+                <td>Server downtime issue</td>
+                <td>John D</td>
+                <td>Support Team A</td>
+                <td><span class="badge bg-warning">L2</span></td>
+                <td>Issue unresolved > 48 hrs</td>
+                <td><span class="badge bg-danger">Pending</span></td>
+                <td>
+                  <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#escalationDetailsModal">
+                  <i class="bi bi-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#resolveEscalationModal">
+                  <i class="bi bi-check2-circle"></i>
+                  </button>
+                  <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#reassignEscalationModal">
+                  <i class="bi bi-arrow-repeat"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Escalation Details Modal -->
+        <div class="modal fade" id="escalationDetailsModal" tabindex="-1">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Escalation Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label class="form-label">Ticket ID</label>
+                  <input type="text" class="form-control" value="#TCKT1009" readonly>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Escalation Level</label>
+                  <input type="text" class="form-control" value="Level 2" readonly>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Escalation Reason</label>
+                  <textarea class="form-control" rows="2" readonly>Issue unresolved > 48 hrs</textarea>
+                </div>
+                <!-- Timeline -->
+                <h6 class="mt-4">Escalation History</h6>
+                <ul class="list-group">
+                  <li class="list-group-item">
+                    <small class="text-muted">2025-08-25 14:10</small> — Escalated to L2 by Helpdesk Lead
+                  </li>
+                  <li class="list-group-item">
+                    <small class="text-muted">2025-08-24 10:00</small> — Ticket unresolved for 24 hrs
+                  </li>
+                </ul>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Resolve Escalation Modal -->
+        <div class="modal fade" id="resolveEscalationModal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Resolve Escalation</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label class="form-label">Resolution Notes</label>
+                  <textarea class="form-control" rows="3" placeholder="Enter resolution details..."></textarea>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Update Status</label>
+                  <select class="form-select">
+                    <option>Resolved</option>
+                    <option>Closed</option>
+                  </select>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-success">Submit Resolution</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Reassign Escalation Modal -->
+        <div class="modal fade" id="reassignEscalationModal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">Reassign Escalation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label class="form-label">Current Assignee</label>
+                  <input type="text" class="form-control" value="Support Team A" readonly>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Reassign To</label>
+                  <select class="form-select">
+                    <option>Support Team B</option>
+                    <option>Support Team C</option>
+                    <option>Escalation Manager</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Reassignment Notes</label>
+                  <textarea class="form-control" rows="3" placeholder="Enter reason for reassignment..."></textarea>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-warning">Confirm Reassign</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Ticket Details Modal Placeholder -->
+    <div class="modal fade" id="ticketDetails" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header bg-light">
+            <h5 class="modal-title">Ticket Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Will build full details + timeline in next step -->
+            <p>Ticket details and timeline will appear here...</p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- view -->
+    <div class="modal fade ticketDetailsModal" id="" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title"><i class="bi bi-eye"></i> Ticket Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Ticket Info -->
+            <div class="row g-3">
+              <div class="col-md-6">
+                <p><strong>Ticket ID:</strong> #TCKT-12345</p>
+                <p><strong>Category:</strong> Service Request</p>
+                <p><strong>Priority:</strong> High</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Status:</strong> In Progress</p>
+                <p><strong>Assignee:</strong> John Doe</p>
+                <p><strong>Created On:</strong> 28-Aug-2025</p>
+              </div>
+            </div>
+            <hr>
+            <!-- Timeline -->
+            <h6 class="fw-bold">History / Timeline</h6>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item"><span class="badge bg-success">28 Aug</span> Ticket Created</li>
+              <li class="list-group-item"><span class="badge bg-info">29 Aug</span> Assigned to John Doe</li>
+              <li class="list-group-item"><span class="badge bg-warning">30 Aug</span> Escalated to Lead</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- view -->
+    <!-- assign -->
+    <div class="modal fade ticketAssignModal" id="" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title"><i class="bi bi-person-plus"></i> Assign Ticket</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label class="form-label">Ticket ID</label>
+                <input type="text" class="form-control" value="#TCKT-12345" readonly>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Assign To</label>
+                <select class="form-select">
+                  <option selected disabled>Select Helpdesk User</option>
+                  <option>John Doe</option>
+                  <option>Jane Smith</option>
+                  <option>David Kumar</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-success w-100">Assign</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- assign -->
+    <!-- re-assign -->
+    <div class="modal fade ticketReassignModal" id="" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-warning text-dark">
+            <h5 class="modal-title"><i class="bi bi-arrow-repeat"></i> Reassign Ticket</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label class="form-label">Current Assignee</label>
+                <input type="text" class="form-control" value="John Doe" readonly>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Reassign To</label>
+                <select class="form-select">
+                  <option selected disabled>Select New Assignee</option>
+                  <option>Jane Smith</option>
+                  <option>David Kumar</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-warning w-100">Reassign</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- re-assign -->
+    <!-- escalate -->
+    <div class="modal fade ticketEscalateModal" id="" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title"><i class="bi bi-exclamation-triangle"></i> Escalate Ticket</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label class="form-label">Reason for Escalation</label>
+                <textarea class="form-control" rows="3" placeholder="Enter reason..."></textarea>
+              </div>
+              <button type="submit" class="btn btn-danger w-100">Escalate</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- escalate -->
+    <!-- close -->
+    <div class="modal fade ticketCloseModal" id="" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-secondary text-white">
+            <h5 class="modal-title"><i class="bi bi-check2-circle"></i> Close Ticket</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label class="form-label">Resolution Notes</label>
+                <textarea class="form-control" rows="3" placeholder="Enter resolution..."></textarea>
+              </div>
+              <button type="submit" class="btn btn-secondary w-100">Close Ticket</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- close -->
+    <!-- qc -->
+    <!-- Quality Check Modal -->
+    <div class="modal fade ticketQCModal" id="" tabindex="-1" aria-labelledby="ticketQCModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-dark text-white">
+            <h5 class="modal-title" id="ticketQCModalLabel">
+              <i class="bi bi-clipboard-check me-2"></i> Ticket Quality Check
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="qcForm">
+              <div class="row g-3">
+                <!-- Ticket ID -->
+                <div class="col-md-6">
+                  <label for="qcTicketId" class="form-label">Ticket ID</label>
+                  <input type="text" class="form-control" id="qcTicketId" readonly>
+                </div>
+                <!-- QC Status -->
+                <div class="col-md-6">
+                  <label for="qcStatus" class="form-label">QC Status</label>
+                  <select id="qcStatus" class="form-select" required>
+                    <option value="">Select Status</option>
+                    <option value="pass">Pass</option>
+                    <option value="fail">Fail</option>
+                    <option value="review">Needs Review</option>
+                  </select>
+                </div>
+                <!-- QC Remarks -->
+                <div class="col-12">
+                  <label for="qcRemarks" class="form-label">QC Remarks</label>
+                  <textarea class="form-control" id="qcRemarks" rows="3" placeholder="Enter remarks..."></textarea>
+                </div>
+                <!-- QC By -->
+                <div class="col-md-6">
+                  <label for="qcBy" class="form-label">QC By</label>
+                  <input type="text" class="form-control" id="qcBy" value="Current User" readonly>
+                </div>
+                <!-- QC Date -->
+                <div class="col-md-6">
+                  <label for="qcDate" class="form-label">QC Date</label>
+                  <input type="text" class="form-control" id="qcDate" value="2025-08-30" readonly>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-dark" form="qcForm">
+            <i class="bi bi-check2-circle me-1"></i> Submit QC
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- qc -->
+    </div>
+    <!-- Footer -->
+    <footer>
+      &copy; 2025 My Dashboard. All rights reserved.
+    </footer>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+      // Sidebar toggle
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const sidebar = document.getElementById('sidebar');
+      
+      sidebarToggle.addEventListener('click', () => {
+        if (window.innerWidth < 992) {
+          // Mobile: slide in/out
+          sidebar.classList.toggle('show');
+        } else {
+          // Desktop: collapse sidebar
+          document.body.classList.toggle('sidebar-collapsed');
+        }
+      });
+      
+      // Close mobile sidebar when clicking outside
+      document.addEventListener('click', function(e) {
+        if (window.innerWidth < 992) {
+          if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+            sidebar.classList.remove('show');
+          }
+        }
+      });
+      
+      // Display current date and time
+      function updateDateTime() {
+        const now = new Date();
+        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('currentDateTime').textContent = now.toLocaleDateString(undefined, options) + ' ' + timeString;
+      }
+      setInterval(updateDateTime, 1000);
+      updateDateTime();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TNeGA Official Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+     <style>
+.timeline {
+  position: relative;
+  margin-left: 20px;
+  padding-left: 20px;
+  border-left: 2px solid #dee2e6;
+}
+.timeline-item {
+  opacity: 0;
+  transform: translateX(-30px);
+  margin-bottom: 20px;
+  transition: all 0.5s ease;
+}
+.timeline-item.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+.timeline-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  position: absolute;
+  left: -9px;
+  top: 0;
+}
+.timeline-content {
+  padding-left: 20px;
+  font-size: 14px;
+  color: #495057;
+}
+</style>
+  <style>
+    body {
+      background: #f8f9fa;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .card {
+      border: none;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    .stat-card {
+      text-align: center;
+      padding: 25px 15px;
+    }
+    .stat-card h3 {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #2b4c7e;
+    }
+    .stat-card p {
+      margin: 0;
+      font-size: 15px;
+      color: #6c757d;
+    }
+    .chart-wrapper {
+      min-height: 350px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .loading {
+      height: 350px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      font-size: 18px;
+    }
+  </style>
+  <style>
+    :root{
+      --brand-1: #08306b;   /* deep navy */
+      --brand-2: #2b7bff;   /* bright blue */
+      --accent: #00b4d8;
+      --muted: #6c757d;
+      --card-radius: 12px;
+    }
+
+    body {
+      font-family: "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, #f4f6fb 0%, #eef3fb 100%);
+      color: #24323a;
+    }
+
+    /* Header */
+    header.app-header {
+      background: linear-gradient(90deg, var(--brand-1), var(--brand-2));
+      color: #fff;
+      padding: 12px 20px;
+      box-shadow: 0 6px 18px rgba(11,37,97,0.12);
+      position: sticky;
+      top: 0;
+      z-index: 1050;
+    }
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .brand img { height:40px; width:40px; border-radius:6px; background:#fff; padding:4px; }
+    .datetime { font-size:0.9rem; opacity:0.95; color:rgba(255,255,255,0.9); }
+
+    /* Main layout */
+    .container-main { padding: 28px 20px; max-width:1200px; margin:0 auto; }
+
+    /* Summary cards */
+    .summary-card {
+      border-radius: var(--card-radius);
+      background: #fff;
+      padding:18px;
+      box-shadow: 0 6px 20px rgba(12,35,75,0.06);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .summary-card:hover { transform: translateY(-6px); box-shadow: 0 14px 30px rgba(12,35,75,0.10); }
+    .summary-icon {
+      width:56px; height:56px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+      color:#fff;font-size:1.25rem;
+    }
+    .muted { color:var(--muted); }
+
+    /* Charts area */
+    .card-chart {
+      border-radius: var(--card-radius);
+      overflow:hidden;
+      background:#fff;
+      box-shadow: 0 8px 24px rgba(11,37,97,0.05);
+      padding:14px;
+    }
+
+    /* Table */
+    .table thead { background: linear-gradient(90deg, #0d6efd, #2b7bff); color:#fff; }
+    .legend { font-size:0.85rem; }
+    .legend .badge { border-radius:8px; padding:6px 10px; margin-right:8px; }
+
+    /* Footer */
+    footer.site-footer { margin-top:28px; text-align:center; color:#7a8b96; padding:18px 0; font-size:0.9rem; }
+
+    /* Buttons fix - keep solid on hover */
+    .btn-solid {
+      background: var(--brand-1);
+      color:#fff;
+      border-radius:10px;
+      border: none;
+      transition: background .18s ease;
+    }
+    .btn-solid:hover { background: #061a3a; color:#fff; }
+
+    /* Small responsive tweaks */
+    @media (max-width: 991px) {
+      .container-main { padding:16px; }
+      .summary-icon { width:48px;height:48px;font-size:1.1rem; }
+    }
+  </style>
+
+
+    <style>
+      html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f1f3f6;
+      color: #333;
+      }
+      body {
+      display: flex;
+      flex-direction: column;
+      padding-top: 70px;
+      transition: all 0.3s;
+      }
+      /* Header */
+      nav.navbar {
+      background: linear-gradient(90deg, #4b6cb7, #182848);
+      color: #fff;
+      z-index: 1000;
+      padding: 0.4rem 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      nav.navbar .navbar-brand, nav.navbar .btn, nav.navbar span {
+      color: #fff;
+      }
+      nav.navbar .btn-light {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #fff;
+      }
+      nav.navbar .btn-light:hover {
+      background: rgba(255,255,255,0.25);
+      }
+      /* Sidebar */
+      #sidebar {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 220px;
+      height: calc(100% - 70px);
+      background: #fff;
+      padding-top: 1rem;
+      transition: all 0.3s;
+      overflow-y: auto;
+      border-right: 1px solid #e0e0e0;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+      z-index: 999;
+      }
+      #sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: #495057;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 8px;
+      margin: 4px 10px;
+      transition: all 0.2s ease-in-out;
+      }
+      #sidebar a:hover {
+      background: #4b6cb7;
+      color: #fff;
+      transform: translateX(5px);
+      }
+      #sidebar a.active {
+      background: #182848;
+      color: white;
+      }
+      #sidebar i {
+      margin-right: 12px;
+      font-size: 1.2rem;
+      }
+      .sidebar-collapsed #sidebar a {
+      padding: 12px 0px;
+      } 
+      /* Collapsed sidebar */
+      body.sidebar-collapsed #sidebar {
+      width: 60px;
+      }
+      body.sidebar-collapsed #sidebar a span { display: none; }
+      body.sidebar-collapsed #sidebar a i {
+      margin-right: 0;
+      width: 100%;
+      text-align: center;
+      }
+      /* Main content */
+      #mainContent {
+      margin-left: 220px;
+      padding: 30px;
+      flex: 1;
+      transition: all 0.3s;
+      }
+      body.sidebar-collapsed #mainContent { margin-left: 60px; }
+      /* Cards for main content */
+      .card {
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      }
+      /* Footer */
+      footer {
+      background: #fff;
+      text-align: center;
+      padding: 15px;
+      border-top: 1px solid #ddd;
+      width: 100%;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+      }
+      /* Mobile responsiveness */
+      @media (max-width: 992px) {
+      #sidebar {
+      left: -100%;
+      top: 0;
+      width: 220px;
+      height: 100%;
+      border-right: none;
+      box-shadow: 2px 0 15px rgba(0,0,0,0.2);
+      z-index: 9999; 
+      }
+      #sidebar.show { left: 0; }
+      #mainContent { margin-left: 0; padding: 20px 10px; }
+      body.sidebar-collapsed #mainContent { margin-left: 0; }
+      }
+      @media (max-width: 768px) {
+      #currentDateTime { display: none; }
+      .navbar .fw-bold { font-size: 1.1rem; }
+      #sidebarToggle { padding: 0.35rem 0.6rem; }
+      .dropdown-toggle span { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container-fluid d-flex align-items-center">
+        <button class="btn btn-light" id="sidebarToggle">
+        <i class="bi bi-list fs-4"></i>
+        </button>
+        <span class="fw-bold ms-3 fs-5">TNeGA Official Dashboard</span>
+        <div class="ms-auto d-flex align-items-center gap-3">
+          <span id="currentDateTime" class="me-3"></span>
+          <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
+            <i class="bi bi-person-circle fs-4"></i> <span class="d-none d-lg-inline fw-semibold">John</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+              <!-- <li><a class="dropdown-item" href="profile.html">Profile</a></li> -->
+              <li><a class="dropdown-item" href="index.html">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- Sidebar -->
+   <div id="sidebar">
+  <a href="citizen-dashboard.html" class="active">
+    <i class="bi bi-people"></i><span>Citizen Dashboard</span>
+  </a>
+  <a href="citizen-report.html">
+    <i class="bi bi-file-earmark-text"></i><span>Citizen Report</span>
+  </a>
+
+  <a href="cm-helpline-dashboard.html">
+    <i class="bi bi-telephone-inbound"></i><span>CM Helpline Dashboard</span>
+  </a>
+  <a href="cm-helpline-report.html">
+    <i class="bi bi-clipboard-data"></i><span>CM Helpline Report</span>
+  </a>
+
+  <a href="department-dashboard.html">
+    <i class="bi bi-building"></i><span>Department Dashboard</span>
+  </a>
+  <a href="department-report.html">
+    <i class="bi bi-journal-text"></i><span>Department Report</span>
+  </a>
+
+  <a href="edm-dashboard.html">
+    <i class="bi bi-lightning"></i><span>EDM Dashboard</span>
+  </a>
+  <a href="edm-report.html">
+    <i class="bi bi-bar-chart-line"></i><span>EDM Report</span>
+  </a>
+
+  <a href="helpdesk-dashboard.html">
+    <i class="bi bi-headset"></i><span>Helpdesk Dashboard</span>
+  </a>
+  <a href="helpdesk-report.html">
+    <i class="bi bi-file-earmark-bar-graph"></i><span>Helpdesk Report</span>
+  </a>
+
+  <a href="helpdesk-lead-dashboard.html">
+    <i class="bi bi-person-badge"></i><span>Helpdesk Lead Dashboard</span>
+  </a>
+  <a href="helpdesk-lead-report.html">
+    <i class="bi bi-clipboard-check"></i><span>Helpdesk Lead Report</span>
+  </a>
+
+  <a href="operator-dashboard.html">
+    <i class="bi bi-person-workspace"></i><span>Operator Dashboard</span>
+  </a>
+  <a href="operator-report.html">
+    <i class="bi bi-journal-check"></i><span>Operator Report</span>
+  </a>
+</div>
+
+    <!-- Main Content -->
+    <div id="mainContent">
+      <!-- Top summary -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-3" data-aos="fade-up">
+          <div class="summary-card d-flex align-items-center gap-3">
+            <div class="summary-icon" style="background:linear-gradient(135deg,var(--brand-2),var(--brand-1));">
+              <i class="bi bi-journal-text"></i>
+            </div>
+            <div>
+              <div class="muted small">Total Tickets Raised</div>
+              <div style="font-weight:700; font-size:1.45rem;" id="totalTickets">120</div>
+              <small class="text-muted">All citizens (statewide)</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3" data-aos="fade-up" data-aos-delay="80">
+          <div class="summary-card d-flex align-items-center gap-3">
+            <div class="summary-icon" style="background:linear-gradient(135deg,#198754,#2bb673);">
+              <i class="bi bi-check2-circle"></i>
+            </div>
+            <div>
+              <div class="muted small">Total Resolved</div>
+              <div style="font-weight:700; font-size:1.45rem;" id="resolvedTickets">63</div>
+              <small class="text-muted">Successfully closed</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3" data-aos="fade-up" data-aos-delay="160">
+          <div class="summary-card d-flex align-items-center gap-3">
+            <div class="summary-icon" style="background:linear-gradient(135deg,#ffc107,#ffb703);">
+              <i class="bi bi-clock-history"></i>
+            </div>
+            <div>
+              <div class="muted small">Pending Tickets</div>
+              <div style="font-weight:700; font-size:1.45rem;" id="pendingTickets">30</div>
+              <small class="text-muted">Awaiting action</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3" data-aos="fade-up" data-aos-delay="240">
+          <div class="summary-card d-flex align-items-center gap-3">
+            <div class="summary-icon" style="background:linear-gradient(135deg,#6c757d,#495057);">
+              <i class="bi bi-speedometer2"></i>
+            </div>
+            <div>
+              <div class="muted small">Avg Resolution Time</div>
+              <div style="font-weight:700; font-size:1.45rem;" id="avgResolution">28 hrs</div>
+              <small class="text-muted">Average across districts</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Filters & legend -->
+      <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+        <div class="d-flex gap-2 align-items-center flex-wrap">
+          <div class="input-group input-group-sm me-2">
+            <span class="input-group-text bg-white"><i class="bi bi-calendar-event"></i></span>
+            <input type="date" id="fromDate" class="form-control form-control-sm" />
+            <input type="date" id="toDate" class="form-control form-control-sm" />
+          </div>
+          <select id="districtFilter" class="form-select form-select-sm w-auto">
+            <option value="">All Districts</option>
+            <option>Chennai</option>
+            <option>Coimbatore</option>
+            <option>Madurai</option>
+            <option>Nilgiris</option>
+          </select>
+          <!-- <select id="departmentFilter" class="form-select form-select-sm w-auto">
+            <option value="">All Departments</option>
+            <option>Municipal</option>
+            <option>Water</option>
+            <option>Electricity</option>
+            <option>PWD</option>
+            </select> -->
+          <button class="btn btn-solid btn-sm" id="applyFilters">Apply Filters</button>
+          <button class="btn btn-outline-secondary btn-sm" id="resetFilters">Reset</button>
+        </div>
+        <div class="text-end">
+          <div class="legend">
+            <span class="badge bg-danger">Critical / High</span>
+            <span class="badge bg-warning text-dark">48+ hrs</span>
+            <span class="badge bg-success">Resolved</span>
+          </div>
+        </div>
+      </div>
+      <!-- Charts Row -->
+      <div class="row g-3 mb-4">
+        <!-- District Chart -->
+        <div class="card mb-4 p-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold">District-wise Summary</h5>
+            <select id="districtFilter" class="form-select w-auto">
+              <option>Top 5 Districts</option>
+              <option>Chennai</option>
+              <option>Coimbatore</option>
+              <option>Madurai</option>
+              <option>Salem</option>
+              <option>Tiruchirappalli</option>
+            </select>
+          </div>
+          <div id="districtChart" class="chart-wrapper"></div>
+        </div>
+        <!-- Department Chart -->
+        <!--   <div class="card p-3">
+          <h5 class="fw-bold mb-3">Department-wise Performance</h5>
+          <div id="deptChart" class="chart-wrapper"></div>
+          </div> -->
+      </div>
+      <!-- Recent escalations + top districts cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-lg-6" data-aos="fade-up">
+          <div class="card-chart p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5 class="mb-0">Recent Escalations</h5>
+              <small class="muted">Latest escalated tickets requiring attention</small>
+            </div>
+            <div class="list-group">
+              <div class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="fw-semibold">REQ-2025-00127</div>
+                  <div class="text-muted small">Chennai — Water Supply — Pipeline Leak</div>
+                  <div class="text-muted small">Raised by: Citizen (2025-08-24 09:30 AM)</div>
+                </div>
+                <div class="text-end">
+                  <div><span class="badge bg-danger">Escalated</span></div>
+                  <div class="mt-2"><button class="btn btn-sm btn-outline-primary">View</button></div>
+                </div>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="fw-semibold">REQ-2025-00103</div>
+                  <div class="text-muted small">Coimbatore — Road Repair — Potholes</div>
+                  <div class="text-muted small">Raised by: EDM (2025-08-22 03:15 PM)</div>
+                </div>
+                <div class="text-end">
+                  <div><span class="badge bg-warning text-dark">48+ hrs</span></div>
+                  <div class="mt-2"><button class="btn btn-sm btn-outline-primary">View</button></div>
+                </div>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="fw-semibold">REQ-2025-00111</div>
+                  <div class="text-muted small">Madurai — Power Outage — Transformer Fault</div>
+                  <div class="text-muted small">Raised by: Call Centre (2025-08-21 10:00 AM)</div>
+                </div>
+                <div class="text-end">
+                  <div><span class="badge bg-danger">Critical</span></div>
+                  <div class="mt-2"><button class="btn btn-sm btn-outline-primary">View</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="80">
+          <div class="card-chart p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5 class="mb-0">Top Districts — Ticket Count</h5>
+              <small class="muted">Where most tickets are reported</small>
+            </div>
+            <div class="row g-2">
+              <div class="col-sm-6">
+                <div class="summary-card p-3">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="flex-grow-1">
+                      <div class="muted small">Chennai</div>
+                      <div class="fw-bold fs-5">28 Tickets</div>
+                      <div class="text-muted small">Resolved 18 • Pending 10</div>
+                    </div>
+                    <div class="text-end">
+                      <div class="badge bg-danger">Critical 6</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="summary-card p-3">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="flex-grow-1">
+                      <div class="muted small">Coimbatore</div>
+                      <div class="fw-bold fs-5">22 Tickets</div>
+                      <div class="text-muted small">Resolved 14 • Pending 8</div>
+                    </div>
+                    <div class="text-end">
+                      <div class="badge bg-warning text-dark">48+ hrs 3</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="summary-card p-3">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="flex-grow-1">
+                      <div class="muted small">Madurai</div>
+                      <div class="fw-bold fs-5">18 Tickets</div>
+                      <div class="text-muted small">Resolved 10 • Pending 8</div>
+                    </div>
+                    <div class="text-end">
+                      <div class="badge bg-info text-dark">Medium 7</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="summary-card p-3">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="flex-grow-1">
+                      <div class="muted small">Nilgiris</div>
+                      <div class="fw-bold fs-5">10 Tickets</div>
+                      <div class="text-muted small">Resolved 8 • Pending 2</div>
+                    </div>
+                    <div class="text-end">
+                      <div class="badge bg-success">Stable</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Recent Tickets Table -->
+      <div class="card-chart p-3 mb-3" >
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0">Recent Tickets (All)</h5>
+          <div class="muted small">Showing latest 10 tickets</div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-striped align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th>Request #</th>
+                <th>District</th>
+                <th>Department</th>
+                <th>Issue</th>
+                <th>Priority</th>
+                <th>Created On</th>
+                <th>Assigned To</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>REQ-2025-00127</td>
+                <td>Chennai</td>
+                <td>Water</td>
+                <td>Pipeline leakage</td>
+                <td><span class="badge bg-danger">Critical</span></td>
+                <td>2025-08-24 09:30</td>
+                <td>Helpdesk A</td>
+                <td><span class="badge bg-warning text-dark">Escalated</span></td>
+                <td><button class="btn btn-sm btn-outline-light btn-solid">View</button></td>
+              </tr>
+              <tr>
+                <td>REQ-2025-00103</td>
+                <td>Coimbatore</td>
+                <td>PWD</td>
+                <td>Potholes</td>
+                <td><span class="badge bg-warning text-dark">High</span></td>
+                <td>2025-08-22 15:10</td>
+                <td>Helpdesk B</td>
+                <td><span class="badge bg-primary">In-Progress</span></td>
+                <td><button class="btn btn-sm btn-outline-light btn-solid">View</button></td>
+              </tr>
+              <tr>
+                <td>REQ-2025-00111</td>
+                <td>Madurai</td>
+                <td>Electricity</td>
+                <td>Transformer fault</td>
+                <td><span class="badge bg-danger">Critical</span></td>
+                <td>2025-08-21 10:00</td>
+                <td>Helpdesk C</td>
+                <td><span class="badge bg-success">Resolved</span></td>
+                <td><button class="btn btn-sm btn-outline-light btn-solid">View</button></td>
+              </tr>
+              <tr>
+                <td>REQ-2025-00133</td>
+                <td>Nilgiris</td>
+                <td>Municipal</td>
+                <td>Garbage collection</td>
+                <td><span class="badge bg-info text-dark">Medium</span></td>
+                <td>2025-08-23 11:45</td>
+                <td>Helpdesk D</td>
+                <td><span class="badge bg-secondary">New</span></td>
+                <td><button class="btn btn-sm btn-outline-light btn-solid">View</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- Footer -->
+    <footer>
+      &copy; 2025 My Dashboard. All rights reserved.
+    </footer>
+
+     <!-- Modal -->
+    <div class="modal fade ticketModal" tabindex="-1" aria-labelledby="ticketModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="ticketModalLabel">Ticket Details</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Ticket Info -->
+            <div class="row mb-3">
+              <div class="col-md-6"><strong>Ticket ID:</strong> <span id="modalTicketID"></span></div>
+              <div class="col-md-6"><strong>District:</strong> <span id="modalDistrict"></span></div>
+              <div class="col-md-6"><strong>Department:</strong> <span id="modalDept"></span></div>
+              <div class="col-md-6"><strong>Issue Type:</strong> <span id="modalIssue"></span></div>
+              <div class="col-md-6"><strong>Priority:</strong> <span id="modalPriority"></span></div>
+              <div class="col-md-6"><strong>Status:</strong> <span id="modalStatus"></span></div>
+              <div class="col-md-12"><strong>Reported By:</strong> <span id="modalReportedBy"></span></div>
+              <div class="col-md-12"><strong>Description:</strong> <span id="modalDesc"></span></div>
+            </div>
+            <!-- Timeline -->
+            <h6 class="mt-4">Timeline</h6>
+            <div class="timeline">
+              <div class="timeline-item" data-time="2025-08-24 09:30">
+                <div class="timeline-dot bg-success"></div>
+                <div class="timeline-content">Ticket Raised</div>
+              </div>
+              <div class="timeline-item" data-time="2025-08-24 11:00">
+                <div class="timeline-dot bg-warning"></div>
+                <div class="timeline-content">Assigned to Helpdesk A</div>
+              </div>
+              <div class="timeline-item" data-time="2025-08-24 13:00">
+                <div class="timeline-dot bg-danger"></div>
+                <div class="timeline-content">Escalated</div>
+              </div>
+              <div class="timeline-item" data-time="2025-08-24 16:00">
+                <div class="timeline-dot bg-primary"></div>
+                <div class="timeline-content">Resolved</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Timeline CSS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+      // Sidebar toggle
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const sidebar = document.getElementById('sidebar');
+      
+      sidebarToggle.addEventListener('click', () => {
+        if (window.innerWidth < 992) {
+          // Mobile: slide in/out
+          sidebar.classList.toggle('show');
+        } else {
+          // Desktop: collapse sidebar
+          document.body.classList.toggle('sidebar-collapsed');
+        }
+      });
+      
+      // Close mobile sidebar when clicking outside
+      document.addEventListener('click', function(e) {
+        if (window.innerWidth < 992) {
+          if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+            sidebar.classList.remove('show');
+          }
+        }
+      });
+      
+      // Display current date and time
+      function updateDateTime() {
+        const now = new Date();
+        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('currentDateTime').textContent = now.toLocaleDateString(undefined, options) + ' ' + timeString;
+      }
+      setInterval(updateDateTime, 1000);
+      updateDateTime();
+    </script>
+    <script>
+      // Default District Chart
+      var districtOptions = {
+        chart: { type: 'bar', height: 350 },
+        series: [{
+          name: 'Tickets',
+          data: [1200, 950, 870, 720, 680] // static demo data
+        }],
+        xaxis: { categories: ['Chennai', 'Coimbatore', 'Madurai', 'Salem', 'Tiruchirappalli'] },
+        colors: ['#2b4c7e']
+      };
+      var districtChart = new ApexCharts(document.querySelector("#districtChart"), districtOptions);
+      districtChart.render();
+      
+      // Department Chart
+      // var deptOptions = {
+      //   chart: { type: 'donut', height: 350 },
+      //   series: [44, 55, 41, 17, 15],
+      //   labels: ['Revenue', 'Health', 'Education', 'Agriculture', 'Transport'],
+      //   colors: ['#28a745', '#ffc107', '#007bff', '#fd7e14', '#6f42c1']
+      // };
+      // var deptChart = new ApexCharts(document.querySelector("#deptChart"), deptOptions);
+      // deptChart.render();
+      
+      // Dropdown filter logic
+      document.getElementById("districtFilter").addEventListener("change", function(){
+        const val = this.value;
+        let categories = [];
+        let data = [];
+        if(val === "Chennai") { categories = ['Zone 1','Zone 2','Zone 3']; data=[500,300,400]; }
+        else if(val === "Coimbatore") { categories = ['North','Central','South']; data=[350,280,200]; }
+        else { categories = ['Chennai','Coimbatore','Madurai','Salem','Tiruchirappalli']; data=[1200,950,870,720,680]; }
+      
+        districtChart.updateOptions({
+          series: [{ data: data }],
+          xaxis: { categories: categories }
+        });
+      });
+    </script>
+    <script>
+      AOS.init({ duration: 900, once: true });
+    </script>
+    <!-- jQuery + Script -->
+    <script>
+      $(document).ready(function(){
+        $(".btn-solid").click(function(){
+          // Fetch row data
+          var $row = $(this).closest("tr");
+          $("#modalTicketID").text($row.find("td:eq(0)").text());
+          $("#modalDistrict").text($row.find("td:eq(1)").text());
+          $("#modalDept").text($row.find("td:eq(2)").text());
+          $("#modalIssue").text($row.find("td:eq(3)").text());
+          $("#modalPriority").html($row.find("td:eq(4)").html());
+          $("#modalStatus").html($row.find("td:eq(7)").html());
+          $("#modalReportedBy").text($row.find("td:eq(6)").text());
+          $("#modalDesc").text($row.find("td:eq(3)").text());
+      
+          // Show modal
+          $(".ticketModal").first().modal("show");
+      
+          // Animate timeline
+          $(".timeline-item").removeClass("active");
+          $(".timeline-item").each(function(i){
+            var item = $(this);
+            setTimeout(function(){ item.addClass("active"); }, i*500); // staggered animation
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

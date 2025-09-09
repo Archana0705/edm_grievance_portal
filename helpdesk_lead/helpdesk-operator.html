@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Enhanced Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+      :root{
+      --card-radius: 14px;
+      --soft-shadow: 0 8px 24px rgba(0,0,0,.06);
+      --accent: #3b82f6;
+      }
+     
+      .page-title { font-weight:800; letter-spacing:.2px; }
+      .kpi-card{ border-radius: var(--card-radius); box-shadow: var(--soft-shadow); background:#fff; border:0;}
+      .kpi-icon{ width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.25rem;}
+      .kpi-meta{ font-size:.85rem; color:#6b7280; }
+      .filter-card{ border-radius:12px; box-shadow:0 6px 20px rgba(18,38,63,0.04); background:#fff; padding:14px; }
+      .chart-card{ border-radius:12px; box-shadow:0 6px 20px rgba(18,38,63,0.04); background:#fff; padding:12px; }
+      .table thead th{ background:#0d6efd; color:#fff; border:0; vertical-align: middle; }
+      .btn-compact{ padding:.35rem .65rem; font-size:.85rem; }
+      .small-muted{ color:#6b7280; font-size:.85rem; }
+      .badge-role { background:#eef2ff; color:#312e81; font-weight:600; border-radius: 999px; padding:.35rem .6rem; }
+    </style>
+    <style>
+      html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f1f3f6;
+      color: #333;
+      }
+      body {
+      display: flex;
+      flex-direction: column;
+      padding-top: 70px;
+      transition: all 0.3s;
+      }
+      /* Header */
+      nav.navbar {
+      background: linear-gradient(90deg, #4b6cb7, #182848);
+      color: #fff;
+      z-index: 1000;
+      padding: 0.4rem 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      nav.navbar .navbar-brand, nav.navbar .btn, nav.navbar span {
+      color: #fff;
+      }
+      nav.navbar .btn-light {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #fff;
+      }
+      nav.navbar .btn-light:hover {
+      background: rgba(255,255,255,0.25);
+      }
+      /* Sidebar */
+      #sidebar {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 220px;
+      height: calc(100% - 70px);
+      background: #fff;
+      padding-top: 1rem;
+      transition: all 0.3s;
+      overflow-y: auto;
+      border-right: 1px solid #e0e0e0;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+      z-index: 999;
+      }
+      #sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: #495057;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 8px;
+      margin: 4px 10px;
+      transition: all 0.2s ease-in-out;
+      }
+      #sidebar a:hover {
+      background: #4b6cb7;
+      color: #fff;
+      transform: translateX(5px);
+      }
+      #sidebar a.active {
+      background: #182848;
+      color: white;
+      }
+      #sidebar i {
+      margin-right: 12px;
+      font-size: 1.2rem;
+      }
+      .sidebar-collapsed #sidebar a {
+      padding: 12px 0px;
+      } 
+      /* Collapsed sidebar */
+      body.sidebar-collapsed #sidebar {
+      width: 60px;
+      }
+      body.sidebar-collapsed #sidebar a span { display: none; }
+      body.sidebar-collapsed #sidebar a i {
+      margin-right: 0;
+      width: 100%;
+      text-align: center;
+      }
+      /* Main content */
+      #mainContent {
+      margin-left: 220px;
+      padding: 30px;
+      flex: 1;
+      transition: all 0.3s;
+      }
+      body.sidebar-collapsed #mainContent { margin-left: 60px; }
+      /* Cards for main content */
+      .card {
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      }
+      /* Footer */
+      footer {
+      background: #fff;
+      text-align: center;
+      padding: 15px;
+      border-top: 1px solid #ddd;
+      width: 100%;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+      }
+      /* Mobile responsiveness */
+      @media (max-width: 992px) {
+      #sidebar {
+      left: -100%;
+      top: 0;
+      width: 220px;
+      height: 100%;
+      border-right: none;
+      box-shadow: 2px 0 15px rgba(0,0,0,0.2);
+      z-index: 9999; 
+      }
+      #sidebar.show { left: 0; }
+      #mainContent { margin-left: 0; padding: 20px 10px; }
+      body.sidebar-collapsed #mainContent { margin-left: 0; }
+      }
+      @media (max-width: 768px) {
+      #currentDateTime { display: none; }
+      .navbar .fw-bold { font-size: 1.1rem; }
+      #sidebarToggle { padding: 0.35rem 0.6rem; }
+      .dropdown-toggle span { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container-fluid d-flex align-items-center">
+        <button class="btn btn-light" id="sidebarToggle">
+        <i class="bi bi-list fs-4"></i>
+        </button>
+        <span class="fw-bold ms-3 fs-5">EDM Dashboard</span>
+        <div class="ms-auto d-flex align-items-center gap-3">
+          <span id="currentDateTime" class="me-3"></span>
+          <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
+            <i class="bi bi-person-circle fs-4"></i> <span class="d-none d-lg-inline fw-semibold">John</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+              <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+              <li><a class="dropdown-item" href="index.html">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- Sidebar -->
+<div id="sidebar">
+  <a href="dashboard.html" >
+    <i class="bi bi-house"></i><span>Dashboard</span>
+  </a>
+
+  <a href="ticket-management.html">
+    <i class="bi bi-ticket-detailed"></i><span>Ticket Management</span>
+  </a>
+
+  <a href="user-management.html">
+    <i class="bi bi-people"></i><span>User Management</span>
+  </a>
+
+  <a href="quality-check.html">
+    <i class="bi bi-check2-square"></i><span>Quality Check</span>
+  </a>
+
+  <a href="helpdesk-operator.html" class="active">
+    <i class="bi bi-headset"></i><span>Helpdesk Operator</span>
+  </a>
+
+  <a href="report.html">
+    <i class="bi bi-bar-chart-line"></i><span>Report</span>
+  </a>
+
+  <a href="profile.html">
+    <i class="bi bi-person-circle"></i><span>Profile</span>
+  </a>
+</div>
+
+    <!-- Main Content -->
+    <div id="mainContent">
+      <!-- Quality Check Module -->
+      <div class="container-fluid py-4">
+        <!-- KPIs -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-2">
+            <div class="card text-center shadow-sm">
+              <div class="card-body">
+                <h6>Total Resolved</h6>
+                <h3>124</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="card text-center shadow-sm">
+              <div class="card-body">
+                <h6>QC Done</h6>
+                <h3>58</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="card text-center shadow-sm">
+              <div class="card-body">
+                <h6>Pending QC</h6>
+                <h3>66</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="card text-center shadow-sm">
+              <div class="card-body">
+                <h6>QC Pass %</h6>
+                <h3>85%</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="card text-center shadow-sm">
+              <div class="card-body">
+                <h6>QC Fail %</h6>
+                <h3>15%</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Tabs for QC -->
+        <ul class="nav nav-tabs mb-3" id="qcTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="resolved-tab" data-bs-toggle="tab" data-bs-target="#resolvedTickets" type="button" role="tab">
+            Resolved Tickets
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#qcHistory" type="button" role="tab">
+            QC History
+            </button>
+          </li>
+        </ul>
+        <div class="tab-content" id="qcTabsContent">
+          <!-- Resolved Tickets Tab -->
+          <div class="tab-pane fade show active" id="resolvedTickets" role="tabpanel">
+            <!-- Filters + Random Sampling -->
+            <div class="card shadow-sm mb-4">
+              <div class="card-body">
+                <div class="row g-3 align-items-end">
+                  <div class="col-md-3">
+                    <label class="form-label">Assignee</label>
+                    <select class="form-select">
+                      <option>All</option>
+                      <option>User 1</option>
+                      <option>User 2</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Category</label>
+                    <select class="form-select">
+                      <option>All</option>
+                      <option>Service</option>
+                      <option>Technical</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Date Range</label>
+                    <input type="date" class="form-control">
+                  </div>
+                  <div class="col-md-3 d-flex gap-2">
+                    <button class="btn btn-primary w-100">Apply Filters</button>
+                    <button class="btn btn-outline-secondary w-100">Reset</button>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <button class="btn btn-warning"><i class="bi bi-shuffle"></i> Pick Random Tickets for QC</button>
+                </div>
+              </div>
+            </div>
+            <!-- Resolved Tickets Table -->
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Resolved Tickets</h5>
+                <div class="table-responsive">
+                  <table class="table table-striped align-middle">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Priority</th>
+                        <th>Resolved By</th>
+                        <th>Resolved On</th>
+                        <th>QC Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>#1023</td>
+                        <td>Portal Login Issue</td>
+                        <td>Technical</td>
+                        <td>High</td>
+                        <td>Agent A</td>
+                        <td>2025-08-29</td>
+                        <td><span class="badge bg-secondary">Pending</span></td>
+                        <td>
+                          <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target=".qcModal">
+                          <i class="bi bi-check2-square"></i> QC
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>#1024</td>
+                        <td>Certificate Download</td>
+                        <td>Service</td>
+                        <td>Medium</td>
+                        <td>Agent B</td>
+                        <td>2025-08-28</td>
+                        <td><span class="badge bg-success">Pass</span></td>
+                        <td>
+                          <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target=".qcModal">
+                          <i class="bi bi-check2-square"></i> QC
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- QC History Tab -->
+          <div class="tab-pane fade" id="qcHistory" role="tabpanel">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title mb-3">QC History</h5>
+                <!-- Filter Bar -->
+                <div class="card p-3 mb-3 shadow-sm">
+                  <div class="row g-2">
+                    <div class="col-md-2">
+                      <select class="form-select">
+                        <option>QC Status</option>
+                        <option>Pass</option>
+                        <option>Fail</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <select class="form-select">
+                        <option>Auditor</option>
+                        <option>Admin</option>
+                        <option>Lead</option>
+                        <option>QC Team</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <input type="date" class="form-control" placeholder="From Date">
+                    </div>
+                    <div class="col-md-2">
+                      <input type="date" class="form-control" placeholder="To Date">
+                    </div>
+                    <div class="col-md-1 d-grid">
+                      <button class="btn btn-primary">Filter</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-striped align-middle">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Resolved By</th>
+                        <th>QC Status</th>
+                        <th>QC Remarks</th>
+                        <th>Audited By</th>
+                        <th>Audited On</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>#1001</td>
+                        <td>Password Reset Issue</td>
+                        <td>Technical</td>
+                        <td>Agent X</td>
+                        <td><span class="badge bg-success">Pass</span></td>
+                        <td>Resolution was correct and timely.</td>
+                        <td>Lead A</td>
+                        <td>2025-08-20</td>
+                      </tr>
+                      <tr>
+                        <td>#1002</td>
+                        <td>Application Error</td>
+                        <td>Service</td>
+                        <td>Agent Y</td>
+                        <td><span class="badge bg-danger">Fail</span></td>
+                        <td>Incomplete resolution, customer follow-up needed.</td>
+                        <td>Lead A</td>
+                        <td>2025-08-22</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- QC Modal -->
+      <div class="modal fade qcModal" tabindex="-1">
+        <div class="modal-dialog modal-md">
+          <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+              <h5 class="modal-title">Ticket Quality Check</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <label class="form-label">Ticket ID</label>
+                  <input type="text" class="form-control" value="#1023" readonly>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">QC Status</label>
+                  <select class="form-select">
+                    <option>Pass</option>
+                    <option>Fail</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Remarks</label>
+                  <textarea class="form-control" rows="3" placeholder="Enter remarks"></textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button class="btn btn-primary">Submit QC</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Footer -->
+    <footer>
+      &copy; 2025 My Dashboard. All rights reserved.
+    </footer>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+      // Sidebar toggle
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const sidebar = document.getElementById('sidebar');
+      
+      sidebarToggle.addEventListener('click', () => {
+        if (window.innerWidth < 992) {
+          // Mobile: slide in/out
+          sidebar.classList.toggle('show');
+        } else {
+          // Desktop: collapse sidebar
+          document.body.classList.toggle('sidebar-collapsed');
+        }
+      });
+      
+      // Close mobile sidebar when clicking outside
+      document.addEventListener('click', function(e) {
+        if (window.innerWidth < 992) {
+          if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+            sidebar.classList.remove('show');
+          }
+        }
+      });
+      
+      // Display current date and time
+      function updateDateTime() {
+        const now = new Date();
+        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('currentDateTime').textContent = now.toLocaleDateString(undefined, options) + ' ' + timeString;
+      }
+      setInterval(updateDateTime, 1000);
+      updateDateTime();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  </body>
+</html>

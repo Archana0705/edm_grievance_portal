@@ -1,0 +1,967 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Helpdesk Lead Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <style>
+      :root{
+        --card-radius: 14px;
+        --soft-shadow: 0 8px 24px rgba(0,0,0,.06);
+        --accent: #3b82f6;
+      }
+     
+      .page-title { font-weight:800; letter-spacing:.2px; }
+      .kpi-card{ border-radius: var(--card-radius); box-shadow: var(--soft-shadow); background:#fff; border:0;}
+      .kpi-icon{ width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.25rem;}
+      .kpi-meta{ font-size:.85rem; color:#6b7280; }
+      .filter-card{ border-radius:12px; box-shadow:0 6px 20px rgba(18,38,63,0.04); background:#fff; padding:14px; }
+      .chart-card{ border-radius:12px; box-shadow:0 6px 20px rgba(18,38,63,0.04); background:#fff; padding:12px; }
+      .table thead th{ background:#0d6efd; color:#fff; border:0; vertical-align: middle; }
+      .btn-compact{ padding:.35rem .65rem; font-size:.85rem; }
+      .small-muted{ color:#6b7280; font-size:.85rem; }
+      .badge-role { background:#eef2ff; color:#312e81; font-weight:600; border-radius: 999px; padding:.35rem .6rem; }
+      /* responsive tweaks */
+
+    </style>
+    <style>
+      html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f1f3f6;
+      color: #333;
+      }
+      body {
+      display: flex;
+      flex-direction: column;
+      padding-top: 70px;
+      transition: all 0.3s;
+      }
+      /* Header */
+      nav.navbar {
+      background: linear-gradient(90deg, #4b6cb7, #182848);
+      color: #fff;
+      z-index: 1000;
+      padding: 0.4rem 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      nav.navbar .navbar-brand, nav.navbar .btn, nav.navbar span {
+      color: #fff;
+      }
+      nav.navbar .btn-light {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #fff;
+      }
+      nav.navbar .btn-light:hover {
+      background: rgba(255,255,255,0.25);
+      }
+      /* Sidebar */
+      #sidebar {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 220px;
+      height: calc(100% - 70px);
+      background: #fff;
+      padding-top: 1rem;
+      transition: all 0.3s;
+      overflow-y: auto;
+      border-right: 1px solid #e0e0e0;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+      z-index: 999;
+      }
+      #sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: #495057;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 8px;
+      margin: 4px 10px;
+      transition: all 0.2s ease-in-out;
+      }
+      #sidebar a:hover {
+      background: #4b6cb7;
+      color: #fff;
+      transform: translateX(5px);
+      }
+      #sidebar a.active {
+      background: #182848;
+      color: white;
+      }
+      #sidebar i {
+      margin-right: 12px;
+      font-size: 1.2rem;
+      }
+      .sidebar-collapsed #sidebar a {
+      padding: 12px 0px;
+      } 
+      /* Collapsed sidebar */
+      body.sidebar-collapsed #sidebar {
+      width: 60px;
+      }
+      body.sidebar-collapsed #sidebar a span { display: none; }
+      body.sidebar-collapsed #sidebar a i {
+      margin-right: 0;
+      width: 100%;
+      text-align: center;
+      }
+      /* Main content */
+      #mainContent {
+      margin-left: 220px;
+      padding: 30px;
+      flex: 1;
+      transition: all 0.3s;
+      }
+      body.sidebar-collapsed #mainContent { margin-left: 60px; }
+      /* Cards for main content */
+      .card {
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      }
+      /* Footer */
+      footer {
+      background: #fff;
+      text-align: center;
+      padding: 15px;
+      border-top: 1px solid #ddd;
+      width: 100%;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+      }
+      /* Mobile responsiveness */
+      @media (max-width: 992px) {
+      #sidebar {
+      left: -100%;
+      top: 0;
+      width: 220px;
+      height: 100%;
+      border-right: none;
+      box-shadow: 2px 0 15px rgba(0,0,0,0.2);
+      z-index: 9999; 
+      }
+      #sidebar.show { left: 0; }
+      #mainContent { margin-left: 0; padding: 20px 10px; }
+      body.sidebar-collapsed #mainContent { margin-left: 0; }
+      }
+      @media (max-width: 768px) {
+      #currentDateTime { display: none; }
+      .navbar .fw-bold { font-size: 1.1rem; }
+      #sidebarToggle { padding: 0.35rem 0.6rem; }
+      .dropdown-toggle span { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container-fluid d-flex align-items-center">
+        <button class="btn btn-light" id="sidebarToggle">
+        <i class="bi bi-list fs-4"></i>
+        </button>
+        <span class="fw-bold ms-3 fs-5">EDM Dashboard</span>
+        <div class="ms-auto d-flex align-items-center gap-3">
+          <span id="currentDateTime" class="me-3"></span>
+          <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
+            <i class="bi bi-person-circle fs-4"></i> <span class="d-none d-lg-inline fw-semibold">John</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+              <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+              <li><a class="dropdown-item" href="index.html">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- Sidebar -->
+<div id="sidebar">
+  <a href="dashboard.html" class="active">
+    <i class="bi bi-house"></i><span>Dashboard</span>
+  </a>
+
+  <a href="ticket-management.html">
+    <i class="bi bi-ticket-detailed"></i><span>Ticket Management</span>
+  </a>
+
+  <a href="user-management.html">
+    <i class="bi bi-people"></i><span>User Management</span>
+  </a>
+
+  <a href="quality-check.html">
+    <i class="bi bi-check2-square"></i><span>Quality Check</span>
+  </a>
+
+  <a href="helpdesk-operator.html">
+    <i class="bi bi-headset"></i><span>Helpdesk Operator</span>
+  </a>
+
+  <a href="report.html">
+    <i class="bi bi-bar-chart-line"></i><span>Report</span>
+  </a>
+
+  <a href="profile.html">
+    <i class="bi bi-person-circle"></i><span>Profile</span>
+  </a>
+</div>
+
+    <!-- Main Content -->
+    <div id="mainContent">
+      <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="d-flex align-items-end justify-content-between mb-3">
+          <div>
+            <h2 class="page-title mb-1" data-aos="fade-down">Helpdesk Lead Dashboard</h2>
+            <div class="small-muted" data-aos="fade-down" data-aos-delay="40">
+              Team overview • Manage assignments, quality checks & escalations
+            </div>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-light btn-compact" id="btnQuickRefresh"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTicketModal">
+              <i class="bi bi-plus-circle"></i> Create Ticket
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="row g-3 mb-3">
+          <div class="col-md-3" data-aos="fade-up">
+            <div class="card kpi-card p-3">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="kpi-icon" style="background:var(--accent)"><i class="bi bi-collection"></i></div>
+                  <div>
+                    <div class="small-muted">Total Team Tickets</div>
+                    <div class="h4 fw-bold">521</div>
+                    <div class="small text-success">+4.2% (7d)</div>
+                  </div>
+                </div>
+                <div class="text-end small-muted">Last 7 days</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3" data-aos="fade-up" data-aos-delay="80">
+            <div class="card kpi-card p-3">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="kpi-icon" style="background:#0dcaf0"><i class="bi bi-clock-history"></i></div>
+                  <div>
+                    <div class="small-muted">Pending</div>
+                    <div class="h4 fw-bold">74</div>
+                    <div class="small text-danger">+1.1% (7d)</div>
+                  </div>
+                </div>
+                <div class="text-end small-muted">SLA watch</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3" data-aos="fade-up" data-aos-delay="160">
+            <div class="card kpi-card p-3">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="kpi-icon" style="background:#f59e0b"><i class="bi bi-tools"></i></div>
+                  <div>
+                    <div class="small-muted">In-Progress</div>
+                    <div class="h4 fw-bold">183</div>
+                    <div class="small text-muted">—</div>
+                  </div>
+                </div>
+                <div class="text-end small-muted">Team work</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3" data-aos="fade-up" data-aos-delay="240">
+            <div class="card kpi-card p-3">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="kpi-icon" style="background:#10b981"><i class="bi bi-check-circle"></i></div>
+                  <div>
+                    <div class="small-muted">Resolved (7d)</div>
+                    <div class="h4 fw-bold">264</div>
+                    <div class="small text-success">+8.6%</div>
+                  </div>
+                </div>
+                <div class="text-end small-muted">Quality checks</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-card mb-3" data-aos="fade-up">
+          <div class="row g-2 align-items-end">
+            <div class="col-lg-3 col-md-6">
+              <label class="form-label mb-1">Quick Range</label>
+              <div class="btn-group w-100">
+                <button class="btn btn-outline-primary btn-sm" id="qToday">Today</button>
+                <button class="btn btn-outline-primary btn-sm" id="qWeek">This Week</button>
+                <button class="btn btn-outline-primary btn-sm" id="qMonth">This Month</button>
+              </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+              <label class="form-label mb-1">From</label>
+              <input id="fromDate" type="date" class="form-control form-control-sm">
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+              <label class="form-label mb-1">To</label>
+              <input id="toDate" type="date" class="form-control form-control-sm">
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+              <label class="form-label mb-1">Status</label>
+              <select id="statusFilter" class="form-select form-select-sm">
+                <option value="">All Status</option>
+                <option>New</option>
+                <option>Pending</option>
+                <option>In-Progress</option>
+                <option>Resolved</option>
+                <option>Escalated</option>
+                <option>Closed</option>
+              </select>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+              <label class="form-label mb-1">Agent</label>
+              <select id="agentFilter" class="form-select form-select-sm">
+                <option value="">All Agents</option>
+                <option>Agent A</option>
+                <option>Agent B</option>
+                <option>Agent C</option>
+              </select>
+            </div>
+
+            <div class="col-lg-1 col-md-12 text-end">
+              <button id="applyFilters" class="btn btn-primary btn-sm w-100"><i class="bi bi-funnel"></i> Apply</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row g-3 mb-3">
+          <div class="col-lg-4" data-aos="fade-up">
+            <div class="chart-card">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <strong>Tickets by Status</strong>
+                <small class="small-muted">3 districts shown</small>
+              </div>
+              <div id="chartStatus" style="height:230px;"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="80">
+            <div class="chart-card">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <strong>Agent Performance</strong>
+                <small class="small-muted">Tickets assigned / resolved</small>
+              </div>
+              <div id="chartAgent" style="height:230px;"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="160">
+            <div class="chart-card">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <strong>Tickets Trend (14 days)</strong>
+                <small class="small-muted">New vs Resolved</small>
+              </div>
+              <div id="chartTrend" style="height:230px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tickets Table -->
+        <div class="card card-block" data-aos="fade-up">
+          <div class="card-header bg-white d-flex align-items-center justify-content-between">
+            <span class="fw-semibold">Team Tickets — Summary</span>
+            <div class="small text-muted">Static demo data</div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-striped align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Subject</th>
+                  <th>District</th>
+                  <th>Category</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Assigned To</th>
+                  <th>Created</th>
+                  <th>Last Updated</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="ticketsBody">
+                <!-- sample rows -->
+                <tr>
+                  <td>HL/2025-08-25/2101</td>
+                  <td>Water pipeline leakage</td>
+                  <td>Chennai</td>
+                  <td>Complaint / Water</td>
+                  <td><span class="badge bg-danger">High</span></td>
+                  <td><span class="badge bg-warning text-dark">In-Progress</span></td>
+                  <td>Agent A</td>
+                  <td>2025-08-25</td>
+                  <td>2025-08-27</td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#ticketModal" data-ticket="HL/2025-08-25/2101">
+                      <i class="bi bi-eye"></i> View
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>HL/2025-08-26/2102</td>
+                  <td>Road pothole reported</td>
+                  <td>Coimbatore</td>
+                  <td>Infrastructure / Road</td>
+                  <td><span class="badge bg-warning text-dark">Medium</span></td>
+                  <td><span class="badge bg-info text-dark">New</span></td>
+                  <td>Agent B</td>
+                  <td>2025-08-26</td>
+                  <td>2025-08-26</td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#ticketModal" data-ticket="HL/2025-08-26/2102">
+                      <i class="bi bi-eye"></i> View
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- Footer -->
+    <footer>
+      &copy; 2025 My Dashboard. All rights reserved.
+    </footer>
+
+    <!-- Ticket Detail Modal (for Lead) -->
+    <div class="modal fade" id="ticketModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="modalTitle">Ticket Details</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body">
+            <div class="row g-3">
+              <div class="col-lg-8">
+                <div class="mb-3">
+                  <h6 id="ticketId">HL/2025-08-25/2101</h6>
+                  <p class="mb-1"><strong>Subject:</strong> <span id="ticketSubject">Water pipeline leakage</span></p>
+                  <p class="mb-1"><strong>District:</strong> <span id="ticketDistrict">Chennai</span></p>
+                  <p class="mb-1"><strong>Category:</strong> <span id="ticketCategory">Complaint / Water</span></p>
+                  <p class="mb-1"><strong>Description:</strong></p>
+                  <div class="border p-3 rounded bg-light" id="ticketDescription">
+                    Pipe burst at junction causing flooding of road. Citizen reported on call.
+                  </div>
+                </div>
+
+                <hr>
+
+                <h6>Update History</h6>
+                <ul class="list-group" id="updateHistory">
+                  <li class="list-group-item">
+                    <strong>Agent A</strong> - Investigating (2025-08-26 11:04)
+                  </li>
+                </ul>
+
+                <hr>
+
+                <h6>Quality Check (Lead)</h6>
+                <div class="mb-3">
+                  <label class="form-label">QA Note</label>
+                  <textarea id="qaNote" class="form-control" rows="3" placeholder="Add QA observations (optional)"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">QA Rating</label>
+                  <select id="qaRating" class="form-select w-auto">
+                    <option value="">Select</option>
+                    <option>Pass</option>
+                    <option>Fail</option>
+                    <option>Requires Follow-up</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-lg-4">
+                <div class="card p-3 mb-3">
+                  <p class="mb-1"><strong>Status:</strong> <span id="ticketStatus" class="badge bg-warning text-dark">In-Progress</span></p>
+                  <p class="mb-1"><strong>Priority:</strong> <span id="ticketPriority" class="badge bg-danger">High</span></p>
+                  <p class="mb-1"><strong>Assigned:</strong> <span id="ticketAssignee">Agent A</span></p>
+                  <p class="mb-1"><strong>Created:</strong> 2025-08-25</p>
+                  <p class="mb-1"><strong>SLA Due:</strong> 2025-08-26 10:00</p>
+                </div>
+
+                <!-- Lead Actions -->
+                <div class="card p-3">
+                  <h6 class="mb-2">Lead Actions</h6>
+
+                  <div class="mb-2">
+                    <label class="form-label small">Re-assign to</label>
+                    <select id="reassignSelect" class="form-select form-select-sm">
+                      <option value="">-- Select Agent --</option>
+                      <option>Agent A</option>
+                      <option>Agent B</option>
+                      <option>Agent C</option>
+                    </select>
+                  </div>
+
+                  <div class="d-grid gap-2">
+                    <button id="btnReassign" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#confirmReassignModal"><i class="bi bi-arrow-repeat"></i> Re-assign</button>
+                    <button id="btnEscalate" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmEscalateModal"><i class="bi bi-arrow-up-circle"></i> Escalate</button>
+                    <button id="btnClose" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#confirmCloseModal"><i class="bi bi-x-circle"></i> Close Ticket</button>
+                    <button id="btnSaveQA" class="btn btn-success btn-sm">Save QA</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button id="btnSaveAll" class="btn btn-primary">Save All</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Modals (two-step confirmations inside modal) -->
+
+    <!-- Reassign Confirm Modal -->
+    <div class="modal fade" id="confirmReassignModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title">Confirm Re-assign</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <p id="reassignText">You are about to re-assign this ticket to <strong id="reassignAgentName"></strong>. Please confirm.</p>
+            <div id="reassignConfirm" class="d-none alert alert-warning">Click <strong>Confirm</strong> to proceed.</div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button id="reassignProceed" class="btn btn-warning">Re-assign</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Escalate Confirm Modal -->
+    <div class="modal fade" id="confirmEscalateModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title">Confirm Escalation</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <p>Please provide escalation reason:</p>
+            <textarea id="escalationReason" class="form-control mb-3" rows="3" placeholder="Reason for escalation"></textarea>
+            <div id="escalateConfirm" class="d-none alert alert-danger">Confirm escalation — ticket will move to Helpdesk Lead queue.</div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button id="escalateProceed" class="btn btn-danger">Escalate</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Close Confirm Modal -->
+    <div class="modal fade" id="confirmCloseModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-dark text-white">
+            <h5 class="modal-title">Confirm Close</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <p>Provide closing note (optional):</p>
+            <textarea id="closeNote" class="form-control mb-3" rows="3" placeholder="Closing note"></textarea>
+            <div id="closeConfirm" class="d-none alert alert-dark">Click confirm to permanently close the ticket.</div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button id="closeProceed" class="btn btn-dark">Close Ticket</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast for feedback -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+      <div id="liveToast" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body" id="toastBody">Action completed</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Ticket Modal -->
+<div class="modal fade" id="createTicketModal" tabindex="-1" aria-labelledby="createTicketLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content shadow-lg rounded-4">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="createTicketLabel"><i class="bi bi-ticket-detailed"></i> Create New Ticket</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-4">
+        <form id="createTicketForm">
+          <div class="row g-3">
+
+            <!-- Requester Name -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold"><i class="bi bi-person-circle"></i> Requester Name</label>
+              <input type="text" class="form-control" placeholder="Enter requester name" required>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold"><i class="bi bi-telephone"></i> Contact Number</label>
+              <input type="text" class="form-control" placeholder="Enter contact number" required>
+            </div>
+
+            <!-- Department -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold"><i class="bi bi-building"></i> Department</label>
+              <select class="form-select" required>
+                <option value="">Select Department</option>
+                <option value="Revenue">Revenue</option>
+                <option value="Rural Development">Rural Development</option>
+                <option value="eSevai">eSevai</option>
+              </select>
+            </div>
+
+            <!-- Category -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold"><i class="bi bi-layers"></i> Category</label>
+              <select class="form-select" required>
+                <option value="">Select Category</option>
+                <option value="Login Issue">Login Issue</option>
+                <option value="Portal Error">Portal Error</option>
+                <option value="Application Delay">Application Delay</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <!-- Priority -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold"><i class="bi bi-flag"></i> Priority</label>
+              <select class="form-select" required>
+                <option value="">Select Priority</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+
+            <!-- Assigned To -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold"><i class="bi bi-people"></i> Assign To</label>
+              <select class="form-select">
+                <option value="">Select Helpdesk Agent</option>
+                <option value="Agent1">Agent 1</option>
+                <option value="Agent2">Agent 2</option>
+                <option value="Agent3">Agent 3</option>
+              </select>
+            </div>
+
+            <!-- Description -->
+            <div class="col-12">
+              <label class="form-label fw-semibold"><i class="bi bi-chat-left-text"></i> Description</label>
+              <textarea class="form-control" rows="3" placeholder="Enter ticket description" required></textarea>
+            </div>
+
+            <!-- Attachments -->
+            <div class="col-12">
+              <label class="form-label fw-semibold"><i class="bi bi-paperclip"></i> Attachments</label>
+              <input type="file" class="form-control" multiple>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-success" form="createTicketForm">
+          <i class="bi bi-check-circle"></i> Submit Ticket
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+    <script>
+      AOS.init({duration:700, once:true});
+      // Sidebar toggle
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const sidebar = document.getElementById('sidebar');
+      
+      sidebarToggle.addEventListener('click', () => {
+        if (window.innerWidth < 992) {
+          // Mobile: slide in/out
+          sidebar.classList.toggle('show');
+        } else {
+          // Desktop: collapse sidebar
+          document.body.classList.toggle('sidebar-collapsed');
+        }
+      });
+      
+      // Close mobile sidebar when clicking outside
+      document.addEventListener('click', function(e) {
+        if (window.innerWidth < 992) {
+          if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+            sidebar.classList.remove('show');
+          }
+        }
+      });
+      
+      // Display current date and time
+      function updateDateTime() {
+        const now = new Date();
+        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('currentDateTime').textContent = now.toLocaleDateString(undefined, options) + ' ' + timeString;
+      }
+      setInterval(updateDateTime, 1000);
+      updateDateTime();
+    </script>
+     <script>
+      AOS.init({duration:700, once:true});
+
+      // datetime
+      function updateDateTime(){
+        const now = new Date();
+        document.getElementById('currentDateTime').textContent = now.toLocaleString();
+      }
+      setInterval(updateDateTime,1000);
+      updateDateTime();
+
+      // --- QUICK FILTERS ---
+      const pad = n => String(n).padStart(2,'0');
+      const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+      document.getElementById('qToday').addEventListener('click', () => {
+        const d = new Date(); document.getElementById('fromDate').value = fmt(d); document.getElementById('toDate').value = fmt(d);
+      });
+      document.getElementById('qWeek').addEventListener('click', () => {
+        const d = new Date(); const start = new Date(d.getFullYear(), d.getMonth(), d.getDate() - 7);
+        document.getElementById('fromDate').value = fmt(start); document.getElementById('toDate').value = fmt(d);
+      });
+      document.getElementById('qMonth').addEventListener('click', () => {
+        const d = new Date(); const start = new Date(d.getFullYear(), d.getMonth()-1, d.getDate());
+        document.getElementById('fromDate').value = fmt(start); document.getElementById('toDate').value = fmt(d);
+      });
+      document.getElementById('applyFilters').addEventListener('click', () => {
+        alert('Filters applied (demo). Hook your API to refresh data.');
+      });
+
+      // --- Charts (ApexCharts) sample data ---
+      const statusChart = new ApexCharts(document.querySelector("#chartStatus"), {
+        chart: { type: 'donut' },
+        series: [120, 183, 74, 144], // sample Open/InProgress/Pending/Resolved
+        labels: ['Open','In Progress','Pending','Resolved'],
+        legend: { position: 'bottom' },
+        height: 230
+      });
+      statusChart.render();
+
+      const agentChart = new ApexCharts(document.querySelector("#chartAgent"), {
+        chart: { type: 'bar' },
+        series: [
+          { name:'Assigned', data:[40,65,78] },
+          { name:'Resolved', data:[30,55,60] }
+        ],
+        xaxis: { categories:['Agent A','Agent B','Agent C'] },
+        plotOptions: { bar: { borderRadius:6, columnWidth:'55%'} },
+        height: 230
+      });
+      agentChart.render();
+
+      const trendChart = new ApexCharts(document.querySelector("#chartTrend"), {
+        chart: { type: 'area' },
+        series: [{ name:'New', data:[4,5,7,6,8,6,7,5,6,9,8,7,6,5] }, { name:'Resolved', data:[3,4,5,4,6,7,6,5,7,8,7,9,8,7] }],
+        xaxis: { categories: ['D-14','D-13','D-12','D-11','D-10','D-9','D-8','D-7','D-6','D-5','D-4','D-3','D-2','D-1'] },
+        height: 230,
+        stroke: { curve:'smooth' }
+      });
+      trendChart.render();
+
+      // --- Ticket modal load (populate with sample) ---
+      const ticketModalEl = document.getElementById('ticketModal');
+      ticketModalEl.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const ticketId = button?.getAttribute('data-ticket') || 'HL/2025-08-25/2101';
+        // here we would fetch ticket details; for demo we'll set static or based on id
+        document.getElementById('ticketId').textContent = ticketId;
+        // quick customization per ticket id (demo)
+        if(ticketId.includes('2102')){
+          document.getElementById('ticketSubject').textContent = 'Road pothole reported';
+          document.getElementById('ticketDistrict').textContent = 'Coimbatore';
+          document.getElementById('ticketCategory').textContent = 'Infrastructure / Road';
+          document.getElementById('ticketDescription').textContent = 'Large pothole causing traffic hazard near market.';
+          document.getElementById('ticketStatus').className = 'badge bg-info text-dark';
+          document.getElementById('ticketStatus').textContent = 'New';
+          document.getElementById('ticketAssignee').textContent = 'Agent B';
+          document.getElementById('ticketPriority').className = 'badge bg-warning text-dark';
+          document.getElementById('ticketPriority').textContent = 'Medium';
+        } else {
+          document.getElementById('ticketSubject').textContent = 'Water pipeline leakage';
+          document.getElementById('ticketDistrict').textContent = 'Chennai';
+          document.getElementById('ticketCategory').textContent = 'Complaint / Water';
+          document.getElementById('ticketDescription').textContent = 'Pipe burst at junction causing flooding of road. Citizen reported on call.';
+          document.getElementById('ticketStatus').className = 'badge bg-warning text-dark';
+          document.getElementById('ticketStatus').textContent = 'In-Progress';
+          document.getElementById('ticketAssignee').textContent = 'Agent A';
+          document.getElementById('ticketPriority').className = 'badge bg-danger';
+          document.getElementById('ticketPriority').textContent = 'High';
+        }
+      });
+
+      // --- Two-step confirmation patterns for actions ---
+      // Reassign
+      document.getElementById('reassignProceed').addEventListener('click', function(){
+        const agent = document.getElementById('reassignSelect').value;
+        if(!agent){
+          alert('Please select an agent to re-assign.');
+          return;
+        }
+        const confirmBox = document.getElementById('reassignConfirm');
+        if(confirmBox.classList.contains('d-none')){
+          document.getElementById('reassignAgentName').textContent = agent;
+          confirmBox.classList.remove('d-none');
+          this.textContent = 'Confirm';
+        } else {
+          // final step
+          showToast(`Ticket re-assigned to ${agent}`);
+          const modal = bootstrap.Modal.getInstance(document.getElementById('confirmReassignModal'));
+          modal.hide();
+          // reset UI
+          confirmBox.classList.add('d-none');
+          this.textContent = 'Re-assign';
+        }
+      });
+
+      // Escalate
+      document.getElementById('escalateProceed').addEventListener('click', function(){
+        const reason = document.getElementById('escalationReason').value.trim();
+        const confirmBox = document.getElementById('escalateConfirm');
+        if(!confirmBox.classList.contains('d-none')){
+          // final proceed
+          showToast('Ticket escalated — lead notified');
+          const modal = bootstrap.Modal.getInstance(document.getElementById('confirmEscalateModal'));
+          modal.hide();
+          confirmBox.classList.add('d-none');
+          document.getElementById('escalationReason').value = '';
+        } else {
+          if(!reason){
+            alert('Please provide an escalation reason before proceeding.');
+            return;
+          }
+          confirmBox.classList.remove('d-none');
+          this.textContent = 'Confirm Escalate';
+        }
+      });
+
+      // Close
+      document.getElementById('closeProceed').addEventListener('click', function(){
+        const confirmBox = document.getElementById('closeConfirm');
+        if(!confirmBox.classList.contains('d-none')){
+          showToast('Ticket closed successfully');
+          const modal = bootstrap.Modal.getInstance(document.getElementById('confirmCloseModal'));
+          modal.hide();
+          confirmBox.classList.add('d-none');
+          document.getElementById('closeNote').value = '';
+        } else {
+          confirmBox.classList.remove('d-none');
+          this.textContent = 'Confirm Close';
+        }
+      });
+
+      // Save QA
+      document.getElementById('btnSaveQA').addEventListener('click', function(){
+        const note = document.getElementById('qaNote').value.trim();
+        const rating = document.getElementById('qaRating').value;
+        if(!rating){
+          alert('Please select QA rating');
+          return;
+        }
+        showToast('QA saved (demo)');
+      });
+
+      // Save All button inside ticket modal
+      document.getElementById('btnSaveAll').addEventListener('click', function(){
+        showToast('All updates saved (demo). Hook API to persist.');
+        const modal = bootstrap.Modal.getInstance(document.getElementById('ticketModal'));
+        if(modal) modal.hide();
+      });
+
+      // re-assign modal open: ensure reassign button text reset
+      const confirmReassignModalEl = document.getElementById('confirmReassignModal');
+      confirmReassignModalEl.addEventListener('show.bs.modal', function(){
+        document.getElementById('reassignProceed').textContent = 'Re-assign';
+        document.getElementById('reassignConfirm').classList.add('d-none');
+        document.getElementById('reassignAgentName').textContent = '';
+      });
+
+      // escalate modal open: reset
+      const confirmEscalateModalEl = document.getElementById('confirmEscalateModal');
+      confirmEscalateModalEl.addEventListener('show.bs.modal', function(){
+        document.getElementById('escalateProceed').textContent = 'Escalate';
+        document.getElementById('escalateConfirm').classList.add('d-none');
+        document.getElementById('escalationReason').value = '';
+      });
+
+      // close modal open: reset
+      const confirmCloseModalEl = document.getElementById('confirmCloseModal');
+      confirmCloseModalEl.addEventListener('show.bs.modal', function(){
+        document.getElementById('closeProceed').textContent = 'Close Ticket';
+        document.getElementById('closeConfirm').classList.add('d-none');
+        document.getElementById('closeNote').value = '';
+      });
+
+      // small toast utility
+      function showToast(message){
+        const toastEl = document.getElementById('liveToast');
+        document.getElementById('toastBody').textContent = message;
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+      }
+
+    </script>
+  </body>
+</html>
