@@ -1,57 +1,65 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Enhanced Dashboard</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- page css -->
-    <style>
-      body {
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Enhanced Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- page css -->
+  <style>
+    body {
       background: #f8f9fa;
-      }
-      .page-title {
+    }
+
+    .page-title {
       font-size: 1.5rem;
       font-weight: 600;
       margin-bottom: 1rem;
-      }
-      .form-section {
+    }
+
+    .form-section {
       background: #fff;
       border-radius: 12px;
       padding: 2rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      }
-      .form-label {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-label {
       font-weight: 500;
-      }
-      .btn-submit {
+    }
+
+    .btn-submit {
       background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
       border: none;
       color: #fff;
       font-weight: 600;
       border-radius: 8px;
       transition: 0.3s;
-      }
-      .btn-submit:hover {
+    }
+
+    .btn-submit:hover {
       transform: scale(1.03);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      }
-    </style>
-    <!-- CSS -->
-    <style>
-      .timeline-wrapper {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+  <!-- CSS -->
+  <style>
+    .timeline-wrapper {
       position: relative;
       padding-left: 30px;
-      }
-      .timeline {
+    }
+
+    .timeline {
       list-style: none;
       margin: 0;
       padding: 0;
       position: relative;
-      }
-      .timeline::before {
+    }
+
+    .timeline::before {
       content: '';
       position: absolute;
       top: 0;
@@ -59,14 +67,16 @@
       width: 3px;
       height: 100%;
       background: #dee2e6;
-      }
-      .timeline-item {
+    }
+
+    .timeline-item {
       position: relative;
       margin-bottom: 25px;
       display: flex;
       align-items: flex-start;
-      }
-      .timeline-icon {
+    }
+
+    .timeline-icon {
       position: absolute;
       left: -2px;
       width: 36px;
@@ -76,83 +86,168 @@
       align-items: center;
       justify-content: center;
       z-index: 1;
-      box-shadow: 0 0 6px rgba(0,0,0,0.1);
-      }
-      .timeline-content {
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .timeline-content {
       margin-left: 50px;
       background: #fff;
       padding: 12px 15px;
       border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      }
-      .timeline-content h6 {
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .timeline-content h6 {
       font-size: 15px;
       font-weight: 600;
-      }
-      td, th {
+    }
+
+    td,
+    th {
       white-space: nowrap;
-      }
-      .card-header.bg-dark, th {
+    }
+
+    .card-header.bg-dark,
+    th {
       background: #182848 !important;
       color: #fff !important;
-      } 
-    </style>
-    <style>
-      :root{
+    }
+  </style>
+  <style>
+    :root {
       --card-radius: 16px;
-      --soft-shadow: 0 8px 24px rgba(0,0,0,.08);
-      }
-      body{ background:#f6f8fb; }
-      .page-title{ font-weight:800; letter-spacing:.3px; }
-      .subtle{ color:#6b7280; }
-      .kpi-card{
-      border:0; border-radius: var(--card-radius); box-shadow: var(--soft-shadow);
-      transition: transform .2s ease, box-shadow .2s ease; background:#fff;
-      }
-      .kpi-card:hover{ transform: translateY(-4px); box-shadow: 0 14px 32px rgba(0,0,0,.12); }
-      .kpi-icon{
-      width:56px; height:56px; border-radius:14px; display:flex; align-items:center; justify-content:center;
-      font-size:1.25rem; color:#fff;
-      }
-      .kpi-meta{ font-size:.85rem; color:#6b7280; }
-      .sticky-filters{
-      position: sticky; top: 0; z-index: 5; background: #f6f8fb; padding: 10px 0;
-      }
-      .legend .badge{ font-weight:600; }
-      .card-block{
-      border:0; border-radius: var(--card-radius); box-shadow: var(--soft-shadow); background:#fff;
-      }
-      /* table styles */
-      .table thead th{ color:#fff; border:0; vertical-align: middle; }
-      .table tbody td{ vertical-align: middle; }
-      .badge-48{ background:#ffed99; color:#7a5b00; }        /* 48+ hrs age badge */
-      .row-danger{ background:#fff2f2; }                      /* row hint for high priority */
-      .escalation-flag{ color:#dc3545; font-size:1rem; }      /* 🔺 icon or similar */
-      /* escalation alert */
-      .escalation-bar{
-      border-radius: 12px; padding: 14px 18px; display:flex; align-items:center; gap:12px;
+      --soft-shadow: 0 8px 24px rgba(0, 0, 0, .08);
+    }
+
+    body {
+      background: #f6f8fb;
+    }
+
+    .page-title {
+      font-weight: 800;
+      letter-spacing: .3px;
+    }
+
+    .subtle {
+      color: #6b7280;
+    }
+
+    .kpi-card {
+      border: 0;
+      border-radius: var(--card-radius);
+      box-shadow: var(--soft-shadow);
+      transition: transform .2s ease, box-shadow .2s ease;
+      background: #fff;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, .12);
+    }
+
+    .kpi-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: #fff;
+    }
+
+    .kpi-meta {
+      font-size: .85rem;
+      color: #6b7280;
+    }
+
+    .sticky-filters {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: #f6f8fb;
+      padding: 10px 0;
+    }
+
+    .legend .badge {
+      font-weight: 600;
+    }
+
+    .card-block {
+      border: 0;
+      border-radius: var(--card-radius);
+      box-shadow: var(--soft-shadow);
+      background: #fff;
+    }
+
+    /* table styles */
+    .table thead th {
+      color: #fff;
+      border: 0;
+      vertical-align: middle;
+    }
+
+    .table tbody td {
+      vertical-align: middle;
+    }
+
+    .badge-48 {
+      background: #ffed99;
+      color: #7a5b00;
+    }
+
+    /* 48+ hrs age badge */
+    .row-danger {
+      background: #fff2f2;
+    }
+
+    /* row hint for high priority */
+    .escalation-flag {
+      color: #dc3545;
+      font-size: 1rem;
+    }
+
+    /* 🔺 icon or similar */
+    /* escalation alert */
+    .escalation-bar {
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
       background: linear-gradient(135deg, #fff5f5, #fff);
-      border:1px solid #ffd2d2;
-      }
-      .escalation-bar i{ color:#dc3545; }
-      /* chart heights */
-      #chartStatus, #chartPriority, #chartTrend{ height: 280px; }
-      #parentTabs {
+      border: 1px solid #ffd2d2;
+    }
+
+    .escalation-bar i {
+      color: #dc3545;
+    }
+
+    /* chart heights */
+    #chartStatus,
+    #chartPriority,
+    #chartTrend {
+      height: 280px;
+    }
+
+    #parentTabs {
       border-bottom: 0px !important;
-      }
-      #parentTabs li .nav-link.active {
+    }
+
+    #parentTabs li .nav-link.active {
       background: #182848;
       color: #fff;
       border-radius: 4px 7px;
-      }
-      #parentTabs li .nav-link {
+    }
+
+    #parentTabs li .nav-link {
       color: #182848;
       border-radius: 4px 7px;
       border: 1px solid #182848;
-      }
-    </style>
-    <!-- page css -->
-    <!-- <style>
+    }
+  </style>
+  <!-- page css -->
+  <!-- <style>
       .kpi-card {
         padding: 1.5rem; 
         border-radius: 1rem;
@@ -183,41 +278,50 @@
         background: linear-gradient(135deg, #434343, #000000);
       }
       </style> -->
-    <style>
-      html, body {
+  <style>
+    html,
+    body {
       height: 100%;
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f1f3f6;
       color: #333;
-      }
-      body {
+    }
+
+    body {
       display: flex;
       flex-direction: column;
       padding-top: 70px;
       transition: all 0.3s;
-      }
-      /* Header */
-      nav.navbar {
+    }
+
+    /* Header */
+    nav.navbar {
       background: linear-gradient(90deg, #4b6cb7, #182848);
       color: #fff;
       z-index: 1000;
       padding: 0.4rem 1rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      }
-      nav.navbar .navbar-brand, nav.navbar .btn, nav.navbar span {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    nav.navbar .navbar-brand,
+    nav.navbar .btn,
+    nav.navbar span {
       color: #fff;
-      }
-      nav.navbar .btn-light {
-      background: rgba(255,255,255,0.15);
+    }
+
+    nav.navbar .btn-light {
+      background: rgba(255, 255, 255, 0.15);
       border: none;
       color: #fff;
-      }
-      nav.navbar .btn-light:hover {
-      background: rgba(255,255,255,0.25);
-      }
-      /* Sidebar */
-      #sidebar {
+    }
+
+    nav.navbar .btn-light:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Sidebar */
+    #sidebar {
       position: fixed;
       top: 70px;
       left: 0;
@@ -228,10 +332,11 @@
       transition: all 0.3s;
       overflow-y: auto;
       border-right: 1px solid #e0e0e0;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
       z-index: 999;
-      }
-      #sidebar a {
+    }
+
+    #sidebar a {
       display: flex;
       align-items: center;
       padding: 12px 20px;
@@ -241,145 +346,198 @@
       border-radius: 8px;
       margin: 4px 10px;
       transition: all 0.2s ease-in-out;
-      }
-      #sidebar a:hover {
+    }
+
+    #sidebar a:hover {
       background: #4b6cb7;
       color: #fff;
       transform: translateX(5px);
-      }
-      #sidebar a.active {
+    }
+
+    #sidebar a.active {
       background: #182848;
       color: white;
-      }
-      #sidebar i {
+    }
+
+    #sidebar i {
       margin-right: 12px;
       font-size: 1.2rem;
-      }
-      .sidebar-collapsed #sidebar a {
+    }
+
+    .sidebar-collapsed #sidebar a {
       padding: 12px 0px;
-      } 
-      /* Collapsed sidebar */
-      body.sidebar-collapsed #sidebar {
+    }
+
+    /* Collapsed sidebar */
+    body.sidebar-collapsed #sidebar {
       width: 60px;
-      }
-      body.sidebar-collapsed #sidebar a span { display: none; }
-      body.sidebar-collapsed #sidebar a i {
+    }
+
+    body.sidebar-collapsed #sidebar a span {
+      display: none;
+    }
+
+    body.sidebar-collapsed #sidebar a i {
       margin-right: 0;
       width: 100%;
       text-align: center;
-      }
-      /* Main content */
-      #mainContent {
+    }
+
+    /* Main content */
+    #mainContent {
       margin-left: 220px;
       padding: 30px;
       flex: 1;
       transition: all 0.3s;
-      }
-      body.sidebar-collapsed #mainContent { margin-left: 60px; }
-      /* Cards for main content */
-      .card {
+    }
+
+    body.sidebar-collapsed #mainContent {
+      margin-left: 60px;
+    }
+
+    /* Cards for main content */
+    .card {
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
-      /*.card:hover {
+    }
+
+    /*.card:hover {
       transform: translateY(-5px);
       box-shadow: 0 8px 20px rgba(0,0,0,0.15);
       }*/
-      /* Footer */
-      footer {
+    /* Footer */
+    footer {
       background: #fff;
       text-align: center;
       padding: 15px;
       border-top: 1px solid #ddd;
       width: 100%;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
-      }
-      /* Mobile responsiveness */
-      @media (max-width: 992px) {
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 992px) {
       #sidebar {
-      left: -100%;
-      top: 0;
-      width: 220px;
-      height: 100%;
-      border-right: none;
-      box-shadow: 2px 0 15px rgba(0,0,0,0.2);
-      z-index: 9999; 
+        left: -100%;
+        top: 0;
+        width: 220px;
+        height: 100%;
+        border-right: none;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
       }
-      #sidebar.show { left: 0; }
-      #mainContent { margin-left: 0; padding: 20px 10px; }
-      body.sidebar-collapsed #mainContent { margin-left: 0; }
+
+      #sidebar.show {
+        left: 0;
       }
-      @media (max-width: 768px) {
-      #currentDateTime { display: none; }
-      .navbar .fw-bold { font-size: 1.1rem; }
-      #sidebarToggle { padding: 0.35rem 0.6rem; }
-      .dropdown-toggle span { display: none; }
+
+      #mainContent {
+        margin-left: 0;
+        padding: 20px 10px;
       }
-    </style>
-    <!-- main content -->
-    <style>
-      .hover-shadow:hover { 
-      box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
-      transition: all 0.3s; 
+
+      body.sidebar-collapsed #mainContent {
+        margin-left: 0;
       }
-      .card h3 { font-weight: 600; }
-      .card i { transition: transform 0.3s; }
-      .card:hover i { transform: scale(1.2); }
-      .table-hover tbody tr:hover { background-color: #f1f3f5; } 
-      .section-title {
+    }
+
+    @media (max-width: 768px) {
+      #currentDateTime {
+        display: none;
+      }
+
+      .navbar .fw-bold {
+        font-size: 1.1rem;
+      }
+
+      #sidebarToggle {
+        padding: 0.35rem 0.6rem;
+      }
+
+      .dropdown-toggle span {
+        display: none;
+      }
+    }
+  </style>
+  <!-- main content -->
+  <style>
+    .hover-shadow:hover {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s;
+    }
+
+    .card h3 {
+      font-weight: 600;
+    }
+
+    .card i {
+      transition: transform 0.3s;
+    }
+
+    .card:hover i {
+      transform: scale(1.2);
+    }
+
+    .table-hover tbody tr:hover {
+      background-color: #f1f3f5;
+    }
+
+    .section-title {
       font-weight: 600;
       margin-bottom: 15px;
       border-left: 4px solid #4e73df;
       padding-left: 10px;
-      }
-      .no-height {
+    }
+
+    .no-height {
       height: 0px !important;
-      } 
-    </style>
-    <!-- main content -->
-  </head>
-  <body>
-    <!-- Header -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-      <div class="container-fluid d-flex align-items-center">
-        <button class="btn btn-light" id="sidebarToggle">
+    }
+  </style>
+  <!-- main content -->
+</head>
+
+<body>
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid d-flex align-items-center">
+      <button class="btn btn-light" id="sidebarToggle">
         <i class="bi bi-list fs-4"></i>
-        </button>
-        <span class="fw-bold ms-3 fs-5">My Dashboard</span>
-        <div class="ms-auto d-flex align-items-center gap-3">
-          <span id="currentDateTime" class="me-3"></span>
-          <div class="dropdown">
-            <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
+      </button>
+      <span class="fw-bold ms-3 fs-5">My Dashboard</span>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <span id="currentDateTime" class="me-3"></span>
+        <div class="dropdown">
+          <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
             <i class="bi bi-person-circle fs-4"></i> <span class="d-none d-lg-inline fw-semibold">John</span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-              <li><a class="dropdown-item" href="profile.html">Profile</a></li>
-              <li><a class="dropdown-item" href="index.html">Logout</a></li>
-            </ul>
-          </div>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+            <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+            <li><a class="dropdown-item" href="index.html">Logout</a></li>
+          </ul>
         </div>
       </div>
-    </nav>
-    <!-- Sidebar -->
-    <div id="sidebar">
-      <a href="dashboard.html" class="active"><i class="bi bi-house"></i><span>Dashboard</span></a>
-      <a href="report-issue.html"><i class="bi bi-file-earmark-text"></i><span>Report Issue - Self</span></a>
-      <a href="raise-ticket-behalf.html"><i class="bi bi-eye"></i><span>Report Issue - Behalf</span></a> 
-      <a href="profile.html"><i class="bi bi-person"></i><span>Profile</span></a>
-      <a href="faq.html"><i class="bi bi-question-circle"></i><span>FAQ</span></a>
     </div>
-    <!-- Main Content -->
-    <div id="mainContent">
-      <!--  <section class="dashboard-header py-3 px-3 bg-gradient shadow-sm rounded-3 mb-4 d-flex flex-column flex-md-row justify-content-between align-items-center">
+  </nav>
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <a href="dashboard.html" class="active"><i class="bi bi-house"></i><span>Dashboard</span></a>
+    <a href="report-issue.html"><i class="bi bi-file-earmark-text"></i><span>Report Issue - Self</span></a>
+    <a href="raise-ticket-behalf.html"><i class="bi bi-eye"></i><span>Report Issue - Behalf</span></a>
+    <a href="profile.html"><i class="bi bi-person"></i><span>Profile</span></a>
+    <a href="faq.html"><i class="bi bi-question-circle"></i><span>FAQ</span></a>
+  </div>
+  <!-- Main Content -->
+  <div id="mainContent">
+    <!--  <section class="dashboard-header py-3 px-3 bg-gradient shadow-sm rounded-3 mb-4 d-flex flex-column flex-md-row justify-content-between align-items-center">
         <div class="d-flex align-items-center mb-2 mb-md-0">
           <h2 class="mb-0 me-3">Welcome, John!</h2>
           <div class="text-muted" id="currentDateTime"></div>
         </div>
         </section> -->
-      <div class="row g-3 mb-3">
-        <!-- Total Tickets -->
-        <!-- <div class="col-md-3 d-flex aos-init aos-animate" data-aos="fade-up">
+    <div class="row g-3 mb-3">
+      <!-- Total Tickets -->
+      <!-- <div class="col-md-3 d-flex aos-init aos-animate" data-aos="fade-up">
           <div class="card kpi-card w-100">
             <div class="card-body">
               <div class="d-flex align-items-center justify-content-between">
@@ -394,74 +552,74 @@
             </div>
           </div>
         </div> -->
-        <!-- Self Tickets -->
-        <div class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-          <div class="card kpi-card">
-            <div class="card-body">
-              <div class="d-flex align-items-center justify-content-between">
-                <div class="kpi-icon bg-info"><i class="bi bi-person-badge"></i></div>
-                <div class="text-end">
-                  <div class="subtle">Self Tickets</div>
-                  <div class="h3 fw-bold mb-0">65</div>
-                </div>
-              </div>
-              <div class="kpi-meta mt-2">
-                In-Progress: <span class="fw-semibold">20</span> &nbsp;|&nbsp;
-                Returned: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
-                <span class="d-block no-height">&nbsp;</span>
-                Resolved: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
-                Re-Opened: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
-                Closed: <span class="fw-semibold">30</span>
+      <!-- Self Tickets -->
+      <div class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+        <div class="card kpi-card">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="kpi-icon bg-info"><i class="bi bi-person-badge"></i></div>
+              <div class="text-end">
+                <div class="subtle">Self Tickets</div>
+                <div class="h3 fw-bold mb-0">65</div>
               </div>
             </div>
-          </div>
-        </div>
-        <!-- On-Behalf Tickets -->
-        <div class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="150">
-          <div class="card kpi-card">
-            <div class="card-body">
-              <div class="d-flex align-items-center justify-content-between">
-                <div class="kpi-icon bg-warning"><i class="bi bi-people"></i></div>
-                <div class="text-end">
-                  <div class="subtle">On-Behalf Tickets</div>
-                  <div class="h3 fw-bold mb-0">55</div>
-                </div>
-              </div>
-              <div class="kpi-meta mt-2">
-                In-Progress: <span class="fw-semibold">20</span> &nbsp;|&nbsp;
-                Returned: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
-                <span class="d-block no-height">&nbsp;</span>
-                Resolved: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
-                Re-Opened: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
-                Closed: <span class="fw-semibold">30</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Overall Tickets (Self + On-Behalf) -->
-        <div class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
-          <div class="card kpi-card">
-            <div class="card-body">
-              <div class="d-flex align-items-center justify-content-between">
-                <div class="kpi-icon bg-success"><i class="bi bi-collection"></i></div>
-                <div class="text-end">
-                  <div class="subtle">Overall Tickets</div>
-                  <div class="h3 fw-bold mb-0">120</div>
-                </div>
-              </div>
-              <div class="kpi-meta mt-2">
-                In-Progress: <span class="fw-semibold">20</span> &nbsp;|&nbsp;
-                Returned: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
-                <span class="d-block no-height">&nbsp;</span>
-                Resolved: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
-                Re-Opened: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
-                Closed: <span class="fw-semibold">30</span>
-              </div>
+            <div class="kpi-meta mt-2">
+              In-Progress: <span class="fw-semibold">20</span> &nbsp;|&nbsp;
+              Returned: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
+              <span class="d-block no-height">&nbsp;</span>
+              Resolved: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
+              Re-Opened: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
+              Closed: <span class="fw-semibold">30</span>
             </div>
           </div>
         </div>
       </div>
-      <!-- 
+      <!-- On-Behalf Tickets -->
+      <div class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="150">
+        <div class="card kpi-card">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="kpi-icon bg-warning"><i class="bi bi-people"></i></div>
+              <div class="text-end">
+                <div class="subtle">On-Behalf Tickets</div>
+                <div class="h3 fw-bold mb-0">55</div>
+              </div>
+            </div>
+            <div class="kpi-meta mt-2">
+              In-Progress: <span class="fw-semibold">20</span> &nbsp;|&nbsp;
+              Returned: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
+              <span class="d-block no-height">&nbsp;</span>
+              Resolved: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
+              Re-Opened: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
+              Closed: <span class="fw-semibold">30</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Overall Tickets (Self + On-Behalf) -->
+      <div class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+        <div class="card kpi-card">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="kpi-icon bg-success"><i class="bi bi-collection"></i></div>
+              <div class="text-end">
+                <div class="subtle">Overall Tickets</div>
+                <div class="h3 fw-bold mb-0">120</div>
+              </div>
+            </div>
+            <div class="kpi-meta mt-2">
+              In-Progress: <span class="fw-semibold">20</span> &nbsp;|&nbsp;
+              Returned: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
+              <span class="d-block no-height">&nbsp;</span>
+              Resolved: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
+              Re-Opened: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
+              Closed: <span class="fw-semibold">30</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 
         <div class="row g-3 mb-4">
         
          
@@ -519,10 +677,10 @@
           </div>
         
         </div> -->
-      <div class="">
+    <div class="">
 
 
-        <!-- <div class="sticky-filters aos-init aos-animate" data-aos="fade-up">
+      <!-- <div class="sticky-filters aos-init aos-animate" data-aos="fade-up">
           <div class="card card-block">
             <div class="card-body py-3">
                   <div class="row filter-box">
@@ -551,580 +709,604 @@
         </div> -->
 
 
-        
 
 
-        <ul class="nav nav-tabs my-3 aos-init aos-animate" id="parentTabs" role="tablist" data-aos="fade-up">
-        <li class="nav-item" role="presentation"><button class="nav-link active" id="self-tab" data-bs-toggle="tab" data-bs-target="#selfTickets" type="button" aria-selected="true" role="tab"><i class="bi bi-person-plus"></i> Self Tickets</button></li>
-        <li class="nav-item mx-2" role="presentation"><button class="nav-link" id="behalf-tab" data-bs-toggle="tab" data-bs-target="#behalfTickets" type="button" aria-selected="false" tabindex="-1" role="tab"><i class="bi bi-people"></i> On-Behalf Tickets</button></li>
+
+      <ul class="nav nav-tabs my-3 aos-init aos-animate" id="parentTabs" role="tablist" data-aos="fade-up">
+        <li class="nav-item" role="presentation"><button class="nav-link active" id="self-tab" data-bs-toggle="tab"
+            data-bs-target="#selfTickets" type="button" aria-selected="true" role="tab"><i
+              class="bi bi-person-plus"></i> Self Tickets</button></li>
+        <li class="nav-item mx-2" role="presentation"><button class="nav-link" id="behalf-tab" data-bs-toggle="tab"
+            data-bs-target="#behalfTickets" type="button" aria-selected="false" tabindex="-1" role="tab"><i
+              class="bi bi-people"></i> On-Behalf Tickets</button></li>
       </ul>
 
       <div class="tab-content" id="parentTabsContent">
         <!-- Self Tickets Parent Tab -->
         <div class="tab-pane fade show active" id="selfTickets" role="tabpanel" aria-labelledby="self-tab">
           <!-- Sub-Tabs -->
-          
+
           <!-- Issue History -->
-        <div class="card shadow-sm mt-3">
-          <div class="card-header bg-dark text-white">
-            Issue History
-          </div>
-          <div class="card-body">
-            <ul class="nav nav-tabs" id="reportTabs" role="tablist">
-              <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="open-tab" data-bs-toggle="tab" data-bs-target="#openReports" type="button" role="tab">In-Progress</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="open-tab" data-bs-toggle="tab" data-bs-target="#returned" type="button" role="tab">Returned </button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="open-tab" data-bs-toggle="tab" data-bs-target="#resolved" type="button" role="tab">Resolved</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="open-tab" data-bs-toggle="tab" data-bs-target="#reopen" type="button" role="tab">Re-opened</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="closed-tab" data-bs-toggle="tab" data-bs-target="#closedReports" type="button" role="tab">Closed</button>
-              </li>
-            </ul>
-            <!-- Open / Closed Reports Table -->
-            <div class="tab-content mt-4">
-              <!-- Open Reports -->
-              <div class="tab-pane fade show active" id="openReports" role="tabpanel">
-                <div class="table-responsive shadow-sm rounded">
-                  <table class="table table-striped table-hover align-middle text-center">
-                    <thead class="table-primary">
-                      <tr>
-                        <th>Requested By</th>
-                        <th>Action</th>
-                        <th>Status</th>
-                        <th>Type of User</th>
-                        <th>Name</th>
-                        <th>Mobile</th>
-                        <th>District</th>
-                        <th>Date</th>
-                        <th>Issue Type</th>
-                        <th>Category</th>
-                        <th>Subcategory</th>
-                        <th>Ack No</th>
-                        <th>Remarks</th>
-                        <th>Attachment</th>
-                        <th>Helpdesk Notes</th>
-                        <th>Helpdesk Upload</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>OPR001</td>
-                        <td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target=".issueDetailsModal1">View</button></td>
-                        <td><span class="badge bg-info text-dark">In Progress</span></td>
-                        <td>Citizen</td>
-                        <td>John</td>
-                        <td>9876543210</td>
-                        <td>Dharmapuri</td>
-                        <td>28-04-2025 11:43 AM</td>
-                        <td>Service Delay</td>
-                        <td>Application</td>
-                        <td>Certificate Issue</td>
-                        <td>ACK12345</td>
-                        <td>Remarks given</td>
-                        <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
-                        <td>--</td>
-                        <td>---</td>
-                      </tr>
-                    </tbody>
-                  </table>
+          <div class="card shadow-sm mt-3">
+            <div class="card-header bg-dark text-white">
+              Issue History
+            </div>
+            <div class="card-body">
+              <ul class="nav nav-tabs" id="reportTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="open-tab" data-bs-toggle="tab" data-bs-target="#openReports"
+                    type="button" role="tab">In-Progress</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="open-tab" data-bs-toggle="tab" data-bs-target="#returned" type="button"
+                    role="tab">Returned </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="open-tab" data-bs-toggle="tab" data-bs-target="#resolved" type="button"
+                    role="tab">Resolved</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="open-tab" data-bs-toggle="tab" data-bs-target="#reopen" type="button"
+                    role="tab">Re-opened</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="closed-tab" data-bs-toggle="tab" data-bs-target="#closedReports"
+                    type="button" role="tab">Closed</button>
+                </li>
+              </ul>
+              <!-- Open / Closed Reports Table -->
+              <div class="tab-content mt-4">
+                <!-- Open Reports -->
+                <div class="tab-pane fade show active" id="openReports" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center">
+                      <thead class="table-primary">
+                        <tr>
+                          <th>Requested By</th>
+                          <th>Action</th>
+                          <th>Status</th>
+                          <th>Type of User</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>District</th>
+                          <th>Date</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Subcategory</th>
+                          <th>Ack No</th>
+                          <th>Remarks</th>
+                          <th>Attachment</th>
+                          <th>Helpdesk Notes</th>
+                          <th>Helpdesk Upload</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>OPR001</td>
+                          <td><button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                              data-bs-target=".issueDetailsModal1">View</button></td>
+                          <td><span class="badge bg-info text-dark">In Progress</span></td>
+                          <td>Citizen</td>
+                          <td>John</td>
+                          <td>9876543210</td>
+                          <td>Dharmapuri</td>
+                          <td>28-04-2025 11:43 AM</td>
+                          <td>Service Delay</td>
+                          <td>Application</td>
+                          <td>Certificate Issue</td>
+                          <td>ACK12345</td>
+                          <td>Remarks given</td>
+                          <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
+                          <td>--</td>
+                          <td>---</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-              <!-- Returned Reports -->
-              <div class="tab-pane fade" id="returned" role="tabpanel">
-                <div class="table-responsive shadow-sm rounded">
-                  <table class="table table-striped table-hover align-middle text-center">
-                    <thead class="table-primary">
-                      <tr>
-                        <th>Requested By</th>
-                        <th>Action</th>
-                        <th>Status</th>
-                        <th>Type of User</th>
-                        <th>Name</th>
-                        <th>Mobile</th>
-                        <th>District</th>
-                        <th>Date</th>
-                        <th>Issue Type</th>
-                        <th>Category</th>
-                        <th>Subcategory</th>
-                        <th>Ack No</th>
-                        <th>Remarks</th>
-                        <th>Attachment</th>
-                        <th>Helpdesk Notes</th>
-                        <th>Helpdesk Upload</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>OPR001</td>
-                        <td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target=".issueDetailsModal2">View</button></td>
-                        <td><span class="badge bg-danger">Returned</span></td>
-                        <td>Citizen</td>
-                        <td>John</td>
-                        <td>9876543210</td>
-                        <td>Dharmapuri</td>
-                        <td>28-04-2025 11:43 AM</td>
-                        <td>Service Delay</td>
-                        <td>Application</td>
-                        <td>Certificate Issue</td>
-                        <td>ACK12345</td>
-                        <td>Remarks given</td>
-                        <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
-                        <td>--</td>
-                        <td>---</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <!-- Returned Reports -->
+                <div class="tab-pane fade" id="returned" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center">
+                      <thead class="table-primary">
+                        <tr>
+                          <th>Requested By</th>
+                          <th>Action</th>
+                          <th>Status</th>
+                          <th>Type of User</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>District</th>
+                          <th>Date</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Subcategory</th>
+                          <th>Ack No</th>
+                          <th>Remarks</th>
+                          <th>Attachment</th>
+                          <th>Helpdesk Notes</th>
+                          <th>Helpdesk Upload</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>OPR001</td>
+                          <td><button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                              data-bs-target=".issueDetailsModal2">View</button></td>
+                          <td><span class="badge bg-danger">Returned</span></td>
+                          <td>Citizen</td>
+                          <td>John</td>
+                          <td>9876543210</td>
+                          <td>Dharmapuri</td>
+                          <td>28-04-2025 11:43 AM</td>
+                          <td>Service Delay</td>
+                          <td>Application</td>
+                          <td>Certificate Issue</td>
+                          <td>ACK12345</td>
+                          <td>Remarks given</td>
+                          <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
+                          <td>--</td>
+                          <td>---</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-              <!-- Resolved Reports -->
-              <div class="tab-pane fade" id="resolved" role="tabpanel">
-                <div class="table-responsive shadow-sm rounded">
-                  <table class="table table-striped table-hover align-middle text-center">
-                    <thead class="table-primary">
-                      <tr>
-                        <th>Requested By</th>
-                        <th>Action</th>
-                        <th>Status</th>
-                        <th>Type of User</th>
-                        <th>Name</th>
-                        <th>Mobile</th>
-                        <th>District</th>
-                        <th>Date</th>
-                        <th>Issue Type</th>
-                        <th>Category</th>
-                        <th>Subcategory</th>
-                        <th>Ack No</th>
-                        <th>Remarks</th>
-                        <th>Attachment</th>
-                        <th>Helpdesk Notes</th>
-                        <th>Helpdesk Upload</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>OPR001</td>
-                        <td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target=".issueDetailsModal3">View</button></td>
-                        <td><span class="badge bg-success">Resolved</span></td>
-                        <td>Citizen</td>
-                        <td>John</td>
-                        <td>9876543210</td>
-                        <td>Dharmapuri</td>
-                        <td>28-04-2025 11:43 AM</td>
-                        <td>Service Delay</td>
-                        <td>Application</td>
-                        <td>Certificate Issue</td>
-                        <td>ACK12345</td>
-                        <td>Remarks given</td>
-                        <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
-                        <td>--</td>
-                        <td>---</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <!-- Resolved Reports -->
+                <div class="tab-pane fade" id="resolved" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center">
+                      <thead class="table-primary">
+                        <tr>
+                          <th>Requested By</th>
+                          <th>Action</th>
+                          <th>Status</th>
+                          <th>Type of User</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>District</th>
+                          <th>Date</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Subcategory</th>
+                          <th>Ack No</th>
+                          <th>Remarks</th>
+                          <th>Attachment</th>
+                          <th>Helpdesk Notes</th>
+                          <th>Helpdesk Upload</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>OPR001</td>
+                          <td><button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                              data-bs-target=".issueDetailsModal3">View</button></td>
+                          <td><span class="badge bg-success">Resolved</span></td>
+                          <td>Citizen</td>
+                          <td>John</td>
+                          <td>9876543210</td>
+                          <td>Dharmapuri</td>
+                          <td>28-04-2025 11:43 AM</td>
+                          <td>Service Delay</td>
+                          <td>Application</td>
+                          <td>Certificate Issue</td>
+                          <td>ACK12345</td>
+                          <td>Remarks given</td>
+                          <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
+                          <td>--</td>
+                          <td>---</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-              <!-- Resolved Reports -->
-              <div class="tab-pane fade" id="reopen" role="tabpanel">
-                <div class="table-responsive shadow-sm rounded">
-                  <table class="table table-striped table-hover align-middle text-center">
-                    <thead class="table-primary">
-                      <tr>
-                        <th>Requested By</th>
-                        <th>Action</th>
-                        <th>Status</th>
-                        <th>Type of User</th>
-                        <th>Name</th>
-                        <th>Mobile</th>
-                        <th>District</th>
-                        <th>Date</th>
-                        <th>Issue Type</th>
-                        <th>Category</th>
-                        <th>Subcategory</th>
-                        <th>Ack No</th>
-                        <th>Remarks</th>
-                        <th>Attachment</th>
-                        <th>Helpdesk Notes</th>
-                        <th>Helpdesk Upload</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>OPR001</td>
-                        <td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target=".issueDetailsModal4">View</button></td>
-                        <td><span class="badge bg-primary">Re-Opened</span></td>
-                        <td>Citizen</td>
-                        <td>John</td>
-                        <td>9876543210</td>
-                        <td>Dharmapuri</td>
-                        <td>28-04-2025 11:43 AM</td>
-                        <td>Service Delay</td>
-                        <td>Application</td>
-                        <td>Certificate Issue</td>
-                        <td>ACK12345</td>
-                        <td>Remarks given</td>
-                        <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
-                        <td>--</td>
-                        <td>---</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <!-- Resolved Reports -->
+                <div class="tab-pane fade" id="reopen" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center">
+                      <thead class="table-primary">
+                        <tr>
+                          <th>Requested By</th>
+                          <th>Action</th>
+                          <th>Status</th>
+                          <th>Type of User</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>District</th>
+                          <th>Date</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Subcategory</th>
+                          <th>Ack No</th>
+                          <th>Remarks</th>
+                          <th>Attachment</th>
+                          <th>Helpdesk Notes</th>
+                          <th>Helpdesk Upload</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>OPR001</td>
+                          <td><button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                              data-bs-target=".issueDetailsModal4">View</button></td>
+                          <td><span class="badge bg-primary">Re-Opened</span></td>
+                          <td>Citizen</td>
+                          <td>John</td>
+                          <td>9876543210</td>
+                          <td>Dharmapuri</td>
+                          <td>28-04-2025 11:43 AM</td>
+                          <td>Service Delay</td>
+                          <td>Application</td>
+                          <td>Certificate Issue</td>
+                          <td>ACK12345</td>
+                          <td>Remarks given</td>
+                          <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
+                          <td>--</td>
+                          <td>---</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-              <!-- Closed Reports -->
-              <div class="tab-pane fade" id="closedReports" role="tabpanel">
-                <div class="table-responsive shadow-sm rounded">
-                  <table class="table table-striped table-hover align-middle text-center">
-                    <thead class="table-primary">
-                      <tr>
-                        <th>Requested By</th>
-                        <th>Action</th>
-                        <th>Status</th>
-                        <th>Type of User</th>
-                        <th>Name</th>
-                        <th>Mobile</th>
-                        <th>District</th>
-                        <th>Date</th>
-                        <th>Issue Type</th>
-                        <th>Category</th>
-                        <th>Subcategory</th>
-                        <th>Ack No</th>
-                        <th>Remarks</th>
-                        <th>Attachment</th>
-                        <th>Helpdesk Notes</th>
-                        <th>Helpdesk Upload</th>
-                        <th>Citizen Remarks</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>OPR001</td>
-                        <td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target=".issueDetailsModal5">View</button></td>
-                        <td><span class="badge bg-secondary">Closed</span></td>
-                        <td>Citizen</td>
-                        <td>John</td>
-                        <td>9876543210</td>
-                        <td>Dharmapuri</td>
-                        <td>28-04-2025 11:43 AM</td>
-                        <td>Service Delay</td>
-                        <td>Application</td>
-                        <td>Certificate Issue</td>
-                        <td>ACK12345</td>
-                        <td>Remarks given</td>
-                        <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
-                        <td>--</td>
-                        <td>---</td>
-                        <td>issue fixed</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <!-- Closed Reports -->
+                <div class="tab-pane fade" id="closedReports" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center">
+                      <thead class="table-primary">
+                        <tr>
+                          <th>Requested By</th>
+                          <th>Action</th>
+                          <th>Status</th>
+                          <th>Type of User</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>District</th>
+                          <th>Date</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Subcategory</th>
+                          <th>Ack No</th>
+                          <th>Remarks</th>
+                          <th>Attachment</th>
+                          <th>Helpdesk Notes</th>
+                          <th>Helpdesk Upload</th>
+                          <th>Citizen Remarks</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>OPR001</td>
+                          <td><button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                              data-bs-target=".issueDetailsModal5">View</button></td>
+                          <td><span class="badge bg-secondary">Closed</span></td>
+                          <td>Citizen</td>
+                          <td>John</td>
+                          <td>9876543210</td>
+                          <td>Dharmapuri</td>
+                          <td>28-04-2025 11:43 AM</td>
+                          <td>Service Delay</td>
+                          <td>Application</td>
+                          <td>Certificate Issue</td>
+                          <td>ACK12345</td>
+                          <td>Remarks given</td>
+                          <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
+                          <td>--</td>
+                          <td>---</td>
+                          <td>issue fixed</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-          
-          
+
+
         </div>
         <!-- On-Behalf Tickets Parent Tab -->
         <div class="tab-pane fade" id="behalfTickets" role="tabpanel" aria-labelledby="behalf-tab">
           <!-- Sub-Tabs -->
-          
-           <!-- Issue History -->
-        <div class="card shadow-sm mt-3">
-          <div class="card-header bg-dark text-white">
-            Issue History
-          </div>
-          <div class="card-body">
-            <ul class="nav nav-tabs" id="reportTabs" role="tablist">
-              <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="open-tab" data-bs-toggle="tab" data-bs-target="#openReports1" type="button" role="tab">In-Progress</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="open-tab" data-bs-toggle="tab" data-bs-target="#returned1" type="button" role="tab">Returned </button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="open-tab" data-bs-toggle="tab" data-bs-target="#resolved1" type="button" role="tab">Resolved</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="open-tab" data-bs-toggle="tab" data-bs-target="#reopen1" type="button" role="tab">Re-opened</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="closed-tab" data-bs-toggle="tab" data-bs-target="#closedReports1" type="button" role="tab">Closed</button>
-              </li>
-            </ul>
-            <!-- Open / Closed Reports Table -->
-            <div class="tab-content mt-4">
-              <!-- Open Reports -->
-              <div class="tab-pane fade show active" id="openReports1" role="tabpanel">
-                <div class="table-responsive shadow-sm rounded">
-                  <table class="table table-striped table-hover align-middle text-center">
-                    <thead class="table-primary">
-                      <tr>
-                        <th>Requested By</th>
-                        <th>Action</th>
-                        <th>Status</th>
-                        <th>Relationship Type</th>
-                        <th>Type of User</th>
-                        <th>Name</th>
-                        <th>Mobile</th>
-                        <th>District</th>
-                        <th>Date</th>
-                        <th>Issue Type</th>
-                        <th>Category</th>
-                        <th>Subcategory</th>
-                        <th>Ack No</th>
-                        <th>Remarks</th>
-                        <th>Attachment</th>
-                        <th>Helpdesk Notes</th>
-                        <th>Helpdesk Upload</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>OPR001</td>
-                        <td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target=".issueDetailsModal1">View</button></td>
-                        <td><span class="badge bg-info text-dark">In Progress</span></td>
-                        <td>Friend</td>
-                        <td>Citizen</td>
-                        <td>John</td>
-                        <td>9876543210</td>
-                        <td>Dharmapuri</td>
-                        <td>28-04-2025 11:43 AM</td>
-                        <td>Service Delay</td>
-                        <td>Application</td>
-                        <td>Certificate Issue</td>
-                        <td>ACK12345</td>
-                        <td>Remarks given</td>
-                        <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
-                        <td>--</td>
-                        <td>---</td>
-                      </tr>
-                    </tbody>
-                  </table>
+
+          <!-- Issue History -->
+          <div class="card shadow-sm mt-3">
+            <div class="card-header bg-dark text-white">
+              Issue History
+            </div>
+            <div class="card-body">
+              <ul class="nav nav-tabs" id="reportTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="open-tab" data-bs-toggle="tab" data-bs-target="#openReports1"
+                    type="button" role="tab">In-Progress</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="open-tab" data-bs-toggle="tab" data-bs-target="#returned1" type="button"
+                    role="tab">Returned </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="open-tab" data-bs-toggle="tab" data-bs-target="#resolved1" type="button"
+                    role="tab">Resolved</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="open-tab" data-bs-toggle="tab" data-bs-target="#reopen1" type="button"
+                    role="tab">Re-opened</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="closed-tab" data-bs-toggle="tab" data-bs-target="#closedReports1"
+                    type="button" role="tab">Closed</button>
+                </li>
+              </ul>
+              <!-- Open / Closed Reports Table -->
+              <div class="tab-content mt-4">
+                <!-- Open Reports -->
+                <div class="tab-pane fade show active" id="openReports1" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center">
+                      <thead class="table-primary">
+                        <tr>
+                          <th>Requested By</th>
+                          <th>Action</th>
+                          <th>Status</th>
+                          <th>Relationship Type</th>
+                          <th>Type of User</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>District</th>
+                          <th>Date</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Subcategory</th>
+                          <th>Ack No</th>
+                          <th>Remarks</th>
+                          <th>Attachment</th>
+                          <th>Helpdesk Notes</th>
+                          <th>Helpdesk Upload</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>OPR001</td>
+                          <td><button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                              data-bs-target=".issueDetailsModal1">View</button></td>
+                          <td><span class="badge bg-info text-dark">In Progress</span></td>
+                          <td>Friend</td>
+                          <td>Citizen</td>
+                          <td>John</td>
+                          <td>9876543210</td>
+                          <td>Dharmapuri</td>
+                          <td>28-04-2025 11:43 AM</td>
+                          <td>Service Delay</td>
+                          <td>Application</td>
+                          <td>Certificate Issue</td>
+                          <td>ACK12345</td>
+                          <td>Remarks given</td>
+                          <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
+                          <td>--</td>
+                          <td>---</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-              <!-- Returned Reports -->
-              <div class="tab-pane fade" id="returned1" role="tabpanel">
-                <div class="table-responsive shadow-sm rounded">
-                  <table class="table table-striped table-hover align-middle text-center">
-                    <thead class="table-primary">
-                      <tr>
-                        <th>Requested By</th>
-                        <th>Action</th>
-                        <th>Status</th>
-                        <th>Relationship Type</th>
-                        <th>Type of User</th>
-                        <th>Name</th>
-                        <th>Mobile</th>
-                        <th>District</th>
-                        <th>Date</th>
-                        <th>Issue Type</th>
-                        <th>Category</th>
-                        <th>Subcategory</th>
-                        <th>Ack No</th>
-                        <th>Remarks</th>
-                        <th>Attachment</th>
-                        <th>Helpdesk Notes</th>
-                        <th>Helpdesk Upload</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>OPR001</td>
-                        <td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target=".issueDetailsModal2">View</button></td>
-                        <td><span class="badge bg-danger">Returned</span></td>
-                        <td>Friend</td>
-                        <td>Citizen</td>
-                        <td>John</td>
-                        <td>9876543210</td>
-                        <td>Dharmapuri</td>
-                        <td>28-04-2025 11:43 AM</td>
-                        <td>Service Delay</td>
-                        <td>Application</td>
-                        <td>Certificate Issue</td>
-                        <td>ACK12345</td>
-                        <td>Remarks given</td>
-                        <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
-                        <td>--</td>
-                        <td>---</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <!-- Returned Reports -->
+                <div class="tab-pane fade" id="returned1" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center">
+                      <thead class="table-primary">
+                        <tr>
+                          <th>Requested By</th>
+                          <th>Action</th>
+                          <th>Status</th>
+                          <th>Relationship Type</th>
+                          <th>Type of User</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>District</th>
+                          <th>Date</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Subcategory</th>
+                          <th>Ack No</th>
+                          <th>Remarks</th>
+                          <th>Attachment</th>
+                          <th>Helpdesk Notes</th>
+                          <th>Helpdesk Upload</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>OPR001</td>
+                          <td><button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                              data-bs-target=".issueDetailsModal2">View</button></td>
+                          <td><span class="badge bg-danger">Returned</span></td>
+                          <td>Friend</td>
+                          <td>Citizen</td>
+                          <td>John</td>
+                          <td>9876543210</td>
+                          <td>Dharmapuri</td>
+                          <td>28-04-2025 11:43 AM</td>
+                          <td>Service Delay</td>
+                          <td>Application</td>
+                          <td>Certificate Issue</td>
+                          <td>ACK12345</td>
+                          <td>Remarks given</td>
+                          <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
+                          <td>--</td>
+                          <td>---</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-              <!-- Resolved Reports -->
-              <div class="tab-pane fade" id="resolved1" role="tabpanel">
-                <div class="table-responsive shadow-sm rounded">
-                  <table class="table table-striped table-hover align-middle text-center">
-                    <thead class="table-primary">
-                      <tr>
-                        <th>Requested By</th>
-                        <th>Action</th>
-                        <th>Status</th>
-                        <th>Relationship Type</th>
-                        <th>Type of User</th>
-                        <th>Name</th>
-                        <th>Mobile</th>
-                        <th>District</th>
-                        <th>Date</th>
-                        <th>Issue Type</th>
-                        <th>Category</th>
-                        <th>Subcategory</th>
-                        <th>Ack No</th>
-                        <th>Remarks</th>
-                        <th>Attachment</th>
-                        <th>Helpdesk Notes</th>
-                        <th>Helpdesk Upload</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>OPR001</td>
-                        <td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target=".issueDetailsModal3">View</button></td>
-                        <td><span class="badge bg-success">Resolved</span></td>
-                        <td>Friend</td>
-                        <td>Citizen</td>
-                        <td>John</td>
-                        <td>9876543210</td>
-                        <td>Dharmapuri</td>
-                        <td>28-04-2025 11:43 AM</td>
-                        <td>Service Delay</td>
-                        <td>Application</td>
-                        <td>Certificate Issue</td>
-                        <td>ACK12345</td>
-                        <td>Remarks given</td>
-                        <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
-                        <td>--</td>
-                        <td>---</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <!-- Resolved Reports -->
+                <div class="tab-pane fade" id="resolved1" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center">
+                      <thead class="table-primary">
+                        <tr>
+                          <th>Requested By</th>
+                          <th>Action</th>
+                          <th>Status</th>
+                          <th>Relationship Type</th>
+                          <th>Type of User</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>District</th>
+                          <th>Date</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Subcategory</th>
+                          <th>Ack No</th>
+                          <th>Remarks</th>
+                          <th>Attachment</th>
+                          <th>Helpdesk Notes</th>
+                          <th>Helpdesk Upload</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>OPR001</td>
+                          <td><button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                              data-bs-target=".issueDetailsModal3">View</button></td>
+                          <td><span class="badge bg-success">Resolved</span></td>
+                          <td>Friend</td>
+                          <td>Citizen</td>
+                          <td>John</td>
+                          <td>9876543210</td>
+                          <td>Dharmapuri</td>
+                          <td>28-04-2025 11:43 AM</td>
+                          <td>Service Delay</td>
+                          <td>Application</td>
+                          <td>Certificate Issue</td>
+                          <td>ACK12345</td>
+                          <td>Remarks given</td>
+                          <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
+                          <td>--</td>
+                          <td>---</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-              <!-- Resolved Reports -->
-              <div class="tab-pane fade" id="reopen1" role="tabpanel">
-                <div class="table-responsive shadow-sm rounded">
-                  <table class="table table-striped table-hover align-middle text-center">
-                    <thead class="table-primary">
-                      <tr>
-                        <th>Requested By</th>
-                        <th>Action</th>
-                        <th>Status</th>
-                        <th>Relationship Type</th>
-                        <th>Type of User</th>
-                        <th>Name</th>
-                        <th>Mobile</th>
-                        <th>District</th>
-                        <th>Date</th>
-                        <th>Issue Type</th>
-                        <th>Category</th>
-                        <th>Subcategory</th>
-                        <th>Ack No</th>
-                        <th>Remarks</th>
-                        <th>Attachment</th>
-                        <th>Helpdesk Notes</th>
-                        <th>Helpdesk Upload</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>OPR001</td>
-                        <td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target=".issueDetailsModal4">View</button></td>
-                        <td><span class="badge bg-primary">Re-Opened</span></td>
-                        <td>Friend</td>
-                        <td>Citizen</td>
-                        <td>John</td>
-                        <td>9876543210</td>
-                        <td>Dharmapuri</td>
-                        <td>28-04-2025 11:43 AM</td>
-                        <td>Service Delay</td>
-                        <td>Application</td>
-                        <td>Certificate Issue</td>
-                        <td>ACK12345</td>
-                        <td>Remarks given</td>
-                        <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
-                        <td>--</td>
-                        <td>---</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <!-- Resolved Reports -->
+                <div class="tab-pane fade" id="reopen1" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center">
+                      <thead class="table-primary">
+                        <tr>
+                          <th>Requested By</th>
+                          <th>Action</th>
+                          <th>Status</th>
+                          <th>Relationship Type</th>
+                          <th>Type of User</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>District</th>
+                          <th>Date</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Subcategory</th>
+                          <th>Ack No</th>
+                          <th>Remarks</th>
+                          <th>Attachment</th>
+                          <th>Helpdesk Notes</th>
+                          <th>Helpdesk Upload</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>OPR001</td>
+                          <td><button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                              data-bs-target=".issueDetailsModal4">View</button></td>
+                          <td><span class="badge bg-primary">Re-Opened</span></td>
+                          <td>Friend</td>
+                          <td>Citizen</td>
+                          <td>John</td>
+                          <td>9876543210</td>
+                          <td>Dharmapuri</td>
+                          <td>28-04-2025 11:43 AM</td>
+                          <td>Service Delay</td>
+                          <td>Application</td>
+                          <td>Certificate Issue</td>
+                          <td>ACK12345</td>
+                          <td>Remarks given</td>
+                          <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
+                          <td>--</td>
+                          <td>---</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-              <!-- Closed Reports -->
-              <div class="tab-pane fade" id="closedReports1" role="tabpanel">
-                <div class="table-responsive shadow-sm rounded">
-                  <table class="table table-striped table-hover align-middle text-center">
-                    <thead class="table-primary">
-                      <tr>
-                        <th>Requested By</th>
-                        <th>Action</th>
-                        <th>Status</th>
-                        <th>Relationship Type</th>
-                        <th>Type of User</th>
-                        <th>Name</th>
-                        <th>Mobile</th>
-                        <th>District</th>
-                        <th>Date</th>
-                        <th>Issue Type</th>
-                        <th>Category</th>
-                        <th>Subcategory</th>
-                        <th>Ack No</th>
-                        <th>Remarks</th>
-                        <th>Attachment</th>
-                        <th>Helpdesk Notes</th>
-                        <th>Helpdesk Upload</th>
-                        <th>Citizen Remarks</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>OPR001</td>
-                        <td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target=".issueDetailsModal5">View</button></td>
-                        <td><span class="badge bg-secondary">Closed</span></td>
-                        <td>Friend</td>
-                        <td>Citizen</td>
-                        <td>John</td>
-                        <td>9876543210</td>
-                        <td>Dharmapuri</td>
-                        <td>28-04-2025 11:43 AM</td>
-                        <td>Service Delay</td>
-                        <td>Application</td>
-                        <td>Certificate Issue</td>
-                        <td>ACK12345</td>
-                        <td>Remarks given</td>
-                        <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
-                        <td>--</td>
-                        <td>---</td>
-                        <td>issue fixed</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <!-- Closed Reports -->
+                <div class="tab-pane fade" id="closedReports1" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center">
+                      <thead class="table-primary">
+                        <tr>
+                          <th>Requested By</th>
+                          <th>Action</th>
+                          <th>Status</th>
+                          <th>Relationship Type</th>
+                          <th>Type of User</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>District</th>
+                          <th>Date</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Subcategory</th>
+                          <th>Ack No</th>
+                          <th>Remarks</th>
+                          <th>Attachment</th>
+                          <th>Helpdesk Notes</th>
+                          <th>Helpdesk Upload</th>
+                          <th>Citizen Remarks</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>OPR001</td>
+                          <td><button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                              data-bs-target=".issueDetailsModal5">View</button></td>
+                          <td><span class="badge bg-secondary">Closed</span></td>
+                          <td>Friend</td>
+                          <td>Citizen</td>
+                          <td>John</td>
+                          <td>9876543210</td>
+                          <td>Dharmapuri</td>
+                          <td>28-04-2025 11:43 AM</td>
+                          <td>Service Delay</td>
+                          <td>Application</td>
+                          <td>Certificate Issue</td>
+                          <td>ACK12345</td>
+                          <td>Remarks given</td>
+                          <td><a href="#" data-bs-toggle="modal" data-bs-target=".attachmentModal">View</a></td>
+                          <td>--</td>
+                          <td>---</td>
+                          <td>issue fixed</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-          
-          
+
+
         </div>
       </div>
 
 
 
 
-        
 
 
 
-      </div>
-      <!-- <div class="card shadow-sm border-0 p-3 mb-4">
+
+    </div>
+    <!-- <div class="card shadow-sm border-0 p-3 mb-4">
         <h5 class="mb-3 section-title">Recent Activities</h5>
           <div class="table-responsive shadow-sm rounded">
           <table class="table table-striped table-hover align-middle text-center">
@@ -1187,668 +1369,675 @@
           </table>
         </div>
         </div> -->
-    </div>
-    <!-- Footer -->
-    <footer>
-      &copy; 2025 My Dashboard. All rights reserved.
-    </footer>
-    <!-- in-progress -->
-    <!-- closed modal -->
-    <!-- Issue Details Modal with Timeline -->
-    <div class="modal fade issueDetailsModal1" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header bg-dark text-white">
-            <h5 class="modal-title">Issue Details - ISS-101</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+  </div>
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 My Dashboard. All rights reserved.
+  </footer>
+  <!-- in-progress -->
+  <!-- closed modal -->
+  <!-- Issue Details Modal with Timeline -->
+  <div class="modal fade issueDetailsModal1" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title">Issue Details - ISS-101</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Basic Details -->
+          <h6 class="fw-bold mb-2">Issue Information</h6>
+          <table class="table table-sm table-bordered">
+            <tr>
+              <th>District</th>
+              <td>Nilgiris</td>
+            </tr>
+            <tr>
+              <th>Taluk</th>
+              <td>Coonoor</td>
+            </tr>
+            <tr>
+              <th>Category</th>
+              <td>Water Supply</td>
+            </tr>
+            <tr>
+              <th>Sub Category</th>
+              <td>Pipeline Leakage</td>
+            </tr>
+            <tr>
+              <th>Remarks</th>
+              <td>Leak near main road</td>
+            </tr>
+            <tr>
+              <th>Status</th>
+              <td><span class="badge bg-warning">Pending</span></td>
+            </tr>
+          </table>
+          <!-- Timeline -->
+          <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
+          <div class="timeline-wrapper">
+            <ul class="timeline">
+              <li class="timeline-item">
+                <div class="timeline-icon bg-success">
+                  <i class="bi bi-check-circle-fill text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Citizen submitted issue</h6>
+                  <small class="text-muted">2025-08-20, 09:30 AM</small>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-icon bg-primary">
+                  <i class="bi bi-person-workspace text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Assigned to Helpdesk Operator</h6>
+                  <small class="text-muted">2025-08-20, 10:00 AM</small>
+                </div>
+              </li>
+            </ul>
           </div>
-          <div class="modal-body">
-            <!-- Basic Details -->
-            <h6 class="fw-bold mb-2">Issue Information</h6>
-            <table class="table table-sm table-bordered">
-              <tr>
-                <th>District</th>
-                <td>Nilgiris</td>
-              </tr>
-              <tr>
-                <th>Taluk</th>
-                <td>Coonoor</td>
-              </tr>
-              <tr>
-                <th>Category</th>
-                <td>Water Supply</td>
-              </tr>
-              <tr>
-                <th>Sub Category</th>
-                <td>Pipeline Leakage</td>
-              </tr>
-              <tr>
-                <th>Remarks</th>
-                <td>Leak near main road</td>
-              </tr>
-              <tr>
-                <th>Status</th>
-                <td><span class="badge bg-warning">Pending</span></td>
-              </tr>
-            </table>
-            <!-- Timeline -->
-            <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
-            <div class="timeline-wrapper">
-              <ul class="timeline">
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-success">
-                    <i class="bi bi-check-circle-fill text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Citizen submitted issue</h6>
-                    <small class="text-muted">2025-08-20, 09:30 AM</small>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-primary">
-                    <i class="bi bi-person-workspace text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Assigned to Helpdesk Operator</h6>
-                    <small class="text-muted">2025-08-20, 10:00 AM</small>
-                  </div>
-                </li>
-              </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- closed modal -->
+  <!-- in-progress -->
+  <!-- returned -->
+  <!-- closed modal -->
+  <!-- Issue Details Modal with Timeline -->
+  <div class="modal fade issueDetailsModal2" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title">Issue Details - ISS-101</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Basic Details -->
+          <h6 class="fw-bold mb-2">Issue Information</h6>
+          <table class="table table-sm table-bordered">
+            <tr>
+              <th>District</th>
+              <td>Nilgiris</td>
+            </tr>
+            <tr>
+              <th>Taluk</th>
+              <td>Coonoor</td>
+            </tr>
+            <tr>
+              <th>Category</th>
+              <td>Water Supply</td>
+            </tr>
+            <tr>
+              <th>Sub Category</th>
+              <td>Pipeline Leakage</td>
+            </tr>
+            <tr>
+              <th>Remarks</th>
+              <td>Leak near main road</td>
+            </tr>
+            <tr>
+              <th>Status</th>
+              <td><span class="badge bg-warning">Pending</span></td>
+            </tr>
+          </table>
+          <!-- Timeline -->
+          <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
+          <div class="timeline-wrapper">
+            <ul class="timeline">
+              <li class="timeline-item">
+                <div class="timeline-icon bg-success">
+                  <i class="bi bi-check-circle-fill text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Citizen submitted issue</h6>
+                  <small class="text-muted">2025-08-20, 09:30 AM</small>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-icon bg-primary">
+                  <i class="bi bi-person-workspace text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Assigned to Helpdesk Operator</h6>
+                  <small class="text-muted">2025-08-20, 10:00 AM</small>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-icon bg-warning">
+                  <i class="bi bi-tools text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Work In Progress</h6>
+                  <small class="text-muted">2025-08-21, 02:15 PM</small>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-icon bg-success">
+                  <i class="bi bi-check2-circle text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Completed - Pipeline repaired successfully</h6>
+                  <small class="text-muted">2025-08-22, 11:00 AM</small>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="card p-4 shadow-sm border-0 rounded-3">
+            <h5 class="mb-3">HelpDesk Feedback</h5>
+            <!-- Feedback Textarea -->
+            <div class="mb-3">
+              <label for="citizenFeedback" class="form-label">Your Feedback</label>
+              <label class="form-label w-100">issue Closed</label>
+            </div>
+            <!-- Mark as Closed (Toggle) -->
+            <div class="form-check form-switch mb-3">
+              <!-- <input class="form-check-input" type="checkbox" id="markClosed"> -->
+              <label class="form-check-label fw-bold text-success" for="markClosed">Marked this request as
+                Closed</label>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- closed modal -->
-    <!-- in-progress -->
-    <!-- returned -->
-    <!-- closed modal -->
-    <!-- Issue Details Modal with Timeline -->
-    <div class="modal fade issueDetailsModal2" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header bg-dark text-white">
-            <h5 class="modal-title">Issue Details - ISS-101</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <!-- Basic Details -->
-            <h6 class="fw-bold mb-2">Issue Information</h6>
-            <table class="table table-sm table-bordered">
-              <tr>
-                <th>District</th>
-                <td>Nilgiris</td>
-              </tr>
-              <tr>
-                <th>Taluk</th>
-                <td>Coonoor</td>
-              </tr>
-              <tr>
-                <th>Category</th>
-                <td>Water Supply</td>
-              </tr>
-              <tr>
-                <th>Sub Category</th>
-                <td>Pipeline Leakage</td>
-              </tr>
-              <tr>
-                <th>Remarks</th>
-                <td>Leak near main road</td>
-              </tr>
-              <tr>
-                <th>Status</th>
-                <td><span class="badge bg-warning">Pending</span></td>
-              </tr>
-            </table>
-            <!-- Timeline -->
-            <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
-            <div class="timeline-wrapper">
-              <ul class="timeline">
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-success">
-                    <i class="bi bi-check-circle-fill text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Citizen submitted issue</h6>
-                    <small class="text-muted">2025-08-20, 09:30 AM</small>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-primary">
-                    <i class="bi bi-person-workspace text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Assigned to Helpdesk Operator</h6>
-                    <small class="text-muted">2025-08-20, 10:00 AM</small>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-warning">
-                    <i class="bi bi-tools text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Work In Progress</h6>
-                    <small class="text-muted">2025-08-21, 02:15 PM</small>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-success">
-                    <i class="bi bi-check2-circle text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Completed - Pipeline repaired successfully</h6>
-                    <small class="text-muted">2025-08-22, 11:00 AM</small>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="card p-4 shadow-sm border-0 rounded-3">
-              <h5 class="mb-3">HelpDesk Feedback</h5>
-              <!-- Feedback Textarea -->
-              <div class="mb-3">
-                <label for="citizenFeedback" class="form-label">Your Feedback</label>
-                <label class="form-label w-100">issue Closed</label>
-              </div>
-              <!-- Mark as Closed (Toggle) -->
-              <div class="form-check form-switch mb-3">
-                <!-- <input class="form-check-input" type="checkbox" id="markClosed"> -->
-                <label class="form-check-label fw-bold text-success" for="markClosed">Marked this request as Closed</label>
-              </div>
-            </div>
-          </div>
+  </div>
+  <!-- closed modal -->
+  <!-- returned -->
+  <!-- Attachment Modal -->
+  <div class="modal fade attachmentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">Issue Attachments</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-      </div>
-    </div>
-    <!-- closed modal -->
-    <!-- returned -->
-    <!-- Attachment Modal --> 
-    <div class="modal fade attachmentModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title">Issue Attachments</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body text-center">
-            <!-- Sample attachment previews -->
-            <div id="attachmentCarousel" class="carousel slide" data-bs-ride="carousel">
-              <div class="carousel-inner">
-                <div class="carousel-item active">
-                  <img src="https://via.placeholder.com/600x400?text=Attachment+1" class="d-block w-100 rounded">
-                </div>
-                <div class="carousel-item">
-                  <img src="https://via.placeholder.com/600x400?text=Attachment+2" class="d-block w-100 rounded">
-                </div>
+        <div class="modal-body text-center">
+          <!-- Sample attachment previews -->
+          <div id="attachmentCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img src="https://via.placeholder.com/600x400?text=Attachment+1" class="d-block w-100 rounded">
               </div>
-              <button class="carousel-control-prev" type="button" data-bs-target="#attachmentCarousel" data-bs-slide="prev">
+              <div class="carousel-item">
+                <img src="https://via.placeholder.com/600x400?text=Attachment+2" class="d-block w-100 rounded">
+              </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#attachmentCarousel"
+              data-bs-slide="prev">
               <span class="carousel-control-prev-icon"></span>
-              </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#attachmentCarousel" data-bs-slide="next">
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#attachmentCarousel"
+              data-bs-slide="next">
               <span class="carousel-control-next-icon"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Issue Details Modal with Timeline -->
+  <div class="modal fade issueDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title">Issue Details - ISS-101</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Basic Details -->
+          <h6 class="fw-bold mb-2">Issue Information</h6>
+          <table class="table table-sm table-bordered">
+            <tr>
+              <th>District</th>
+              <td>Nilgiris</td>
+            </tr>
+            <tr>
+              <th>Taluk</th>
+              <td>Coonoor</td>
+            </tr>
+            <tr>
+              <th>Category</th>
+              <td>Water Supply</td>
+            </tr>
+            <tr>
+              <th>Sub Category</th>
+              <td>Pipeline Leakage</td>
+            </tr>
+            <tr>
+              <th>Remarks</th>
+              <td>Leak near main road</td>
+            </tr>
+            <tr>
+              <th>Status</th>
+              <td><span class="badge bg-warning">Pending</span></td>
+            </tr>
+          </table>
+          <!-- Timeline -->
+          <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
+          <div class="timeline-wrapper">
+            <ul class="timeline">
+              <li class="timeline-item">
+                <div class="timeline-icon bg-success">
+                  <i class="bi bi-check-circle-fill text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Citizen submitted issue</h6>
+                  <small class="text-muted">2025-08-20, 09:30 AM</small>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-icon bg-primary">
+                  <i class="bi bi-person-workspace text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Assigned to Helpdesk Operator</h6>
+                  <small class="text-muted">2025-08-20, 10:00 AM</small>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-icon bg-warning">
+                  <i class="bi bi-tools text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Work In Progress</h6>
+                  <small class="text-muted">2025-08-21, 02:15 PM</small>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-icon bg-success">
+                  <i class="bi bi-check2-circle text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Completed - Pipeline repaired successfully</h6>
+                  <small class="text-muted">2025-08-22, 11:00 AM</small>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="card p-4 shadow-sm border-0 rounded-3">
+            <h5 class="mb-3">Citizen Feedback</h5>
+            <!-- Feedback Textarea -->
+            <div class="mb-3">
+              <label for="citizenFeedback" class="form-label">Your Feedback</label>
+              <textarea class="form-control" id="citizenFeedback" rows="4"
+                placeholder="Enter your feedback here..."></textarea>
+            </div>
+            <!-- Mark as Closed (Toggle) -->
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" id="markClosed">
+              <label class="form-check-label fw-bold text-success" for="markClosed">Mark this request as Closed</label>
+            </div>
+            <div class="col-md-3">
+              <!-- Submit Button -->
+              <button type="button" class="btn btn-primary w-100">
+                Submit Feedback
               </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- Issue Details Modal with Timeline -->
-    <div class="modal fade issueDetailsModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header bg-dark text-white">
-            <h5 class="modal-title">Issue Details - ISS-101</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+  </div>
+  <!-- resolved -->
+  <div class="modal fade issueDetailsModal3" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title">Issue Details - ISS-101</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Basic Details -->
+          <h6 class="fw-bold mb-2">Issue Information</h6>
+          <table class="table table-sm table-bordered">
+            <tr>
+              <th>District</th>
+              <td>Nilgiris</td>
+            </tr>
+            <tr>
+              <th>Taluk</th>
+              <td>Coonoor</td>
+            </tr>
+            <tr>
+              <th>Category</th>
+              <td>Water Supply</td>
+            </tr>
+            <tr>
+              <th>Sub Category</th>
+              <td>Pipeline Leakage</td>
+            </tr>
+            <tr>
+              <th>Remarks</th>
+              <td>Leak near main road</td>
+            </tr>
+            <tr>
+              <th>Status</th>
+              <td><span class="badge bg-warning">Pending</span></td>
+            </tr>
+          </table>
+          <!-- Timeline -->
+          <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
+          <div class="timeline-wrapper">
+            <ul class="timeline">
+              <li class="timeline-item">
+                <div class="timeline-icon bg-success">
+                  <i class="bi bi-check-circle-fill text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Citizen submitted issue</h6>
+                  <small class="text-muted">2025-08-20, 09:30 AM</small>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-icon bg-primary">
+                  <i class="bi bi-person-workspace text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Assigned to Helpdesk Operator</h6>
+                  <small class="text-muted">2025-08-20, 10:00 AM</small>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-icon bg-warning">
+                  <i class="bi bi-tools text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Work In Progress</h6>
+                  <small class="text-muted">2025-08-21, 02:15 PM</small>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-icon bg-success">
+                  <i class="bi bi-check2-circle text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Completed - Pipeline repaired successfully</h6>
+                  <small class="text-muted">2025-08-22, 11:00 AM</small>
+                </div>
+              </li>
+            </ul>
           </div>
-          <div class="modal-body">
-            <!-- Basic Details -->
-            <h6 class="fw-bold mb-2">Issue Information</h6>
-            <table class="table table-sm table-bordered">
-              <tr>
-                <th>District</th>
-                <td>Nilgiris</td>
-              </tr>
-              <tr>
-                <th>Taluk</th>
-                <td>Coonoor</td>
-              </tr>
-              <tr>
-                <th>Category</th>
-                <td>Water Supply</td>
-              </tr>
-              <tr>
-                <th>Sub Category</th>
-                <td>Pipeline Leakage</td>
-              </tr>
-              <tr>
-                <th>Remarks</th>
-                <td>Leak near main road</td>
-              </tr>
-              <tr>
-                <th>Status</th>
-                <td><span class="badge bg-warning">Pending</span></td>
-              </tr>
-            </table>
-            <!-- Timeline -->
-            <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
-            <div class="timeline-wrapper">
-              <ul class="timeline">
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-success">
-                    <i class="bi bi-check-circle-fill text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Citizen submitted issue</h6>
-                    <small class="text-muted">2025-08-20, 09:30 AM</small>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-primary">
-                    <i class="bi bi-person-workspace text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Assigned to Helpdesk Operator</h6>
-                    <small class="text-muted">2025-08-20, 10:00 AM</small>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-warning">
-                    <i class="bi bi-tools text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Work In Progress</h6>
-                    <small class="text-muted">2025-08-21, 02:15 PM</small>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-success">
-                    <i class="bi bi-check2-circle text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Completed - Pipeline repaired successfully</h6>
-                    <small class="text-muted">2025-08-22, 11:00 AM</small>
-                  </div>
-                </li>
-              </ul>
+          <div class="card p-4 shadow-sm border-0 rounded-3">
+            <h5 class="mb-3">Citizen Feedback</h5>
+            <!-- Feedback Textarea -->
+            <div class="mb-3">
+              <label for="citizenFeedback" class="form-label">Your Feedback</label>
+              <textarea class="form-control" id="citizenFeedback" rows="4"
+                placeholder="Enter your feedback here..."></textarea>
             </div>
-            <div class="card p-4 shadow-sm border-0 rounded-3">
-              <h5 class="mb-3">Citizen Feedback</h5>
-              <!-- Feedback Textarea -->
-              <div class="mb-3">
-                <label for="citizenFeedback" class="form-label">Your Feedback</label>
-                <textarea class="form-control" id="citizenFeedback" rows="4" placeholder="Enter your feedback here..."></textarea>
-              </div>
-              <!-- Mark as Closed (Toggle) -->
-              <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" id="markClosed">
-                <label class="form-check-label fw-bold text-success" for="markClosed">Mark this request as Closed</label>
-              </div>
-              <div class="col-md-3">
-                <!-- Submit Button -->
-                <button type="button" class="btn btn-primary w-100">
+            <!-- Mark as Closed (Toggle) -->
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" id="markClosed">
+              <label class="form-check-label fw-bold text-success" for="markClosed">Mark this request as Closed</label>
+            </div>
+            <div class="col-md-3">
+              <!-- Submit Button -->
+              <button type="button" class="btn btn-primary w-100">
                 Submit Feedback
-                </button>
-              </div>
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- resolved -->
-    <div class="modal fade issueDetailsModal3" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header bg-dark text-white">
-            <h5 class="modal-title">Issue Details - ISS-101</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+  </div>
+  <!-- resolved -->
+  <!-- re-opened -->
+  <div class="modal fade issueDetailsModal4" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title">Issue Details - ISS-101</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Basic Details -->
+          <h6 class="fw-bold mb-2">Issue Information</h6>
+          <table class="table table-sm table-bordered">
+            <tr>
+              <th>District</th>
+              <td>Nilgiris</td>
+            </tr>
+            <tr>
+              <th>Taluk</th>
+              <td>Coonoor</td>
+            </tr>
+            <tr>
+              <th>Category</th>
+              <td>Water Supply</td>
+            </tr>
+            <tr>
+              <th>Sub Category</th>
+              <td>Pipeline Leakage</td>
+            </tr>
+            <tr>
+              <th>Remarks</th>
+              <td>Leak near main road</td>
+            </tr>
+            <tr>
+              <th>Status</th>
+              <td><span class="badge bg-warning">Pending</span></td>
+            </tr>
+          </table>
+          <!-- Timeline -->
+          <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
+          <div class="timeline-wrapper">
+            <ul class="timeline">
+              <li class="timeline-item">
+                <div class="timeline-icon bg-success">
+                  <i class="bi bi-check-circle-fill text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Citizen submitted issue</h6>
+                  <small class="text-muted">2025-08-20, 09:30 AM</small>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-icon bg-primary">
+                  <i class="bi bi-person-workspace text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Assigned to Helpdesk Operator</h6>
+                  <small class="text-muted">2025-08-20, 10:00 AM</small>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-icon bg-warning">
+                  <i class="bi bi-tools text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Work In Progress</h6>
+                  <small class="text-muted">2025-08-21, 02:15 PM</small>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-icon bg-success">
+                  <i class="bi bi-check2-circle text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Completed - Pipeline repaired successfully</h6>
+                  <small class="text-muted">2025-08-22, 11:00 AM</small>
+                </div>
+              </li>
+            </ul>
           </div>
-          <div class="modal-body">
-            <!-- Basic Details -->
-            <h6 class="fw-bold mb-2">Issue Information</h6>
-            <table class="table table-sm table-bordered">
-              <tr>
-                <th>District</th>
-                <td>Nilgiris</td>
-              </tr>
-              <tr>
-                <th>Taluk</th>
-                <td>Coonoor</td>
-              </tr>
-              <tr>
-                <th>Category</th>
-                <td>Water Supply</td>
-              </tr>
-              <tr>
-                <th>Sub Category</th>
-                <td>Pipeline Leakage</td>
-              </tr>
-              <tr>
-                <th>Remarks</th>
-                <td>Leak near main road</td>
-              </tr>
-              <tr>
-                <th>Status</th>
-                <td><span class="badge bg-warning">Pending</span></td>
-              </tr>
-            </table>
-            <!-- Timeline -->
-            <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
-            <div class="timeline-wrapper">
-              <ul class="timeline">
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-success">
-                    <i class="bi bi-check-circle-fill text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Citizen submitted issue</h6>
-                    <small class="text-muted">2025-08-20, 09:30 AM</small>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-primary">
-                    <i class="bi bi-person-workspace text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Assigned to Helpdesk Operator</h6>
-                    <small class="text-muted">2025-08-20, 10:00 AM</small>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-warning">
-                    <i class="bi bi-tools text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Work In Progress</h6>
-                    <small class="text-muted">2025-08-21, 02:15 PM</small>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-success">
-                    <i class="bi bi-check2-circle text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Completed - Pipeline repaired successfully</h6>
-                    <small class="text-muted">2025-08-22, 11:00 AM</small>
-                  </div>
-                </li>
-              </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- re-opened -->
+  <!-- closed modal -->
+  <!-- Issue Details Modal with Timeline -->
+  <div class="modal fade issueDetailsModal5" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title">Issue Details - ISS-101</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Basic Details -->
+          <h6 class="fw-bold mb-2">Issue Information</h6>
+          <table class="table table-sm table-bordered">
+            <tr>
+              <th>District</th>
+              <td>Nilgiris</td>
+            </tr>
+            <tr>
+              <th>Taluk</th>
+              <td>Coonoor</td>
+            </tr>
+            <tr>
+              <th>Category</th>
+              <td>Water Supply</td>
+            </tr>
+            <tr>
+              <th>Sub Category</th>
+              <td>Pipeline Leakage</td>
+            </tr>
+            <tr>
+              <th>Remarks</th>
+              <td>Leak near main road</td>
+            </tr>
+            <tr>
+              <th>Status</th>
+              <td><span class="badge bg-warning">Pending</span></td>
+            </tr>
+          </table>
+          <!-- Timeline -->
+          <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
+          <div class="timeline-wrapper">
+            <ul class="timeline">
+              <li class="timeline-item">
+                <div class="timeline-icon bg-success">
+                  <i class="bi bi-check-circle-fill text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Citizen submitted issue</h6>
+                  <small class="text-muted">2025-08-20, 09:30 AM</small>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-icon bg-primary">
+                  <i class="bi bi-person-workspace text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Assigned to Helpdesk Operator</h6>
+                  <small class="text-muted">2025-08-20, 10:00 AM</small>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-icon bg-warning">
+                  <i class="bi bi-tools text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Work In Progress</h6>
+                  <small class="text-muted">2025-08-21, 02:15 PM</small>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-icon bg-success">
+                  <i class="bi bi-check2-circle text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">Completed - Pipeline repaired successfully</h6>
+                  <small class="text-muted">2025-08-22, 11:00 AM</small>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="card p-4 shadow-sm border-0 rounded-3">
+            <h5 class="mb-3">Citizen Feedback</h5>
+            <!-- Feedback Textarea -->
+            <div class="mb-3">
+              <label for="citizenFeedback" class="form-label">Your Feedback</label>
+              <label class="form-label w-100">issue Closed</label>
             </div>
-            <div class="card p-4 shadow-sm border-0 rounded-3">
-              <h5 class="mb-3">Citizen Feedback</h5>
-              <!-- Feedback Textarea -->
-              <div class="mb-3">
-                <label for="citizenFeedback" class="form-label">Your Feedback</label>
-                <textarea class="form-control" id="citizenFeedback" rows="4" placeholder="Enter your feedback here..."></textarea>
-              </div>
-              <!-- Mark as Closed (Toggle) -->
-              <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" id="markClosed">
-                <label class="form-check-label fw-bold text-success" for="markClosed">Mark this request as Closed</label>
-              </div>
-              <div class="col-md-3">
-                <!-- Submit Button -->
-                <button type="button" class="btn btn-primary w-100">
-                Submit Feedback
-                </button>
-              </div>
+            <!-- Mark as Closed (Toggle) -->
+            <div class="form-check form-switch mb-3">
+              <!-- <input class="form-check-input" type="checkbox" id="markClosed"> -->
+              <label class="form-check-label fw-bold text-success" for="markClosed">Marked this request as
+                Closed</label>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- resolved -->
-    <!-- re-opened -->
-    <div class="modal fade issueDetailsModal4" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header bg-dark text-white">
-            <h5 class="modal-title">Issue Details - ISS-101</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <!-- Basic Details -->
-            <h6 class="fw-bold mb-2">Issue Information</h6>
-            <table class="table table-sm table-bordered">
-              <tr>
-                <th>District</th>
-                <td>Nilgiris</td>
-              </tr>
-              <tr>
-                <th>Taluk</th>
-                <td>Coonoor</td>
-              </tr>
-              <tr>
-                <th>Category</th>
-                <td>Water Supply</td>
-              </tr>
-              <tr>
-                <th>Sub Category</th>
-                <td>Pipeline Leakage</td>
-              </tr>
-              <tr>
-                <th>Remarks</th>
-                <td>Leak near main road</td>
-              </tr>
-              <tr>
-                <th>Status</th>
-                <td><span class="badge bg-warning">Pending</span></td>
-              </tr>
-            </table>
-            <!-- Timeline -->
-            <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
-            <div class="timeline-wrapper">
-              <ul class="timeline">
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-success">
-                    <i class="bi bi-check-circle-fill text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Citizen submitted issue</h6>
-                    <small class="text-muted">2025-08-20, 09:30 AM</small>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-primary">
-                    <i class="bi bi-person-workspace text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Assigned to Helpdesk Operator</h6>
-                    <small class="text-muted">2025-08-20, 10:00 AM</small>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-warning">
-                    <i class="bi bi-tools text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Work In Progress</h6>
-                    <small class="text-muted">2025-08-21, 02:15 PM</small>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-success">
-                    <i class="bi bi-check2-circle text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Completed - Pipeline repaired successfully</h6>
-                    <small class="text-muted">2025-08-22, 11:00 AM</small>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- re-opened -->
-    <!-- closed modal -->
-    <!-- Issue Details Modal with Timeline -->
-    <div class="modal fade issueDetailsModal5" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header bg-dark text-white">
-            <h5 class="modal-title">Issue Details - ISS-101</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <!-- Basic Details -->
-            <h6 class="fw-bold mb-2">Issue Information</h6>
-            <table class="table table-sm table-bordered">
-              <tr>
-                <th>District</th>
-                <td>Nilgiris</td>
-              </tr>
-              <tr>
-                <th>Taluk</th>
-                <td>Coonoor</td>
-              </tr>
-              <tr>
-                <th>Category</th>
-                <td>Water Supply</td>
-              </tr>
-              <tr>
-                <th>Sub Category</th>
-                <td>Pipeline Leakage</td>
-              </tr>
-              <tr>
-                <th>Remarks</th>
-                <td>Leak near main road</td>
-              </tr>
-              <tr>
-                <th>Status</th>
-                <td><span class="badge bg-warning">Pending</span></td>
-              </tr>
-            </table>
-            <!-- Timeline -->
-            <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
-            <div class="timeline-wrapper">
-              <ul class="timeline">
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-success">
-                    <i class="bi bi-check-circle-fill text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Citizen submitted issue</h6>
-                    <small class="text-muted">2025-08-20, 09:30 AM</small>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-primary">
-                    <i class="bi bi-person-workspace text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Assigned to Helpdesk Operator</h6>
-                    <small class="text-muted">2025-08-20, 10:00 AM</small>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-warning">
-                    <i class="bi bi-tools text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Work In Progress</h6>
-                    <small class="text-muted">2025-08-21, 02:15 PM</small>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-success">
-                    <i class="bi bi-check2-circle text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">Completed - Pipeline repaired successfully</h6>
-                    <small class="text-muted">2025-08-22, 11:00 AM</small>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="card p-4 shadow-sm border-0 rounded-3">
-              <h5 class="mb-3">Citizen Feedback</h5>
-              <!-- Feedback Textarea -->
-              <div class="mb-3">
-                <label for="citizenFeedback" class="form-label">Your Feedback</label>
-                <label class="form-label w-100">issue Closed</label>
-              </div>
-              <!-- Mark as Closed (Toggle) -->
-              <div class="form-check form-switch mb-3">
-                <!-- <input class="form-check-input" type="checkbox" id="markClosed"> -->
-                <label class="form-check-label fw-bold text-success" for="markClosed">Marked this request as Closed</label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- closed modal -->
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var options = {
-          chart: {
-            type: 'donut',
-            height: 250
-          },
-          series: [44, 33, 23], // Example: Pending, In-Progress, Completed
-          labels: ['Pending', 'In-Progress', 'Completed'],
-          colors: ['#f39c12', '#3498db', '#2ecc71'],
-          legend: {
-            position: 'bottom'
-          },
-          dataLabels: {
-            enabled: true,
-            formatter: function (val) {
-              return val.toFixed(1) + "%";
-            }
-          }
-        };
-      
-        var chart = new ApexCharts(document.querySelector("#tasksChart"), options);
-        chart.render();
-      });
-    </script>
-    <script>
-      // Sidebar toggle
-      const sidebarToggle = document.getElementById('sidebarToggle');
-      const sidebar = document.getElementById('sidebar');
-      
-      sidebarToggle.addEventListener('click', () => {
-        if (window.innerWidth < 992) {
-          // Mobile: slide in/out
-          sidebar.classList.toggle('show');
-        } else {
-          // Desktop: collapse sidebar
-          document.body.classList.toggle('sidebar-collapsed');
-        }
-      });
-      
-      // Close mobile sidebar when clicking outside
-      document.addEventListener('click', function(e) {
-        if (window.innerWidth < 992) {
-          if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
-            sidebar.classList.remove('show');
-          }
-        }
-      });
-      
-      // Display current date and time
-      function updateDateTime() {
-        const now = new Date();
-        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
-        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        document.getElementById('currentDateTime').textContent = now.toLocaleDateString(undefined, options) + ' ' + timeString;
-      }
-      setInterval(updateDateTime, 1000);
-      updateDateTime();
-    </script>
-    <script>
+  </div>
+  <!-- closed modal -->
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
       var options = {
+        chart: {
+          type: 'donut',
+          height: 250
+        },
+        series: [44, 33, 23], // Example: Pending, In-Progress, Completed
+        labels: ['Pending', 'In-Progress', 'Completed'],
+        colors: ['#f39c12', '#3498db', '#2ecc71'],
+        legend: {
+          position: 'bottom'
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: function (val) {
+            return val.toFixed(1) + "%";
+          }
+        }
+      };
+
+      var chart = new ApexCharts(document.querySelector("#tasksChart"), options);
+      chart.render();
+    });
+  </script>
+  <script>
+    // Sidebar toggle
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+
+    sidebarToggle.addEventListener('click', () => {
+      if (window.innerWidth < 992) {
+        // Mobile: slide in/out
+        sidebar.classList.toggle('show');
+      } else {
+        // Desktop: collapse sidebar
+        document.body.classList.toggle('sidebar-collapsed');
+      }
+    });
+
+    // Close mobile sidebar when clicking outside
+    document.addEventListener('click', function (e) {
+      if (window.innerWidth < 992) {
+        if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+          sidebar.classList.remove('show');
+        }
+      }
+    });
+
+    // Display current date and time
+    function updateDateTime() {
+      const now = new Date();
+      const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+      const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('currentDateTime').textContent = now.toLocaleDateString(undefined, options) + ' ' + timeString;
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+  </script>
+  <script>
+    var options = {
       chart: { type: 'line', height: 250 },
       series: [{ name: 'Requests', data: [10, 15, 8, 12, 20, 25, 18] }],
-      xaxis: { categories: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] }
-      };
-      var chart = new ApexCharts(document.querySelector("#requestsChart"), options);
-      chart.render();
-      
-    </script>
-  </body>
+      xaxis: { categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] }
+    };
+    var chart = new ApexCharts(document.querySelector("#requestsChart"), options);
+    chart.render();
+
+  </script>
+</body>
+
 </html>
