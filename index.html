@@ -7,6 +7,7 @@
 
   <!-- Bootstrap 5.3 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -14,8 +15,6 @@
   <!-- AOS -->
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
   <style type="text/css">
     .front-face .card, .card-inner .card {
@@ -143,7 +142,7 @@
 
                   <!-- Screen 1: Mobile -->
                   <div class="screen screen1">
-                    <i class="fa-solid fa-mobile-screen step-icon"></i>
+                    <i class="bi bi-phone step-icon"></i>
                     <h4 class="mb-3">Citizen Login – Mobile</h4>
                     <div class="mb-3 text-start">
                       <label class="form-label fw-semibold">Mobile Number</label>
@@ -181,7 +180,7 @@
 
                     <!-- Screen 1 (Register mobile) -->
                     <div class="screen screen1">
-                      <i class="fa-solid fa-mobile-screen step-icon"></i>
+                      <i class="bi bi-phone step-icon"></i>
                       <h4 class="mb-3">Register – Mobile</h4>
                       <div class="mb-3 text-start">
                         <label class="form-label fw-semibold">Mobile Number</label>
@@ -261,55 +260,64 @@
       </div>
 
       <!-- RIGHT: brief -->
-     <aside class="brief-panel aos-init aos-animate" data-aos="fade-left">
-          <div>
-            <h3 class="brief-heading">What you can do</h3>
-            <p class="brief-sub">Quick actions &amp; services available to every citizen. Simple steps — faster resolution.</p>
-            <div class="activity-list">
-              <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="50">
-                <div class="icon"><i class="fa-solid fa-ticket"></i></div>
-                <div>
-                  <p class="title mb-0">Raise a Grievance</p>
-                  <p class="desc mb-0">Create a ticket for service issues, apply corrections or report problems.</p>
-                </div>
-              </div>
-              <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-                <div class="icon"><i class="fa-solid fa-circle-check"></i></div>
-                <div>
-                  <p class="title mb-0">Track Ticket Status</p>
-                  <p class="desc mb-0">Monitor progress of your requests and get timely updates.</p>
-                </div>
-              </div>
-              <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="150">
-                <div class="icon"><i class="fa-solid fa-phone"></i></div>
-                <div>
-                  <p class="title mb-0">Helpline &amp; Support</p>
-                  <p class="desc mb-0">Access dedicated helpline numbers and escalation options.</p>
-                </div>
-              </div>
-              <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
-                <div class="icon"><i class="fa-solid fa-file-arrow-up"></i></div>
-                <div>
-                  <p class="title mb-0">Upload Documents</p>
-                  <p class="desc mb-0">Attach supporting documents for faster verification.</p>
-                </div>
-              </div>
-              <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="250">
-                <div class="icon"><i class="fa-solid fa-users"></i></div>
-                <div>
-                  <p class="title mb-0">Community Feedback</p>
-                  <p class="desc mb-0">Share suggestions and see community responses.</p>
-                </div>
-              </div>
-            </div>
-            <div class="brief-cta">
-              <a href="#" class="btn btn-outline-primary w-100"><i class="fa-solid fa-plus me-2"></i>Raise Grievance</a>
-            </div>
-            <div class="mt-3 help-block">
-              <strong>Tip:</strong> Keep your mobile active to receive OTPs. For documents, ensure files are under 1MB for faster upload.
-            </div>
-          </div>
-        </aside>
+      <aside class="brief-panel aos-init aos-animate" data-aos="fade-left">
+  <div>
+    <h3 class="brief-heading">What you can do</h3>
+    <p class="brief-sub">Quick actions &amp; services available to every citizen. Simple steps — faster resolution.</p>
+    <div class="activity-list">
+      
+      <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="50">
+        <div class="icon"><i class="bi bi-ticket-perforated"></i></div>
+        <div>
+          <p class="title mb-0">Raise a Grievance</p>
+          <p class="desc mb-0">Create a ticket for service issues, apply corrections or report problems.</p>
+        </div>
+      </div>
+
+      <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+        <div class="icon"><i class="bi bi-check-circle"></i></div>
+        <div>
+          <p class="title mb-0">Track Ticket Status</p>
+          <p class="desc mb-0">Monitor progress of your requests and get timely updates.</p>
+        </div>
+      </div>
+
+      <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="150">
+        <div class="icon"><i class="bi bi-telephone-fill"></i></div>
+        <div>
+          <p class="title mb-0">Helpline &amp; Support</p>
+          <p class="desc mb-0">Access dedicated helpline numbers and escalation options.</p>
+        </div>
+      </div>
+
+      <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+        <div class="icon"><i class="bi bi-file-earmark-arrow-up"></i></div>
+        <div>
+          <p class="title mb-0">Upload Documents</p>
+          <p class="desc mb-0">Attach supporting documents for faster verification.</p>
+        </div>
+      </div>
+
+      <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="250">
+        <div class="icon"><i class="bi bi-people"></i></div>
+        <div>
+          <p class="title mb-0">Community Feedback</p>
+          <p class="desc mb-0">Share suggestions and see community responses.</p>
+        </div>
+      </div>
+      
+    </div>
+    <div class="brief-cta">
+      <a href="#" class="btn btn-outline-primary w-100"><i class="bi bi-plus me-2"></i>Raise Grievance</a>
+    </div>
+    <div class="mt-3 help-block">
+      <strong>Tip:</strong> Keep your mobile active to receive OTPs. For documents, ensure files are under 1MB for faster upload.
+    </div>
+  </div>
+</aside>
+
+
+
     </div>
   </div>
 
