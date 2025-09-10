@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EDM Grievance Portal</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/font/bootstrap-icons.css" rel="stylesheet"> 
+    <link href="assets/css/aos.css" rel="stylesheet">
+    <style type="text/css">
+      /* Back to Top Button */
+      #backToTop {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      display: none;
+      z-index: 999;
+      width: 55px;               /* equal width & height */
+      height: 55px;
+      border-radius: 50%;        /* perfect circle */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;           /* bigger icon */
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease-in-out;
+      }
+      #backToTop:hover {
+      transform: translateY(-5px) scale(1.1);
+      }
+      img.about_img {
+      width: 100%;
+      border-radius: 7px;
+      } 
+      a.nav-link.active {
+      /*      color: #004aad;*/
+      color: #ffd700;
+      font-weight: 700;
+      } 
+      /* Header Logo */
+      .header-logo {
+      height: 50px;
+      transition: transform 0.3s ease;
+      }
+      .header-logo:hover {
+      transform: scale(1.08);
+      }
+      /* Header Title */
+      .header-title {
+      font-size: 1.5rem;
+      color: #002b5c;
+      font-weight: 700;
+      }
+      /* Nav Menu */
+      .nav-menu ul {
+      list-style: none;
+      padding: 0;
+      }
+      .nav-menu .nav-link {
+      text-decoration: none;
+      font-weight: 400;
+      /*  color: #333; */
+      color: #f4f4f4;
+      position: relative;
+      padding: 5px 0;
+      transition: color 0.3s ease;
+      }
+      .nav-menu .nav-link:hover {
+      /*  color: #004aad;*/
+      color: #ffd700;
+      }
+      /* Underline Hover Animation */
+      .nav-menu .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background: #004aad;
+      transition: width 0.3s ease;
+      }
+      .nav-menu .nav-link:hover::after {
+      width: 100%;
+      }
+      /* Responsive */
+      @media (max-width: 768px) {
+      .main-header {
+      flex-direction: column;
+      text-align: center;
+      }
+      .nav-menu ul {
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 10px;
+      }
+      }
+    </style>
+    <style>
+      /* Sub Header */
+      .sub-header {
+      /*      background: linear-gradient(90deg, #002b5c, #004080);*/
+      background: #00367a; 
+      color: #fff;
+      font-size: 0.9rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1050; /* above main header */
+      transition: transform 0.4s ease, opacity 0.4s ease;
+      }
+      .sub-header i {
+      margin-right: 5px;
+      color: #ffd700;
+      }
+      .font-btn {
+      background: transparent;
+      border: 1px solid #fff;
+      color: #fff;
+      padding: 2px 8px;
+      margin: 0 1px;
+      font-weight: bold;
+      border-radius: 4px;
+      transition: all 0.3s;
+      }
+      .font-btn:hover {
+      background: #ffd700;
+      color: #002b5c;
+      }
+      .access-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      }
+      .access-btn:hover {
+      background: #ffd700;
+      color: #002b5c;
+      transform: scale(1.1);
+      }
+      /* Main Header */
+      .main-header {
+      /*      background: #fff;*/
+      background: #004aad;
+      color: #fff;
+      position: fixed; /* was sticky */
+      top: 40px; /* placed under sub-header */
+      left: 0;
+      right: 0;
+      z-index: 1040;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: top 0.4s ease; /* so it slides up when subheader hides */
+      }
+      .main-header.compact {
+      top: 0; /* when sub-header hidden */
+      }
+      /* Push body content below both headers */
+      body.with-subheader {
+      padding-top: 120px; /* sub-header (40px) + main header (~80px) */
+      }
+      .main-header .header-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #fff;
+      text-align: center;
+      }
+      .header-logo {
+      height: 55px;
+      transition: transform 0.3s ease;
+      }
+      .header-logo:hover {
+      transform: scale(1.05);
+      }
+      .sub-header.hide {
+      transform: translateY(-100%);
+      opacity: 0;
+      }
+    </style>
+    <style>
+      .stat-box {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .stat-box:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+      }
+    </style>
+    <style>
+      body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg,#f4f9ff,#e6f0ff);
+      color:#333;
+      }
+      /* Header */
+      header {
+      background:#004aad;
+      color:#fff;
+      padding:1rem 2rem;
+      position:fixed; top:0; width:100%; z-index:1000;
+      display:flex; align-items:center; justify-content:space-between;
+      }
+      .header-title { flex:1; text-align:center; font-size:1.4rem; font-weight:600; }
+      header img { height:50px; }
+      .spacer { height:90px; } /* pushes body below fixed header */
+      /* Modules */
+      .module-card {
+      background:#fff; border-radius:1rem; padding:2rem 1.5rem;
+      box-shadow:0 6px 18px rgba(0,0,0,0.08);
+      text-align:center; transition:.3s; 
+      /*      cursor:pointer;*/
+      }
+      .module-card:hover { transform:translateY(-6px); box-shadow:0 10px 25px rgba(0,0,0,0.12); }
+      .module-card i { font-size:3rem; color:#004aad; margin-bottom:1rem; }
+      /* About */
+      .about-section { background:#fff; padding:4rem 2rem; }
+      /* Stats */
+      /*    .stats-section { background:#004aad; padding:4rem 2rem; text-align:center; }
+      .stat-box h2 { font-size:2.5rem; font-weight:bold; }*/
+      /* FAQ */
+      .faq-section { background:#f9fbff; padding:4rem 2rem; }
+      /* CTA */
+      .cta-section {
+      background:linear-gradient(135deg,#004aad,#0077ff);
+      color:#fff; text-align:center; padding:4rem 2rem;
+      }
+      /* Footer */
+      /*footer { background:#002d72; color:#eee; padding:2rem 1rem; text-align:center; }
+      footer a { color:#fff; text-decoration:none; margin:0 .5rem; }*/
+    </style>
+    <!--  <style>
+      .footer-section a:hover {
+        color: #ffd700 !important;
+      }
+      .footer-bottom {
+        font-size: 0.85rem;
+        opacity: 0.9;
+      }
+      </style> -->
+    <style>
+      .footer-section {
+      background: linear-gradient(135deg, #002b5c, #003d7a);
+      position: relative;
+      overflow: hidden;
+      }
+      .footer-links li {
+      margin-bottom: 8px;
+      }
+      .footer-links a {
+      color: #ddd;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      }
+      .footer-links a:hover {
+      color: #ffd700;
+      transform: translateX(4px);
+      }
+      .social-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      transition: all 0.3s ease;
+      }
+      .social-btn:hover {
+      background: #ffd700;
+      color: #002b5c;
+      transform: scale(1.1);
+      }
+      .footer-bottom {
+      background: rgba(0,0,0,0.2);
+      backdrop-filter: blur(6px);
+      font-size: 0.9rem;
+      color: #ccc;
+      }
+      /* --- Hero Section --- */
+      .hero {
+      background: linear-gradient(to right, #004aad, #007bff);
+      color: #fff;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-top: 150px; 
+      }
+      .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      }
+      .hero p {
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      }
+      .hero .btn {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 2rem;
+      }
+      .hero .shape {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.15;
+      background: #fff;
+      animation: float 6s ease-in-out infinite;
+      }
+      .shape1 { width: 200px; height: 200px; top: -50px; left: -50px; }
+      .shape2 { width: 150px; height: 150px; bottom: -40px; right: -40px; }
+      @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+      } 
+    </style>
+    <style>
+      .vision-title-alt {
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #111;
+      position: relative;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      }
+      .vision-title-alt span {
+      position: relative;
+      display: inline-block;
+      background: linear-gradient(90deg, #004fb5, #feb47b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      padding: 0 4px;
+      } 
+      .vision-title-alt span::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: rgb(255 215 0);
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      } 
+      .vision-title-alt:hover span::after {
+      height: 6px;
+      background: rgb(231 195 0 / 82%);
+      } 
+      .vision-sub {
+      font-size: 1.1rem;
+      color: #666;
+      max-width: 750px;
+      margin: 0 auto;
+      font-weight: 500;
+      }
+
+      .active-login {
+    background: #004aad;
+    border: 1px solid #fcfcfc;
+    padding: 6px 16px;
+    border-radius: 4px 7px;
+    list-style: none;
+    margin-right: 10px;
+    transition: all 0.3s ease-in-out; /* smooth animation */ 
+}
+.active-login:hover {
+  background: linear-gradient(135deg, #004aad, #007bff); /* gradient blue */
+  transform: translateY(-2px) scale(1.03); /* subtle lift effect */
+  box-shadow: 0 4px 12px rgba(0, 74, 173, 0.3); /* glowing shadow */
+}
+
+.stars {
+    background: url(assets/img/stars.svg);
+}
+.inset-0 {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+}
+.absolute {
+    position: absolute;
+}
+    </style>
+  </head>
+  <body>
+    <!-- Sub Header -->
+    <div class="sub-header py-2 px-3 d-flex justify-content-between align-items-center">
+      <div class="d-flex gap-4 align-items-center">
+        <span><i class="bi bi-telephone-fill"></i> +91 98765 43210</span>
+        <span><i class="bi bi-envelope-fill"></i> support@edmportal.in</span>
+      </div>
+      <div class="d-flex gap-3 align-items-center">   
+        <!-- Font Size Controls --> 
+        <div class="font-controls text-center">
+          <button class="font-btn btn btn-outline-secondary" id="font-decrease">A-</button>
+          <button class="font-btn btn btn-outline-secondary" id="font-reset">A</button>
+          <button class="font-btn btn btn-outline-secondary" id="font-increase">A+</button>
+        </div> 
+        <!-- Accessibility -->
+        <div class="access-icons d-flex gap-2">
+          <button class="access-btn" title="High Contrast"><i class="bi bi-circle-half"></i></button>
+          <button class="access-btn" title="Screen Reader"><i class="bi bi-person-hearts"></i></button>
+          <button class="access-btn" title="Text to Speech"><i class="bi bi-volume-up-fill"></i></button>
+        </div>
+      </div>
+    </div>
+    <!-- Main Header -->
+    <!-- <header class="main-header d-flex justify-content-between align-items-center px-4 py-3">
+      <img src="assets/img/logo.png" alt="Logo Left" class="header-logo">
+      <div class="header-title">EDM Portal – Grievance Redressal</div>
+      <img src="assets/img/tnega.png" alt="Logo Right" class="header-logo">
+      </header> -->
+    <header class="main-header d-flex flex-column flex-md-row justify-content-between align-items-center px-4 py-3">
+      <!-- Left Logo -->
+      <img src="assets/img/logo.png" alt="Logo Left" class="header-logo">
+      <!-- Center Title + Nav -->
+      <div class="text-center flex-grow-1">
+        <div class="header-title fw-bold">EDM Portal – Grievance Redressal</div>
+        <!-- Navigation -->
+        <nav class="nav-menu mt-2">
+          <ul class="d-flex justify-content-center gap-4 mb-0">
+            <li><a href="#home" class="nav-link active"><i class="bi bi-house-door-fill"></i> Home</a></li>
+            <li><a href="#about" class="nav-link"><i class="bi bi-info-circle-fill"></i> About</a></li>
+            <li><a href="#stats" class="nav-link"><i class="bi bi-bar-chart-fill"></i> Stats</a></li>
+            <li><a href="#faq" class="nav-link"><i class="bi bi-question-circle-fill"></i> FAQ</a></li>
+            
+            
+
+
+          </ul>
+        </nav>
+      </div>
+      <!-- Right Logo -->
+      <li class="nav-item active-login">
+  <a href="index.html" class="nav-link text-white">
+    <i class="bi bi-box-arrow-in-right"></i> Login
+  </a>
+</li>
+      <img src="assets/img/tnega.png" alt="Logo Right" class="header-logo">
+    </header>
+    <!-- Hero Section -->
+    <section class="hero" data-aos="fade-up">
+
+      <div class="stars absolute inset-0 bg-center"></div>
+
+      <div class="shape shape1"></div>
+      <div class="shape shape2"></div>
+      <h1>Welcome to Citizen Service Portal</h1>
+      <p>Access government services, track applications, and resolve grievances — all in one place with quick and simple steps.</p>
+      <a href="#" class="btn btn-light text-primary"><i class="bi bi-plus-circle me-2"></i> Get Started</a>
+    </section>
+    <!-- Hero -->
+    <!-- <section class="text-center py-5" data-aos="fade-up"> -->
+    <!-- <h1 class="fw-bold">Welcome to eSevai Grievance Redressal Portal</h1> -->
+    <!-- <p class="lead">Empowering citizens, ensuring accountability & transparency in governance.</p> -->
+    <!-- </section> -->
+    <section class="vision-section py-5 text-center">
+      <div class="container">
+        <h2 class="vision-title-alt" data-aos="fade-up">
+          Empowering citizens, <span>ensuring accountability</span> & <span>transparency</span> in governance.
+        </h2>
+        <p class="vision-sub mt-3" data-aos="fade-up" data-aos-delay="200">
+          Driving innovation in governance with people-first digital transformation.
+        </p>
+      </div>
+    </section>
+    <!-- Modules -->
+    <section class="container pb-5">
+      <div class="row g-4">
+        <!-- <h2 class="text-center pt-5 fw-bold">Empowering citizens, ensuring accountability & transparency in governance.</h2> -->
+        <div class="col-md-4 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="100">
+          <div class="module-card">
+            <i class="bi bi-people"></i>
+            <h5>Citizen</h5>
+            <p>Register &amp; track your grievances, requests, and helpline queries.</p>
+          </div>
+        </div>
+        <div class="col-md-4 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="200">
+          <div class="module-card">
+            <i class="bi bi-person-badge"></i>
+            <h5>eSevai Operators</h5>
+            <p>Assist citizens in grievance submission and service requests.</p>
+          </div>
+        </div>
+        <!-- <div class="col-md-3 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="300">
+          <div class="module-card" onclick="location.href='cm-helpline.html'">
+            <i class="bi bi-headset"></i>
+            <h5>CM Helpline – Helpdesk</h5>
+            <p>Support citizens through dedicated call centre helplines.</p>
+          </div>
+          </div> -->
+        <div class="col-md-4 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="400">
+          <div class="module-card">
+            <i class="bi bi-building"></i>
+            <h5>Department User</h5>
+            <p>Verify, assign, and resolve grievances within departments.</p>
+          </div>
+        </div>
+        <!--  <div class="col-md-3 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="500">
+          <div class="module-card" onclick="location.href='edm.html'">
+            <i class="bi bi-person-workspace"></i>
+            <h5>e-District Manager</h5>
+            <p>Oversee eSevai services &amp; monitor grievance redressal efficiency.</p>
+          </div>
+          </div>
+          <div class="col-md-3 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="600">
+          <div class="module-card" onclick="location.href='esevai-helpdesk.html'">
+            <i class="bi bi-telephone-inbound"></i>
+            <h5>eSevai Helpdesk</h5>
+            <p>Support &amp; escalation desk for unresolved service requests.</p>
+          </div>
+          </div>
+          <div class="col-md-3 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="700">
+          <div class="module-card" onclick="location.href='esevai-helpdesk-lead.html'">
+            <i class="bi bi-person-lines-fill"></i>
+            <h5>Helpdesk Lead</h5>
+            <p>Lead escalations &amp; ensure SLA compliance in grievance handling.</p>
+          </div>
+          </div> -->
+        <!-- <div class="col-md-3 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="800">
+          <div class="module-card" onclick="location.href='tnega.html'">
+            <i class="bi bi-globe2"></i>
+            <h5>TNeGA Officials</h5>
+            <p>Monitor and manage service operations across Tamil Nadu.</p>
+          </div>
+          </div>
+          <div class="col-md-3 mx-auto aos-init aos-animate" data-aos="zoom-in" data-aos-delay="900">
+          <div class="module-card" onclick="location.href='admin.html'">
+            <i class="bi bi-shield-lock"></i>
+            <h5>Admin</h5>
+            <p>Full control for user management, reports, &amp; platform settings.</p>
+          </div>
+          </div> -->
+      </div>
+    </section>
+    <!-- About -->
+    <!-- <section class="about-section text-center" data-aos="fade-up">
+      <div class="container">
+        <h2 class="fw-bold mb-3">About Us</h2>
+        <p class="lead">The EDM Portal is a unified grievance redressal system developed to ensure timely responses, efficient monitoring, and transparent communication between citizens and government bodies.</p>
+      </div>
+      </section> -->
+    <section class="about-section py-5" data-aos="fade-up">
+      <div class="container">
+        <div class="row align-items-center g-5">
+          <!-- Left Side Content -->
+          <div class="col-lg-6 text-start">
+            <section class="vision-section mb-4">
+              <div class="container">
+                <h2 class="vision-title-alt" data-aos="fade-up">
+                  About the <span>EDM Grievance Portal</span>
+                </h2>
+              </div>
+            </section>
+            <!-- <h2 class="fw-bold mb-3">About the EDM Grievance Portal</h2> -->
+            <p class="lead">
+              The <strong>EDM Grievance Redressal Portal</strong> is a centralized platform designed to 
+              empower citizens, streamline operations, and enhance accountability across all levels of governance.  
+              Built on transparency, efficiency, and inclusivity, it ensures timely redressal of grievances and smooth 
+              coordination among stakeholders.
+            </p>
+            <ul class="list-unstyled mt-4">
+              <li class="mb-3 d-flex align-items-start">
+                <i class="bi bi-people-fill text-primary fs-4 me-3"></i>
+                <span><strong>Citizen-Centric:</strong> Easy grievance registration and real-time tracking.</span>
+              </li>
+              <li class="mb-3 d-flex align-items-start">
+                <i class="bi bi-headset text-success fs-4 me-3"></i>
+                <span><strong>Efficient Operators:</strong> Seamless support through eSevai operators and helplines.</span>
+              </li>
+              <li class="mb-3 d-flex align-items-start">
+                <i class="bi bi-building text-warning fs-4 me-3"></i>
+                <span><strong>Department Accountability:</strong> Clear workflows and defined responsibility channels.</span>
+              </li>
+              <li class="mb-3 d-flex align-items-start">
+                <i class="bi bi-bar-chart-line text-danger fs-4 me-3"></i>
+                <span><strong>Data-Driven Monitoring:</strong> Insights and analytics for eDMs & TNeGA officials.</span>
+              </li>
+            </ul>
+          </div>
+          <!-- Right Side Graphic -->
+          <div class="col-lg-6 text-center" data-aos="zoom-in">
+            <img src="assets/img/1.png" class="about_img" 
+              alt="EDM Portal Illustration" class="img-fluid rounded-4 shadow-lg">
+            <div class="mt-4">
+              <p class="small text-muted">“Complaints and their resolution are fundamental to democracy — ensuring <br>
+                justice and empowerment for every citizen, especially the marginalized.”
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Stats -->
+    <!-- <section class="stats-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3 stat-box" data-aos="fade-up"><h2>5000+</h2><p>Grievances Resolved</p></div>
+          <div class="col-md-3 stat-box" data-aos="fade-up" data-aos-delay="100"><h2>1200+</h2><p>Active Operators</p></div>
+          <div class="col-md-3 stat-box" data-aos="fade-up" data-aos-delay="200"><h2>300+</h2><p>Departments Linked</p></div>
+          <div class="col-md-3 stat-box" data-aos="fade-up" data-aos-delay="300"><h2>99%</h2><p>Resolution Rate</p></div>
+        </div>
+      </div>
+      </section> -->
+    <section class="stats-section py-5 text-center" style="background: linear-gradient(135deg, #f0f7ff, #eaf3ff);">
+      <div class="container">
+        <div class="row g-4">
+          <!-- Stat 1 -->
+          <div class="col-md-3" data-aos="fade-up">
+            <div class="stat-box p-4 rounded-4 shadow-sm bg-white h-100">
+              <i class="bi bi-check-circle-fill text-success fs-1 mb-3"></i>
+              <h2 class="fw-bold">5000+</h2>
+              <p class="mb-0 text-muted">Grievances Resolved</p>
+            </div>
+          </div>
+          <!-- Stat 2 -->
+          <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
+            <div class="stat-box p-4 rounded-4 shadow-sm bg-white h-100">
+              <i class="bi bi-person-badge-fill text-primary fs-1 mb-3"></i>
+              <h2 class="fw-bold">1200+</h2>
+              <p class="mb-0 text-muted">Active Operators</p>
+            </div>
+          </div>
+          <!-- Stat 3 -->
+          <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
+            <div class="stat-box p-4 rounded-4 shadow-sm bg-white h-100">
+              <i class="bi bi-building-fill text-warning fs-1 mb-3"></i>
+              <h2 class="fw-bold">300+</h2>
+              <p class="mb-0 text-muted">Departments Linked</p>
+            </div>
+          </div>
+          <!-- Stat 4 -->
+          <div class="col-md-3" data-aos="fade-up" data-aos-delay="300">
+            <div class="stat-box p-4 rounded-4 shadow-sm bg-white h-100">
+              <i class="bi bi-bar-chart-line-fill text-danger fs-1 mb-3"></i>
+              <h2 class="fw-bold">99%</h2>
+              <p class="mb-0 text-muted">Resolution Rate</p>
+            </div>
+          </div>
+          <!-- Extra Stat 5 -->
+          <div class="col-md-3" data-aos="fade-up" data-aos-delay="400">
+            <div class="stat-box p-4 rounded-4 shadow-sm bg-white h-100">
+              <i class="bi bi-people-fill text-info fs-1 mb-3"></i>
+              <h2 class="fw-bold">1M+</h2>
+              <p class="mb-0 text-muted">Citizens Empowered</p>
+            </div>
+          </div>
+          <!-- Extra Stat 6 -->
+          <div class="col-md-3" data-aos="fade-up" data-aos-delay="500">
+            <div class="stat-box p-4 rounded-4 shadow-sm bg-white h-100">
+              <i class="bi bi-telephone-inbound-fill text-purple fs-1 mb-3"></i>
+              <h2 class="fw-bold">50K+</h2>
+              <p class="mb-0 text-muted">Helpline Calls Handled</p>
+            </div>
+          </div>
+          <!-- Extra Stat 7 -->
+          <div class="col-md-3" data-aos="fade-up" data-aos-delay="600">
+            <div class="stat-box p-4 rounded-4 shadow-sm bg-white h-100">
+              <i class="bi bi-globe2 text-dark fs-1 mb-3"></i>
+              <h2 class="fw-bold">Statewide</h2>
+              <p class="mb-0 text-muted">TNeGA Monitoring Coverage</p>
+            </div>
+          </div>
+          <!-- Extra Stat 8 -->
+          <div class="col-md-3" data-aos="fade-up" data-aos-delay="700">
+            <div class="stat-box p-4 rounded-4 shadow-sm bg-white h-100">
+              <i class="bi bi-speedometer2 text-success fs-1 mb-3"></i>
+              <h2 class="fw-bold">24x7</h2>
+              <p class="mb-0 text-muted">Portal Availability</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Call to Action -->
+    <section class="cta-section" data-aos="fade-up">
+      <h2 class="fw-bold mb-3">Ready to Submit Your Grievance?</h2>
+      <p class="mb-4">Join thousands of citizens who have benefitted from faster grievance redressal.</p>
+      <a href="#" class="btn btn-light btn-lg">Get Started</a>
+    </section>
+    <!-- FAQ -->
+    <section class="faq-section">
+      <div class="container">
+        <section class="vision-section mb-4">
+          <div class="container text-center">
+            <h2 class="vision-title-alt" data-aos="fade-up">
+              Help & <span>FAQ</span>
+            </h2>
+          </div>
+        </section>
+        <!-- <h2 class="text-center fw-bold mb-4" data-aos="fade-up">Help & FAQ</h2> -->
+        <div class="accordion" id="faqAccordion">
+          <div class="accordion-item" data-aos="fade-up">
+            <h2 class="accordion-header"><button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#faq1">How can I register a grievance?</button></h2>
+            <div id="faq1" class="accordion-collapse collapse show">
+              <div class="accordion-body">Login as a citizen and submit details via the Citizen module.</div>
+            </div>
+          </div>
+          <div class="accordion-item" data-aos="fade-up">
+            <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq2">How can I track my complaint?</button></h2>
+            <div id="faq2" class="accordion-collapse collapse">
+              <div class="accordion-body">Use your grievance ID or registered mobile number to track status anytime.</div>
+            </div>
+          </div>
+          <div class="accordion-item" data-aos="fade-up">
+            <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq3">Who resolves grievances?</button></h2>
+            <div id="faq3" class="accordion-collapse collapse">
+              <div class="accordion-body">Relevant departments resolve grievances, monitored by operators and officials.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer class="footer-section text-light pt-5">
+      <div class="container">
+        <div class="row g-4">
+          <!-- Brand -->
+          <div class="col-md-4">
+            <h4 class="fw-bold mb-3">EDM Grievance Portal</h4>
+            <p class="small mb-3">A unified grievance redressal platform built to empower citizens, ensure faster resolutions, and enhance transparency in governance.</p>
+            <p class="small fst-italic">“Empowering Citizens • Enabling Governance”</p>
+          </div>
+          <!-- Quick Links -->
+          <div class="col-md-2">
+            <h6 class="fw-bold mb-3">Quick Links</h6>
+            <ul class="list-unstyled footer-links">
+              <li><a href="index.html"><i class="bi bi-arrow-right-short"></i> Home</a></li>
+              <li><a href="about.html"><i class="bi bi-arrow-right-short"></i> About Us</a></li>
+              <li><a href="faq.html"><i class="bi bi-arrow-right-short"></i> FAQs</a></li>
+              <li><a href="contact.html"><i class="bi bi-arrow-right-short"></i> Contact</a></li>
+            </ul>
+          </div>
+          <!-- Resources -->
+          <div class="col-md-3">
+            <h6 class="fw-bold mb-3">Resources</h6>
+            <ul class="list-unstyled footer-links">
+              <li><a href="#"><i class="bi bi-shield-check"></i> Privacy Policy</a></li>
+              <li><a href="#"><i class="bi bi-file-text"></i> Terms & Conditions</a></li>
+              <li><a href="#"><i class="bi bi-book"></i> User Guide</a></li>
+              <li><a href="#"><i class="bi bi-headset"></i> Support</a></li>
+            </ul>
+          </div>
+          <!-- Social & Visitors -->
+          <div class="col-md-3">
+            <h6 class="fw-bold mb-3">Connect with Us</h6>
+            <div class="d-flex gap-3 mb-3">
+              <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="social-btn"><i class="bi bi-twitter-x"></i></a>
+              <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="social-btn"><i class="bi bi-linkedin"></i></a>
+              <a href="#" class="social-btn"><i class="bi bi-youtube"></i></a>
+            </div>
+            <span class="badge bg-warning text-dark px-3 py-2">
+            <i class="bi bi-eye"></i> Visitors: <span id="visitorCount">12,345</span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- Bottom Bar -->
+      <div class="footer-bottom mt-5 py-3">
+        <div class="container text-center">
+          <p class="mb-0 small">© 2025 EDM Grievance Portal. All Rights Reserved. | Designed with ❤️ for Citizens of Tamil Nadu</p>
+        </div>
+      </div>
+    </footer>
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="btn btn-primary">
+    <i class="bi bi-arrow-up-circle"></i>
+    </button>
+    <script src="assets/js/jquery-3.7.1.min.js"></script> 
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/aos.js"></script>
+    <script>AOS.init({duration:800,once:true});</script>
+    <script>
+      let lastScrollTop = 0;
+      const subHeader = document.querySelector('.sub-header');
+      const mainHeader = document.querySelector('.main-header');
+      const threshold = 100;
+      
+      window.addEventListener("scroll", function () {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      if (scrollTop > threshold) {
+        if (scrollTop > lastScrollTop) {
+          // Scrolling down
+          subHeader.classList.add("hide");
+          mainHeader.classList.add("compact"); // moves up
+        } else {
+          // Scrolling up
+          subHeader.classList.remove("hide");
+          mainHeader.classList.remove("compact");
+        }
+      } else {
+        // Always show at top
+        subHeader.classList.remove("hide");
+        mainHeader.classList.remove("compact");
+      }
+      
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+      }, false);
+      
+    </script>
+    <script>
+      $(document).ready(function(){
+        // Show/Hide button on scroll
+        $(window).scroll(function(){
+          if ($(this).scrollTop() > 200) {
+            $('#backToTop').fadeIn();
+          } else {
+            $('#backToTop').fadeOut();
+          }
+        });
+      
+        // Smooth scroll to top
+        $('#backToTop').click(function(){
+          $('html, body').animate({scrollTop : 0}, 600, "swing");
+          return false;
+        });
+      });
+    </script> 
+    <script>
+$(document).ready(function () {
+  let defaultSize = 16;       // base font size in px
+  let currentStep = 0;        // track steps (-2 to +2)
+  const maxStep = 2;          // allow only 2 steps up/down
+  const stepSize = 2;         // px per step
+
+  function applyFontSize() {
+    let newSize = defaultSize + (currentStep * stepSize);
+    $("body").css("font-size", newSize + "px");
+  }
+
+  // Decrease
+  $("#font-decrease").on("click", function () {
+    if (currentStep > -maxStep) {
+      currentStep--;
+      applyFontSize();
+    }
+  });
+
+  // Increase
+  $("#font-increase").on("click", function () {
+    if (currentStep < maxStep) {
+      currentStep++;
+      applyFontSize();
+    }
+  });
+
+  // Reset
+  $("#font-reset").on("click", function () {
+    currentStep = 0;
+    $("body").css("font-size", defaultSize + "px");
+  });
+});
+</script>
+  </body>
+</html>
