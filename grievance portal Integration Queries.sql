@@ -10,7 +10,7 @@ CREATE OR REPLACE PROCEDURE sp_create_citizen_user(
     p_login_id VARCHAR,
     p_password_hash TEXT DEFAULT NULL
 )
-
+---registration/sign up
 
 /* 
 CALL sp_create_citizen_user(
@@ -24,7 +24,7 @@ CALL sp_create_citizen_user(
 );*/
 
 --Details capturing by mobile:
-CREATE OR REPLACE FUNCTION fn_user_details_by_mobile(p_mobile VARCHAR)
+CREATE OR REPLACE FUNCTION fn_user_details_by_mobile(p_mobile VARCHAR) -- login
 
 /*RETURNS TABLE (
     user_id BIGINT,
