@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,81 +8,149 @@
 
   <!-- Bootstrap 5.3 -->
   <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/font/bootstrap-icons.css" rel="stylesheet"> 
-    <link href="assets/css/aos.css" rel="stylesheet">
-    
+  <link href="assets/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/css/aos.css" rel="stylesheet">
 
   <style type="text/css">
-    .front-face .card, .card-inner .card {
-    border: 0;
-}
+    .front-face .card,
+    .card-inner .card {
+      border: 0;
+    }
+
     /* Flip CSS */
-    .flip-container { perspective: 1000px; }
+    .flip-container {
+      perspective: 1000px;
+    }
+
     .flipper {
       transition: 0.8s;
       transform-style: preserve-3d;
       position: relative;
-      min-height: 420px; /* prevents collapse so faces remain visible */
+      min-height: 420px;
+      /* prevents collapse so faces remain visible */
     }
-    .front-face, .back-face {
+
+    .front-face,
+    .back-face {
       backface-visibility: hidden;
       position: absolute;
       width: 100%;
       top: 0;
       left: 0;
-      padding: 0; /* content already padded inside */
+      padding: 0;
+      /* content already padded inside */
       box-sizing: border-box;
     }
-    .front-face { z-index: 2; transform: rotateY(0deg); }
-    .back-face { transform: rotateY(180deg); }
-    .flip-container.flipped .flipper { transform: rotateY(180deg); }
+
+    .front-face {
+      z-index: 2;
+      transform: rotateY(0deg);
+    }
+
+    .back-face {
+      transform: rotateY(180deg);
+    }
+
+    .flip-container.flipped .flipper {
+      transform: rotateY(180deg);
+    }
 
     /* Basic page styling (kept from your design) */
-    :root{
+    :root {
       --card-bg: #ffffff;
       --muted: #6c757d;
       --primary: #0d6efd;
       --accent: #4da6ff;
       --soft: #f7fbff;
     }
-    body{
+
+    body {
       font-family: 'Segoe UI', Roboto, Arial, sans-serif;
       background-color: var(--soft);
       background-image:
-        linear-gradient(135deg, rgba(255,255,255,0.9) 25%, rgba(0,0,0,0.01) 25%, rgba(0,0,0,0.01) 50%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0.9) 75%, rgba(0,0,0,0.01) 75%, rgba(0,0,0,0.01) 100%),
-        radial-gradient(circle at 1px 1px, rgba(0,0,0,0.03) 1px, transparent 1px);
+        linear-gradient(135deg, rgba(255, 255, 255, 0.9) 25%, rgba(0, 0, 0, 0.01) 25%, rgba(0, 0, 0, 0.01) 50%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0.9) 75%, rgba(0, 0, 0, 0.01) 75%, rgba(0, 0, 0, 0.01) 100%),
+        radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
       background-size: 12px 12px, 8px 8px;
       padding: 40px 20px;
     }
 
-    .portal-header { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
-    .portal-title { font-weight:700; font-size:1.35rem; color:#0b5ed7; margin:0; }
-    .portal-sub { color:var(--muted); margin:0; font-size:0.95rem; }
+    .portal-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
 
-    .split-row { display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch; }
+    .portal-title {
+      font-weight: 700;
+      font-size: 1.35rem;
+      color: #0b5ed7;
+      margin: 0;
+    }
+
+    .portal-sub {
+      color: var(--muted);
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .split-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: stretch;
+    }
 
     .left-card {
       flex: 1;
       display: flex;
       justify-content: center;
-/*      align-items: center;*/
+      /*      align-items: center;*/
       background: #ffffff;
       box-shadow: 0 6px 18px rgba(10, 20, 40, 0.04);
       border-radius: 12px;
       padding: 20px;
     }
 
-    .card-inner { width: 100%; max-width: 340px; }
+    .card-inner {
+      width: 100%;
+      max-width: 340px;
+    }
 
-    .brief-panel { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    .brief-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
-    .step-icon { font-size: 38px; color: var(--primary); margin-bottom: 12px; }
+    .step-icon {
+      font-size: 38px;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
 
-    .otp-input { width: 50px; height: 55px; text-align: center; font-size: 22px; margin: 6px; border-radius: 10px; }
+    .otp-input {
+      width: 50px;
+      height: 55px;
+      text-align: center;
+      font-size: 22px;
+      margin: 6px;
+      border-radius: 10px;
+    }
 
-    .form-control, .form-select { border-radius: 10px; padding: 10px 12px; font-size: 0.95rem; }
+    .form-control,
+    .form-select {
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+    }
 
-    .btn { border-radius: 12px; font-weight: 600; padding: 10px 14px; }
+    .btn {
+      border-radius: 12px;
+      font-weight: 600;
+      padding: 10px 14px;
+    }
 
     .brief-panel {
       position: sticky;
@@ -89,28 +158,93 @@
       border-radius: 14px;
       padding: 20px;
       background: #ffffff;
-      box-shadow: 0 6px 18px rgba(10,20,40,0.04);
-      border: 1px solid rgba(13,110,253,0.04);
+      box-shadow: 0 6px 18px rgba(10, 20, 40, 0.04);
+      border: 1px solid rgba(13, 110, 253, 0.04);
     }
 
-    .brief-heading { color: #07346b; font-weight: 700; margin-bottom: 6px; }
-    .brief-sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 16px; }
+    .brief-heading {
+      color: #07346b;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
 
-    .activity-list { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .brief-sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
 
-    .activity { display:flex; gap:12px; align-items:center; padding: 10px; border-radius: 10px; transition: transform .18s ease, box-shadow .18s ease; cursor: default; }
-    .activity:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(15,23,42,0.06); }
+    .activity-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
 
-    .activity .icon { min-width:48px; min-height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg, rgba(13,110,253,0.08), rgba(77,166,255,0.06)); color: var(--primary); font-size: 20px; }
-    .activity .title { font-weight:600; margin:0; color:#0b5ed7; font-size:0.99rem; }
-    .activity .desc { margin:0; font-size:0.85rem; color:var(--muted); }
+    .activity {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px;
+      border-radius: 10px;
+      transition: transform .18s ease, box-shadow .18s ease;
+      cursor: default;
+    }
 
-    .brief-cta { margin-top: 16px; display:flex; gap:10px; align-items:center; }
-    .help-block { font-size:0.85rem; color:var(--muted); }
+    .activity:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+    }
 
-    @media(max-width:991px){ .card-inner { max-width: 100%; } .brief-panel { position: relative; top: auto; } }
+    .activity .icon {
+      min-width: 48px;
+      min-height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(13, 110, 253, 0.08), rgba(77, 166, 255, 0.06));
+      color: var(--primary);
+      font-size: 20px;
+    }
+
+    .activity .title {
+      font-weight: 600;
+      margin: 0;
+      color: #0b5ed7;
+      font-size: 0.99rem;
+    }
+
+    .activity .desc {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .brief-cta {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .help-block {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    @media(max-width:991px) {
+      .card-inner {
+        max-width: 100%;
+      }
+
+      .brief-panel {
+        position: relative;
+        top: auto;
+      }
+    }
   </style>
 </head>
+
 <body>
 
   <div class="container">
@@ -145,8 +279,9 @@
                       <small class="form-text text-muted">OTP will be sent to your number.</small>
                       <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
                     </div>
-                    <button class="btn btn-primary w-100 continueBtn">Continue</button>
-                    <div class="mt-3"><a href="#" class="newRegister"><i class="bi bi-person-plus me-1"></i> New user? Register here</a></div>
+                    <button class="btn btn-primary w-100 continueBtn" id="loginContinueBtn">Continue</button>
+                    <div class="mt-3"><a href="#" class="newRegister"><i class="bi bi-person-plus me-1"></i> New user?
+                        Register here</a></div>
                   </div>
 
                   <!-- Screen 2: OTP -->
@@ -183,7 +318,7 @@
                         <small class="form-text text-muted">OTP will be sent to your number.</small>
                         <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
                       </div>
-                      <button class="btn btn-primary w-100 continueBtn">Continue</button>
+                      <button class="btn btn-primary w-100 continueBtn" id="registerContinueBtn">Continue</button>
                     </div>
 
                     <!-- Screen 2: OTP (register) -->
@@ -207,7 +342,8 @@
                       <!-- <i class="fa-solid fa-user step-icon"></i> -->
                       <h4 class="mb-3">Citizen Profile Creation</h4>
 
-                      <input type="text" id="nameField" class="form-control mb-2" placeholder="Enter your Name" required>
+                      <input type="text" id="nameField" class="form-control mb-2" placeholder="Enter your Name"
+                        required>
                       <select id="genderField" class="form-select mb-2" required>
                         <option value="">Select Gender</option>
                         <option>Male</option>
@@ -220,7 +356,8 @@
                         <option>Coimbatore</option>
                         <option>Madurai</option>
                       </select>
-                      <input type="email" id="emailField" class="form-control mb-3" placeholder="Enter your Email (optional)">
+                      <input type="email" id="emailField" class="form-control mb-3"
+                        placeholder="Enter your Email (optional)">
 
                       <!-- Declaration -->
                       <div class="alert alert-light border rounded-3 shadow-sm p-3 mb-4" role="alert">
@@ -229,7 +366,8 @@
                           <div>
                             <h6 class="fw-bold mb-2">Declaration</h6>
                             <p class="mb-2 small text-muted">
-                              I hereby declare that the information provided in this portal is true and correct to the best of my knowledge.
+                              I hereby declare that the information provided in this portal is true and correct to the
+                              best of my knowledge.
                             </p>
                             <div class="form-check">
                               <input class="form-check-input" type="checkbox" id="declarationCheck">
@@ -245,7 +383,8 @@
                   </div>
                 </div>
 
-                <div class="mt-2 text-center"><a href="#" class="backToLogin"><i class="bi bi-arrow-left-circle me-1"></i> Back to Login</a></div>
+                <div class="mt-2 text-center"><a href="#" class="backToLogin"><i
+                      class="bi bi-arrow-left-circle me-1"></i> Back to Login</a></div>
               </div>
 
             </div> <!-- .flipper -->
@@ -256,60 +395,62 @@
 
       <!-- RIGHT: brief -->
       <aside class="brief-panel aos-init aos-animate" data-aos="fade-left">
-  <div>
-    <h3 class="brief-heading">What you can do</h3>
-    <p class="brief-sub">Quick actions &amp; services available to every citizen. Simple steps — faster resolution.</p>
-    <div class="activity-list">
-      
-      <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="50">
-        <div class="icon"><i class="bi bi-ticket-perforated"></i></div>
         <div>
-          <p class="title mb-0">Raise a Grievance</p>
-          <p class="desc mb-0">Create a ticket for service issues, apply corrections or report problems.</p>
-        </div>
-      </div>
+          <h3 class="brief-heading">What you can do</h3>
+          <p class="brief-sub">Quick actions &amp; services available to every citizen. Simple steps — faster
+            resolution.</p>
+          <div class="activity-list">
 
-      <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-        <div class="icon"><i class="bi bi-check-circle"></i></div>
-        <div>
-          <p class="title mb-0">Track Ticket Status</p>
-          <p class="desc mb-0">Monitor progress of your requests and get timely updates.</p>
-        </div>
-      </div>
+            <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="50">
+              <div class="icon"><i class="bi bi-ticket-perforated"></i></div>
+              <div>
+                <p class="title mb-0">Raise a Grievance</p>
+                <p class="desc mb-0">Create a ticket for service issues, apply corrections or report problems.</p>
+              </div>
+            </div>
 
-      <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="150">
-        <div class="icon"><i class="bi bi-telephone-fill"></i></div>
-        <div>
-          <p class="title mb-0">Helpline &amp; Support</p>
-          <p class="desc mb-0">Access dedicated helpline numbers and escalation options.</p>
-        </div>
-      </div>
+            <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+              <div class="icon"><i class="bi bi-check-circle"></i></div>
+              <div>
+                <p class="title mb-0">Track Ticket Status</p>
+                <p class="desc mb-0">Monitor progress of your requests and get timely updates.</p>
+              </div>
+            </div>
 
-      <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
-        <div class="icon"><i class="bi bi-file-earmark-arrow-up"></i></div>
-        <div>
-          <p class="title mb-0">Upload Documents</p>
-          <p class="desc mb-0">Attach supporting documents for faster verification.</p>
-        </div>
-      </div>
+            <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="150">
+              <div class="icon"><i class="bi bi-telephone-fill"></i></div>
+              <div>
+                <p class="title mb-0">Helpline &amp; Support</p>
+                <p class="desc mb-0">Access dedicated helpline numbers and escalation options.</p>
+              </div>
+            </div>
 
-      <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="250">
-        <div class="icon"><i class="bi bi-people"></i></div>
-        <div>
-          <p class="title mb-0">Community Feedback</p>
-          <p class="desc mb-0">Share suggestions and see community responses.</p>
+            <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+              <div class="icon"><i class="bi bi-file-earmark-arrow-up"></i></div>
+              <div>
+                <p class="title mb-0">Upload Documents</p>
+                <p class="desc mb-0">Attach supporting documents for faster verification.</p>
+              </div>
+            </div>
+
+            <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="250">
+              <div class="icon"><i class="bi bi-people"></i></div>
+              <div>
+                <p class="title mb-0">Community Feedback</p>
+                <p class="desc mb-0">Share suggestions and see community responses.</p>
+              </div>
+            </div>
+
+          </div>
+          <div class="brief-cta">
+            <a href="#" class="btn btn-outline-primary w-100"><i class="bi bi-plus me-2"></i>Raise Grievance</a>
+          </div>
+          <div class="mt-3 help-block">
+            <strong>Tip:</strong> Keep your mobile active to receive OTPs. For documents, ensure files are under 1MB for
+            faster upload.
+          </div>
         </div>
-      </div>
-      
-    </div>
-    <div class="brief-cta">
-      <a href="#" class="btn btn-outline-primary w-100"><i class="bi bi-plus me-2"></i>Raise Grievance</a>
-    </div>
-    <div class="mt-3 help-block">
-      <strong>Tip:</strong> Keep your mobile active to receive OTPs. For documents, ensure files are under 1MB for faster upload.
-    </div>
-  </div>
-</aside>
+      </aside>
 
 
 
@@ -317,103 +458,316 @@
   </div>
 
   <!-- AOS JS -->
-  <script src="assets/js/jquery-3.7.1.min.js"></script> 
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/aos.js"></script>
+  <script src="assets/js/jquery-3.7.1.min.js"></script>
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/aos.js"></script>
+  <script src="assets/js/dataTableUtil.js"></script>
+  <script src="assets/js/crypto-js.min.js"></script>
+  <script src="assets/js/global.js"></script>
+  <script src="assets/js/encrypt_decrypt.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/toastUtil.js"></script>
+  <script src="assets/js/apiConfig.js"></script>
 
-  <!-- Script: simplified flow (no OTP logic) -->
-<script>
-$(function () {
-  AOS.init({ duration: 420, once: true });
+  <script>
+    $(function () {
+      AOS.init({ duration: 420, once: true });
 
-  // helper: validate indian mobile
-  function isValidMobile(num) {
-    return /^[6-9]\d{9}$/.test(num || "");
-  }
+      // ✅ Helpers
+      function isValidMobile(num) {
+        return /^[6-9]\d{9}$/.test(num || "");
+      }
 
-  // initialize: show screen1 on both faces
-  $(".front-face .screen, .back-face .screen").hide();
-  $(".front-face .screen1, .back-face .screen1").show();
+      function sanitizeInput(str) {
+        return String(str || "").replace(/[<>"'%;()&+]/g, "");
+      }
 
-  // flip handlers
-  $(document).on("click", ".newRegister", function (e) {
-    e.preventDefault();
-    $(".flip-container").addClass("flipped");
-    $(".back-face .screen").hide();
-    $(".back-face .screen1").show();
-  });
-  $(document).on("click", ".backToLogin", function (e) {
-    e.preventDefault();
-    $(".flip-container").removeClass("flipped");
-    $(".front-face .screen").hide();
-    $(".front-face .screen1").show();
-  });
+      // 👉 Init
+      $(".front-face .screen, .back-face .screen").hide();
+      $(".front-face .screen1, .back-face .screen1").show();
 
-  // Continue (mobile -> OTP) - both faces
-  $(document).on("click", ".continueBtn", function (e) {
-    e.preventDefault();
-    const $face = $(this).closest(".front-face, .back-face");
-    const $mobile = $face.find(".mobileInput").first();
-    const mobile = ($mobile.val() || "").trim();
+      // 👉 Flip handlers
+      $(document).on("click", ".newRegister", function (e) {
+        e.preventDefault();
+        $(".flip-container").addClass("flipped");
+        $(".back-face .screen").hide();
+        $(".back-face .screen1").show();
+      });
+      $(document).on("click", ".backToLogin", function (e) {
+        e.preventDefault();
+        $(".flip-container").removeClass("flipped");
+        $(".front-face .screen").hide();
+        $(".front-face .screen1").show();
+      });
 
-    if (!isValidMobile(mobile)) {
-      $mobile.addClass("is-invalid");
-      return;
-    }
-    $mobile.removeClass("is-invalid");
 
-    // just show OTP UI
-    $face.find(".screen").hide();
-    $face.find(".screen2").fadeIn();
-  });
+      $(document).on("click", "#loginContinueBtn", function (e) {
+        e.preventDefault();
 
-  // OTP → Next step (Sign In → Dashboard | Sign Up → Profile)
-  $(document).on("click", ".next2", function (e) {
-    e.preventDefault();
-    const $face = $(this).closest(".front-face, .back-face");
+        const $face = $(this).closest(".front-face");
+        const $mobile = $face.find(".mobileInput").first();
+        const mobile = sanitizeInput($mobile.val());
 
-    if ($face.hasClass("front-face")) {
-      // Sign In → Dashboard
-      window.location.href = "dashboard.html";
-    } else {
-      // Sign Up → Profile Creation
-      $face.find(".screen").hide();
-      $face.find(".screen3").fadeIn();
+        if (!isValidMobile(mobile)) {
+          $mobile.addClass("is-invalid");
+          showErrorToast("Please enter a valid 10-digit mobile number.");
+          return;
+        }
+        $mobile.removeClass("is-invalid");
 
-      // autofill mobile
-      const m = $face.find(".mobileInput").first().val() || "";
-      $face.find("#mobileField").val(m);
-    }
-  });
+        const payload = {
+          action: "function_call",
+          function_name: "fn_citizen_login_by_mobile",
+          params: { p_mobile: mobile }
+        };
 
-  // Profile creation (register) → Dashboard
-  $(document).on("click", ".next3", function (e) {
-    e.preventDefault();
-    const $face = $(this).closest(".back-face");
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: "json",
+          success: function (res) {
+            if (!res.success) {
+              showErrorToast("Login API failed: " + res.message);
+              return;
+            }
 
-    // basic validations
-    const name = $face.find("#nameField").val() || "";
-    const gender = $face.find("#genderField").val() || "";
-    if (name.trim() === "") { alert("Please enter your name."); return; }
-    if (!gender) { alert("Please select gender."); return; }
+            const decrypted = decryptData(res.data);
+            const apiResponse = JSON.parse(decrypted[0].fn_citizen_login_by_mobile);
 
-    const $decl = $face.find("#declarationCheck");
-    if ($decl.length && !$decl.is(":checked")) {
-      alert("Please agree to the declaration.");
-      return;
-    }
+            if (apiResponse.status === "error") {
+              showErrorToast(apiResponse.message);
+              // Flip to registration if needed
+              $(".flip-container").addClass("flipped");
+              $(".back-face .screen").hide();
+              $(".back-face .screen1").show().find(".mobileInput").val(mobile);
+              return;
+            }
 
-    alert("Profile created successfully!");
-    window.location.href = "dashboard.html";
-  });
+            showSuccessToast("Mobile verified. Sending OTP...");
+            $face.find(".screen").hide();
+            $face.find(".screen2").fadeIn().find(".mobileInput").val(mobile);
 
-  // remove invalid state as user types
-  $(document).on("input", ".mobileInput", function () {
-    if (isValidMobile($(this).val().trim())) $(this).removeClass("is-invalid");
-  });
-});
-</script>
+            sendOtp(mobile, $face);
+          },
+          error: function () {
+            showErrorToast("Login API error.");
+          }
+        });
+      });
+
+
+      $(document).on("click", "#registerContinueBtn", function (e) {
+        debugger
+        e.preventDefault();
+
+        const $face = $(this).closest(".back-face");
+        const $mobile = $face.find(".mobileInput").first();
+        const mobile = sanitizeInput($mobile.val());
+
+        if (!isValidMobile(mobile)) {
+          $mobile.addClass("is-invalid");
+          showErrorToast("Please enter a valid 10-digit mobile number.");
+          return;
+        }
+        $mobile.removeClass("is-invalid");
+
+        const payload = {
+          action: "function_call",
+          function_name: "fn_citizen_login_by_mobile",
+          params: { p_mobile: mobile }
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: "json",
+          success: function (res) {
+            if (!res.success) {
+              showErrorToast("Registration API failed: " + res.message);
+              return;
+            }
+
+            const decrypted = decryptData(res.data);
+            const apiResponse = JSON.parse(decrypted[0].fn_citizen_login_by_mobile);
+
+            // 🔹 If error is MOBILE_NOT_REGISTERED → continue to OTP
+            if (apiResponse.status === "error") {
+              showSuccessToast("Mobile not registered. Sending OTP for registration...");
+            } else {
+              showErrorToast(apiResponse.message);
+              return;
+            }
+
+            // ✅ Always show OTP UI for registration
+            $face.find(".screen").hide();
+            $face.find(".screen2").fadeIn().find(".mobileInput").val(mobile);
+
+            sendOtp(mobile, $face);
+          },
+          error: function () {
+            showErrorToast("Registration API error.");
+          }
+        });
+      });
+
+      // 👉 Verify OTP
+      $(document).on("click", ".next2", function (e) {
+        e.preventDefault();
+        const $face = $(this).closest(".front-face, .back-face");
+        const mobile = sanitizeInput($face.find(".mobileInput").first().val());
+        const enteredOTP = $face
+          .find(".otp-input")
+          .map(function () {
+            return $(this).val();
+          })
+          .get()
+          .join("")
+          .trim();
+
+        if (enteredOTP.length !== 6) {
+          showErrorToast("Please enter 6-digit OTP.");
+          return;
+        }
+
+        // const otpPayload = {
+        //   action: "function_call",
+        //   function_name: "otp_verification_fn",
+        //   params: { p_mobile: mobile, p_otp: enteredOTP },
+        // };
+
+        // $.ajax({
+        //   url: `${BASE_API_URL}/commonfunction`,
+        //   method: "POST",
+        //   data: { data: encryptData(otpPayload) },
+        //   dataType: "json",
+        //   success: function (otpRes) {
+        //     if (otpRes.success) {
+        //       const decrypted = decryptData(otpRes.data);
+
+        //       if (decrypted[0].status === true) {
+        //         // ✅ OTP success
+        //         if ($face.hasClass("front-face")) {
+        //           // Login → fetch user
+        //           const loginPayload = {
+        //             action: "function_call",
+        //             function_name: "get_user_auth_operator_fun",
+        //             params: { p_mobile: mobile },
+        //           };
+
+        //           $.ajax({
+        //             url: `${BASE_API_URL}/commonfunction`,
+        //             method: "POST",
+        //             data: { data: encryptData(loginPayload) },
+        //             dataType: "json",
+        //             success: function (loginRes) {
+        //               if (loginRes.success) {
+        //                 const operatorData = decryptData(loginRes.data)[0];
+        //                 localStorage.setItem("userRole", operatorData.designation);
+        //                 localStorage.setItem("userName", operatorData.name);
+        //                 localStorage.setItem("userId", operatorData.user_id);
+        //                 localStorage.setItem("operatorId", operatorData.operator_id);
+        //                 localStorage.setItem("operatorDistrict", operatorData.district);
+
+        //                 showSuccessToast("Login successful!");
+        //                 window.location.href = "dashboard.html";
+        //               } else {
+        //                 showErrorToast("Login failed: " + loginRes.message);
+        //               }
+        //             },
+        //             error: function () {
+        //               showErrorToast("Login API error.");
+        //             },
+        //           });
+        //         } else {
+        //           // Registration → go to Profile creation
+        //           $face.find(".screen").hide();
+        //           $face.find(".screen3").fadeIn();
+        //           $face.find("#mobileField").val(mobile);
+        //         }
+        //       } else {
+        //         showErrorToast("Invalid OTP. Please try again.");
+        //       }
+        //     } else {
+        //       showErrorToast("OTP verification failed: " + otpRes.message);
+        //     }
+        //   },
+        //   error: function () {
+        //     showErrorToast("OTP verification API error.");
+        //   },
+        // });
+
+        if (enteredOTP === "123456") {
+          // ✅ OTP is correct → go to profile form
+          $face.find(".screen").hide();
+          $face.find(".screen3").fadeIn();
+          $face.find("#mobileField").val(mobile);
+        } else {
+          showErrorToast("Invalid OTP. Please enter 1234 for testing.");
+        }
+
+      });
+
+      // 👉 Registration → Profile API
+      $(document).on("click", ".next3", function (e) {
+        e.preventDefault();
+        const $face = $(this).closest(".back-face");
+
+        const name = sanitizeInput($face.find("#nameField").val());
+        const gender = $face.find("#genderField").val();
+        const mobile = sanitizeInput($face.find("#mobileField").val());
+        const district = $face.find("#districtField").val();
+        const email = sanitizeInput($face.find("#emailField").val());
+
+        if (!name) return showErrorToast("Please enter your name.");
+        if (!gender) return showErrorToast("Please select gender.");
+        if (!district) return showErrorToast("Please select district.");
+        if ($face.find("#declarationCheck").length && !$face.find("#declarationCheck").is(":checked")) {
+          return showErrorToast("Please agree to the declaration.");
+        }
+
+        const registerPayload = {
+          action: "function_call",
+          function_name: "fn_citizen_register",
+          params: { p_mobile: mobile, p_name: name, p_gender: gender, p_district: district, p_email: email },
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(registerPayload) },
+          dataType: "json",
+          success: function (res) {
+            if (res.success) {
+              const regData = decryptData(res.data)[0];
+              localStorage.setItem("userName", regData.name);
+              localStorage.setItem("userId", regData.user_id);
+              localStorage.setItem("userRole", regData.designation || "Citizen");
+              localStorage.setItem("userMobile", mobile);
+
+              showSuccessToast("Registration successful!");
+              window.location.href = "dashboard.html";
+            } else {
+              showErrorToast("Registration failed: " + res.message);
+            }
+          },
+          error: function () {
+            showErrorToast("Registration API error. Please try again.");
+          },
+        });
+      });
+
+      // 👉 Remove invalid state
+      $(document).on("input", ".mobileInput", function () {
+        if (isValidMobile($(this).val().trim())) $(this).removeClass("is-invalid");
+      });
+    });
+
+  </script>
 
 
 </body>
+
 </html>
