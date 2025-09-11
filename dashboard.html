@@ -547,7 +547,7 @@
           </div>
         </div> -->
       <!-- Self Tickets -->
-      <div class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+      <!-- <div class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
         <div class="card kpi-card">
           <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
@@ -567,9 +567,9 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <!-- On-Behalf Tickets -->
-      <div class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="150">
+      <!-- <div class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="150">
         <div class="card kpi-card">
           <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
@@ -589,9 +589,9 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <!-- Overall Tickets (Self + On-Behalf) -->
-      <div class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+      <!-- <div class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
         <div class="card kpi-card">
           <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
@@ -611,8 +611,77 @@
             </div>
           </div>
         </div>
+      </div> -->
+
+
+      <!-- Self Tickets -->
+      <div id="selfTicketsCard" class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+        <div class="card kpi-card">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="kpi-icon bg-info"><i class="bi bi-person-badge"></i></div>
+              <div class="text-end">
+                <div class="subtle">Self Tickets</div>
+                <div class="h3 fw-bold mb-0">0</div> <!-- API fills -->
+              </div>
+            </div>
+            <div class="kpi-meta mt-2">
+              In-Progress: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Returned: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              <span class="d-block no-height">&nbsp;</span>
+              Resolved: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Re-Opened: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Closed: <span class="fw-semibold">0</span>
+            </div>
+          </div>
+        </div>
       </div>
 
+      <!-- On-Behalf Tickets -->
+      <div id="onBehalfTicketsCard" class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="150">
+        <div class="card kpi-card">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="kpi-icon bg-warning"><i class="bi bi-people"></i></div>
+              <div class="text-end">
+                <div class="subtle">On-Behalf Tickets</div>
+                <div class="h3 fw-bold mb-0">0</div> <!-- API fills -->
+              </div>
+            </div>
+            <div class="kpi-meta mt-2">
+              In-Progress: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Returned: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              <span class="d-block no-height">&nbsp;</span>
+              Resolved: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Re-Opened: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Closed: <span class="fw-semibold">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overall Tickets (Self + On-Behalf) -->
+      <div id="overallTicketsCard" class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+        <div class="card kpi-card">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="kpi-icon bg-success"><i class="bi bi-collection"></i></div>
+              <div class="text-end">
+                <div class="subtle">Overall Tickets</div>
+                <div class="h3 fw-bold mb-0">0</div> <!-- API fills -->
+              </div>
+            </div>
+            <div class="kpi-meta mt-2">
+              In-Progress: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Returned: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              <span class="d-block no-height">&nbsp;</span>
+              Resolved: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Re-Opened: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Closed: <span class="fw-semibold">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
 
     </div>
@@ -1966,42 +2035,18 @@
   <!-- Bootstrap JS -->
 
   <script src="assets/js/jquery-3.7.1.min.js"></script>
+  <script src="assets/js/global.js"></script>
+
   <!-- <script src="assets/js/bootstrap.bundle.min.js"></script> -->
   <script src="assets/js/aos.js"></script>
   <script src="assets/js/dataTableUtil.js"></script>
   <script src="assets/js/crypto-js.min.js"></script>
-  <script src="assets/js/global.js"></script>
   <script src="assets/js/encrypt_decrypt.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/toastUtil.js"></script>
   <script src="assets/js/apiConfig.js"></script>
   <script src="assets/js/globalProfileDropdown.js"></script>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      var options = {
-        chart: {
-          type: 'donut',
-          height: 250
-        },
-        series: [44, 33, 23], // Example: Pending, In-Progress, Completed
-        labels: ['Pending', 'In-Progress', 'Completed'],
-        colors: ['#f39c12', '#3498db', '#2ecc71'],
-        legend: {
-          position: 'bottom'
-        },
-        dataLabels: {
-          enabled: true,
-          formatter: function (val) {
-            return val.toFixed(1) + "%";
-          }
-        }
-      };
 
-      var chart = new ApexCharts(document.querySelector("#tasksChart"), options);
-      chart.render();
-    });
-  </script> -->
   <script>
     // Sidebar toggle
     const sidebarToggle = document.getElementById('sidebarToggle');
@@ -2046,6 +2091,76 @@
     chart.render();
 
   </script> -->
+  <script>
+    var userid = localStorage.getItem("user_id") || 0;
+    function bindDashboardCounts(userId) {
+      debugger
+      const payload = {
+        action: "function_call",
+        function_name: "fn_dashboard_citizen_edmopr_counts",
+        params: { p_user_id: userid }
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(payload) },
+        dataType: "json",
+        success: function (res) {
+          try {
+            // 🔑 Step 1: decrypt API response
+            const decrypted = decryptData(res.data);
+
+            // 🔑 Step 2: parse decrypted JSON (string → object)
+            const parsed = (typeof decrypted === "string") ? JSON.parse(decrypted) : decrypted;
+
+            // 🔑 Step 3: extract the actual counts string
+            const dataStr = parsed[0].fn_dashboard_citizen_edmopr_counts;
+            const data = JSON.parse(dataStr);
+
+            // --- Bind Self Tickets ---
+            $("#selfTicketsCard .h3").text(data.SelfTickets.Total);
+            $("#selfTicketsCard .kpi-meta span").eq(0).text(data.SelfTickets.InProgress);
+            $("#selfTicketsCard .kpi-meta span").eq(1).text(data.SelfTickets.Returned);
+            $("#selfTicketsCard .kpi-meta span").eq(2).text(data.SelfTickets.Resolved);
+            $("#selfTicketsCard .kpi-meta span").eq(3).text(data.SelfTickets.ReOpened);
+            $("#selfTicketsCard .kpi-meta span").eq(4).text(data.SelfTickets.Closed);
+
+            // --- Bind On-Behalf Tickets ---
+            $("#onBehalfTicketsCard .h3").text(data.OnBehalfTickets.Total);
+            $("#onBehalfTicketsCard .kpi-meta span").eq(0).text(data.OnBehalfTickets.InProgress);
+            $("#onBehalfTicketsCard .kpi-meta span").eq(1).text(data.OnBehalfTickets.Returned);
+            $("#onBehalfTicketsCard .kpi-meta span").eq(2).text(data.OnBehalfTickets.Resolved);
+            $("#onBehalfTicketsCard .kpi-meta span").eq(3).text(data.OnBehalfTickets.ReOpened);
+            $("#onBehalfTicketsCard .kpi-meta span").eq(4).text(data.OnBehalfTickets.Closed);
+
+            // --- Bind Overall Tickets ---
+            $("#overallTicketsCard .h3").text(data.OverallTickets.Total);
+            $("#overallTicketsCard .kpi-meta span").eq(0).text(data.OverallTickets.InProgress);
+            $("#overallTicketsCard .kpi-meta span").eq(1).text(data.OverallTickets.Returned);
+            $("#overallTicketsCard .kpi-meta span").eq(2).text(data.OverallTickets.Resolved);
+            $("#overallTicketsCard .kpi-meta span").eq(3).text(data.OverallTickets.ReOpened);
+            $("#overallTicketsCard .kpi-meta span").eq(4).text(data.OverallTickets.Closed);
+
+          } catch (err) {
+            console.error("Error parsing dashboard data:", err);
+            showErrorToast("Failed to parse dashboard data.");
+          }
+        },
+        error: function () {
+          showErrorToast("Dashboard API error.");
+        }
+      });
+    }
+
+    // --- Initialize ---
+    const userId = localStorage.getItem("login_user_id") || 0;
+    bindDashboardCounts(userId);
+
+    // Optional: refresh every 60s
+    setInterval(() => bindDashboardCounts(userId), 60000);
+
+  </script>
 </body>
 
 </html>

@@ -34,7 +34,7 @@ window.showErrorToast = function (message) {
 
 window.loadToastLayout = function (callback) {
     const currentPath = window.location.pathname;
-    const isInEdmPortal = currentPath.includes("/edm_portal/");
+    const isInEdmPortal = currentPath.includes("/edm_grievance_portal/");
     const toastPath = isInEdmPortal
         ? "assets/partials/toastLayout.html"
         : "/assets/partials/toastLayout.html";
