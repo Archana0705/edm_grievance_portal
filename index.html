@@ -275,8 +275,10 @@
                     <h4 class="mb-3">Citizen Login – Mobile</h4>
                     <div class="mb-3 text-start">
                       <label class="form-label fw-semibold">Mobile Number</label>
-                      <input type="text" class="form-control mobileInput" placeholder="Enter mobile number">
-                      <small class="form-text text-muted">OTP will be sent to your number.</small>
+                      <input type="text" class="form-control mobileInput" placeholder="Enter mobile number"
+                        maxlength="10" pattern="^[6-9]\d{9}$"
+                        title="Enter a valid 10-digit mobile number starting with 6-9"> <small
+                        class="form-text text-muted">OTP will be sent to your number.</small>
                       <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
                     </div>
                     <button class="btn btn-primary w-100 continueBtn" id="loginContinueBtn">Continue</button>
@@ -313,8 +315,10 @@
                       <h4 class="mb-3">Register – Mobile</h4>
                       <div class="mb-3 text-start">
                         <label class="form-label fw-semibold">Mobile Number</label>
-                        <input type="text" class="form-control mobileInput" placeholder="Enter mobile number">
-                        <small class="form-text text-muted">OTP will be sent to your number.</small>
+                        <input type="text" class="form-control mobileInput" placeholder="Enter mobile number"
+                          maxlength="10" pattern="^[6-9]\d{9}$"
+                          title="Enter a valid 10-digit mobile number starting with 6-9"> <small
+                          class="form-text text-muted">OTP will be sent to your number.</small>
                         <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
                       </div>
                       <button class="btn btn-primary w-100 continueBtn" id="registerContinueBtn">Continue</button>
@@ -500,7 +504,6 @@
         $(".front-face .screen1").show();
       });
 
-      // 👉 Auto move to next/previous OTP box
       $(document).on("input", ".otp-input", function () {
         const $this = $(this);
         const value = $this.val();
@@ -515,10 +518,27 @@
         const $this = $(this);
 
         if (e.key === "Backspace" && !$this.val()) {
-          // Move to previous input if exists
           $this.prev(".otp-input").focus();
         }
+
+        if (e.key === "Enter") {
+          const $face = $this.closest(".face, .front-face, .back-face");
+
+          // Check if all OTP boxes are filled
+          const enteredOTP = $face.find(".otp-input").map(function () {
+            return $(this).val();
+          }).get().join("").trim();
+
+          if (enteredOTP.length === 6) {
+            if ($face.hasClass("front-face")) {
+              $("#loginOtpVerifyBtn").trigger("click");
+            } else if ($face.hasClass("back-face")) {
+              $("#registerOtpVerifyBtn").trigger("click");
+            }
+          }
+        }
       });
+
 
 
 
@@ -646,18 +666,25 @@
           return showErrorToast("Please enter 6-digit OTP.");
         }
 
-        if (enteredOTP === "123456") {
-          // ✅ Login flow
-          showSuccessToast("Login successful!");
-          window.location.href = "dashboard.html";
-        } else {
-          showErrorToast("Invalid OTP for Login.");
-        }
+        showSuccessToast("Verifying OTP...");
+
+        setTimeout(function () {
+          if (enteredOTP === "123456") {
+            showSuccessToast("Login successful!");
+            setTimeout(function () {
+              window.location.href = "dashboard.html";
+            }, 1200);
+          } else {
+            showErrorToast("Invalid OTP for Login.");
+            return;
+          }
+        }, 2000); // ⏳ 2 seconds delay before verifying
       });
 
       // 👉 Verify OTP (REGISTER)
       $(document).on("click", "#registerOtpVerifyBtn", function (e) {
         e.preventDefault();
+
         const $face = $(this).closest(".back-face");
         const mobile = sanitizeInput($face.find(".mobileInput").first().val());
         const enteredOTP = $face.find(".otp-input").map(function () {
@@ -668,14 +695,24 @@
           return showErrorToast("Please enter 6-digit OTP.");
         }
 
-        if (enteredOTP === "123456") {
-          // ✅ Registration flow → go to profile creation
-          $face.find(".screen").hide();
-          $face.find(".screen3").fadeIn();
-          $face.find("#mobileField").val(mobile);
-        } else {
-          showErrorToast("Invalid OTP for Registration.");
-        }
+        // Simulate API verification
+        showSuccessToast("Verifying OTP...");
+
+        setTimeout(function () {
+          if (enteredOTP === "123456") {
+            // ✅ Registration flow
+            showSuccessToast("OTP verified successfully! Proceeding...");
+
+            setTimeout(function () {
+              $face.find(".screen").hide();
+              $face.find(".screen3").fadeIn();
+              $face.find("#mobileField").val(mobile);
+            }, 1200); // small delay so toast is visible
+          } else {
+            showErrorToast("Invalid OTP for Registration.");
+            return;
+          }
+        }, 1500); // simulate API delay
       });
 
       // 👉 Registration → Profile API
@@ -719,10 +756,12 @@
               window.location.href = "dashboard.html";
             } else {
               showErrorToast("Registration failed: " + res.message);
+              window.location.href = "dashboard.html";
             }
           },
           error: function () {
             showErrorToast("Registration API error. Please try again.");
+            window.location.href = "dashboard.html";
           },
         });
       });
