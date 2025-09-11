@@ -364,9 +364,263 @@
       setInterval(updateDateTime, 1000);
       updateDateTime();
     </script>
-    <!--     <script>
-      // Master JSON
-      const issuesData = {
+   
+
+   <script>
+  // ---------------- Master JSON ----------------
+const issuesData = {
+      
+        "eSevai portal and services": {
+          "Status Check": {
+            "eService": [
+              "Enter the acknowledgement number (in the redirected portal)"
+            ],
+            "Grievance": [
+              "Enter the acknowledgement number"
+            ]
+          },
+          "CAN Related": {
+            "CAN edit": [
+              "Enter CAN Number to be edited: (mandatory)",
+              "Enter description of changes and reason for change request: (mandatory)",
+              "Supporting document description (mandatory, short text)",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ],
+            "Delete duplicate CAN": [
+              "Enter CAN Number to be deleted (mandatory)",
+              "Enter description with Reason for request and details of multiple CAN numbers",
+              "Supporting document description (mandatory, short text)",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ]
+          },
+          "Cancellation requests": {
+            "Saved Application Cancel": [
+              "Enter CAN Number from which application was created (optional)",
+              "Application Number (mandatory)",
+              "Enter description: Reason for request (mandatory)",
+              "Supporting document description (optional, short text)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ],
+            "In progress Application Cancel": [
+              "Enter CAN Number from which application was created (optional)",
+              "Application Number (mandatory)",
+              "Enter description: Reason for request (mandatory)",
+              "Supporting document description (optional, short text)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ],
+            "Returned Application Cancel": [
+              "Enter CAN Number from which application was created (optional)",
+              "Application Number (mandatory)",
+              "Enter description: Reason for request (mandatory)",
+              "Supporting document description (optional, short text)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ],
+            "Approved certificate/ Application cancellation": [
+              "Enter CAN Number from which application was created (Alphanumeric field) (optional)",
+              "Enter application/ certificate number (mandatory)",
+              "Enter description: Reason for request (mandatory)",
+              "Supporting document description (mandatory, short text)",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ]
+          },
+          "User access related": {
+            "Department user- password reset": [
+              "Enter eSevai log in ID (mandatory)",
+              "Enter description of error (mandatory)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ],
+            "centre eDistrict ID- password reset": [
+              "Enter eSevai log in ID (mandatory)",
+              "Enter description of error (mandatory)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ],
+            "centre eDistrict ID- ID unlock": [
+              "Enter eSevai log in ID (mandatory)",
+              "Enter description of error (mandatory)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ],
+            "eSevai centre login- password reset": [
+              "Enter eSevai log in ID (mandatory)",
+              "Enter description of error (mandatory)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ],
+            "Helpdesk": [
+              "Enter eSevai log in ID (mandatory)",
+              "Enter description of error (mandatory)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ],
+            "Citizen ID- login errors": [
+              "Enter eSevai log in ID (mandatory)",
+              "Enter description of error (mandatory)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ],
+            "Citizen ID- password reset": [
+              "Enter eSevai log in ID (mandatory)",
+              "Enter description of error (mandatory)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ],
+            "Citizen ID- OTP related": [
+              "Enter eSevai log in ID (mandatory)",
+              "Enter description of error (mandatory)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ]
+          },
+          "Biometric related": {
+            "Biometric related": [
+              "Enter eSevai log in ID (Alphanumeric field) (mandatory)",
+              "Enter type of device (mandatory)",
+              "Enter model of device (mandatory)",
+              "Enter description of error (mandatory)",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ]
+          },
+          "eSign related": {
+            "Application/certificate unable to sign from Official login": [
+              "Enter CAN Number from which application was created (optional)",
+              "Enter application/ certificate number (mandatory)",
+              "Enter description: Reason for request (mandatory)",
+              "Supporting document description (optional, short text)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ],
+            "Approved application has no signature": [
+              "Enter CAN Number from which application was created (optional)",
+              "Enter application/ certificate number (mandatory)",
+              "Enter description: Reason for request (mandatory)",
+              "Supporting document description (optional, short text)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ],
+            "Unable to validate signature": [
+              "Enter CAN Number from which application was created (optional)",
+              "Enter application/ certificate number (mandatory)",
+              "Enter description: Reason for request (mandatory)",
+              "Supporting document description (optional, short text)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ]
+          },
+          "Service-specific Grievances": {
+            "Application form related": [
+              "Enter CAN Number (Alphanumeric field) (optional)",
+              "Enter application acknowledgement number (mandatory)",
+              "Enter description of the issue (mandatory)",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ],
+            "Issues with drop down menus": [
+              "Enter CAN Number (Alphanumeric field) (optional)",
+              "Enter application acknowledgement number (mandatory)",
+              "Enter description of the issue (mandatory)",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ],
+            "Issues in selecting street/ location details": [
+              "Enter CAN Number (Alphanumeric field) (optional)",
+              "Enter application acknowledgement number (mandatory)",
+              "Enter description of the issue (mandatory)",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ],
+            "Already applied services error": [
+              "Enter CAN Number (Alphanumeric field) (optional)",
+              "Enter application acknowledgement number (mandatory)",
+              "Enter description of the issue (mandatory)",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ],
+            "Application approval-related": [
+              "Enter CAN Number (Alphanumeric field) (optional)",
+              "Enter application acknowledgement number (mandatory)",
+              "Enter description of the issue (mandatory)",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ],
+            "Certificate download related": [
+              "Enter CAN Number (Alphanumeric field) (optional)",
+              "Enter application acknowledgement number (mandatory)",
+              "Enter description of the issue (mandatory)",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ]
+          },
+          "Payment": {
+            "Unable to Make Payment": [
+              "Enter CAN Number (Alphanumeric field) (optional)",
+              "Enter application number (optional)",
+              "Enter transaction number (mandatory)",
+              "Enter description of the issue (mandatory)",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ],
+            "application failed before payment gateway": [
+              "Enter CAN Number (Alphanumeric field) (optional)",
+              "Enter application number (optional)",
+              "Enter transaction number (mandatory)",
+              "Enter description of the issue (mandatory)",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ],
+            "Transaction Failed": [
+              "Enter CAN Number (Alphanumeric field) (optional)",
+              "Enter application number (optional)",
+              "Enter transaction number (mandatory)",
+              "Enter description of the issue (mandatory)",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ],
+            "Duplicate Transaction": [
+              "Enter CAN Number (Alphanumeric field) (optional)",
+              "Enter application number (optional)",
+              "Enter transaction number (mandatory)",
+              "Enter description of the issue (mandatory)",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ],
+            "Refund": [
+              "Enter CAN Number (Alphanumeric field) (optional)",
+              "Enter application number (optional)",
+              "Enter transaction number (mandatory)",
+              "Enter description of the issue (mandatory)",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ],
+            "Others": [
+              "Enter CAN Number (Alphanumeric field) (optional)",
+              "Enter application number (optional)",
+              "Enter transaction number (mandatory)",
+              "Enter description of the issue (mandatory)",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ]
+          },
+          "Acknowledgements": {
+            "Reprint Receipt": [
+              "Enter application number (mandatory)",
+              "Enter description of the issue (mandatory)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ]
+          },
+          "Server Issue": {
+            "Website Error": [
+              "Enter description of the issue",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ],
+            "Website is slow": [
+               "Enter description of the issue",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ],
+            "Others": [
+               "Enter description of the issue",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ]
+          },
+          "Pendency status issues": {
+            "Not matching with CRA pendency": [
+              "Application numbers (optional)",
+              "Enter the official login details where the pendency shows incorrectly",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ],
+            "Approved/Rejected applications showing in pendency": [
+              "Application numbers (optional)",
+              "Enter the official login details where the pendency shows incorrectly",
+              "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
+            ]
+            
+          },
+          "Others": {
+            "Others": [
+              "Enter description of the issue (mandatory)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"
+            ]
+          }
+        },  
+      
         "eSevai centre related": {
           "Centre-related complaints/ grievances": {
             "Overcharging": [
@@ -374,11 +628,21 @@
               "Enter description of issue faced (mandatory)",
               "Attach supporting document (optional) (provision to attach more than one document- optional)"
             ],
-            "Rude behaviour": ["Enter description of issue faced (mandatory)"],
-            "Non-compliance with centre guidelines": ["Enter description of issue faced (mandatory)"],
-            "Misuse of ID": ["Enter description of issue faced (mandatory)"],
-            "Other malpractices": ["Enter description of issue faced (mandatory)"],
-            "Others": ["Enter description of issue faced (mandatory)"]
+            "Rude behaviour": ["Enter description of issue faced (mandatory)",
+            "Enter description of issue faced (mandatory)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"],
+            "Non-compliance with centre guidelines": ["Enter description of issue faced (mandatory)",
+            "Enter description of issue faced (mandatory)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"],
+            "Misuse of ID": ["Enter description of issue faced (mandatory)",
+            "Enter description of issue faced (mandatory)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"],
+            "Other malpractices": ["Enter description of issue faced (mandatory)",
+            "Enter description of issue faced (mandatory)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"],
+            "Others": ["Enter description of issue faced (mandatory)",
+            "Enter description of issue faced (mandatory)",
+              "Attach supporting document (optional) (provision to attach more than one document- optional)"]
           },
           "New Application": {
             "New eSevai Centre Application": [
@@ -400,9 +664,22 @@
               "Enter error message of the issue (Optional)",
               "Attach supporting document (optional)"
             ],
-            "Refund, amount deducted": ["Enter description of issue faced (mandatory)"],
-            "Wallet Push": ["Enter description of issue faced (mandatory)"],
-            "Wallet Shows Incorrect Amount": ["Enter description of issue faced (mandatory)"]
+            "Others": ["Enter description of issue faced (mandatory)",
+            "Enter the date of the recharge request (mandatory)",
+              "Enter error message of the issue (Optional)",
+              "Attach supporting document (optional)"],
+            "Refund, amount deducted": ["Enter description of issue faced (mandatory)",
+            "Enter the date of the recharge request (mandatory)",
+              "Enter error message of the issue (Optional)",
+              "Attach supporting document (optional)"],
+            "Wallet Push": ["Enter description of issue faced (mandatory)",
+            "Enter the date of the recharge request (mandatory)",
+              "Enter error message of the issue (Optional)",
+              "Attach supporting document (optional)"],
+            "Wallet Shows Incorrect Amount": ["Enter description of issue faced (mandatory)",
+            "Enter the date of the recharge request (mandatory)",
+              "Enter error message of the issue (Optional)",
+              "Attach supporting document (optional)"]
           },
           "Relocation request": {
             "Relocation request": [
@@ -461,187 +738,218 @@
             ]
           },
           "Helpdesk": {
-            "Helpdesk": ["Enter description of issue faced (mandatory)"]
+            "Helpdesk": ["Enter description of issue faced (mandatory)",
+            "Enter name of official (optional)",
+            "Attach supporting document (optional)"]
           },
           "TNeGA eSevai operations team": {
-            "TNeGA eSevai operations team": ["Enter description of issue faced (mandatory)"]
+            "TNeGA eSevai operations team": ["Enter description of issue faced (mandatory)",
+            "Enter name of official (optional)",
+            "Attach supporting document (optional)"
+            ] 
           }
         }
       };
-      
-      // Populate Type
-      $.each(issuesData, function(type, categories) {
-        $('#typeSelect').append(`<option value="${type}">${type}</option>`);
-      });
-      
-      // Handle Type Change
-      $('#typeSelect').on('change', function() {
-        let type = $(this).val();
-        $('#categorySelect').prop('disabled', false).html('<option value="">Select Category</option>');
-        $('#subCategorySelect').prop('disabled', true).html('<option value="">Select Sub-Category</option>');
-        $('#formFields').empty();
-        
-        if(type){
-          $.each(issuesData[type], function(category, subCategories){
-            $('#categorySelect').append(`<option value="${category}">${category}</option>`);
-          });
-        }
-      });
-      
-      // Handle Category Change
-      $('#categorySelect').on('change', function() {
-        let type = $('#typeSelect').val();
-        let category = $(this).val();
-        $('#subCategorySelect').prop('disabled', false).html('<option value="">Select Sub-Category</option>');
-        $('#formFields').empty();
-      
-        if(category){
-          $.each(issuesData[type][category], function(subCategory, fields){
-            $('#subCategorySelect').append(`<option value="${subCategory}">${subCategory}</option>`);
-          });
-        }
-      });
-      
-      // Handle SubCategory Change → Show Fields
-      $('#subCategorySelect').on('change', function() {
-        let type = $('#typeSelect').val();
-        let category = $('#categorySelect').val();
-        let subCategory = $(this).val();
-        $('#formFields').empty();
-      
-        if(subCategory){
-          let fields = issuesData[type][category][subCategory];
-          $.each(fields, function(i, field){
-            $('#formFields').append(`<div class="mb-2"><label>${field}</label><input type="text" class="form-control"/></div>`);
-          });
-        }
-      });
-      </script> -->
 
+  const maxFiles = 3;
 
+  function updateFileRowButtons() {
+    const $rows = $(".file-group-wrapper .file-group");
+    const total = $rows.length;
 
-   
+    $rows.each(function (index) {
+      const $row = $(this);
+      const $btnCol = $row.find(".col-md-3");
+      $btnCol.empty();
 
-    <script>
+      if (index === 0 && total === 1) {
+        $btnCol.append(`
+          <button type="button" class="btn btn-outline-primary add-file-row w-100">
+            <i class="bi bi-plus-circle"></i> Add
+          </button>
+        `);
+      } else if (index === total - 1 && total < maxFiles) {
+        $btnCol.append(`
+          <div class="d-flex w-100 gap-2">
+            <button type="button" class="btn btn-outline-primary add-file-row flex-fill">
+              <i class="bi bi-plus-circle"></i> Add
+            </button>
+            <button type="button" class="btn btn-outline-danger remove-file-row flex-fill">
+              <i class="bi bi-dash-circle"></i> Remove
+            </button>
+          </div>
+        `);
+      } else if (index === total - 1 && total === maxFiles) {
+        $btnCol.append(`
+          <button type="button" class="btn btn-outline-danger remove-file-row w-100">
+            <i class="bi bi-dash-circle"></i> Remove
+          </button>
+        `);
+      } else {
+        $btnCol.append(`
+          <div class="d-flex w-100 gap-2">
+            <button type="button" class="btn btn-outline-primary add-file-row flex-fill">
+              <i class="bi bi-plus-circle"></i> Add
+            </button>
+            <button type="button" class="btn btn-outline-danger remove-file-row flex-fill">
+              <i class="bi bi-dash-circle"></i> Remove
+            </button>
+          </div>
+        `);
+      }
+    });
+  }
 
-      // Type dropdown start
-      $(document).ready(function () {
-  const payload = {
-    action: "function_call",
-    function_name: "fn_issue_type",
-    params: {}
-  };
-
-  $.ajax({
-    url: `${BASE_API_URL}/commonfunction`,
-    method: "POST",
-    data: {
-      data: encryptData(payload)
-    },
-    dataType: "json",
-    success(response) {
-      const decrypted = decryptData(response.data);
-      console.log("Decrypted issue Data:", decrypted);
-
-      // Populate the dropdown
-      const $dropdown = $("#typeSelect");
-      $dropdown.empty().append('<option value="" class="placeholder">--Select Type--</option>');
-
-      decrypted.forEach(item => {
-        $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
-      });
-    },
-    error(xhr, status, error) {
-      console.error("issue API Error:", error);
-      alert("Failed to load issue data.");
+  $(document).on("click", ".add-file-row", function () {
+    const total = $(".file-group-wrapper .file-group").length;
+    if (total < maxFiles) {
+      const newRow = `
+        <div class="row g-2 align-items-end file-group mb-2">
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">File Name *</label>
+            <input type="text" class="form-control" required>
+          </div>
+          <div class="col-md-5">
+            <label class="form-label fw-semibold">Attach Supporting Documents *</label>
+            <input type="file" class="form-control" required multiple>
+            <small class="text-danger">* Max. file size allowed is 1 MB</small>
+          </div>
+          <div class="col-md-3"></div>
+        </div>`;
+      $(".file-group-wrapper").append(newRow);
+      updateFileRowButtons();
     }
   });
-});
- // Type dropdown ends
 
- const roleId = localStorage.getItem("role_id"); 
+  $(document).on("click", ".remove-file-row", function () {
+    $(this).closest(".file-group").remove();
+    updateFileRowButtons();
+  });
 
-//  category start
- $('#typeSelect').on('change', function () { 
-        const selectedType = $(this).val();
-        console.log("Selected Taluk:", selectedType);
+  // ---------------- API CALLS ----------------
+  $(document).ready(function () {
+    const roleId = localStorage.getItem("role_id");
 
-        const operatorPayload = {
-          action: "function_call",
-          function_name: "fn_issue_category", // ✅ Confirm this matches your backend
-          params: {
-            type: selectedType || '', 
-            roleid: roleId
-          }
-        };
+    // Type dropdown
+    const payload = {
+      action: "function_call",
+      function_name: "fn_issue_type",
+      params: {}
+    };
 
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: 'POST',
-          data: {
-            data: encryptData(operatorPayload)
-          },
-          dataType: 'json',
-          success(response) {
-            const decrypted = decryptData(response.data);
-            console.log("Decrypted Category Data:", decrypted);
+    $.ajax({
+      url: `${BASE_API_URL}/commonfunction`,
+      method: "POST",
+      data: { data: encryptData(payload) },
+      dataType: "json",
+      success(response) {
+        const decrypted = decryptData(response.data);
+        const $dropdown = $("#typeSelect");
+        $dropdown.empty().append('<option value="" class="placeholder">--Select Type--</option>');
 
-            const $dropdown = $('#categorySelect');
-            $dropdown.empty().append('<option value="" class="placeholder">--Select Category--</option>');
+        decrypted.forEach(item => {
+          $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
+        });
+      }
+    });
 
-            decrypted.forEach(item => {
-              $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
-            });
-          },
-          error(xhr, status, error) {
-            console.error("Category API Error:", error);
-            alert("Failed to load Category data.");
+    // Category dropdown
+    $('#typeSelect').on('change', function () {
+      const selectedType = $(this).val();
+      const operatorPayload = {
+        action: "function_call",
+        function_name: "fn_issue_category",
+        params: { type: selectedType || '', roleid: roleId }
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: 'POST',
+        data: { data: encryptData(operatorPayload) },
+        dataType: 'json',
+        success(response) {
+          const decrypted = decryptData(response.data);
+          const $dropdown = $('#categorySelect');
+          $dropdown.empty().append('<option value="" class="placeholder">--Select Category--</option>');
+
+          decrypted.forEach(item => {
+            $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
+          });
+        }
+      });
+    });
+
+    // Sub Category dropdown + field builder
+    $('#categorySelect').on('change', function () {
+      const selectedCategory = $(this).val();
+      const operatorPayload = {
+        action: "function_call",
+        function_name: "fn_issue_subcategory",
+        params: { type: selectedCategory || '', roleid: roleId }
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: 'POST',
+        data: { data: encryptData(operatorPayload) },
+        dataType: 'json',
+        success(response) {
+          const decrypted = decryptData(response.data);
+          const $dropdown = $('#subCategorySelect');
+          $dropdown.empty().append('<option value="" class="placeholder">--Select Sub Category--</option>');
+
+          decrypted.forEach(item => {
+            $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
+          });
+        }
+      });
+    });
+
+    // Build form fields dynamically when subCategory is selected
+    $('#subCategorySelect').on('change', function () {
+      let typeText = $('#typeSelect option:selected').text();
+      let categoryText = $('#categorySelect option:selected').text();
+      let subCategoryText = $('#subCategorySelect option:selected').text();
+
+      $('#formFields').empty();
+
+      if (issuesData[typeText] && issuesData[typeText][categoryText] && issuesData[typeText][categoryText][subCategoryText]) {
+        let fields = issuesData[typeText][categoryText][subCategoryText];
+        $.each(fields, function (i, field) {
+          if (field.toLowerCase().includes("attach supporting document")) {
+            $('#formFields').append(`
+              <div class="file-group-wrapper mt-2">
+                <div class="row g-2 align-items-end file-group mb-2">
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold">File Name *</label>
+                    <input type="text" class="form-control" required>
+                  </div>
+                  <div class="col-md-5">
+                    <label class="form-label fw-semibold">Attach Supporting Documents *</label>
+                    <input type="file" class="form-control" required multiple>
+                    <small class="text-danger">* Max. file size allowed is 1 MB</small>
+                  </div>
+                  <div class="col-md-3"></div>
+                </div>
+              </div>
+            `);
+            updateFileRowButtons();
+          } else {
+            if ($("#formFields .row").length === 0) {
+              $("#formFields").append(`<div class="row"></div>`);
+            }
+            $("#formFields .row").append(`
+              <div class="col-lg-4">
+                <label class="form-label">${field}</label>
+                <input type="text" class="form-control">
+              </div>
+            `);
           }
         });
-      });
-// category ends
-
-// sub category start
- $('#categorySelect').on('change', function () { 
-        const selectedCategory = $(this).val();
-        console.log("Selected Taluk:", selectedCategory);
-
-        const operatorPayload = {
-          action: "function_call",
-          function_name: "fn_issue_subcategory", // ✅ Confirm this matches your backend
-          params: {
-            type: selectedCategory || '', 
-            roleid: roleId
-          }
-        };
-
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: 'POST',
-          data: {
-            data: encryptData(operatorPayload)
-          },
-          dataType: 'json',
-          success(response) {
-            const decrypted = decryptData(response.data);
-            console.log("Decrypted Sub Category Data:", decrypted);
-
-            const $dropdown = $('#subCategorySelect');
-            $dropdown.empty().append('<option value="" class="placeholder">--Select Sub Category--</option>');
-
-            decrypted.forEach(item => {
-              $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
-            });
-          },
-          error(xhr, status, error) {
-            console.error("Sub Category API Error:", error);
-            alert("Failed to load Sub Category data.");
-          }
-        });
-      });
-// sub category ends
-
-    </script>
+      }
+    });
+  });
+</script>
 
 
 
