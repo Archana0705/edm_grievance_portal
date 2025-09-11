@@ -284,10 +284,10 @@
                         Register here</a></div>
                   </div>
 
-                  <!-- Screen 2: OTP -->
-                  <div class="screen screen2" style="display:none;">
+                  <!-- LOGIN OTP -->
+                  <div class="screen screen2 login-otp-screen" id="loginOtpScreen" style="display:none;">
                     <i class="fa-solid fa-key step-icon"></i>
-                    <h4 class="mb-3">Verify OTP</h4>
+                    <h4 class="mb-3">Verify OTP (Login)</h4>
                     <div class="d-flex justify-content-center mb-3">
                       <input type="text" maxlength="1" class="otp-input form-control">
                       <input type="text" maxlength="1" class="otp-input form-control">
@@ -297,9 +297,8 @@
                       <input type="text" maxlength="1" class="otp-input form-control">
                     </div>
                     <p class="text-muted"><span class="otpTimer">Resend OTP in 02:00</span></p>
-                    <button class="btn btn-success w-100 next2">Verify OTP</button>
+                    <button class="btn btn-success w-100" id="loginOtpVerifyBtn">Verify OTP</button>
                   </div>
-
                 </div>
               </div>
 
@@ -321,10 +320,10 @@
                       <button class="btn btn-primary w-100 continueBtn" id="registerContinueBtn">Continue</button>
                     </div>
 
-                    <!-- Screen 2: OTP (register) -->
-                    <div class="screen screen2" style="display:none;">
+                    <!-- REGISTER OTP -->
+                    <div class="screen screen2 register-otp-screen" id="registerOtpScreen" style="display:none;">
                       <i class="fa-solid fa-key step-icon"></i>
-                      <h4 class="mb-3">Verify OTP</h4>
+                      <h4 class="mb-3">Verify OTP (Register)</h4>
                       <div class="d-flex justify-content-center mb-3">
                         <input type="text" maxlength="1" class="otp-input form-control">
                         <input type="text" maxlength="1" class="otp-input form-control">
@@ -334,7 +333,7 @@
                         <input type="text" maxlength="1" class="otp-input form-control">
                       </div>
                       <p class="text-muted"><span class="otpTimer">Resend OTP in 02:00</span></p>
-                      <button class="btn btn-success w-100 next2">Verify OTP</button>
+                      <button class="btn btn-success w-100" id="registerOtpVerifyBtn">Verify OTP</button>
                     </div>
 
                     <!-- Screen 3: Profile creation (register only) -->
@@ -501,6 +500,27 @@
         $(".front-face .screen1").show();
       });
 
+      // 👉 Auto move to next/previous OTP box
+      $(document).on("input", ".otp-input", function () {
+        const $this = $(this);
+        const value = $this.val();
+
+        if (value.length === 1) {
+          // Move to next input if exists
+          $this.next(".otp-input").focus();
+        }
+      });
+
+      $(document).on("keydown", ".otp-input", function (e) {
+        const $this = $(this);
+
+        if (e.key === "Backspace" && !$this.val()) {
+          // Move to previous input if exists
+          $this.prev(".otp-input").focus();
+        }
+      });
+
+
 
       $(document).on("click", "#loginContinueBtn", function (e) {
         e.preventDefault();
@@ -613,101 +633,49 @@
         });
       });
 
-      // 👉 Verify OTP
-      $(document).on("click", ".next2", function (e) {
+      // 👉 Verify OTP (LOGIN)
+      $(document).on("click", "#loginOtpVerifyBtn", function (e) {
         e.preventDefault();
-        const $face = $(this).closest(".front-face, .back-face");
+        const $face = $(this).closest(".front-face");
         const mobile = sanitizeInput($face.find(".mobileInput").first().val());
-        const enteredOTP = $face
-          .find(".otp-input")
-          .map(function () {
-            return $(this).val();
-          })
-          .get()
-          .join("")
-          .trim();
+        const enteredOTP = $face.find(".otp-input").map(function () {
+          return $(this).val();
+        }).get().join("").trim();
 
         if (enteredOTP.length !== 6) {
-          showErrorToast("Please enter 6-digit OTP.");
-          return;
+          return showErrorToast("Please enter 6-digit OTP.");
         }
 
-        // const otpPayload = {
-        //   action: "function_call",
-        //   function_name: "otp_verification_fn",
-        //   params: { p_mobile: mobile, p_otp: enteredOTP },
-        // };
+        if (enteredOTP === "123456") {
+          // ✅ Login flow
+          showSuccessToast("Login successful!");
+          window.location.href = "dashboard.html";
+        } else {
+          showErrorToast("Invalid OTP for Login.");
+        }
+      });
 
-        // $.ajax({
-        //   url: `${BASE_API_URL}/commonfunction`,
-        //   method: "POST",
-        //   data: { data: encryptData(otpPayload) },
-        //   dataType: "json",
-        //   success: function (otpRes) {
-        //     if (otpRes.success) {
-        //       const decrypted = decryptData(otpRes.data);
+      // 👉 Verify OTP (REGISTER)
+      $(document).on("click", "#registerOtpVerifyBtn", function (e) {
+        e.preventDefault();
+        const $face = $(this).closest(".back-face");
+        const mobile = sanitizeInput($face.find(".mobileInput").first().val());
+        const enteredOTP = $face.find(".otp-input").map(function () {
+          return $(this).val();
+        }).get().join("").trim();
 
-        //       if (decrypted[0].status === true) {
-        //         // ✅ OTP success
-        //         if ($face.hasClass("front-face")) {
-        //           // Login → fetch user
-        //           const loginPayload = {
-        //             action: "function_call",
-        //             function_name: "get_user_auth_operator_fun",
-        //             params: { p_mobile: mobile },
-        //           };
-
-        //           $.ajax({
-        //             url: `${BASE_API_URL}/commonfunction`,
-        //             method: "POST",
-        //             data: { data: encryptData(loginPayload) },
-        //             dataType: "json",
-        //             success: function (loginRes) {
-        //               if (loginRes.success) {
-        //                 const operatorData = decryptData(loginRes.data)[0];
-        //                 localStorage.setItem("userRole", operatorData.designation);
-        //                 localStorage.setItem("userName", operatorData.name);
-        //                 localStorage.setItem("userId", operatorData.user_id);
-        //                 localStorage.setItem("operatorId", operatorData.operator_id);
-        //                 localStorage.setItem("operatorDistrict", operatorData.district);
-
-        //                 showSuccessToast("Login successful!");
-        //                 window.location.href = "dashboard.html";
-        //               } else {
-        //                 showErrorToast("Login failed: " + loginRes.message);
-        //               }
-        //             },
-        //             error: function () {
-        //               showErrorToast("Login API error.");
-        //             },
-        //           });
-        //         } else {
-        //           // Registration → go to Profile creation
-        //           $face.find(".screen").hide();
-        //           $face.find(".screen3").fadeIn();
-        //           $face.find("#mobileField").val(mobile);
-        //         }
-        //       } else {
-        //         showErrorToast("Invalid OTP. Please try again.");
-        //       }
-        //     } else {
-        //       showErrorToast("OTP verification failed: " + otpRes.message);
-        //     }
-        //   },
-        //   error: function () {
-        //     showErrorToast("OTP verification API error.");
-        //   },
-        // });
+        if (enteredOTP.length !== 6) {
+          return showErrorToast("Please enter 6-digit OTP.");
+        }
 
         if (enteredOTP === "123456") {
-          // ✅ OTP is correct → go to profile form
+          // ✅ Registration flow → go to profile creation
           $face.find(".screen").hide();
           $face.find(".screen3").fadeIn();
           $face.find("#mobileField").val(mobile);
         } else {
-          showErrorToast("Invalid OTP. Please enter 1234 for testing.");
+          showErrorToast("Invalid OTP for Registration.");
         }
-
       });
 
       // 👉 Registration → Profile API
@@ -730,8 +698,8 @@
 
         const registerPayload = {
           action: "function_call",
-          function_name: "fn_citizen_register",
-          params: { p_mobile: mobile, p_name: name, p_gender: gender, p_district: district, p_email: email },
+          function_name: "sp_create_citizen_user",
+          params: { p_user_name: name, p_gender: gender, p_mobile: mobile, p_district: district, p_email: email, p_login_id: '1234', p_password_hash: 'abcd' },
         };
 
         $.ajax({
