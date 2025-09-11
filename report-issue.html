@@ -318,9 +318,17 @@
     </div>
     <!-- Bootstrap JS -->
     
-    <script src="assets/js/jquery-3.7.1.min.js"></script> 
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/aos.js"></script>
+  <script src="assets/js/jquery-3.7.1.min.js"></script>
+  <!-- <script src="assets/js/bootstrap.bundle.min.js"></script> -->
+  <script src="assets/js/aos.js"></script>
+  <script src="assets/js/dataTableUtil.js"></script>
+  <script src="assets/js/crypto-js.min.js"></script>
+  <script src="assets/js/global.js"></script>
+  <script src="assets/js/encrypt_decrypt.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/toastUtil.js"></script>
+  <script src="assets/js/apiConfig.js"></script>
+  <script src="assets/js/globalProfileDropdown.js"></script>
     
     <script>
       // Sidebar toggle
@@ -509,8 +517,10 @@
         }
       });
       </script> -->
+
+
+
     <script>
-      // ---------------- Master JSON ----------------
       const issuesData = {
       
         "eSevai portal and services": {
@@ -893,8 +903,7 @@
           }
         }
       };
-      
-      // ---------------- Populate Dropdowns ----------------
+ 
       $.each(issuesData, function(type, categories) {
         $('#typeSelect').append(`<option value="${type}">${type}</option>`);
       });
@@ -935,7 +944,7 @@
           let fields = issuesData[type][category][subCategory];
           $.each(fields, function(i, field) {
             if (field.toLowerCase().includes("attach supporting document")) {
-              // File upload special UI
+            
               $('#formFields').append(`
                 <div class="file-group-wrapper mt-2">
                   <div class="row g-2 align-items-end file-group mb-2">
@@ -952,16 +961,14 @@
                   </div>
                 </div>
               `);
-              updateFileRowButtons(); // call button updater
+              updateFileRowButtons(); 
             } else {
-              // Normal text input
-              
-              // Create a row container if it doesn't already exist
+             
               if ($("#formFields .row").length === 0) {
                 $("#formFields").append(`<div class="row"></div>`);
               }
 
-              // Append field into that row
+          
               $("#formFields .row").append(`
                 <div class="col-lg-4">
                   <label class="form-label">${field}</label>
@@ -975,7 +982,7 @@
         }
       });
       
-      // ---------------- File Upload Logic ----------------
+ 
       const maxFiles = 3;
       
       function updateFileRowButtons() {
@@ -995,7 +1002,7 @@
               </button>
             `);
           } else if (index === total - 1 && total < maxFiles) {
-            // Last row, can add
+         
             $btnCol.append(`
               <div class="d-flex w-100 gap-2">
                 <button type="button" class="btn btn-outline-primary add-file-row flex-fill">
@@ -1007,14 +1014,14 @@
               </div>
             `);
           } else if (index === total - 1 && total === maxFiles) {
-            // Max reached
+          
             $btnCol.append(`
               <button type="button" class="btn btn-outline-danger remove-file-row w-100">
                 <i class="bi bi-dash-circle"></i> Remove
               </button>
             `);
           } else {
-            // Middle rows
+       
             $btnCol.append(`
               <div class="d-flex w-100 gap-2">
                 <button type="button" class="btn btn-outline-primary add-file-row flex-fill">
@@ -1055,5 +1062,129 @@
         updateFileRowButtons();
       });
     </script>
+
+    <script>
+
+      // Type dropdown start
+      $(document).ready(function () {
+  const payload = {
+    action: "function_call",
+    function_name: "fn_issue_type",
+    params: {}
+  };
+
+  $.ajax({
+    url: `${BASE_API_URL}/commonfunction`,
+    method: "POST",
+    data: {
+      data: encryptData(payload)
+    },
+    dataType: "json",
+    success(response) {
+      const decrypted = decryptData(response.data);
+      console.log("Decrypted issue Data:", decrypted);
+
+      // Populate the dropdown
+      const $dropdown = $("#typeSelect");
+      $dropdown.empty().append('<option value="" class="placeholder">--Select Type--</option>');
+
+      decrypted.forEach(item => {
+        $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
+      });
+    },
+    error(xhr, status, error) {
+      console.error("issue API Error:", error);
+      alert("Failed to load issue data.");
+    }
+  });
+});
+ // Type dropdown ends
+
+ const roleId = localStorage.getItem("role_id"); 
+
+//  category start
+ $('#typeSelect').on('change', function () { 
+        const selectedType = $(this).val();
+        console.log("Selected Taluk:", selectedType);
+
+        const operatorPayload = {
+          action: "function_call",
+          function_name: "fn_issue_category", // ✅ Confirm this matches your backend
+          params: {
+            type: selectedType || '', 
+            roleid: roleId
+          }
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: 'POST',
+          data: {
+            data: encryptData(operatorPayload)
+          },
+          dataType: 'json',
+          success(response) {
+            const decrypted = decryptData(response.data);
+            console.log("Decrypted Category Data:", decrypted);
+
+            const $dropdown = $('#categorySelect');
+            $dropdown.empty().append('<option value="" class="placeholder">--Select Category--</option>');
+
+            decrypted.forEach(item => {
+              $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
+            });
+          },
+          error(xhr, status, error) {
+            console.error("Category API Error:", error);
+            alert("Failed to load Category data.");
+          }
+        });
+      });
+// category ends
+
+// sub category start
+ $('#categorySelect').on('change', function () { 
+        const selectedCategory = $(this).val();
+        console.log("Selected Taluk:", selectedCategory);
+
+        const operatorPayload = {
+          action: "function_call",
+          function_name: "fn_issue_subcategory", // ✅ Confirm this matches your backend
+          params: {
+            type: selectedCategory || '', 
+            roleid: roleId
+          }
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: 'POST',
+          data: {
+            data: encryptData(operatorPayload)
+          },
+          dataType: 'json',
+          success(response) {
+            const decrypted = decryptData(response.data);
+            console.log("Decrypted Sub Category Data:", decrypted);
+
+            const $dropdown = $('#subCategorySelect');
+            $dropdown.empty().append('<option value="" class="placeholder">--Select Sub Category--</option>');
+
+            decrypted.forEach(item => {
+              $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
+            });
+          },
+          error(xhr, status, error) {
+            console.error("Sub Category API Error:", error);
+            alert("Failed to load Sub Category data.");
+          }
+        });
+      });
+// sub category ends
+
+    </script>
+
+
+
   </body>
 </html>
