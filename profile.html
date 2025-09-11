@@ -11,6 +11,12 @@
     <link href="assets/css/aos.css" rel="stylesheet">
     
     <style>
+
+      .card_wraps {
+        max-width: 450px;
+        margin: 0px auto;
+      }
+
       html, body {
       height: 100%;
       margin: 0;
@@ -273,15 +279,13 @@
     <div id="mainContent">
       <div class="container">
   <!-- Profile Header -->
-  <div class="profile-header text-center mb-5" data-aos="fade-up">
-    <!-- <img src="https://i.pravatar.cc/150?img=12" alt="Citizen Avatar" class="profile-avatar mb-3"> -->
-    <h3 class="fw-bold">John</h3>
-    <p class="mb-1"><i class="bi bi-geo-alt-fill me-2"></i>Chennai, Tamil Nadu</p>
-    <!-- <button class="btn btn-light btn-sm mt-2"><i class="bi bi-pencil-square me-2"></i>Edit Profile</button> -->
-  </div>
+<div class="profile-header text-center mb-5" data-aos="fade-up">
+  <h3 class="fw-bold" id="userName"></h3>
+  <p class="mb-1"><i class="bi bi-geo-alt-fill me-2"></i><span id="districtVal"></span></p>
+</div>
 
   <!-- Profile Details -->
-  <div class="row g-4">
+  <div class="row g-4 card_wraps">
     <div class="col-lg-12" data-aos="fade-right">
       <div class="card info-card p-3">
         <div class="d-flex align-items-center mb-2">
@@ -290,17 +294,13 @@
         </div>
 
         <div class="row">
-
           <div class="col-md-4">
-            <p><strong>Email:</strong> John@example.com</p>
-          </div>
-          <div class="col-md-4">
-            <p><strong>Mobile:</strong> +91 98765 43210</p>
+            <p><strong>Email:</strong> <span id="emailVal"></span></p>
           </div>
           <div class="col-md-4">
-            <p><strong>Date of Birth:</strong> 12 Jan 1995</p>
+            <p><strong>Mobile:</strong> <span id="mobileVal"></span></p>
           </div>
-          </div>
+        </div>   
 
       </div>
     </div>
@@ -432,5 +432,22 @@
       setInterval(updateDateTime, 1000);
       updateDateTime();
     </script>
+
+    <script>
+  $(function () {
+    // get from localStorage
+    const email = localStorage.getItem("email");
+    const mobile = localStorage.getItem("mobile");
+    const district = localStorage.getItem("district");
+    const userName = localStorage.getItem("user_name");
+
+    // bind values to HTML
+    if (email) $("#emailVal").text(email);
+    if (mobile) $("#mobileVal").text("+91 " + mobile);
+    if (district) $("#districtVal").text(district);
+    if (userName) $("#userName").text(userName);
+  });
+</script>
+
   </body>
 </html>
