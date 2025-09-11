@@ -2046,6 +2046,75 @@
     chart.render();
 
   </script> -->
+  <script>
+    function bindDashboardCounts(userId) {
+      const payload = {
+        action: "function_call",
+        function_name: "fn_dashboard_citizen_edmopr_counts",
+        params: { p_user_id: userId }
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(payload) },
+        dataType: "json",
+        success: function (res) {
+          if (!res.success) return showErrorToast("Failed to fetch dashboard counts.");
+
+          try {
+            const decrypted = decryptData(res.data);
+            const data = (typeof decrypted === "string") ? JSON.parse(decrypted) : decrypted;
+
+            // --- Self Tickets ---
+            const self = data.SelfTickets;
+            $(".col-md-4:eq(0) .h3").text(self.Total);
+            const selfSpans = $(".col-md-4:eq(0) .kpi-meta span.fw-semibold");
+            selfSpans.eq(0).text(self.InProgress);
+            selfSpans.eq(1).text(self.Returned);
+            selfSpans.eq(2).text(self.Resolved);
+            selfSpans.eq(3).text(self.ReOpened);
+            selfSpans.eq(4).text(self.Closed);
+
+            // --- On-Behalf Tickets ---
+            const onBehalf = data.OnBehalfTickets;
+            $(".col-md-4:eq(1) .h3").text(onBehalf.Total);
+            const onBehalfSpans = $(".col-md-4:eq(1) .kpi-meta span.fw-semibold");
+            onBehalfSpans.eq(0).text(onBehalf.InProgress);
+            onBehalfSpans.eq(1).text(onBehalf.Returned);
+            onBehalfSpans.eq(2).text(onBehalf.Resolved);
+            onBehalfSpans.eq(3).text(onBehalf.ReOpened);
+            onBehalfSpans.eq(4).text(onBehalf.Closed);
+
+            // --- Overall Tickets ---
+            const overall = data.OverallTickets;
+            $(".col-md-4:eq(2) .h3").text(overall.Total);
+            const overallSpans = $(".col-md-4:eq(2) .kpi-meta span.fw-semibold");
+            overallSpans.eq(0).text(overall.InProgress);
+            overallSpans.eq(1).text(overall.Returned);
+            overallSpans.eq(2).text(overall.Resolved);
+            overallSpans.eq(3).text(overall.ReOpened);
+            overallSpans.eq(4).text(overall.Closed);
+
+          } catch (err) {
+            console.error("Error parsing dashboard data:", err);
+            showErrorToast("Failed to parse dashboard data.");
+          }
+        },
+        error: function () {
+          showErrorToast("Dashboard API error.");
+        }
+      });
+    }
+
+    // --- Initialize ---
+    const userId = localStorage.getItem("login_user_id") || 0;
+    bindDashboardCounts(userId);
+
+    // Optional: refresh every 60s
+    setInterval(() => bindDashboardCounts(userId), 60000);
+
+  </script>
 </body>
 
 </html>
