@@ -653,8 +653,11 @@
         });
       });
 
+
+
       // 👉 Verify OTP (LOGIN)
       $(document).on("click", "#loginOtpVerifyBtn", function (e) {
+        debugger
         e.preventDefault();
         const $face = $(this).closest(".front-face");
         const mobile = sanitizeInput($face.find(".mobileInput").first().val());
@@ -668,17 +671,62 @@
 
         showSuccessToast("Verifying OTP...");
 
-        setTimeout(function () {
-          if (enteredOTP === "123456") {
-            showSuccessToast("Login successful!");
-            setTimeout(function () {
-              window.location.href = "dashboard.html";
-            }, 1200);
-          } else {
-            showErrorToast("Invalid OTP for Login.");
-            return;
+        // 🔹 API payload for OTP verification
+        const payload = {
+          action: "function_call",
+          function_name: "fn_user_details_by_mobile",
+          params: {
+            p_mobile: mobile,
+            // p_otp: enteredOTP
+          } // include OTP if backend expects it
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: "json",
+          success: function (res) {
+            if (!res.success) {
+              return showErrorToast("OTP verification failed: " + (res.message || "Unknown error"));
+            }
+
+            try {
+              const decrypted = decryptData(res.data);
+
+              // Check if it's already an object/array
+              let apiResponse;
+              if (typeof decrypted === "string") {
+                apiResponse = JSON.parse(decrypted);
+              } else {
+                apiResponse = decrypted;
+              }
+
+              if (Array.isArray(apiResponse) && apiResponse.length > 0) {
+                const user = apiResponse[0];
+
+                localStorage.setItem("user_id", user.user_id || "");
+                localStorage.setItem("user_name", user.user_name || "");
+                localStorage.setItem("email", user.email || "");
+                localStorage.setItem("mobile", user.mobile || "");
+                localStorage.setItem("login_id", user.login_id || "");
+                localStorage.setItem("role_id", user.role_id || "");
+                localStorage.setItem("district", user.district || "");
+
+                showSuccessToast("Login successful!");
+                setTimeout(() => window.location.href = "dashboard.html", 1000);
+              } else {
+                showErrorToast("Invalid OTP for Login. No user data found.");
+              }
+            } catch (err) {
+              console.error("Error parsing OTP verification response:", err);
+              showErrorToast("Something went wrong while verifying OTP.");
+            }
+          },
+          error: function () {
+            showErrorToast("OTP verification API error.");
           }
-        }, 2000); // ⏳ 2 seconds delay before verifying
+        });
       });
 
       // 👉 Verify OTP (REGISTER)
@@ -715,7 +763,7 @@
         }, 1500); // simulate API delay
       });
 
-      // 👉 Registration → Profile API
+
       $(document).on("click", ".next3", function (e) {
         e.preventDefault();
         const $face = $(this).closest(".back-face");
