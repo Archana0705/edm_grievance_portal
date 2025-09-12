@@ -15,8 +15,8 @@ window.loadDataToTable = function ({
         url: apiUrl,
         method: httpMethod.toUpperCase(),
         headers: {
-            'X-APP-Key': "edm",
-            'X-APP-Name': "edm"
+            "X-App-Key": "edm_grievance_portal",
+            "X-App-Name": "edm_grievance_portal"
         },
         data: { data: payload },
         dataType: 'json',
