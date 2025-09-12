@@ -9,6 +9,8 @@
   <link href="assets/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/font/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/css/aos.css" rel="stylesheet">
+  <link href="assets/vendor/datatable/css/dataTables.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/vendor/datatable/dataTables.bootstrap5.min.css">
   <!-- page css -->
   <style>
     body {
@@ -825,7 +827,7 @@
                 <!-- Open Reports -->
                 <div class="tab-pane fade show active" id="openReports" role="tabpanel">
                   <div class="table-responsive shadow-sm rounded">
-                    <table class="table table-striped table-hover align-middle text-center">
+                    <!-- <table class="table table-striped table-hover align-middle text-center">
                       <thead class="table-primary">
                         <tr>
                           <th>Requested By</th>
@@ -867,7 +869,24 @@
                           <td>---</td>
                         </tr>
                       </tbody>
+                    </table> -->
+                    <table class="table table-striped table-hover align-middle text-center" id="pressReleaseTable"
+                      class="display" style="width:100%">
+                      <thead>
+                        <tr>
+                          <th>Request Number</th>
+                          <th>Issue Type</th>
+                          <th>Short Description</th>
+                          <th>Request Status</th>
+                          <th>Created On</th>
+                          <th>Requested By</th>
+                          <th>Requested Group</th>
+                          <th>Assigned To</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
                     </table>
+
                   </div>
                 </div>
                 <!-- Returned Reports -->
@@ -2036,6 +2055,7 @@
 
   <script src="assets/js/jquery-3.7.1.min.js"></script>
   <script src="assets/js/global.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
   <!-- <script src="assets/js/bootstrap.bundle.min.js"></script> -->
   <script src="assets/js/aos.js"></script>
@@ -2159,6 +2179,91 @@
 
     // Optional: refresh every 60s
     setInterval(() => bindDashboardCounts(userId), 60000);
+
+  </script>
+
+  <!-- datatable-->
+  <script>
+    $(document).ready(function () {
+      console.log('jQuery loaded?', typeof jQuery !== 'undefined');
+      console.log('DataTable loaded?', typeof $.fn.DataTable !== 'undefined'); // should be true
+
+      $('#pressReleaseTable').DataTable();
+    });
+  </script>
+  <script>
+    console.log("✅ DataTables loaded?", typeof $.fn.DataTable); 
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      var userId = localStorage.getItem('user_id');
+
+      const statusMap = {
+        "openReports": "In-Progress",
+        "returned": "Returned",
+        "resolved": "Resolved",
+        "reopen": "Re-opened",
+        "closedReports": "Closed",
+        "openReports1": "In-Progress",
+        "returned1": "Returned",
+        "resolved1": "Resolved",
+        "reopen1": "Re-opened",
+        "closedReports1": "Closed"
+      };
+
+      function loadRequestsData(issueStatus, ticketType) {
+        const payload = {
+          action: "function_call",
+          function_name: "fn_cit_opr_edm_cms_dep_view_requests",
+          params: {
+            userid: userId,
+            issue_status: issueStatus,
+            ticket_type: ticketType
+          }
+        };
+
+        console.log("Loading Data →", payload);
+
+        loadDataToTable({
+          tableId: 'pressReleaseTable',
+          apiUrl: `${BASE_API_URL}/commonfunction`,
+          httpMethod: 'POST',
+          payload: encryptData(payload),
+          rowBuilder: (item) => {
+            return `
+          <tr>
+            <td>${item.request_number}</td>
+            <td>${item.issue_type || 'N/A'}</td>
+            <td>${item.short_description || 'N/A'}</td>
+            <td>${item.request_status || 'N/A'}</td>
+            <td>${item.created_date || 'N/A'}</td>
+            <td>${item.requested_by || 'N/A'}</td>
+            <td>${item.requested_group || 'N/A'}</td>
+            <td>${item.assigned_to || 'N/A'}</td>
+          </tr>
+        `;
+          },
+          onTableInit: function (dtRef) {
+            dataTableRef = dtRef;
+          }
+        });
+      }
+
+      loadRequestsData("In-Progress", "Self");
+
+      $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+        const parentActive = $("#parentTabs .nav-link.active").attr("id");
+        const ticketType = parentActive === "self-tab" ? "Self" : "Behalf";
+
+        const subId = $(e.target).attr("id");
+        const issueStatus = statusMap[subId] || "In-Progress";
+
+        console.log("Tab Change → ticketType:", ticketType, "issueStatus:", issueStatus);
+
+        loadRequestsData(issueStatus, ticketType);
+      });
+    });
 
   </script>
 </body>
