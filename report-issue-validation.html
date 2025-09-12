@@ -11,6 +11,13 @@
     <link href="assets/css/aos.css" rel="stylesheet">
 
     <style>
+      .error-message {
+      color: red;
+      font-size: 0.85rem;
+    }
+    .is-invalid {
+      border-color: red;
+    }
       html, body {
       height: 100%;
       margin: 0;
@@ -354,10 +361,10 @@
     </script>
    
 
-   <script>
-  // ---------------- Master JSON ----------------
-const issuesData = {
-      
+      <script>
+  // 🔹 Static JSON config (for dynamic fields)
+  const formConfig = {
+       
         "eSevai portal and services": {
           "Status Check": {
             "eService": [
@@ -749,205 +756,252 @@ const issuesData = {
         }
       };
 
-  const maxFiles = 3;
-
-  function updateFileRowButtons() {
-    const $rows = $(".file-group-wrapper .file-group");
-    const total = $rows.length;
-
-    $rows.each(function (index) {
-      const $row = $(this);
-      const $btnCol = $row.find(".col-md-3");
-      $btnCol.empty();
-
-      if (index === 0 && total === 1) {
-        $btnCol.append(`
-          <button type="button" class="btn btn-outline-primary add-file-row w-100">
-            <i class="bi bi-plus-circle"></i> Add
-          </button>
-        `);
-      } else if (index === total - 1 && total < maxFiles) {
-        $btnCol.append(`
-          <div class="d-flex w-100 gap-2">
-            <button type="button" class="btn btn-outline-primary add-file-row flex-fill">
-              <i class="bi bi-plus-circle"></i> Add
-            </button>
-            <button type="button" class="btn btn-outline-danger remove-file-row flex-fill">
-              <i class="bi bi-dash-circle"></i> Remove
-            </button>
-          </div>
-        `);
-      } else if (index === total - 1 && total === maxFiles) {
-        $btnCol.append(`
-          <button type="button" class="btn btn-outline-danger remove-file-row w-100">
-            <i class="bi bi-dash-circle"></i> Remove
-          </button>
-        `);
-      } else {
-        $btnCol.append(`
-          <div class="d-flex w-100 gap-2">
-            <button type="button" class="btn btn-outline-primary add-file-row flex-fill">
-              <i class="bi bi-plus-circle"></i> Add
-            </button>
-            <button type="button" class="btn btn-outline-danger remove-file-row flex-fill">
-              <i class="bi bi-dash-circle"></i> Remove
-            </button>
-          </div>
-        `);
-      }
-    });
+  // Dummy encrypt/decrypt functions
+  function encryptData(data) {
+    return btoa(JSON.stringify(data));
   }
 
-  $(document).on("click", ".add-file-row", function () {
-    const total = $(".file-group-wrapper .file-group").length;
-    if (total < maxFiles) {
-      const newRow = `
-        <div class="row g-2 align-items-end file-group mb-2">
-          <div class="col-md-4">
-            <label class="form-label fw-semibold">File Name *</label>
-            <input type="text" class="form-control" required>
-          </div>
-          <div class="col-md-5">
-            <label class="form-label fw-semibold">Attach Supporting Documents *</label>
-            <input type="file" class="form-control" required multiple>
-            <small class="text-danger">* Max. file size allowed is 1 MB</small>
-          </div>
-          <div class="col-md-3"></div>
-        </div>`;
-      $(".file-group-wrapper").append(newRow);
-      updateFileRowButtons();
+  function decryptData(data) {
+    try {
+      if (typeof data === "string") {
+        data = data.trim();
+        if ((data.startsWith("{") && data.endsWith("}")) || (data.startsWith("[") && data.endsWith("]"))) {
+          return JSON.parse(data);
+        } else {
+          console.warn("decryptData received non-JSON string:", data);
+          return [];
+        }
+      }
+      return data;
+    } catch (e) {
+      console.error("Decryption/JSON parse error:", e, "Data received:", data);
+      return [];
     }
-  });
+  }
 
-  $(document).on("click", ".remove-file-row", function () {
-    $(this).closest(".file-group").remove();
-    updateFileRowButtons();
-  });
-
-  // ---------------- API CALLS ----------------
   $(document).ready(function () {
-    const roleId = localStorage.getItem("role_id");
+    const roleId = localStorage.getItem("role_id") || "1";
 
-    // Type dropdown
-    const payload = {
+    // 🔹 TYPE DROPDOWN API
+    const typePayload = {
       action: "function_call",
       function_name: "fn_issue_type",
-      params: {}
+      params: { roleid: roleId }
     };
 
     $.ajax({
       url: `${BASE_API_URL}/commonfunction`,
       method: "POST",
-      data: { data: encryptData(payload) },
-      dataType: "json",
-      success(response) {
-        const decrypted = decryptData(response.data);
-        const $dropdown = $("#typeSelect");
-        $dropdown.empty().append('<option value="" class="placeholder">--Select Type--</option>');
+      data: { data: encryptData(typePayload) },
+      dataType: "text", // use text to avoid JSON parse errors
+      success(responseText) {
+        if (!responseText || responseText.startsWith("Decryption")) {
+          console.error("fn_issue_type error:", responseText);
+          return;
+        }
 
+        const decrypted = decryptData(responseText);
+        if (!Array.isArray(decrypted) || decrypted.length === 0) {
+          console.warn("fn_issue_type returned empty data:", decrypted);
+          return;
+        }
+
+        const $dropdown = $("#typeSelect");
+        $dropdown.empty().append('<option value="">--Select Type--</option>');
         decrypted.forEach(item => {
-          $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
+          // Use the exact key in formConfig as value
+          const key = item.issue_name.toLowerCase().replace(/&/g, "and");
+          $dropdown.append(`<option value="${key}">${item.issue_name}</option>`);
         });
+      },
+      error(xhr, status, error) {
+        console.error("fn_issue_type API Error:", error);
       }
     });
 
-    // Category dropdown
+    // 🔹 CATEGORY DROPDOWN API
     $('#typeSelect').on('change', function () {
       const selectedType = $(this).val();
-      const operatorPayload = {
+      if (!selectedType) return;
+
+      const categoryPayload = {
         action: "function_call",
         function_name: "fn_issue_category",
-        params: { type: selectedType || '', roleid: roleId }
+        params: { type: selectedType, roleid: roleId }
       };
 
       $.ajax({
         url: `${BASE_API_URL}/commonfunction`,
-        method: 'POST',
-        data: { data: encryptData(operatorPayload) },
-        dataType: 'json',
-        success(response) {
-          const decrypted = decryptData(response.data);
+        method: "POST",
+        data: { data: encryptData(categoryPayload) },
+        dataType: "text",
+        success(responseText) {
+          if (!responseText || responseText.startsWith("Decryption")) {
+            console.error("fn_issue_category error:", responseText);
+            return;
+          }
+          const decrypted = decryptData(responseText);
+          if (!Array.isArray(decrypted) || decrypted.length === 0) {
+            console.warn("fn_issue_category returned empty data:", decrypted);
+            return;
+          }
           const $dropdown = $('#categorySelect');
-          $dropdown.empty().append('<option value="" class="placeholder">--Select Category--</option>');
-
+          $dropdown.empty().append('<option value="">--Select Category--</option>');
           decrypted.forEach(item => {
-            $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
+            const key = item.issue_name; // use exact JSON key if needed
+            $dropdown.append(`<option value="${key}">${item.issue_name}</option>`);
           });
+        },
+        error(xhr, status, error) {
+          console.error("fn_issue_category API Error:", error);
         }
       });
     });
 
-    // Sub Category dropdown + field builder
+    // 🔹 SUB CATEGORY DROPDOWN API
     $('#categorySelect').on('change', function () {
       const selectedCategory = $(this).val();
-      const operatorPayload = {
+      if (!selectedCategory) return;
+
+      const subPayload = {
         action: "function_call",
         function_name: "fn_issue_subcategory",
-        params: { type: selectedCategory || '', roleid: roleId }
+        params: { type: selectedCategory, roleid: roleId }
       };
 
       $.ajax({
         url: `${BASE_API_URL}/commonfunction`,
-        method: 'POST',
-        data: { data: encryptData(operatorPayload) },
-        dataType: 'json',
-        success(response) {
-          const decrypted = decryptData(response.data);
+        method: "POST",
+        data: { data: encryptData(subPayload) },
+        dataType: "text",
+        success(responseText) {
+          if (!responseText || responseText.startsWith("Decryption")) {
+            console.error("fn_issue_subcategory error:", responseText);
+            return;
+          }
+          const decrypted = decryptData(responseText);
+          if (!Array.isArray(decrypted) || decrypted.length === 0) {
+            console.warn("fn_issue_subcategory returned empty data:", decrypted);
+            return;
+          }
           const $dropdown = $('#subCategorySelect');
-          $dropdown.empty().append('<option value="" class="placeholder">--Select Sub Category--</option>');
-
+          $dropdown.empty().append('<option value="">--Select Sub Category--</option>');
           decrypted.forEach(item => {
-            $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
+            const key = item.issue_name; // use exact JSON key if needed
+            $dropdown.append(`<option value="${key}">${item.issue_name}</option>`);
           });
+        },
+        error(xhr, status, error) {
+          console.error("fn_issue_subcategory API Error:", error);
         }
       });
     });
 
-    // Build form fields dynamically when subCategory is selected
+    // 🔹 Build dynamic fields
     $('#subCategorySelect').on('change', function () {
-      let typeText = $('#typeSelect option:selected').text();
-      let categoryText = $('#categorySelect option:selected').text();
-      let subCategoryText = $('#subCategorySelect option:selected').text();
+      const typeKey = $('#typeSelect').val();
+      const categoryKey = $('#categorySelect').val();
+      const subCategoryKey = $('#subCategorySelect').val();
 
       $('#formFields').empty();
 
-      if (issuesData[typeText] && issuesData[typeText][categoryText] && issuesData[typeText][categoryText][subCategoryText]) {
-        let fields = issuesData[typeText][categoryText][subCategoryText];
-        $.each(fields, function (i, field) {
-          if (field.toLowerCase().includes("attach supporting document")) {
-            $('#formFields').append(`
-              <div class="file-group-wrapper mt-2">
-                <div class="row g-2 align-items-end file-group mb-2">
-                  <div class="col-md-4">
-                    <label class="form-label fw-semibold">File Name *</label>
-                    <input type="text" class="form-control" required>
-                  </div>
-                  <div class="col-md-5">
-                    <label class="form-label fw-semibold">Attach Supporting Documents *</label>
-                    <input type="file" class="form-control" required multiple>
-                    <small class="text-danger">* Max. file size allowed is 1 MB</small>
-                  </div>
-                  <div class="col-md-3"></div>
-                </div>
-              </div>
-            `);
-            updateFileRowButtons();
-          } else {
-            if ($("#formFields .row").length === 0) {
-              $("#formFields").append(`<div class="row"></div>`);
+      const fields = formConfig[typeKey]?.[categoryKey]?.[subCategoryKey] || [];
+      fields.forEach(field => {
+        const isFile = field.toLowerCase().includes("attach supporting document");
+        const mandatory = field.toLowerCase().includes("(mandatory)") || false;
+        if (isFile) {
+          $('#formFields').append(`
+            <div class="mb-3">
+              <label class="form-label">${field}${mandatory ? ' *' : ''}</label>
+              <input type="file" class="form-control dynamic-field" data-label="${field}" ${mandatory ? 'required' : ''} multiple>
+              <small class="text-danger">* Max. file size 1 MB each</small>
+              <div class="error-message"></div>
+            </div>
+          `);
+        } else {
+          $('#formFields').append(`
+            <div class="mb-3">
+              <label class="form-label">${field}${mandatory ? ' *' : ''}</label>
+              <input type="text" class="form-control dynamic-field" data-label="${field}" ${mandatory ? 'required' : ''}>
+              <div class="error-message"></div>
+            </div>
+          `);
+        }
+      });
+    });
+
+    // 🔹 Validation helpers
+    function showError(input, message) {
+      input.addClass("is-invalid");
+      input.siblings(".error-message").text(message);
+    }
+    function clearError(input) {
+      input.removeClass("is-invalid");
+      input.siblings(".error-message").text("");
+    }
+
+    // 🔹 Submit handler
+    $("#issueForm").on("submit", function (e) {
+      e.preventDefault();
+      let isValid = true;
+
+      // Validate dropdowns
+      ["#typeSelect", "#categorySelect", "#subCategorySelect"].forEach(sel => {
+        const $el = $(sel);
+        if (!$el.val()) {
+          showError($el, "This field is required");
+          isValid = false;
+        } else clearError($el);
+      });
+
+      // Validate dynamic fields
+      $("#formFields .dynamic-field").each(function () {
+        const $input = $(this);
+        if ($input.prop("required") && !$input.val()) {
+          showError($input, `${$input.data("label")} is required`);
+          isValid = false;
+        } else if ($input.attr("type") === "file" && $input[0].files.length) {
+          Array.from($input[0].files).forEach(file => {
+            if (file.size > 1024 * 1024) {
+              showError($input, `File "${file.name}" exceeds 1 MB`);
+              isValid = false;
             }
-            $("#formFields .row").append(`
-              <div class="col-lg-4">
-                <label class="form-label">${field}</label>
-                <input type="text" class="form-control">
-              </div>
-            `);
-          }
-        });
-      }
+          });
+        } else clearError($input);
+      });
+
+      if (!isValid) return;
+
+      // Collect values
+      const formData = {
+        type: $("#typeSelect").val(),
+        category: $("#categorySelect").val(),
+        subCategory: $("#subCategorySelect").val(),
+        fields: {}
+      };
+      $("#formFields .dynamic-field").each(function () {
+        const $input = $(this);
+        const label = $input.data("label");
+        if ($input.attr("type") === "file") {
+          formData.fields[label] = Array.from($input[0].files).map(f => f.name);
+        } else {
+          formData.fields[label] = $input.val();
+        }
+      });
+
+      console.log("Form submitted successfully:", formData);
+      alert("Form submitted successfully! Check console for details.");
+    });
+
+    // 🔹 Remove error instantly on input/change
+    $(document).on("input change", ".dynamic-field, #typeSelect, #categorySelect, #subCategorySelect", function () {
+      clearError($(this));
     });
   });
 </script>
+
+
+
 
 
 

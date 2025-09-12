@@ -280,7 +280,7 @@
               </div>
             </div>
             <div class="col-lg-4 d-flex align-items-center mt-2">
-              <button type="submit" class="btn btn-primary px-4 py-2">
+              <button type="submit" id="submitBtn" class="btn btn-primary px-4 py-2">
               <i class="bi bi-send-fill me-2"></i> Submit Issue
               </button>
             </div>
@@ -904,48 +904,127 @@ const issuesData = {
     });
 
     // Build form fields dynamically when subCategory is selected
-    $('#subCategorySelect').on('change', function () {
-      let typeText = $('#typeSelect option:selected').text();
-      let categoryText = $('#categorySelect option:selected').text();
-      let subCategoryText = $('#subCategorySelect option:selected').text();
+$('#subCategorySelect').on('change', function () {
+    let typeText = $('#typeSelect option:selected').text();
+    let categoryText = $('#categorySelect option:selected').text();
+    let subCategoryText = $('#subCategorySelect option:selected').text();
 
-      $('#formFields').empty();
+    $('#formFields').empty();
 
-      if (issuesData[typeText] && issuesData[typeText][categoryText] && issuesData[typeText][categoryText][subCategoryText]) {
+    if (issuesData[typeText] && issuesData[typeText][categoryText] && issuesData[typeText][categoryText][subCategoryText]) {
         let fields = issuesData[typeText][categoryText][subCategoryText];
         $.each(fields, function (i, field) {
-          if (field.toLowerCase().includes("attach supporting document")) {
-            $('#formFields').append(`
-              <div class="file-group-wrapper mt-2">
-                <div class="row g-2 align-items-end file-group mb-2">
-                  <div class="col-md-4">
-                    <label class="form-label fw-semibold">File Name *</label>
-                    <input type="text" class="form-control" required>
-                  </div>
-                  <div class="col-md-5">
-                    <label class="form-label fw-semibold">Attach Supporting Documents *</label>
-                    <input type="file" class="form-control" required multiple>
-                    <small class="text-danger">* Max. file size allowed is 1 MB</small>
-                  </div>
-                  <div class="col-md-3"></div>
-                </div>
-              </div>
-            `);
-            updateFileRowButtons();
-          } else {
-            if ($("#formFields .row").length === 0) {
-              $("#formFields").append(`<div class="row"></div>`);
+            // sanitize the field to make a safe ID
+            let fieldId = field.replace(/[^a-zA-Z0-9]/g, "_").toLowerCase() + "_" + i;
+
+            if (field.toLowerCase().includes("attach supporting document")) {
+                $('#formFields').append(`
+                    <div class="file-group-wrapper mt-2">
+                        <div class="row g-2 align-items-end file-group mb-2">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold" for="filename_${i}">File Name *</label>
+                                <input type="text" class="form-control" id="filename_${i}" name="filename_${i}" required>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label fw-semibold" for="file_${i}">Attach Supporting Documents *</label>
+                                <input type="file" class="form-control" id="file_${i}" name="file_${i}" required multiple>
+                                <small class="text-danger">* Max. file size allowed is 1 MB</small>
+                            </div>
+                            <div class="col-md-3"></div>
+                        </div>
+                    </div>
+                `);
+                updateFileRowButtons();
+            } else {
+                if ($("#formFields .row").length === 0) {
+                    $("#formFields").append(`<div class="row"></div>`);
+                }
+                $("#formFields .row").append(`
+                    <div class="col-lg-4">
+                        <label class="form-label" for="${fieldId}">${field}</label>
+                        <input type="text" class="form-control" id="${fieldId}" name="${fieldId}">
+                    </div>
+                `);
             }
-            $("#formFields .row").append(`
-              <div class="col-lg-4">
-                <label class="form-label">${field}</label>
-                <input type="text" class="form-control">
-              </div>
-            `);
+        });
+    }
+});
+ 
+
+
+    $('#submitBtn').on('click', async function (event) {
+        debugger
+        event.preventDefault();
+
+        alert("submit")
+        // if (checkFile('#P7_UPLOAD_DROPZONE_input')) {
+        //   const uploadedFiles = await processFile('#P7_UPLOAD_DROPZONE_input');
+        //   renderFileList(uploadedFiles);
+
+        //   uploadPayload = uploadedFiles.map(file => ({
+        //     p_upload: file.fileBase64,
+        //     p_attach_filename: file.filename,
+        //     p_attach_mimetype: file.mimetype,
+        //   }));
+        // }
+        
+        var mobile = localStorage.getItem('mobile');
+        var email = localStorage.getItem('email');
+        var district = localStorage.getItem('district');
+        var typeSelect = $('#typeSelect').val();
+      
+        const payload = {
+          action: "function_call",
+          function_name: "sp_citizen_create_ticket",   
+          params: {
+            p_complainant_name: complainant_name,
+            p_mobile: mobile,
+            p_email: email,
+            p_district_id: district, 
+            p_issue_id: issue_id,
+            p_description: description,
+            p_created_by_user_id: created_by_user_id,
+            p_category_id: category_id,
+            p_subcategory_id: subcategory_id,
+            p_priority: priority,
+            p_onbehalf_name: onbehalf_name,
+            p_onbehalf_mobile: onbehalf_mobile,
+            p_onbehalf_email: onbehalf_email,
+            p_onbehalf_district_id: onbehalf_district_id,
+            p_can_number: can_number,
+            p_certificate_no: certificate_no,
+            p_esevai_id: esevai_id,
+            p_complaint_esevai_id: complaint_esevai_id,
+            p_transaction_number: transaction_number,
+            p_id_block_reason: id_block_reason,
+            p_officer_name: officer_name 
+          }
+        }
+
+        // console.log(payload);
+        $.ajax({
+          url: apiUrl,
+          method: 'POST',
+          data: {
+            data: encryptData(payload)
+          },
+          dataType: 'json',
+          success: function (response) {
+            console.error("form submitted successfully:");
+            // showSuccessToast("Submitted successfully.");
+            // setTimeout(() => {
+            //   location.reload();
+            // }, 1000);
+            // location.reload();
+
+          },
+          error(xhr, status, error) {
+            console.error("Issue Type API Error:", error);
+            alert("Failed to load issue types.");
           }
         });
-      }
-    });
+
+      });
   });
 </script>
 
