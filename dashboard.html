@@ -1515,6 +1515,23 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="ticketDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title">Issue Details</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-sm table-bordered" id="ticketDetailsTable"></table>
+          <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
+          <ul class="timeline" id="ticketTimeline"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- closed modal -->
   <!-- Bootstrap JS -->
 
@@ -1824,12 +1841,12 @@
 
               return `
       <tr>
-        <td class="u-tL">
-          <a data-id="${data.TicketId}"
-             href="allrequest-info.html?details=${data.TicketId}&status=${data.Status}">
-            <i class="bi bi-eye-fill text-primary me-2"></i>
-          </a>
-        </td>
+       <td>
+  <button class="btn btn-sm btn-info viewTicketBtn" 
+          data-ticket='${JSON.stringify(data)}'>
+    <i class="bi bi-eye-fill text-white"></i>
+  </button>
+</td>
         <td>${data.TicketId || 'N/A'}</td>
         <td>${data.TypeOfUser || 'N/A'}</td>
         <td>${data.Name || 'N/A'}</td>
@@ -1892,6 +1909,52 @@
       });
 
 
+
+      $(document).on("click", ".viewTicketBtn", function () {
+        const ticketData = $(this).data("ticket");
+
+        // Populate Basic Details Table with all fields
+        const $table = $("#ticketDetailsTable");
+        $table.empty();
+        $table.append(`
+    <tr><th>Ticket ID</th><td>${ticketData.TicketId || 'N/A'}</td></tr>
+    <tr><th>Type Of User</th><td>${ticketData.TypeOfUser || 'N/A'}</td></tr>
+    <tr><th>Name</th><td>${ticketData.Name || 'N/A'}</td></tr>
+    <tr><th>Mobile</th><td>${ticketData.Mobile || 'N/A'}</td></tr>
+    <tr><th>District</th><td>${ticketData.District || 'N/A'}</td></tr>
+    <tr><th>Created Date</th><td>${ticketData.CreatedDate || 'N/A'}</td></tr>
+    <tr><th>Issue Type</th><td>${ticketData.IssueType || 'N/A'}</td></tr>
+    <tr><th>Category</th><td>${ticketData.Category || 'N/A'}</td></tr>
+    <tr><th>Subcategory</th><td>${ticketData.Subcategory || 'N/A'}</td></tr>
+    <tr><th>Attachments</th><td>${Array.isArray(ticketData.Attachments) && ticketData.Attachments.length > 0
+            ? ticketData.Attachments.map(att => `<a href="${att.FilePath}" target="_blank">${att.FileName}</a>`).join(", ")
+            : "N/A"
+          }</td></tr>
+    <tr><th>Remarks</th><td>${ticketData.Remarks || 'N/A'}</td></tr>
+  `);
+
+        // Populate Timeline dynamically only if In-Progress
+        const $timeline = $("#ticketTimeline");
+        $timeline.empty();
+        if (ticketData.Status && ticketData.Status.toLowerCase() === "in-progress") {
+          $timeline.append(`
+      <li class="timeline-item">
+        <div class="timeline-icon bg-success">
+          <i class="bi bi-check-circle-fill text-white"></i>
+        </div>
+        <div class="timeline-content">
+          <h6 class="mb-1">Citizen submitted issue</h6>
+          <small class="text-muted">${ticketData.CreatedDate || 'N/A'}</small>
+        </div>
+      </li>
+    `);
+        } else {
+          $timeline.append(`<li class="text-muted">No timeline available</li>`);
+        }
+
+        // Show the modal
+        new bootstrap.Modal(document.getElementById('ticketDetailsModal')).show();
+      });
 
 
 
