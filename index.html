@@ -355,9 +355,9 @@
                       </select>
                       <input type="text" id="mobileField" class="form-control mb-2" readonly>
                       <select id="districtField" class="form-select mb-2" required>
-                        <option value="">Select District</option>
+                        <!-- <option value="">Select District</option>
                         <option>Coimbatore</option>
-                        <option>Madurai</option>
+                        <option>Madurai</option> -->
                       </select>
                       <input type="email" id="emailField" class="form-control mb-3"
                         placeholder="Enter your Email (optional)">
@@ -485,6 +485,35 @@
         return String(str || "").replace(/[<>"'%;()&+]/g, "");
       }
 
+      const payload = {
+        action: "function_call",
+        function_name: "fn_district_list",
+        params: {}
+      };
+      function loadDistricts() {
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: 'json',
+          success: function (response) {
+            const decrypted = decryptData(response.data);
+            const $dropdown = $("#districtField");
+            $dropdown.empty().append('<option value="" class="placeholder">--Select District--</option>');
+
+            decrypted.forEach(item => {
+              $dropdown.append(`<option value="${item.id}">${item.district}</option>`);
+            });
+
+          },
+          error: function () {
+            alert('Failed to load districts. Please try again.');
+          }
+        });
+      }
+
+      // Call function on page load
+      loadDistricts();
       // 👉 Init
       $(".front-face .screen, .back-face .screen").hide();
       $(".front-face .screen1, .back-face .screen1").show();
@@ -711,6 +740,7 @@
                 localStorage.setItem("login_id", user.login_id || "");
                 localStorage.setItem("role_id", user.role_id || "");
                 localStorage.setItem("district", user.district || "");
+                localStorage.setItem("district_id", user.district_id || "");
 
                 showSuccessToast("Login successful!");
                 setTimeout(() => window.location.href = "dashboard.html", 1000);

@@ -1370,7 +1370,7 @@
             p_complainant_name: null,
             p_mobile: null,
             p_email: null,
-            p_district_id: 2,
+            p_district_id: null,
             p_issue_id: null,
             p_created_by_user_id: null,
             p_category_id: null,
@@ -1397,7 +1397,7 @@
           allParams.p_complainant_name = safeVal(localStorage.getItem('user_name'));
           allParams.p_mobile = safeVal(localStorage.getItem('mobile'));
           allParams.p_email = safeVal(localStorage.getItem('email'));
-          // allParams.p_district_id = safeVal(localStorage.getItem('district'));
+          allParams.p_district_id = safeVal(localStorage.getItem('district_id'));
           allParams.p_created_by_user_id = safeVal(localStorage.getItem('user_id'));
           allParams.p_issue_id = safeVal($('#typeSelect').val());
           allParams.p_category_id = safeVal($('#categorySelect').val());
@@ -1453,7 +1453,7 @@
             dataType: 'json',
             success: function (response) {
               console.log("Form submitted successfully:", response);
-              alert("Submitted successfully.");
+              showSuccessToast("Submitted successfully.");
               setTimeout(() => location.reload(), 1000);
             },
             error: function (xhr, status, error) {
