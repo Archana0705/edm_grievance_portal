@@ -1,15 +1,22 @@
-
 window.loadDataToTable = function ({
     tableId,
     apiUrl,
     httpMethod = 'POST',
     payload,
     rowBuilder,
-    onTableInit = () => { } // callback to return DataTable instance
+    onTableInit = () => { }
 }) {
     const tableSelector = `#${tableId}`;
     const tableBody = $(`${tableSelector} tbody`);
-    tableBody.html('<tr><td colspan="10" class="text-center">Loading...</td></tr>');
+    const colCount = Math.max($(tableSelector + ' thead th').length, 1);
+
+    // 1️⃣ Destroy existing table first
+    if ($.fn.DataTable.isDataTable(tableSelector)) {
+        $(tableSelector).DataTable().clear().destroy();
+    }
+
+    // 2️⃣ Show loading
+    tableBody.html(`<tr><td colspan="${colCount}" class="text-center">Loading...</td></tr>`);
 
     $.ajax({
         url: apiUrl,
@@ -22,38 +29,25 @@ window.loadDataToTable = function ({
         dataType: 'json',
         cache: false,
         success: function (response) {
-            let decrypted;
-
+            let decrypted = [];
             try {
                 decrypted = decryptData(response.data);
-                console.log("Decrypted response:", decrypted);
+                if (!Array.isArray(decrypted)) decrypted = [];
             } catch (err) {
                 console.error("Decryption failed:", err);
-                decrypted = [];
             }
 
-            // ensure data is always an array
-            let data = Array.isArray(decrypted) ? decrypted : [];
+            // 3️⃣ Build rows
+            let rows = decrypted.map(rowBuilder).join('').trim();
 
-            let rows = data.map(rowBuilder).join('').trim();
-
-            // if no rows at all, show "No Data Found"
             if (!rows) {
-                rows = `
-    <tr>
-      <td colspan="12" class="text-center text-muted fw-bold">
-        No Data Found
-      </td>
-    </tr>`;
+                rows = `<tr><td colspan="${colCount}" class="text-center text-muted fw-bold">No Data Found</td></tr>`;
             }
 
+            // 4️⃣ Set tbody HTML AFTER destroying DataTable
             tableBody.html(rows);
 
-            // re-init DataTable
-            if ($.fn.DataTable.isDataTable(tableSelector)) {
-                $(tableSelector).DataTable().destroy();
-            }
-
+            // 5️⃣ Re-initialize DataTable
             const dt = $(tableSelector).DataTable({
                 destroy: true,
                 responsive: true,
@@ -61,16 +55,14 @@ window.loadDataToTable = function ({
                 searching: true,
                 pageLength: 10,
                 lengthChange: true,
-                language: {
-                    emptyTable: "No Data Found"
-                }
+                language: { emptyTable: "No Data Found" }
             });
 
             onTableInit(dt);
         },
         error(xhr, status, error) {
             console.error("API Error:", error);
-            tableBody.html('<tr><td colspan="10" class="text-center">No Data Found</td></tr>');
+            tableBody.html(`<tr><td colspan="${colCount}" class="text-center">No Data Found</td></tr>`);
         }
     });
 };

@@ -622,78 +622,151 @@
             <div class="card-header bg-dark text-white">Issue History</div>
             <div class="card-body">
               <ul class="nav nav-tabs" id="reportTabsSelf" role="tablist">
-                <li class="nav-item"><button class="nav-link active" id="self-open" data-bs-toggle="tab"
-                    data-bs-target="#openReports" type="button" role="tab">In-Progress</button></li>
-                <li class="nav-item"><button class="nav-link" id="self-returned" data-bs-toggle="tab"
-                    data-bs-target="#returned" type="button" role="tab">Returned</button></li>
-                <li class="nav-item"><button class="nav-link" id="self-resolved" data-bs-toggle="tab"
-                    data-bs-target="#resolved" type="button" role="tab">Resolved</button></li>
-                <li class="nav-item"><button class="nav-link" id="self-reopen" data-bs-toggle="tab"
-                    data-bs-target="#reopen" type="button" role="tab">Re-opened</button></li>
-                <li class="nav-item"><button class="nav-link" id="self-closed" data-bs-toggle="tab"
-                    data-bs-target="#closedReports" type="button" role="tab">Closed</button></li>
+                <li class="nav-item">
+                  <button class="nav-link active" id="self-open" data-bs-toggle="tab" data-bs-target="#openSelf"
+                    type="button" role="tab">In-Progress</button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" id="self-returned" data-bs-toggle="tab" data-bs-target="#returnedSelf"
+                    type="button" role="tab">Returned</button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" id="self-resolved" data-bs-toggle="tab" data-bs-target="#resolvedSelf"
+                    type="button" role="tab">Resolved</button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" id="self-reopen" data-bs-toggle="tab" data-bs-target="#reopenSelf"
+                    type="button" role="tab">Re-opened</button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" id="self-closed" data-bs-toggle="tab" data-bs-target="#closedSelf"
+                    type="button" role="tab">Closed</button>
+                </li>
               </ul>
 
               <div class="tab-content mt-4">
-                <div class="tab-pane fade show active" id="openReports" role="tabpanel">
+                <div class="tab-pane fade show active" id="openSelf" role="tabpanel">
                   <div class="table-responsive shadow-sm rounded">
-                    <table class="table table-striped table-hover align-middle text-center" id="pressReleaseTable"
+                    <table class="table table-striped table-hover align-middle text-center" id="openSelfTable"
                       style="width:100%">
                       <thead>
                         <tr>
-                          <th>Request Number</th>
+                          <th>Actions</th>
+                          <th>Ticket Id</th>
+                          <th>Type of User</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>District</th>
+                          <th>Created Date</th>
                           <th>Issue Type</th>
-                          <th>Short Description</th>
-                          <th>Request Status</th>
-                          <th>Created On</th>
-                          <th>Requested By</th>
-                          <th>Requested Group</th>
-                          <th>Assigned To</th>
+                          <th>Category</th>
+                          <th>Sub Category</th>
+                          <th>Attachments</th>
+                          <th>Remarks</th>
                         </tr>
                       </thead>
                       <tbody></tbody>
                     </table>
                   </div>
                 </div>
-                <!-- Returned/Resolved/Reopen/Closed panes remain same -->
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <!-- On-Behalf Tickets -->
-        <div class="tab-pane fade" id="behalfTickets" role="tabpanel" aria-labelledby="behalf-tab">
-          <div class="card shadow-sm mt-3">
-            <div class="card-header bg-dark text-white">Issue History</div>
-            <div class="card-body">
-              <ul class="nav nav-tabs" id="reportTabsBehalf" role="tablist">
-                <li class="nav-item"><button class="nav-link active" id="behalf-open" data-bs-toggle="tab"
-                    data-bs-target="#openReports1" type="button" role="tab">In-Progress</button></li>
-                <li class="nav-item"><button class="nav-link" id="behalf-returned" data-bs-toggle="tab"
-                    data-bs-target="#returned1" type="button" role="tab">Returned</button></li>
-                <li class="nav-item"><button class="nav-link" id="behalf-resolved" data-bs-toggle="tab"
-                    data-bs-target="#resolved1" type="button" role="tab">Resolved</button></li>
-                <li class="nav-item"><button class="nav-link" id="behalf-reopen" data-bs-toggle="tab"
-                    data-bs-target="#reopen1" type="button" role="tab">Re-opened</button></li>
-                <li class="nav-item"><button class="nav-link" id="behalf-closed" data-bs-toggle="tab"
-                    data-bs-target="#closedReports1" type="button" role="tab">Closed</button></li>
-              </ul>
-
-              <div class="tab-content mt-4">
-                <div class="tab-pane fade show active" id="openReports" role="tabpanel">
+                <!-- Returned -->
+                <div class="tab-pane fade" id="returnedSelf" role="tabpanel">
                   <div class="table-responsive shadow-sm rounded">
-                    <table class="table table-striped table-hover align-middle text-center" id="pressReleaseTable"
+                    <table class="table table-striped table-hover align-middle text-center" id="returnedSelfTable"
                       style="width:100%">
                       <thead>
                         <tr>
-                          <th>Request Number</th>
+                          <th>Actions</th>
+                          <th>Ticket Id</th>
+                          <th>Type of User</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>District</th>
+                          <th>Created Date</th>
                           <th>Issue Type</th>
-                          <th>Short Description</th>
-                          <th>Request Status</th>
-                          <th>Created On</th>
-                          <th>Requested By</th>
-                          <th>Requested Group</th>
-                          <th>Assigned To</th>
+                          <th>Category</th>
+                          <th>Sub Category</th>
+                          <th>Attachments</th>
+                          <th>Remarks</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Resolved -->
+                <div class="tab-pane fade" id="resolvedSelf" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center" id="resolvedSelfTable"
+                      style="width:100%">
+                      <thead>
+                        <tr>
+                          <th>Actions</th>
+                          <th>Ticket Id</th>
+                          <th>Type of User</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>District</th>
+                          <th>Created Date</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Sub Category</th>
+                          <th>Attachments</th>
+                          <th>Remarks</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Re-opened -->
+                <div class="tab-pane fade" id="reopenSelf" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center" id="reopenSelfTable"
+                      style="width:100%">
+                      <thead>
+                        <tr>
+                          <th>Actions</th>
+                          <th>Ticket Id</th>
+                          <th>Type of User</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>District</th>
+                          <th>Created Date</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Sub Category</th>
+                          <th>Attachments</th>
+                          <th>Remarks</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Closed -->
+                <div class="tab-pane fade" id="closedSelf" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center" id="closedSelfTable"
+                      style="width:100%">
+                      <thead>
+                        <tr>
+                          <th>Actions</th>
+                          <th>Ticket Id</th>
+                          <th>Type of User</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>District</th>
+                          <th>Created Date</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Sub Category</th>
+                          <th>Attachments</th>
+                          <th>Remarks</th>
                         </tr>
                       </thead>
                       <tbody></tbody>
@@ -701,11 +774,149 @@
                   </div>
                 </div>
               </div>
+
+
             </div>
           </div>
         </div>
       </div>
+
+      <!-- On-Behalf Tickets (fixed pane ids and tables) -->
+      <div class="tab-pane fade" id="behalfTickets" role="tabpanel" aria-labelledby="behalf-tab">
+        <div class="card shadow-sm mt-3">
+          <div class="card-header bg-dark text-white">Issue History</div>
+          <div class="card-body">
+            <ul class="nav nav-tabs" id="reportTabsBehalf" role="tablist">
+              <li class="nav-item"><button class="nav-link active" id="behalf-open" data-bs-toggle="tab"
+                  data-bs-target="#openReports" type="button" role="tab">In-Progress</button></li>
+              <li class="nav-item"><button class="nav-link" id="behalf-returned" data-bs-toggle="tab"
+                  data-bs-target="#returnedReports" type="button" role="tab">Returned</button></li>
+              <li class="nav-item"><button class="nav-link" id="behalf-resolved" data-bs-toggle="tab"
+                  data-bs-target="#resolvedReports" type="button" role="tab">Resolved</button></li>
+              <li class="nav-item"><button class="nav-link" id="behalf-reopen" data-bs-toggle="tab"
+                  data-bs-target="#reopenReports" type="button" role="tab">Re-opened</button></li>
+              <li class="nav-item"><button class="nav-link" id="behalf-closed" data-bs-toggle="tab"
+                  data-bs-target="#closedReports" type="button" role="tab">Closed</button></li>
+            </ul>
+
+            <div class="tab-content mt-4">
+              <!-- openReports -->
+              <div class="tab-pane fade show active" id="openReports" role="tabpanel">
+                <div class="table-responsive shadow-sm rounded">
+                  <table class="table table-striped table-hover align-middle text-center" id="openReportsTable"
+                    style="width:100%">
+                    <thead>
+                      <tr>
+                        <th>Request Number</th>
+                        <th>Issue Type</th>
+                        <th>Short Description</th>
+                        <th>Request Status</th>
+                        <th>Created On</th>
+                        <th>Requested By</th>
+                        <th>Requested Group</th>
+                        <th>Assigned To</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- returnedReports -->
+              <div class="tab-pane fade" id="returnedReports" role="tabpanel">
+                <div class="table-responsive shadow-sm rounded">
+                  <table class="table table-striped table-hover align-middle text-center" id="returnedReportsTable"
+                    style="width:100%">
+                    <thead>
+                      <tr>
+                        <th>Request Number</th>
+                        <th>Issue Type</th>
+                        <th>Short Description</th>
+                        <th>Request Status</th>
+                        <th>Created On</th>
+                        <th>Requested By</th>
+                        <th>Requested Group</th>
+                        <th>Assigned To</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- resolvedReports -->
+              <div class="tab-pane fade" id="resolvedReports" role="tabpanel">
+                <div class="table-responsive shadow-sm rounded">
+                  <table class="table table-striped table-hover align-middle text-center" id="resolvedReportsTable"
+                    style="width:100%">
+                    <thead>
+                      <tr>
+                        <th>Request Number</th>
+                        <th>Issue Type</th>
+                        <th>Short Description</th>
+                        <th>Request Status</th>
+                        <th>Created On</th>
+                        <th>Requested By</th>
+                        <th>Requested Group</th>
+                        <th>Assigned To</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- reopenReports -->
+              <div class="tab-pane fade" id="reopenReports" role="tabpanel">
+                <div class="table-responsive shadow-sm rounded">
+                  <table class="table table-striped table-hover align-middle text-center" id="reopenReportsTable"
+                    style="width:100%">
+                    <thead>
+                      <tr>
+                        <th>Request Number</th>
+                        <th>Issue Type</th>
+                        <th>Short Description</th>
+                        <th>Request Status</th>
+                        <th>Created On</th>
+                        <th>Requested By</th>
+                        <th>Requested Group</th>
+                        <th>Assigned To</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- closedReports -->
+              <div class="tab-pane fade" id="closedReports" role="tabpanel">
+                <div class="table-responsive shadow-sm rounded">
+                  <table class="table table-striped table-hover align-middle text-center" id="closedReportsTable"
+                    style="width:100%">
+                    <thead>
+                      <tr>
+                        <th>Request Number</th>
+                        <th>Issue Type</th>
+                        <th>Short Description</th>
+                        <th>Request Status</th>
+                        <th>Created On</th>
+                        <th>Requested By</th>
+                        <th>Requested Group</th>
+                        <th>Assigned To</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
+  </div>
 
 
   </div>
@@ -1461,11 +1672,113 @@
         "behalf-open": "In-Progress",
         "behalf-returned": "Returned",
         "behalf-resolved": "Resolved",
-        "behalf-reopen": "Re-opened",
+        "behalf-reopen": "Re-Opened",
         "behalf-closed": "Closed"
       };
 
-      function loadRequestsData(issueStatus, ticketType) {
+      const tableIdMap = {
+        "self-open": "openSelfTable",
+        "self-returned": "returnedSelfTable",
+        "self-resolved": "resolvedSelfTable",
+        "self-reopen": "reopenSelfTable",
+        "self-closed": "closedSelfTable",
+        "behalf-open": "openReportsTable",
+        "behalf-returned": "returnedReportsTable",
+        "behalf-resolved": "resolvedReportsTable",
+        "behalf-reopen": "reopenReportsTable",
+        "behalf-closed": "closedReportsTable"
+      };
+
+      // improved global loader: dynamic colspan and defensiveness
+      window.loadDataToTable = function ({
+        tableId,
+        apiUrl,
+        httpMethod = 'POST',
+        payload,
+        rowBuilder,
+        onTableInit = () => { } // callback to return DataTable instance
+      }) {
+        const tableSelector = `#${tableId}`;
+        const tableBody = $(`${tableSelector} tbody`);
+
+        // compute column count from thead so loading / no-data rows use correct colspan
+        const colCount = Math.max($(tableSelector + ' thead th').length, 1);
+        tableBody.html(`<tr><td colspan="${colCount}" class="text-center">Loading...</td></tr>`);
+
+        $.ajax({
+          url: apiUrl,
+          method: httpMethod.toUpperCase(),
+          headers: {
+            "X-App-Key": "edm_grievance_portal",
+            "X-App-Name": "edm_grievance_portal"
+          },
+          data: { data: payload },
+          dataType: 'json',
+          cache: false,
+          success: function (response) {
+            let decrypted;
+
+            try {
+              decrypted = decryptData(response.data);
+              console.log("Decrypted response:", decrypted);
+            } catch (err) {
+              console.error("Decryption failed:", err);
+              decrypted = [];
+            }
+
+            let data = Array.isArray(decrypted) ? decrypted : [];
+
+            let rows = data.map(rowBuilder).join('').trim();
+
+            if (!rows) {
+              rows = `
+    <tr>
+      <td colspan="${colCount}" class="text-center text-muted fw-bold">
+        No Data Found
+      </td>
+    </tr>`;
+            }
+
+            tableBody.html(rows);
+
+            // re-init DataTable (destroy first if necessary)
+            if ($.fn.DataTable.isDataTable(tableSelector)) {
+              $(tableSelector).DataTable().destroy();
+            }
+
+            const dt = $(tableSelector).DataTable({
+              destroy: true,
+              responsive: true,
+              ordering: true,
+              searching: true,
+              pageLength: 10,
+              lengthChange: true,
+              language: {
+                emptyTable: "No Data Found"
+              }
+            });
+
+            dt.on('draw', function () {
+              const $tbody = $(`${tableSelector} tbody`);
+              if ($tbody.children().length === 0 || $tbody.find('tr').length === 0) {
+                $tbody.html(`
+                  <tr>
+                    <td colspan="${colCount}" class="text-center text-muted fw-bold">No data found</td>
+                  </tr>`);
+              }
+            });
+
+            onTableInit(dt);
+          },
+          error(xhr, status, error) {
+            console.error("API Error:", error);
+            const colCountErr = Math.max($(tableSelector + ' thead th').length, 1);
+            tableBody.html(`<tr><td colspan="${colCountErr}" class="text-center">No Data Found</td></tr>`);
+          }
+        });
+      };
+
+      function loadRequestsData(issueStatus, ticketType, tableId) {
         const payload = {
           action: "function_call",
           function_name: "fn_cit_opr_edm_cms_dep_view_requests",
@@ -1476,45 +1789,112 @@
           }
         };
 
-        console.log("Loading Data →", payload);
+        console.log("Loading Data →", payload, "into table:", tableId);
 
         loadDataToTable({
-          tableId: 'pressReleaseTable',
+          tableId: tableId,
           apiUrl: `${BASE_API_URL}/commonfunction`,
           httpMethod: 'POST',
           payload: encryptData(payload),
           rowBuilder: (item) => {
-            return `
-          <tr>
-            <td>${item.request_number}</td>
-            <td>${item.issue_type || 'N/A'}</td>
-            <td>${item.short_description || 'N/A'}</td>
-            <td>${item.request_status || 'N/A'}</td>
-            <td>${item.created_date || 'N/A'}</td>
-            <td>${item.requested_by || 'N/A'}</td>
-            <td>${item.requested_group || 'N/A'}</td>
-            <td>${item.assigned_to || 'N/A'}</td>
-          </tr>`;
+            let parsed = [];
+
+            try {
+              if (item.fn_cit_opr_edm_cms_dep_view_requests) {
+                parsed = JSON.parse(item.fn_cit_opr_edm_cms_dep_view_requests);
+              }
+            } catch (e) {
+              console.error("JSON parse error:", e);
+              parsed = [];
+            }
+
+            if (!parsed || parsed.length === 0) {
+              return ""; // global loader will render "No Data Found"
+            }
+
+            return parsed.map(entry => {
+              const data = entry.jsonb_build_object;
+
+              let attachments = "N/A";
+              if (Array.isArray(data.Attachments) && data.Attachments.length > 0) {
+                attachments = data.Attachments
+                  .map(att => `<a href="${att.FilePath}" target="_blank">${att.FileName}</a>`)
+                  .join(", ");
+              }
+
+              return `
+      <tr>
+        <td class="u-tL">
+          <a data-id="${data.TicketId}"
+             href="allrequest-info.html?details=${data.TicketId}&status=${data.Status}">
+            <i class="bi bi-eye-fill text-primary me-2"></i>
+          </a>
+        </td>
+        <td>${data.TicketId || 'N/A'}</td>
+        <td>${data.TypeOfUser || 'N/A'}</td>
+        <td>${data.Name || 'N/A'}</td>
+        <td>${data.Mobile || 'N/A'}</td>
+        <td>${data.District || 'N/A'}</td>
+        <td>${data.CreatedDate || 'N/A'}</td>
+        <td>${data.IssueType || 'N/A'}</td>
+        <td>${data.Category || 'N/A'}</td>
+        <td>${data.Subcategory || 'N/A'}</td>
+        <td>${attachments}</td>
+        <td>${data.Remarks || 'N/A'}</td>
+      </tr>`;
+            }).join("");
           },
           onTableInit: function (dtRef) {
-            dataTableRef = dtRef;
+            window[tableId + "Ref"] = dtRef;
           }
         });
       }
 
-      // Default load
-      loadRequestsData("In-Progress", "Self");
+      $(document).on('shown.bs.tab', 'button[data-bs-toggle="tab"]', function (e) {
+        let activatedId = e.target.id;
 
-      // Handle both parent and child tab changes
-      $(document).on("shown.bs.tab", "button[data-bs-toggle='tab']", function (e) {
-        const tabId = $(e.target).attr("id");
-        if (statusMap[tabId]) {
-          const ticketType = tabId.startsWith("self") ? "Self" : "Behalf";
-          const issueStatus = statusMap[tabId];
-          console.log("Tab Change → ticketType:", ticketType, "issueStatus:", issueStatus);
-          loadRequestsData(issueStatus, ticketType);
+        if (activatedId === 'self-tab') {
+          activatedId = 'self-open';
+        } else if (activatedId === 'behalf-tab') {
+          activatedId = 'behalf-open';
+        }
+
+        const issueStatus = statusMap[activatedId] || "In-Progress";
+        const ticketType = activatedId.startsWith('self-') ? 'Self' : 'Behalf';
+        const tableId = tableIdMap[activatedId];
+
+        if (!tableId) {
+          console.warn('No tableId mapped for activated tab:', activatedId);
+          return;
+        }
+
+        loadRequestsData(issueStatus, ticketType, tableId);
+      });
+
+      $(document).ready(function () {
+        let activeTabId = $('#parentTabs .nav-link.active').attr('id');
+
+        if (activeTabId === 'self-tab') {
+          activeTabId = 'self-open'; // default to in-progress for self
+        } else if (activeTabId === 'behalf-tab') {
+          activeTabId = 'behalf-open'; // default to in-progress for behalf
+        }
+
+        const issueStatus = statusMap[activeTabId] || "In-Progress";
+        const ticketType = activeTabId.startsWith('self-') ? 'Self' : 'Behalf';
+        const tableId = tableIdMap[activeTabId];
+
+        if (tableId) {
+          loadRequestsData(issueStatus, ticketType, tableId);
+        } else {
+          console.warn("No tableId found for:", activeTabId);
         }
       });
+
+
+
+
+
     });
   </script>
 
