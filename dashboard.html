@@ -1843,7 +1843,7 @@
       <tr>
        <td>
   <button class="btn btn-sm btn-info viewTicketBtn" 
-          data-ticket='${JSON.stringify(data)}'>
+          data-ticket='${JSON.stringify(data)}' data-ticketid='${data.TicketId || ''}'>
     <i class="bi bi-eye-fill text-white"></i>
   </button>
 </td>
@@ -1910,53 +1910,148 @@
 
 
 
+      //     $(document).on("click", ".viewTicketBtn", function () {
+      //       const ticketData = $(this).data("ticket");
+
+      //       // Populate Basic Details Table with all fields
+      //       const $table = $("#ticketDetailsTable");
+      //       $table.empty();
+      //       $table.append(`
+      //   <tr><th>Ticket ID</th><td>${ticketData.TicketId || 'N/A'}</td></tr>
+      //   <tr><th>Type Of User</th><td>${ticketData.TypeOfUser || 'N/A'}</td></tr>
+      //   <tr><th>Name</th><td>${ticketData.Name || 'N/A'}</td></tr>
+      //   <tr><th>Mobile</th><td>${ticketData.Mobile || 'N/A'}</td></tr>
+      //   <tr><th>District</th><td>${ticketData.District || 'N/A'}</td></tr>
+      //   <tr><th>Created Date</th><td>${ticketData.CreatedDate || 'N/A'}</td></tr>
+      //   <tr><th>Issue Type</th><td>${ticketData.IssueType || 'N/A'}</td></tr>
+      //   <tr><th>Category</th><td>${ticketData.Category || 'N/A'}</td></tr>
+      //   <tr><th>Subcategory</th><td>${ticketData.Subcategory || 'N/A'}</td></tr>
+      //   <tr><th>Attachments</th><td>${Array.isArray(ticketData.Attachments) && ticketData.Attachments.length > 0
+      //           ? ticketData.Attachments.map(att => `<a href="${att.FilePath}" target="_blank">${att.FileName}</a>`).join(", ")
+      //           : "N/A"
+      //         }</td></tr>
+      //   <tr><th>Remarks</th><td>${ticketData.Remarks || 'N/A'}</td></tr>
+      // `);
+
+      //       // Populate Timeline dynamically only if In-Progress
+      //       const $timeline = $("#ticketTimeline");
+      //       $timeline.empty();
+      //       if (ticketData.Status && ticketData.Status.toLowerCase() === "in-progress") {
+      //         $timeline.append(`
+      //     <li class="timeline-item">
+      //       <div class="timeline-icon bg-success">
+      //         <i class="bi bi-check-circle-fill text-white"></i>
+      //       </div>
+      //       <div class="timeline-content">
+      //         <h6 class="mb-1">Citizen submitted issue</h6>
+      //         <small class="text-muted">${ticketData.CreatedDate || 'N/A'}</small>
+      //       </div>
+      //     </li>
+      //   `);
+      //       } else {
+      //         $timeline.append(`<li class="text-muted">No timeline available</li>`);
+      //       }
+
+      //       // Show the modal
+      //       new bootstrap.Modal(document.getElementById('ticketDetailsModal')).show();
+      //     });
+
+
       $(document).on("click", ".viewTicketBtn", function () {
-        const ticketData = $(this).data("ticket");
+        const ticketId = $(this).data("ticketid"); // store only ticketId in button
 
-        // Populate Basic Details Table with all fields
-        const $table = $("#ticketDetailsTable");
-        $table.empty();
-        $table.append(`
-    <tr><th>Ticket ID</th><td>${ticketData.TicketId || 'N/A'}</td></tr>
-    <tr><th>Type Of User</th><td>${ticketData.TypeOfUser || 'N/A'}</td></tr>
-    <tr><th>Name</th><td>${ticketData.Name || 'N/A'}</td></tr>
-    <tr><th>Mobile</th><td>${ticketData.Mobile || 'N/A'}</td></tr>
-    <tr><th>District</th><td>${ticketData.District || 'N/A'}</td></tr>
-    <tr><th>Created Date</th><td>${ticketData.CreatedDate || 'N/A'}</td></tr>
-    <tr><th>Issue Type</th><td>${ticketData.IssueType || 'N/A'}</td></tr>
-    <tr><th>Category</th><td>${ticketData.Category || 'N/A'}</td></tr>
-    <tr><th>Subcategory</th><td>${ticketData.Subcategory || 'N/A'}</td></tr>
-    <tr><th>Attachments</th><td>${Array.isArray(ticketData.Attachments) && ticketData.Attachments.length > 0
-            ? ticketData.Attachments.map(att => `<a href="${att.FilePath}" target="_blank">${att.FileName}</a>`).join(", ")
-            : "N/A"
-          }</td></tr>
-    <tr><th>Remarks</th><td>${ticketData.Remarks || 'N/A'}</td></tr>
-  `);
-
-        // Populate Timeline dynamically only if In-Progress
-        const $timeline = $("#ticketTimeline");
-        $timeline.empty();
-        if (ticketData.Status && ticketData.Status.toLowerCase() === "in-progress") {
-          $timeline.append(`
-      <li class="timeline-item">
-        <div class="timeline-icon bg-success">
-          <i class="bi bi-check-circle-fill text-white"></i>
-        </div>
-        <div class="timeline-content">
-          <h6 class="mb-1">Citizen submitted issue</h6>
-          <small class="text-muted">${ticketData.CreatedDate || 'N/A'}</small>
-        </div>
-      </li>
-    `);
-        } else {
-          $timeline.append(`<li class="text-muted">No timeline available</li>`);
+        if (!ticketId) {
+          return showErrorToast("Ticket ID not found.");
         }
 
-        // Show the modal
-        new bootstrap.Modal(document.getElementById('ticketDetailsModal')).show();
+        // 🔹 API payload
+        const payload = {
+          action: "function_call",
+          function_name: "fn_get_ticket_details",
+          params: {
+            p_ticket_id: ticketId
+          }
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: "json",
+          beforeSend: function () {
+            $("#ticketDetailsTable").html(
+              `<tr><td colspan="2" class="text-center text-muted">Loading...</td></tr>`
+            );
+            $("#ticketTimeline").html(
+              `<li class="text-muted">Loading timeline...</li>`
+            );
+          },
+          success: function (res) {
+            if (!res.success) {
+              return showErrorToast("Failed to fetch ticket details.");
+            }
+
+            try {
+              const decrypted = decryptData(res.data);
+              let ticketData = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
+
+              // If API returns array, take first item
+              if (Array.isArray(ticketData)) {
+                ticketData = ticketData[0] || {};
+              }
+
+              // Populate Basic Details Table
+              const $table = $("#ticketDetailsTable");
+              $table.empty();
+              $table.append(`
+          <tr><th>Ticket ID</th><td>${ticketData.TicketId || 'N/A'}</td></tr>
+          <tr><th>Type Of User</th><td>${ticketData.TypeOfUser || 'N/A'}</td></tr>
+          <tr><th>Name</th><td>${ticketData.Name || 'N/A'}</td></tr>
+          <tr><th>Mobile</th><td>${ticketData.Mobile || 'N/A'}</td></tr>
+          <tr><th>District</th><td>${ticketData.District || 'N/A'}</td></tr>
+          <tr><th>Created Date</th><td>${ticketData.CreatedDate || 'N/A'}</td></tr>
+          <tr><th>Issue Type</th><td>${ticketData.IssueType || 'N/A'}</td></tr>
+          <tr><th>Category</th><td>${ticketData.Category || 'N/A'}</td></tr>
+          <tr><th>Subcategory</th><td>${ticketData.Subcategory || 'N/A'}</td></tr>
+          <tr><th>Attachments</th><td>${Array.isArray(ticketData.Attachments) && ticketData.Attachments.length > 0
+                  ? ticketData.Attachments.map(att => `<a href="${att.FilePath}" target="_blank">${att.FileName}</a>`).join(", ")
+                  : "N/A"
+                }</td></tr>
+          <tr><th>Remarks</th><td>${ticketData.Remarks || 'N/A'}</td></tr>
+        `);
+
+              // Populate Timeline
+              const $timeline = $("#ticketTimeline");
+              $timeline.empty();
+              if (ticketData.Status && ticketData.Status.toLowerCase() === "in-progress") {
+                $timeline.append(`
+            <li class="timeline-item">
+              <div class="timeline-icon bg-success">
+                <i class="bi bi-check-circle-fill text-white"></i>
+              </div>
+              <div class="timeline-content">
+                <h6 class="mb-1">Citizen submitted issue</h6>
+                <small class="text-muted">${ticketData.CreatedDate || 'N/A'}</small>
+              </div>
+            </li>
+          `);
+              } else {
+                $timeline.append(`<li class="text-muted">No timeline available</li>`);
+              }
+
+              // Show Modal
+              new bootstrap.Modal(document.getElementById('ticketDetailsModal')).show();
+
+            } catch (err) {
+              console.error("Error parsing ticket details:", err);
+              showErrorToast("Something went wrong while loading ticket details.");
+            }
+          },
+          error: function () {
+            showErrorToast("API error while fetching ticket details.");
+          }
+        });
       });
-
-
 
     });
   </script>

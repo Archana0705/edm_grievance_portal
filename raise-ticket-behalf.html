@@ -328,7 +328,7 @@
                 <!-- Citizen Details -->
                 <div class="mb-3 col-lg-4">
                   <label class="form-label">Citizen Name</label>
-                  <input type="text" class="form-control" placeholder="Enter Citizen Name">
+                  <input type="text" class="form-control" id="citizenName" placeholder="Enter Citizen Name">
                 </div>
                 <div class="mb-3 col-lg-4">
                   <label class="form-label">Mobile</label>
@@ -487,6 +487,66 @@
   </script>
   <script>
     AOS.init();
+
+    const payload = {
+      action: "function_call",
+      function_name: "fn_relationship",
+      params: {}
+    };
+    function loadRelationship() {
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(payload) },
+        dataType: 'json',
+        success: function (response) {
+          const decrypted = decryptData(response.data);
+          const $dropdown = $("#genderField");
+          $dropdown.empty().append('<option value="" class="placeholder">--Select Relationship-</option>');
+
+          decrypted.forEach(item => {
+            $dropdown.append(`<option value="${item.id}">${item.relationship}</option>`);
+          });
+
+        },
+        error: function () {
+          alert('Failed to load districts. Please try again.');
+        }
+      });
+    }
+
+    // Call function on page load
+    loadRelationship();
+
+    const districtpayload = {
+      action: "function_call",
+      function_name: "fn_district_list",
+      params: {}
+    };
+    function loadDistricts() {
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(districtpayload) },
+        dataType: 'json',
+        success: function (response) {
+          const decrypted = decryptData(response.data);
+          const $dropdown = $("#districtField");
+          $dropdown.empty().append('<option value="" class="placeholder">--Select District--</option>');
+
+          decrypted.forEach(item => {
+            $dropdown.append(`<option value="${item.id}">${item.district}</option>`);
+          });
+
+        },
+        error: function () {
+          alert('Failed to load districts. Please try again.');
+        }
+      });
+    }
+
+    // Call function on page load
+    loadDistricts();
 
     function isValidMobile(num) {
       return /^[6-9]\d{9}$/.test(num || "");
@@ -1139,7 +1199,7 @@
             p_complainant_name: null,
             p_mobile: null,
             p_email: null,
-            p_district_id: 2,
+            p_district_id: null,
             p_issue_id: null,
             p_created_by_user_id: null,
             p_category_id: null,
@@ -1173,10 +1233,10 @@
           allParams.p_subcategory_id = safeVal($('#subCategorySelect').val());
           allParams.p_priority = safeVal($('#priority').val());
           allParams.p_description = safeVal($('#description').val());
-          allParams.p_onbehalf_name = safeVal($('#onbehalf_name').val());
-          allParams.p_onbehalf_mobile = safeVal($('#onbehalf_mobile').val());
-          allParams.p_onbehalf_email = safeVal($('#onbehalf_email').val());
-          allParams.p_onbehalf_district_id = safeVal($('#onbehalf_district_id').val());
+          allParams.p_onbehalf_name = safeVal($('#citizenName').val());
+          allParams.p_onbehalf_mobile = safeVal($('#citizenMobile').val());
+          allParams.p_onbehalf_email = safeVal($('#emailField').val());
+          allParams.p_onbehalf_district_id = safeVal($('#districtField').val());
 
           // ✅ Declaration
           // allParams.p_declaration = $('#declarationCheck').is(':checked') ? "Yes" : "No";
