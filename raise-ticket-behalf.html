@@ -296,7 +296,8 @@
             </div>
             <div class="mb-3 col-md-4">
               <label class="form-label">Mobile Number</label>
-              <input type="text" class="form-control" id="citizenMobile" placeholder="Enter mobile number">
+              <input type="text" class="form-control" id="citizenMobile" placeholder="Enter mobile number"
+                maxlength="10" pattern="^[6-9]\d{9}$" title="Enter a valid 10-digit mobile number starting with 6-9">
             </div>
             <div class="mb-3 col-md-4 d-flex align-items-center">
               <button class="btn btn-primary mt-4" id="sendOtpBtn">Send OTP</button>
@@ -451,6 +452,7 @@
   <script src="assets/js/globalProfileDropdown.js"></script>
   <script>
     // Sidebar toggle
+
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebar = document.getElementById('sidebar');
 
@@ -486,9 +488,42 @@
   <script>
     AOS.init();
 
+    function isValidMobile(num) {
+      return /^[6-9]\d{9}$/.test(num || "");
+    }
+
+    function sanitizeInput(str) {
+      return String(str || "").replace(/[<>"'%;()&+]/g, "");
+    }
+
+    function isValidEmail(email) {
+      // Basic email regex
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    }
+
     // OTP flow simulation
     let otpTimer;
     $('#sendOtpBtn').click(function () {
+      debugger
+      const $mobile = $('#citizenMobile');
+      const mobile = sanitizeInput($mobile.val());
+
+      if (!isValidMobile(mobile)) {
+        $mobile.addClass("is-invalid");
+        showErrorToast("Please enter a valid 10-digit mobile number.");
+
+        // ✅ Remove error highlight after 3 seconds
+        setTimeout(() => {
+          $mobile.removeClass("is-invalid");
+        }, 1000);
+
+        return;
+      }
+
+      $mobile.removeClass("is-invalid");
+
+
       $('#otpSection').removeClass('hidden');
       let timeLeft = 120; // 2 min timer
       $('#otpTimer').text("OTP sent. Expires in 120s");
@@ -497,21 +532,46 @@
         $('#otpTimer').text("OTP sent. Expires in " + timeLeft + "s");
         if (timeLeft <= 0) { clearInterval(otpTimer); $('#otpTimer').text("OTP expired. Please resend."); }
       }, 1000);
+
+
     });
 
+    // $('#verifyOtpBtn').click(function () {
+    //   let otp = $('#citizenOtp').val();
+    //   if (otp === "") { // demo OTP
+    //     clearInterval(otpTimer);
+    //     $('#otpSuccess').fadeIn();
+    //     setTimeout(function () {
+    //       $('#step1').hide();
+    //       $('#step2').removeClass('hidden').hide().fadeIn();
+    //     }, 1000);
+    //   } else {
+    //     alert("Invalid OTP. Try again.");
+    //   }
+    // });
+
     $('#verifyOtpBtn').click(function () {
-      let otp = $('#citizenOtp').val();
-      if (otp === "") { // demo OTP
+
+      let otp = $('#citizenOtp').val().trim();
+
+      if (otp === "123456") { // ✅ Demo OTP validation
         clearInterval(otpTimer);
         $('#otpSuccess').fadeIn();
+
+        let mobile = $('#citizenMobile').val();
+        $('input[readonly][value="(Verified Mobile)"]').val(mobile);
+
         setTimeout(function () {
           $('#step1').hide();
           $('#step2').removeClass('hidden').hide().fadeIn();
         }, 1000);
+
       } else {
-        alert("Invalid OTP. Try again.");
+        $('#citizenOtp').addClass("is-invalid"); // Bootstrap red border
+        showErrorToast("Invalid OTP. Please try again.");
       }
     });
+
   </script>
 
   <script>
@@ -993,12 +1053,31 @@
       //   }
       // });
 
+      $('#emailField').on('blur', function () {
+        let email = $(this).val().trim();
+
+        if (!isValidEmail(email)) {
+          $(this).addClass("is-invalid");
+        } else {
+          $(this).removeClass("is-invalid"); // ✅ hide red highlight when correct
+        }
+      });
 
       $('#submitBtn').on('click', async function (event) {
         debugger
         event.preventDefault();
 
         let isValid = true;
+        let email = $('#emailField').val().trim();
+
+        if (!isValidEmail(email)) {
+          $('#emailField').addClass("is-invalid");
+          showErrorToast("Please enter a valid email address."); // if you’re using toast
+          return;
+        } else {
+          $('#emailField').removeClass("is-invalid");
+        }
+
 
         // ✅ Validate declaration checkbox
         if (!$('#declarationCheck').is(':checked')) {
