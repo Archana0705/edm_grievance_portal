@@ -1003,57 +1003,6 @@
         generateDynamicFields(columnsData);
       });
 
-      // function generateDynamicFields(columnsString) {
-      //   const $container = $('#dynamicFieldsContainer');
-      //   $container.empty();
-
-      //   if (!columnsString) {
-      //     $container.append('<p>No additional fields required for this subcategory.</p>');
-      //     return;
-      //   }
-
-      //   const columnsArray = columnsString.split(',');
-
-      //   columnsArray.forEach((col, index) => {
-      //     col = col.trim();
-      //     const field = fieldMap[col];
-      //     if (!field) return;
-
-      //     const inputId = `field_${col}_${index}`; // unique id
-
-      //     // Handle "Multiple Attach supporting document (optional)" 4opt separately
-      //     if (col === "4opt") {
-      //       const wrapperId = `wrapper_${inputId}`;
-      //       const html = `
-      //           <div id="${wrapperId}" class="mb-3 file-wrapper">
-      //               <label>${field.label}</label>
-      //               <div class="file-row d-flex align-items-center mb-2">
-      //                   <input type="file" class="form-control me-2 file-input">
-      //                   <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
-      //               </div>
-      //               <button type="button" class="btn btn-primary btn-sm btn-add-file">Add More</button>
-      //           </div>
-      //       `;
-      //       $container.append(html);
-      //     } else {
-      //       let fieldHtml = '';
-      //       if (field.type === "textarea") {
-      //         fieldHtml = `
-      //               <div class="mb-3">
-      //                   <label for="${inputId}">${field.label}</label>
-      //                   <textarea id="${inputId}" class="form-control" ${field.required ? "required" : ""}></textarea>
-      //               </div>`;
-      //       } else {
-      //         fieldHtml = `
-      //               <div class="mb-3">
-      //                   <label for="${inputId}">${field.label}</label>
-      //                   <input id="${inputId}" type="${field.type}" class="form-control" ${field.required ? "required" : ""}>
-      //               </div>`;
-      //       }
-      //       $container.append(fieldHtml);
-      //     }
-      //   });
-      // }
 
       function generateDynamicFields(columnsString) {
         const $container = $('#dynamicFieldsContainer');
@@ -1190,11 +1139,176 @@
 
 
 
+      // $('#submitBtn').on('click', async function (event) {
+      //   event.preventDefault();
+
+      //   let isValid = true;
+
+      //   if (!$('#declarationCheck').is(':checked')) {
+      //     $('#declarationError').text('You must agree to the declaration.').show();
+      //     isValid = false;
+      //   } else {
+      //     $('#declarationError').hide();
+      //   }
+
+      //   $('#declarationCheck').on('change', function () {
+      //     if ($(this).is(':checked')) {
+      //       $('#declarationError').hide();
+      //     }
+      //   });
+
+
+      //   // Validate type, category, subcategory
+      //   ['#typeSelect', '#categorySelect', '#subCategorySelect'].forEach(selector => {
+      //     const $el = $(selector);
+      //     if (!$el.val() || $el.val().trim() === '') {
+      //       $el.addClass('is-invalid');
+      //       $el.next('.error-msg').remove();
+      //       $el.after('<span class="error-msg text-danger">This field is required</span>');
+      //       isValid = false;
+      //     } else {
+      //       $el.removeClass('is-invalid');
+      //       $el.next('.error-msg').remove();
+      //     }
+      //   });
+
+      //   $('#dynamicFieldsContainer [data-mandatory="true"]').each(function () {
+      //     if ($(this).val().trim() === '') {
+      //       $(this).addClass('is-invalid');
+      //       $(this).next('.error-msg').remove();
+      //       $(this).after('<span class="error-msg text-danger">This field is required</span>');
+      //       isValid = false;
+      //     } else {
+      //       $(this).removeClass('is-invalid');
+      //       $(this).next('.error-msg').remove();
+      //     }
+      //   });
+
+      //   if (!isValid) {
+      //     showErrorToast('Please fill in all mandatory fields.');
+      //     return;
+      //   }
+
+
+
+
+      //   try {
+      //     // Collect uploaded files
+      //     const uploadedFiles = await processFiles();
+
+      //     // Get relevant columns for selected subcategory
+      //     const selectedOption = $('#subCategorySelect').find('option:selected');
+      //     const columnsData = selectedOption.attr('data-columns'); // e.g., "3man,4opt,7man"
+      //     const columnsArray = columnsData ? columnsData.split(',').map(c => c.trim()) : [];
+
+      //     // All possible fields with default null
+      //     const allParams = {
+      //       p_complainant_name: null,
+      //       p_mobile: null,
+      //       p_email: null,
+      //       p_district_id: null,
+      //       p_issue_id: null,
+      //       p_created_by_user_id: null,
+      //       p_category_id: null,
+      //       p_subcategory_id: null,
+      //       p_priority: null,
+      //       p_onbehalf_name: null,
+      //       p_onbehalf_mobile: null,
+      //       p_onbehalf_email: null,
+      //       p_onbehalf_district_id: null,
+      //       p1man: null,
+      //       p1opt: null,
+      //       p2man: null,
+      //       p2opt: null,
+      //       p3man: null,
+      //       p3opt: null,
+      //       p4man: null,
+      //       p4opt: null,
+      //       p5man: null,
+      //       p5opt: null,
+      //       p6man: null,
+      //       p7man: null,
+      //       p8man: null,
+      //       p9man: null,
+      //       p10opt: null,
+      //       files: []
+      //     };
+
+      //     // Populate standard static fields
+      //     allParams.p_complainant_name = safeVal(localStorage.getItem('user_name'));
+      //     allParams.p_mobile = safeVal(localStorage.getItem('mobile'));
+      //     allParams.p_email = safeVal(localStorage.getItem('email'));
+      //     allParams.p_district_id = safeVal(localStorage.getItem('district'));
+      //     allParams.p_created_by_user_id = safeVal(localStorage.getItem('user_id'));
+      //     allParams.p_issue_id = safeVal($('#typeSelect').val());
+      //     allParams.p_category_id = safeVal($('#categorySelect').val());
+      //     allParams.p_subcategory_id = safeVal($('#subCategorySelect').val());
+      //     allParams.p_priority = safeVal($('#priority').val());
+      //     allParams.p_description = safeVal($('#description').val());
+      //     allParams.p_onbehalf_name = safeVal($('#onbehalf_name').val());
+      //     allParams.p_onbehalf_mobile = safeVal($('#onbehalf_mobile').val());
+      //     allParams.p_onbehalf_email = safeVal($('#onbehalf_email').val());
+      //     allParams.p_onbehalf_district_id = safeVal($('#onbehalf_district_id').val());
+
+      //     // Populate dynamic fields based on relevant columns
+      //     columnsArray.forEach(col => {
+      //       if (col === "4opt") return; // files handled separately
+
+      //       const field = fieldMap[col];
+      //       if (!field) return;
+
+      //       const $input = $(`#dynamicFieldsContainer [data-col="${col}"]`);
+      //       if ($input.length) {
+      //         allParams[field.paramName] = safeVal($input.val());
+      //       }
+      //     });
+
+      //     // Add uploaded files if any
+      //     if (uploadedFiles.length > 0) {
+      //       allParams.files = uploadedFiles;
+      //     }
+
+      //     const payload = {
+      //       action: "function_call",
+      //       function_name: "sp_citizen_create_ticket",
+      //       params: allParams
+      //     };
+
+      //     console.log("Final Payload:", payload);
+
+      //     // AJAX call
+      //     $.ajax({
+      //       url: `${BASE_API_URL}/commonfunction`,
+      //       method: 'POST',
+      //       data: {
+      //         data: encryptData(payload)
+      //       },
+      //       dataType: 'json',
+      //       success: function (response) {
+      //         console.log("Form submitted successfully:", response);
+      //         alert("Submitted successfully.");
+      //         setTimeout(() => location.reload(), 1000);
+      //       },
+      //       error: function (xhr, status, error) {
+      //         console.error("API Error:", error);
+      //         alert("Failed to submit form.");
+      //       }
+      //     });
+
+      //   } catch (err) {
+      //     console.error("Error in submission:", err);
+      //     alert("Something went wrong while preparing the form data.");
+      //   }
+      // });
+
+
       $('#submitBtn').on('click', async function (event) {
+        debugger
         event.preventDefault();
 
         let isValid = true;
 
+        // ✅ Validate declaration checkbox
         if (!$('#declarationCheck').is(':checked')) {
           $('#declarationError').text('You must agree to the declaration.').show();
           isValid = false;
@@ -1208,8 +1322,7 @@
           }
         });
 
-
-        // Validate type, category, subcategory
+        // ✅ Validate type, category, subcategory
         ['#typeSelect', '#categorySelect', '#subCategorySelect'].forEach(selector => {
           const $el = $(selector);
           if (!$el.val() || $el.val().trim() === '') {
@@ -1223,6 +1336,7 @@
           }
         });
 
+        // ✅ Validate mandatory dynamic fields
         $('#dynamicFieldsContainer [data-mandatory="true"]').each(function () {
           if ($(this).val().trim() === '') {
             $(this).addClass('is-invalid');
@@ -1240,49 +1354,48 @@
           return;
         }
 
-
-
-
         try {
-          // Collect uploaded files
+          // ✅ Collect uploaded files
           const uploadedFiles = await processFiles();
 
-          // Get relevant columns for selected subcategory
+          // ✅ Get relevant columns for selected subcategory
           const selectedOption = $('#subCategorySelect').find('option:selected');
           const columnsData = selectedOption.attr('data-columns'); // e.g., "3man,4opt,7man"
           const columnsArray = columnsData ? columnsData.split(',').map(c => c.trim()) : [];
 
-          // All possible fields with default null
+          // ✅ All possible params with default null
           const allParams = {
-            p_description: null,
+            p_complainant_name: null,
+            p_mobile: null,
+            p_email: null,
+            p_district_id: 2,
             p_issue_id: null,
+            p_created_by_user_id: null,
             p_category_id: null,
             p_subcategory_id: null,
             p_priority: null,
+            p_description: null,
             p_onbehalf_name: null,
             p_onbehalf_mobile: null,
             p_onbehalf_email: null,
             p_onbehalf_district_id: null,
-            p_can_number: null,
-            p_certificate_no: null,
-            p_esevai_id: null,
-            p_complaint_esevai_id: null,
-            p_transaction_number: null,
-            p_id_block_reason: null,
-            p_officer_name: null,
-            p_complainant_name: null,
-            p_mobile: null,
-            p_email: null,
-            p_district_id: null,
-            p_created_by_user_id: null,
-            files: []
+            p1man: null, p1opt: null,
+            p2man: null, p2opt: null,
+            p3man: null, p3opt: null,
+            p4man: null, p4opt: null,
+            p5man: null, p5opt: null,
+            p6man: null,
+            p7man: null,
+            p8man: null,
+            p9man: null,
+            p10opt: null,
           };
 
-          // Populate standard static fields
+          // ✅ Populate static fields
           allParams.p_complainant_name = safeVal(localStorage.getItem('user_name'));
           allParams.p_mobile = safeVal(localStorage.getItem('mobile'));
           allParams.p_email = safeVal(localStorage.getItem('email'));
-          allParams.p_district_id = safeVal(localStorage.getItem('district'));
+          // allParams.p_district_id = safeVal(localStorage.getItem('district'));
           allParams.p_created_by_user_id = safeVal(localStorage.getItem('user_id'));
           allParams.p_issue_id = safeVal($('#typeSelect').val());
           allParams.p_category_id = safeVal($('#categorySelect').val());
@@ -1294,39 +1407,47 @@
           allParams.p_onbehalf_email = safeVal($('#onbehalf_email').val());
           allParams.p_onbehalf_district_id = safeVal($('#onbehalf_district_id').val());
 
-          // Populate dynamic fields based on relevant columns
-          columnsArray.forEach(col => {
-            if (col === "4opt") return; // files handled separately
+          // ✅ Declaration
+          // allParams.p_declaration = $('#declarationCheck').is(':checked') ? "Yes" : "No";
 
-            const field = fieldMap[col];
-            if (!field) return;
+          // ✅ Populate dynamic fields (except files)
+          columnsArray.forEach(col => {
+            col = col.trim();
+
+            if (col === "4opt" || col === "4man") {
+              // handled separately
+              return;
+            }
 
             const $input = $(`#dynamicFieldsContainer [data-col="${col}"]`);
             if ($input.length) {
-              allParams[field.paramName] = safeVal($input.val());
+              const paramName = `p${col}`;
+              allParams[paramName] = safeVal($input.val());
             }
           });
 
-          // Add uploaded files if any
-          if (uploadedFiles.length > 0) {
-            allParams.files = uploadedFiles;
-          }
+          // ✅ Bind file params (p4man / p4opt) properly
+          uploadedFiles.forEach(fileObj => {
+            if (fileObj.mandatory) {
+              allParams.p4man = JSON.stringify([fileObj]);
+            } else {
+              allParams.p4opt = JSON.stringify([fileObj]);
+            }
+          });
 
           const payload = {
             action: "function_call",
-            function_name: "sp_citizen_create_ticket",
+            function_name: "fn_citizen_create_ticket",
             params: allParams
           };
 
           console.log("Final Payload:", payload);
 
-          // AJAX call
+          // ✅ Submit via AJAX
           $.ajax({
             url: `${BASE_API_URL}/commonfunction`,
             method: 'POST',
-            data: {
-              data: encryptData(payload)
-            },
+            data: { data: encryptData(payload) },
             dataType: 'json',
             success: function (response) {
               console.log("Form submitted successfully:", response);
@@ -1344,7 +1465,6 @@
           alert("Something went wrong while preparing the form data.");
         }
       });
-
 
 
     });

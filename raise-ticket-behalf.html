@@ -363,33 +363,20 @@
                 </div>
                 <div class="mb-3 col-lg-4">
                   <label>Category</label>
-                  <select id="categorySelect" class="form-control" disabled>
+                  <select id="categorySelect" class="form-control">
                     <option value="">Select Category</option>
                   </select>
                 </div>
                 <div class="mb-3 col-lg-4">
                   <label>Sub-Category</label>
-                  <select id="subCategorySelect" class="form-control" disabled>
+                  <select id="subCategorySelect" class="form-control">
                     <option value="">Select Sub-Category</option>
                   </select>
                 </div>
 
               </div>
               <!-- Dynamic Form -->
-              <div id="formFields" class="mt-4"></div>
-              <!-- Remarks -->
-              <!-- <div class="mb-3 col-lg-8">
-              <label class="form-label">Remarks</label>
-              <textarea class="form-control" rows="3" placeholder="Enter details" required></textarea>
-              <div class="invalid-feedback">Please enter remarks.</div>
-            </div> -->
-              <!-- Attachments -->
-              <!-- <div class="mb-3 col-lg-4">
-              <label class="form-label">Issue Attachment</label>
-              <input type="file" class="form-control" accept=".jpg,.jpeg,.png,.pdf" required>
-              <small class="text-muted">Allowed: jpg, png, pdf (max 5MB)</small>
-              <div class="invalid-feedback">Please upload a valid file.</div>
-              </div> -->
+              <div id="dynamicFieldsContainer" class="mt-4"></div>
 
 
               <!-- Declaration Component -->
@@ -408,6 +395,8 @@
                         I agree to the terms of this declaration
                       </label>
                     </div>
+                    <span class="text-danger small" id="declarationError" style="display:none;"></span>
+
                   </div>
                 </div>
               </div>
@@ -415,7 +404,7 @@
 
               <!-- Submit -->
               <div class="col-lg-4 d-flex align-items-center">
-                <button type="submit" class="btn btn-primary px-4 py-2">
+                <button type="submit" id="submitBtn" class="btn btn-primary px-4 py-2">
                   <i class="bi bi-send-fill me-2"></i> Submit Issue
                 </button>
               </div>
@@ -433,12 +422,31 @@
   <footer>
     &copy; 2025 My Dashboard. All rights reserved.
   </footer>
+  <div class="toast-container">
+    <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive"
+      aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          <i class="bi bi-check-circle-fill me-2"></i> Issue submitted successfully!
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+          aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
   <!-- Bootstrap JS -->
 
   <script src="assets/js/jquery-3.7.1.min.js"></script>
-  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="assets/js/bootstrap.bundle.min.js"></script> -->
   <script src="assets/js/aos.js"></script>
-
+  <script src="assets/js/dataTableUtil.js"></script>
+  <script src="assets/js/crypto-js.min.js"></script>
+  <script src="assets/js/global.js"></script>
+  <script src="assets/js/encrypt_decrypt.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/toastUtil.js"></script>
+  <script src="assets/js/apiConfig.js"></script>
+  <script src="assets/js/globalProfileDropdown.js"></script>
   <script>
     // Sidebar toggle
     const sidebarToggle = document.getElementById('sidebarToggle');
@@ -505,472 +513,7 @@
   </script>
 
   <script>
-    // ---------------- Master JSON ----------------
-    const issuesData = {
 
-      "eSevai portal and services": {
-        "Status Check": {
-          "eService": [
-            "Enter the acknowledgement number (in the redirected portal)"
-          ],
-          "Grievance": [
-            "Enter the acknowledgement number"
-          ]
-        },
-        "CAN Related": {
-          "CAN edit": [
-            "Enter CAN Number to be edited: (mandatory)",
-            "Enter description of changes and reason for change request: (mandatory)",
-            "Supporting document description (mandatory, short text)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ],
-          "Delete duplicate CAN": [
-            "Enter CAN Number to be deleted (mandatory)",
-            "Enter description with Reason for request and details of multiple CAN numbers",
-            "Supporting document description (mandatory, short text)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ]
-        },
-        "Cancellation requests": {
-          "Saved Application Cancel": [
-            "Enter CAN Number from which application was created (optional)",
-            "Application Number (mandatory)",
-            "Enter description: Reason for request (mandatory)",
-            "Supporting document description (optional, short text)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ],
-          "In progress Application Cancel": [
-            "Enter CAN Number from which application was created (optional)",
-            "Application Number (mandatory)",
-            "Enter description: Reason for request (mandatory)",
-            "Supporting document description (optional, short text)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ],
-          "Returned Application Cancel": [
-            "Enter CAN Number from which application was created (optional)",
-            "Application Number (mandatory)",
-            "Enter description: Reason for request (mandatory)",
-            "Supporting document description (optional, short text)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ],
-          "Approved certificate/ Application cancellation": [
-            "Enter CAN Number from which application was created (Alphanumeric field) (optional)",
-            "Enter application/ certificate number (mandatory)",
-            "Enter description: Reason for request (mandatory)",
-            "Supporting document description (mandatory, short text)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ]
-        },
-        "User access related": {
-          "Department user- password reset": [
-            "Enter eSevai log in ID (mandatory)",
-            "Enter description of error (mandatory)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ],
-          "centre eDistrict ID- password reset": [
-            "Enter eSevai log in ID (mandatory)",
-            "Enter description of error (mandatory)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ],
-          "centre eDistrict ID- ID unlock": [
-            "Enter eSevai log in ID (mandatory)",
-            "Enter description of error (mandatory)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ],
-          "eSevai centre login- password reset": [
-            "Enter eSevai log in ID (mandatory)",
-            "Enter description of error (mandatory)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ],
-          "Helpdesk": [
-            "Enter eSevai log in ID (mandatory)",
-            "Enter description of error (mandatory)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ],
-          "Citizen ID- login errors": [
-            "Enter eSevai log in ID (mandatory)",
-            "Enter description of error (mandatory)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ],
-          "Citizen ID- password reset": [
-            "Enter eSevai log in ID (mandatory)",
-            "Enter description of error (mandatory)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ],
-          "Citizen ID- OTP related": [
-            "Enter eSevai log in ID (mandatory)",
-            "Enter description of error (mandatory)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ]
-        },
-        "Biometric related": {
-          "Biometric related": [
-            "Enter eSevai log in ID (Alphanumeric field) (mandatory)",
-            "Enter type of device (mandatory)",
-            "Enter model of device (mandatory)",
-            "Enter description of error (mandatory)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ]
-        },
-        "eSign related": {
-          "Application/certificate unable to sign from Official login": [
-            "Enter CAN Number from which application was created (optional)",
-            "Enter application/ certificate number (mandatory)",
-            "Enter description: Reason for request (mandatory)",
-            "Supporting document description (optional, short text)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ],
-          "Approved application has no signature": [
-            "Enter CAN Number from which application was created (optional)",
-            "Enter application/ certificate number (mandatory)",
-            "Enter description: Reason for request (mandatory)",
-            "Supporting document description (optional, short text)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ],
-          "Unable to validate signature": [
-            "Enter CAN Number from which application was created (optional)",
-            "Enter application/ certificate number (mandatory)",
-            "Enter description: Reason for request (mandatory)",
-            "Supporting document description (optional, short text)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ]
-        },
-        "Service-specific Grievances": {
-          "Application form related": [
-            "Enter CAN Number (Alphanumeric field) (optional)",
-            "Enter application acknowledgement number (mandatory)",
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ],
-          "Issues with drop down menus": [
-            "Enter CAN Number (Alphanumeric field) (optional)",
-            "Enter application acknowledgement number (mandatory)",
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ],
-          "Issues in selecting street/ location details": [
-            "Enter CAN Number (Alphanumeric field) (optional)",
-            "Enter application acknowledgement number (mandatory)",
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ],
-          "Already applied services error": [
-            "Enter CAN Number (Alphanumeric field) (optional)",
-            "Enter application acknowledgement number (mandatory)",
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ],
-          "Application approval-related": [
-            "Enter CAN Number (Alphanumeric field) (optional)",
-            "Enter application acknowledgement number (mandatory)",
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ],
-          "Certificate download related": [
-            "Enter CAN Number (Alphanumeric field) (optional)",
-            "Enter application acknowledgement number (mandatory)",
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ]
-        },
-        "Payment": {
-          "Unable to Make Payment": [
-            "Enter CAN Number (Alphanumeric field) (optional)",
-            "Enter application number (optional)",
-            "Enter transaction number (mandatory)",
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ],
-          "application failed before payment gateway": [
-            "Enter CAN Number (Alphanumeric field) (optional)",
-            "Enter application number (optional)",
-            "Enter transaction number (mandatory)",
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ],
-          "Transaction Failed": [
-            "Enter CAN Number (Alphanumeric field) (optional)",
-            "Enter application number (optional)",
-            "Enter transaction number (mandatory)",
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ],
-          "Duplicate Transaction": [
-            "Enter CAN Number (Alphanumeric field) (optional)",
-            "Enter application number (optional)",
-            "Enter transaction number (mandatory)",
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ],
-          "Refund": [
-            "Enter CAN Number (Alphanumeric field) (optional)",
-            "Enter application number (optional)",
-            "Enter transaction number (mandatory)",
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ],
-          "Others": [
-            "Enter CAN Number (Alphanumeric field) (optional)",
-            "Enter application number (optional)",
-            "Enter transaction number (mandatory)",
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ]
-        },
-        "Acknowledgements": {
-          "Reprint Receipt": [
-            "Enter application number (mandatory)",
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ]
-        },
-        "Server Issue": {
-          "Website Error": [
-            "Enter description of the issue",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ],
-          "Website is slow": [
-            "Enter description of the issue",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ],
-          "Others": [
-            "Enter description of the issue",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ]
-        },
-        "Pendency status issues": {
-          "Not matching with CRA pendency": [
-            "Application numbers (optional)",
-            "Enter the official login details where the pendency shows incorrectly",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ],
-          "Approved/Rejected applications showing in pendency": [
-            "Application numbers (optional)",
-            "Enter the official login details where the pendency shows incorrectly",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ]
-
-        },
-        "Others": {
-          "Others": [
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ]
-        }
-      },
-
-      "eSevai centre related": {
-        "Centre-related complaints/ grievances": {
-          "Overcharging": [
-            "Enter eSevai centre ID against whom the grievance is lodged (mandatory)",
-            "Enter description of issue faced (mandatory)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"
-          ],
-          "Rude behaviour": ["Enter description of issue faced (mandatory)",
-            "Enter description of issue faced (mandatory)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"],
-          "Non-compliance with centre guidelines": ["Enter description of issue faced (mandatory)",
-            "Enter description of issue faced (mandatory)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"],
-          "Misuse of ID": ["Enter description of issue faced (mandatory)",
-            "Enter description of issue faced (mandatory)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"],
-          "Other malpractices": ["Enter description of issue faced (mandatory)",
-            "Enter description of issue faced (mandatory)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"],
-          "Others": ["Enter description of issue faced (mandatory)",
-            "Enter description of issue faced (mandatory)",
-            "Attach supporting document (optional) (provision to attach more than one document- optional)"]
-        },
-        "New Application": {
-          "New eSevai Centre Application": [
-            "Enter description of the request (mandatory)",
-            "Attach supporting document (mandatory) (provision to attach more than one document- optional)"
-          ]
-        },
-        "ID Block": {
-          "ID Block reactivation": [
-            "Enter eSevai centre ID to be reactivated (mandatory)",
-            "Enter reason for ID block (drop down- ID blocked due to Zero transactions, ID blocked due to overcharging issues , Don’t know) (mandatory)",
-            "Attach supporting document (optional)"
-          ]
-        },
-        "Wallet Recharge Issue": {
-          "Wallet Recharge Error": [
-            "Enter the amount of recharge requested (mandatory)",
-            "Enter the date of the recharge request (mandatory)",
-            "Enter error message of the issue (Optional)",
-            "Attach supporting document (optional)"
-          ],
-          "Others": ["Enter description of issue faced (mandatory)",
-            "Enter the date of the recharge request (mandatory)",
-            "Enter error message of the issue (Optional)",
-            "Attach supporting document (optional)"],
-          "Refund, amount deducted": ["Enter description of issue faced (mandatory)",
-            "Enter the date of the recharge request (mandatory)",
-            "Enter error message of the issue (Optional)",
-            "Attach supporting document (optional)"],
-          "Wallet Push": ["Enter description of issue faced (mandatory)",
-            "Enter the date of the recharge request (mandatory)",
-            "Enter error message of the issue (Optional)",
-            "Attach supporting document (optional)"],
-          "Wallet Shows Incorrect Amount": ["Enter description of issue faced (mandatory)",
-            "Enter the date of the recharge request (mandatory)",
-            "Enter error message of the issue (Optional)",
-            "Attach supporting document (optional)"]
-        },
-        "Relocation request": {
-          "Relocation request": [
-            "Enter e-Sevai ID (mandatory)",
-            "Current address of the center (mandatory)",
-            "New address of the center (mandatory)",
-            "Reason for relocation (mandatory)",
-            "Whether moving from Rural to Urban location (drop down- Yes/ No) (mandatory)"
-          ]
-        },
-        "Training related": {
-          "Online LMS (Payil) login issues": [
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (optional)"
-          ],
-          "In-person training sessions": [
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (optional)"
-          ]
-        },
-        "Centre details updation": {
-          "Operator Details update": [
-            "Current operator Name: (mandatory)",
-            "Current operator mobile number: (mandatory)",
-            "Reason for operator change: (mandatory)",
-            "New operator name: (mandatory)",
-            "New operator mobile number: (mandatory)",
-            "Attach supporting document (optional)"
-          ],
-          "Phone number update": [
-            "Current registered mobile number: (mandatory)",
-            "Reason for change: (mandatory)",
-            "New registered mobile number: (mandatory)",
-            "Attach supporting document (optional)"
-          ],
-          "Location details update": [
-            "Current registered address: (mandatory)",
-            "Reason for change: (mandatory)",
-            "New registered address: (mandatory)",
-            "Attach supporting document (optional)"
-          ]
-        },
-        "Others": {
-          "Others": [
-            "Enter description of the issue (mandatory)",
-            "Attach supporting document (optional)"
-          ]
-        }
-      },
-      "eSevai officials related": {
-        "eDM": {
-          "eDM": [
-            "Enter description of issue faced (mandatory)",
-            "Enter name of official (optional)",
-            "Attach supporting document (optional)"
-          ]
-        },
-        "Helpdesk": {
-          "Helpdesk": ["Enter description of issue faced (mandatory)",
-            "Enter name of official (optional)",
-            "Attach supporting document (optional)"]
-        },
-        "TNeGA eSevai operations team": {
-          "TNeGA eSevai operations team": ["Enter description of issue faced (mandatory)",
-            "Enter name of official (optional)",
-            "Attach supporting document (optional)"
-          ]
-        }
-      }
-    };
-
-    // ---------------- Populate Dropdowns ----------------
-    $.each(issuesData, function (type, categories) {
-      $('#typeSelect').append(`<option value="${type}">${type}</option>`);
-    });
-
-    $('#typeSelect').on('change', function () {
-      let type = $(this).val();
-      $('#categorySelect').prop('disabled', false).html('<option value="">Select Category</option>');
-      $('#subCategorySelect').prop('disabled', true).html('<option value="">Select Sub-Category</option>');
-      $('#formFields').empty();
-
-      if (type) {
-        $.each(issuesData[type], function (category) {
-          $('#categorySelect').append(`<option value="${category}">${category}</option>`);
-        });
-      }
-    });
-
-    $('#categorySelect').on('change', function () {
-      let type = $('#typeSelect').val();
-      let category = $(this).val();
-      $('#subCategorySelect').prop('disabled', false).html('<option value="">Select Sub-Category</option>');
-      $('#formFields').empty();
-
-      if (category) {
-        $.each(issuesData[type][category], function (subCategory) {
-          $('#subCategorySelect').append(`<option value="${subCategory}">${subCategory}</option>`);
-        });
-      }
-    });
-
-    $('#subCategorySelect').on('change', function () {
-      let type = $('#typeSelect').val();
-      let category = $('#categorySelect').val();
-      let subCategory = $(this).val();
-      $('#formFields').empty();
-
-      if (subCategory) {
-        let fields = issuesData[type][category][subCategory];
-        $.each(fields, function (i, field) {
-          if (field.toLowerCase().includes("attach supporting document")) {
-            // File upload special UI
-            $('#formFields').append(`
-                <div class="file-group-wrapper mt-2">
-                  <div class="row g-2 align-items-end file-group mb-2">
-                    <div class="col-md-4">
-                      <label class="form-label fw-semibold">File Name *</label>
-                      <input type="text" class="form-control" required>
-                    </div>
-                    <div class="col-md-5">
-                      <label class="form-label fw-semibold">Attach Supporting Documents *</label>
-                      <input type="file" class="form-control" required multiple>
-                      <small class="text-danger">* Max. file size allowed is 1 MB</small>
-                    </div>
-                    <div class="col-md-3"></div>
-                  </div>
-                </div>
-              `);
-            updateFileRowButtons(); // call button updater
-          } else {
-            // Normal text input
-
-            // Create a row container if it doesn't already exist
-            if ($("#formFields .row").length === 0) {
-              $("#formFields").append(`<div class="row"></div>`);
-            }
-
-            // Append field into that row
-            $("#formFields .row").append(`
-                <div class="col-lg-4">
-                  <label class="form-label">${field}</label>
-                  <input type="text" class="form-control">
-                </div>
-              `);
-
-
-          }
-        });
-      }
-    });
-
-    // ---------------- File Upload Logic ----------------
     const maxFiles = 3;
 
     function updateFileRowButtons() {
@@ -983,43 +526,39 @@
         $btnCol.empty();
 
         if (index === 0 && total === 1) {
-          // Only row
           $btnCol.append(`
-              <button type="button" class="btn btn-outline-primary add-file-row w-100">
-                <i class="bi bi-plus-circle"></i> Add
-              </button>
-            `);
+          <button type="button" class="btn btn-outline-primary add-file-row w-100">
+            <i class="bi bi-plus-circle"></i> Add
+          </button>
+        `);
         } else if (index === total - 1 && total < maxFiles) {
-          // Last row, can add
           $btnCol.append(`
-              <div class="d-flex w-100 gap-2">
-                <button type="button" class="btn btn-outline-primary add-file-row flex-fill">
-                  <i class="bi bi-plus-circle"></i> Add
-                </button>
-                <button type="button" class="btn btn-outline-danger remove-file-row flex-fill">
-                  <i class="bi bi-dash-circle"></i> Remove
-                </button>
-              </div>
-            `);
+          <div class="d-flex w-100 gap-2">
+            <button type="button" class="btn btn-outline-primary add-file-row flex-fill">
+              <i class="bi bi-plus-circle"></i> Add
+            </button>
+            <button type="button" class="btn btn-outline-danger remove-file-row flex-fill">
+              <i class="bi bi-dash-circle"></i> Remove
+            </button>
+          </div>
+        `);
         } else if (index === total - 1 && total === maxFiles) {
-          // Max reached
           $btnCol.append(`
-              <button type="button" class="btn btn-outline-danger remove-file-row w-100">
-                <i class="bi bi-dash-circle"></i> Remove
-              </button>
-            `);
+          <button type="button" class="btn btn-outline-danger remove-file-row w-100">
+            <i class="bi bi-dash-circle"></i> Remove
+          </button>
+        `);
         } else {
-          // Middle rows
           $btnCol.append(`
-              <div class="d-flex w-100 gap-2">
-                <button type="button" class="btn btn-outline-primary add-file-row flex-fill">
-                  <i class="bi bi-plus-circle"></i> Add
-                </button>
-                <button type="button" class="btn btn-outline-danger remove-file-row flex-fill">
-                  <i class="bi bi-dash-circle"></i> Remove
-                </button>
-              </div>
-            `);
+          <div class="d-flex w-100 gap-2">
+            <button type="button" class="btn btn-outline-primary add-file-row flex-fill">
+              <i class="bi bi-plus-circle"></i> Add
+            </button>
+            <button type="button" class="btn btn-outline-danger remove-file-row flex-fill">
+              <i class="bi bi-dash-circle"></i> Remove
+            </button>
+          </div>
+        `);
         }
       });
     }
@@ -1027,19 +566,15 @@
     $(document).on("click", ".add-file-row", function () {
       const total = $(".file-group-wrapper .file-group").length;
       if (total < maxFiles) {
-        const newRow = ` 
-            <div class="row g-2 align-items-end file-group mb-2">
-              <div class="col-md-4">
-                <label class="form-label fw-semibold">File Name *</label>
-                <input type="text" class="form-control" required>
-              </div>
-              <div class="col-md-5">
-                <label class="form-label fw-semibold">Attach Supporting Documents *</label>
-                <input type="file" class="form-control" required multiple>
-                <small class="text-danger">* Max. file size allowed is 1 MB</small>
-              </div>
-              <div class="col-md-3"></div>
-            </div>`;
+        const newRow = `
+        <div class="row g-2 align-items-end file-group mb-2">
+          <div class="col-md-5">
+            <label class="form-label fw-semibold">Attach Supporting Documents *</label>
+            <input type="file" class="form-control" required multiple>
+            <small class="text-danger">* Max. file size allowed is 1 MB</small>
+          </div>
+          <div class="col-md-3"></div>
+        </div>`;
         $(".file-group-wrapper").append(newRow);
         updateFileRowButtons();
       }
@@ -1049,7 +584,582 @@
       $(this).closest(".file-group").remove();
       updateFileRowButtons();
     });
+
+    // ---------------- API CALLS ----------------
+    $(document).ready(function () {
+      const roleId = localStorage.getItem("role_id");
+
+      // Type dropdown
+      const payload = {
+        action: "function_call",
+        function_name: "fn_issue_type",
+        params: {}
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(payload) },
+        dataType: "json",
+        success(response) {
+          const decrypted = decryptData(response.data);
+          const $dropdown = $("#typeSelect");
+          $dropdown.empty().append('<option value="" class="placeholder">--Select Type--</option>');
+
+          decrypted.forEach(item => {
+            $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
+          });
+        }
+      });
+
+      // Category dropdown
+      $('#typeSelect').on('change', function () {
+        const selectedType = $(this).val();
+        const operatorPayload = {
+          action: "function_call",
+          function_name: "fn_issue_category",
+          params: { type: selectedType || '', roleid: roleId }
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: 'POST',
+          data: { data: encryptData(operatorPayload) },
+          dataType: 'json',
+          success(response) {
+            const decrypted = decryptData(response.data);
+            const $dropdown = $('#categorySelect');
+            $dropdown.empty().append('<option value="" class="placeholder">--Select Category--</option>');
+
+            decrypted.forEach(item => {
+              $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
+            });
+          }
+        });
+      });
+
+      // Sub Category dropdown + field builder
+      $('#categorySelect').on('change', function () {
+        const selectedCategory = $(this).val();
+        const operatorPayload = {
+          action: "function_call",
+          function_name: "fn_issue_subcategory",
+          params: { type: selectedCategory || '', roleid: roleId }
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: 'POST',
+          data: { data: encryptData(operatorPayload) },
+          dataType: 'json',
+          success(response) {
+            const decrypted = decryptData(response.data);
+            const $dropdown = $('#subCategorySelect');
+            $dropdown.empty().append('<option value="" class="placeholder">--Select Sub Category--</option>');
+
+            decrypted.forEach(item => {
+              $dropdown.append(`<option value="${item.id}" data-columns="${item.relavant_columns || ''}">${item.issue_name}</option>`);
+            });
+
+            // Clear dynamic fields initially
+            $('#dynamicFieldsContainer').empty();
+          }
+        });
+      });
+
+
+      const fieldMap = {
+        "1man": { label: "CAN Number (mandatory)", type: "text", required: true },
+        "1opt": { label: "CAN Number (optional)", type: "text", required: false },
+        "2man": { label: "Application number (mandatory)", type: "text", required: true },
+        "2opt": { label: "Application number (optional)", type: "text", required: false },
+        "3man": { label: "Description of changes and reason (mandatory)", type: "textarea", required: true },
+        "3opt": { label: "Description of the issue (Optional)", type: "textarea", required: false },
+        "4man": { label: "Multiple Attach supporting document (mandatory)", type: "file", required: true, multiple: true },
+        "4opt": { label: "Multiple Attach supporting document (optional)", type: "file", required: false, multiple: true },
+        "5man": { label: "Supporting document description (mandatory, short text)", type: "textarea", required: true },
+        "5opt": { label: "Multiple Supporting document description (optional, short text)", type: "textarea", required: false },
+        "6man": { label: "Enter eSevai log in ID (mandatory)", type: "text", required: true },
+        "7man": { label: "Enter eSevai centre ID against whom the grievance is lodged (mandatory)", type: "text", required: true },
+        "8man": { label: "Transaction number (mandatory)", type: "text", required: true },
+        "9man": { label: "Enter reason for ID block (mandatory)", type: "textarea", required: true },
+        "10opt": { label: "Enter name of official (optional)", type: "text", required: false }
+      };
+
+
+      $('#subCategorySelect').on('change', function () {
+        const selectedOption = $(this).find('option:selected');
+        const columnsData = selectedOption.attr('data-columns'); // e.g., "3man,4opt,7man"
+        generateDynamicFields(columnsData);
+      });
+
+
+      function generateDynamicFields(columnsString) {
+        const $container = $('#dynamicFieldsContainer');
+        $container.empty();
+
+        if (!columnsString) {
+          $container.append('<p>No additional fields required for this subcategory.</p>');
+          return;
+        }
+
+        const columnsArray = columnsString.split(',');
+
+        columnsArray.forEach((col, index) => {
+          col = col.trim();
+          const field = fieldMap[col];
+          if (!field) return;
+
+          const inputId = `field_${col}_${index}`;
+          const isMandatory = col.endsWith('man');
+          const mandatoryAttr = isMandatory ? 'data-mandatory="true"' : '';
+          const nameAttr = `name="${field.paramName}"`;
+          const dataColAttr = `data-col="${col}"`;
+
+          // Handle multiple file attachments (optional)
+          if (col === "4opt") {
+            const wrapperId = `wrapper_${inputId}`;
+            const html = `
+                <div id="${wrapperId}" class="mb-3 file-wrapper">
+                    <label>${field.label}</label>
+                    <div class="file-row d-flex align-items-center mb-2">
+                        <input type="file" class="form-control me-2 file-input">
+                        <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm btn-add-file">Add More</button>
+                </div>
+            `;
+            $container.append(html);
+          } else {
+            let fieldHtml = '';
+            if (field.type === "textarea") {
+              fieldHtml = `
+                    <div class="mb-3">
+                        <label for="${inputId}">${field.label}</label>
+                        <textarea id="${inputId}" class="form-control" ${nameAttr} ${dataColAttr} ${mandatoryAttr}></textarea>
+                    </div>`;
+            } else {
+              fieldHtml = `
+                    <div class="mb-3">
+                        <label for="${inputId}">${field.label}</label>
+                        <input id="${inputId}" type="${field.type}" class="form-control" ${nameAttr} ${dataColAttr} ${mandatoryAttr}>
+                    </div>`;
+            }
+            $container.append(fieldHtml);
+          }
+        });
+      }
+
+      $(document).on('click', '.btn-add-file', function () {
+        const $wrapper = $(this).closest('.file-wrapper');
+        const currentCount = $wrapper.find('.file-row').length;
+
+        if (currentCount >= 3) {
+          alert("You can only add up to 3 attachments.");
+          return;
+        }
+
+        const $newRow = $(`
+        <div class="file-row d-flex align-items-center mb-2">
+            <input type="file" class="form-control me-2 file-input">
+            <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
+        </div>
+    `);
+        $(this).before($newRow);
+      });
+
+      $(document).on('click', '.btn-delete-file', function () {
+        $(this).closest('.file-row').remove();
+      });
+
+
+      $(document).on('input', '#dynamicFieldsContainer input[type="text"], #dynamicFieldsContainer textarea, #dynamicFieldsContainer select', function () {
+        const $this = $(this);
+        if ($this.data('mandatory') && $this.val().trim() === '') {
+          $this.addClass('is-invalid');
+          $this.next('.error-msg').remove();
+          $this.after('<span class="error-msg text-danger">This field is required</span>');
+        } else {
+          $this.removeClass('is-invalid');
+          $this.next('.error-msg').remove();
+        }
+      });
+
+      $(document).on('input change', '#dynamicFieldsContainer input, #dynamicFieldsContainer textarea, #dynamicFieldsContainer select', function () {
+        if ($(this).val().trim() !== '') {
+          $(this).removeClass('is-invalid');
+          $(this).next('.error-msg').remove();
+        }
+      });
+
+      // 2. Mandatory selects outside dynamic fields
+      $('#typeSelect, #categorySelect, #subCategorySelect').on('change', function () {
+        if ($(this).val() && $(this).val().trim() !== '') {
+          $(this).removeClass('is-invalid');
+          $(this).next('.error-msg').remove();
+        }
+      });
+
+      function safeVal(val) {
+        if (val === undefined || val === null) return null;
+        if (typeof val === "string" && val.trim() === "") return null;
+        return val;
+      }
+
+      async function processFiles() {
+        const filesArray = [];
+
+        $('#dynamicFieldsContainer input[type="file"]').each(function () {
+          const files = this.files;
+          const desc = $(this).closest('.file-group').find('.file-desc').val() || '';
+
+          for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            filesArray.push({
+              file_name: file.name,
+              file_path: `/uploads/${file.name}`, // ⚡ adjust if backend returns actual path
+              mime_type: file.type,
+              attachment_desc: desc
+            });
+          }
+        });
+
+        return filesArray;
+      }
+
+
+
+      // $('#submitBtn').on('click', async function (event) {
+      //   event.preventDefault();
+
+      //   let isValid = true;
+
+      //   if (!$('#declarationCheck').is(':checked')) {
+      //     $('#declarationError').text('You must agree to the declaration.').show();
+      //     isValid = false;
+      //   } else {
+      //     $('#declarationError').hide();
+      //   }
+
+      //   $('#declarationCheck').on('change', function () {
+      //     if ($(this).is(':checked')) {
+      //       $('#declarationError').hide();
+      //     }
+      //   });
+
+
+      //   // Validate type, category, subcategory
+      //   ['#typeSelect', '#categorySelect', '#subCategorySelect'].forEach(selector => {
+      //     const $el = $(selector);
+      //     if (!$el.val() || $el.val().trim() === '') {
+      //       $el.addClass('is-invalid');
+      //       $el.next('.error-msg').remove();
+      //       $el.after('<span class="error-msg text-danger">This field is required</span>');
+      //       isValid = false;
+      //     } else {
+      //       $el.removeClass('is-invalid');
+      //       $el.next('.error-msg').remove();
+      //     }
+      //   });
+
+      //   $('#dynamicFieldsContainer [data-mandatory="true"]').each(function () {
+      //     if ($(this).val().trim() === '') {
+      //       $(this).addClass('is-invalid');
+      //       $(this).next('.error-msg').remove();
+      //       $(this).after('<span class="error-msg text-danger">This field is required</span>');
+      //       isValid = false;
+      //     } else {
+      //       $(this).removeClass('is-invalid');
+      //       $(this).next('.error-msg').remove();
+      //     }
+      //   });
+
+      //   if (!isValid) {
+      //     showErrorToast('Please fill in all mandatory fields.');
+      //     return;
+      //   }
+
+
+
+
+      //   try {
+      //     // Collect uploaded files
+      //     const uploadedFiles = await processFiles();
+
+      //     // Get relevant columns for selected subcategory
+      //     const selectedOption = $('#subCategorySelect').find('option:selected');
+      //     const columnsData = selectedOption.attr('data-columns'); // e.g., "3man,4opt,7man"
+      //     const columnsArray = columnsData ? columnsData.split(',').map(c => c.trim()) : [];
+
+      //     // All possible fields with default null
+      //     const allParams = {
+      //       p_complainant_name: null,
+      //       p_mobile: null,
+      //       p_email: null,
+      //       p_district_id: null,
+      //       p_issue_id: null,
+      //       p_created_by_user_id: null,
+      //       p_category_id: null,
+      //       p_subcategory_id: null,
+      //       p_priority: null,
+      //       p_onbehalf_name: null,
+      //       p_onbehalf_mobile: null,
+      //       p_onbehalf_email: null,
+      //       p_onbehalf_district_id: null,
+      //       p1man: null,
+      //       p1opt: null,
+      //       p2man: null,
+      //       p2opt: null,
+      //       p3man: null,
+      //       p3opt: null,
+      //       p4man: null,
+      //       p4opt: null,
+      //       p5man: null,
+      //       p5opt: null,
+      //       p6man: null,
+      //       p7man: null,
+      //       p8man: null,
+      //       p9man: null,
+      //       p10opt: null,
+      //       files: []
+      //     };
+
+      //     // Populate standard static fields
+      //     allParams.p_complainant_name = safeVal(localStorage.getItem('user_name'));
+      //     allParams.p_mobile = safeVal(localStorage.getItem('mobile'));
+      //     allParams.p_email = safeVal(localStorage.getItem('email'));
+      //     allParams.p_district_id = safeVal(localStorage.getItem('district'));
+      //     allParams.p_created_by_user_id = safeVal(localStorage.getItem('user_id'));
+      //     allParams.p_issue_id = safeVal($('#typeSelect').val());
+      //     allParams.p_category_id = safeVal($('#categorySelect').val());
+      //     allParams.p_subcategory_id = safeVal($('#subCategorySelect').val());
+      //     allParams.p_priority = safeVal($('#priority').val());
+      //     allParams.p_description = safeVal($('#description').val());
+      //     allParams.p_onbehalf_name = safeVal($('#onbehalf_name').val());
+      //     allParams.p_onbehalf_mobile = safeVal($('#onbehalf_mobile').val());
+      //     allParams.p_onbehalf_email = safeVal($('#onbehalf_email').val());
+      //     allParams.p_onbehalf_district_id = safeVal($('#onbehalf_district_id').val());
+
+      //     // Populate dynamic fields based on relevant columns
+      //     columnsArray.forEach(col => {
+      //       if (col === "4opt") return; // files handled separately
+
+      //       const field = fieldMap[col];
+      //       if (!field) return;
+
+      //       const $input = $(`#dynamicFieldsContainer [data-col="${col}"]`);
+      //       if ($input.length) {
+      //         allParams[field.paramName] = safeVal($input.val());
+      //       }
+      //     });
+
+      //     // Add uploaded files if any
+      //     if (uploadedFiles.length > 0) {
+      //       allParams.files = uploadedFiles;
+      //     }
+
+      //     const payload = {
+      //       action: "function_call",
+      //       function_name: "sp_citizen_create_ticket",
+      //       params: allParams
+      //     };
+
+      //     console.log("Final Payload:", payload);
+
+      //     // AJAX call
+      //     $.ajax({
+      //       url: `${BASE_API_URL}/commonfunction`,
+      //       method: 'POST',
+      //       data: {
+      //         data: encryptData(payload)
+      //       },
+      //       dataType: 'json',
+      //       success: function (response) {
+      //         console.log("Form submitted successfully:", response);
+      //         alert("Submitted successfully.");
+      //         setTimeout(() => location.reload(), 1000);
+      //       },
+      //       error: function (xhr, status, error) {
+      //         console.error("API Error:", error);
+      //         alert("Failed to submit form.");
+      //       }
+      //     });
+
+      //   } catch (err) {
+      //     console.error("Error in submission:", err);
+      //     alert("Something went wrong while preparing the form data.");
+      //   }
+      // });
+
+
+      $('#submitBtn').on('click', async function (event) {
+        debugger
+        event.preventDefault();
+
+        let isValid = true;
+
+        // ✅ Validate declaration checkbox
+        if (!$('#declarationCheck').is(':checked')) {
+          $('#declarationError').text('You must agree to the declaration.').show();
+          isValid = false;
+        } else {
+          $('#declarationError').hide();
+        }
+
+        $('#declarationCheck').on('change', function () {
+          if ($(this).is(':checked')) {
+            $('#declarationError').hide();
+          }
+        });
+
+        // ✅ Validate type, category, subcategory
+        ['#typeSelect', '#categorySelect', '#subCategorySelect'].forEach(selector => {
+          const $el = $(selector);
+          if (!$el.val() || $el.val().trim() === '') {
+            $el.addClass('is-invalid');
+            $el.next('.error-msg').remove();
+            $el.after('<span class="error-msg text-danger">This field is required</span>');
+            isValid = false;
+          } else {
+            $el.removeClass('is-invalid');
+            $el.next('.error-msg').remove();
+          }
+        });
+
+        // ✅ Validate mandatory dynamic fields
+        $('#dynamicFieldsContainer [data-mandatory="true"]').each(function () {
+          if ($(this).val().trim() === '') {
+            $(this).addClass('is-invalid');
+            $(this).next('.error-msg').remove();
+            $(this).after('<span class="error-msg text-danger">This field is required</span>');
+            isValid = false;
+          } else {
+            $(this).removeClass('is-invalid');
+            $(this).next('.error-msg').remove();
+          }
+        });
+
+        if (!isValid) {
+          showErrorToast('Please fill in all mandatory fields.');
+          return;
+        }
+
+        try {
+          // ✅ Collect uploaded files
+          const uploadedFiles = await processFiles();
+
+          // ✅ Get relevant columns for selected subcategory
+          const selectedOption = $('#subCategorySelect').find('option:selected');
+          const columnsData = selectedOption.attr('data-columns'); // e.g., "3man,4opt,7man"
+          const columnsArray = columnsData ? columnsData.split(',').map(c => c.trim()) : [];
+
+          // ✅ All possible params with default null
+          const allParams = {
+            p_complainant_name: null,
+            p_mobile: null,
+            p_email: null,
+            p_district_id: 2,
+            p_issue_id: null,
+            p_created_by_user_id: null,
+            p_category_id: null,
+            p_subcategory_id: null,
+            p_priority: null,
+            p_description: null,
+            p_onbehalf_name: null,
+            p_onbehalf_mobile: null,
+            p_onbehalf_email: null,
+            p_onbehalf_district_id: null,
+            p1man: null, p1opt: null,
+            p2man: null, p2opt: null,
+            p3man: null, p3opt: null,
+            p4man: null, p4opt: null,
+            p5man: null, p5opt: null,
+            p6man: null,
+            p7man: null,
+            p8man: null,
+            p9man: null,
+            p10opt: null,
+          };
+
+          // ✅ Populate static fields
+          allParams.p_complainant_name = safeVal(localStorage.getItem('user_name'));
+          allParams.p_mobile = safeVal(localStorage.getItem('mobile'));
+          allParams.p_email = safeVal(localStorage.getItem('email'));
+          // allParams.p_district_id = safeVal(localStorage.getItem('district'));
+          allParams.p_created_by_user_id = safeVal(localStorage.getItem('user_id'));
+          allParams.p_issue_id = safeVal($('#typeSelect').val());
+          allParams.p_category_id = safeVal($('#categorySelect').val());
+          allParams.p_subcategory_id = safeVal($('#subCategorySelect').val());
+          allParams.p_priority = safeVal($('#priority').val());
+          allParams.p_description = safeVal($('#description').val());
+          allParams.p_onbehalf_name = safeVal($('#onbehalf_name').val());
+          allParams.p_onbehalf_mobile = safeVal($('#onbehalf_mobile').val());
+          allParams.p_onbehalf_email = safeVal($('#onbehalf_email').val());
+          allParams.p_onbehalf_district_id = safeVal($('#onbehalf_district_id').val());
+
+          // ✅ Declaration
+          // allParams.p_declaration = $('#declarationCheck').is(':checked') ? "Yes" : "No";
+
+          // ✅ Populate dynamic fields (except files)
+          columnsArray.forEach(col => {
+            col = col.trim();
+
+            if (col === "4opt" || col === "4man") {
+              // handled separately
+              return;
+            }
+
+            const $input = $(`#dynamicFieldsContainer [data-col="${col}"]`);
+            if ($input.length) {
+              const paramName = `p${col}`;
+              allParams[paramName] = safeVal($input.val());
+            }
+          });
+
+          // ✅ Bind file params (p4man / p4opt) properly
+          uploadedFiles.forEach(fileObj => {
+            if (fileObj.mandatory) {
+              allParams.p4man = JSON.stringify([fileObj]);
+            } else {
+              allParams.p4opt = JSON.stringify([fileObj]);
+            }
+          });
+
+          const payload = {
+            action: "function_call",
+            function_name: "fn_citizen_create_ticket",
+            params: allParams
+          };
+
+          console.log("Final Payload:", payload);
+
+          // ✅ Submit via AJAX
+          $.ajax({
+            url: `${BASE_API_URL}/commonfunction`,
+            method: 'POST',
+            data: { data: encryptData(payload) },
+            dataType: 'json',
+            success: function (response) {
+              console.log("Form submitted successfully:", response);
+              alert("Submitted successfully.");
+              setTimeout(() => location.reload(), 1000);
+            },
+            error: function (xhr, status, error) {
+              console.error("API Error:", error);
+              alert("Failed to submit form.");
+            }
+          });
+
+        } catch (err) {
+          console.error("Error in submission:", err);
+          alert("Something went wrong while preparing the form data.");
+        }
+      });
+
+
+    });
   </script>
+
 
 </body>
 
