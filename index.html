@@ -782,8 +782,8 @@
 
         const registerPayload = {
           action: "function_call",
-          function_name: "sp_create_citizen_user",
-          params: { p_user_name: name, p_gender: gender, p_mobile: mobile, p_district: district, p_email: email, p_login_id: '1234', p_password_hash: 'abcd' },
+          function_name: "fn_create_citizen_user",
+          params: { p_user_name: name, p_mobile: mobile, p_district: district, p_email: email },
         };
 
         $.ajax({
@@ -808,7 +808,7 @@
           },
           error: function () {
             showErrorToast("Registration API error. Please try again.");
-            window.location.href = "dashboard.html";
+            // window.location.href = "dashboard.html";
           },
         });
       });
