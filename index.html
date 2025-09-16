@@ -481,6 +481,11 @@
         return /^[6-9]\d{9}$/.test(num || "");
       }
 
+      function isValidEmail(email) {
+        // Basic RFC 5322 compliant pattern (simple version for most cases)
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email || "");
+      }
+
       function sanitizeInput(str) {
         return String(str || "").replace(/[<>"'%;()&+]/g, "");
       }
@@ -806,6 +811,9 @@
         if (!name) return showErrorToast("Please enter your name.");
         if (!gender) return showErrorToast("Please select gender.");
         if (!district) return showErrorToast("Please select district.");
+        if (email && !isValidEmail(email)) {
+          return showErrorToast("Please enter a valid email address.");
+        }
         if ($face.find("#declarationCheck").length && !$face.find("#declarationCheck").is(":checked")) {
           return showErrorToast("Please agree to the declaration.");
         }

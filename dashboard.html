@@ -2051,10 +2051,7 @@
           <tr><th>Subcategory</th><td>${ticketDetails.subcategory || 'N/A'}</td></tr>
           <tr><th>Priority</th><td>${ticketDetails.priority || 'N/A'}</td></tr>
           <tr><th>Status</th><td>${ticketDetails.status || 'N/A'}</td></tr>
-          <tr><th>Attachments</th><td>${attachments.length > 0
-                  ? attachments.map(att => `<a href="${att.FilePath}" target="_blank">${att.FileName}</a>`).join(", ")
-                  : "N/A"
-                }</td></tr>
+         
           <tr><th>Remarks</th><td>${ticketDetails.remarks || 'N/A'}</td></tr>
         `);
 
@@ -2102,3 +2099,9 @@
 </body>
 
 </html>
+
+<!-- 
+ <tr><th>Attachments</th><td>${attachments.length > 0
+                  ? attachments.map(att => `<a href="${att.FilePath}" target="_blank">${att.FileName}</a>`).join(", ")
+                  : "N/A"
+                }</td></tr> -->
