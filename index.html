@@ -830,10 +830,14 @@
               localStorage.setItem("userMobile", mobile);
 
               showSuccessToast("Registration successful!");
-              window.location.href = "dashboard.html";
+              // window.location.href = "dashboard.html";
+              localStorage.clear();
+              $(".flip-container").removeClass("flipped");
+              $(".front-face .screen").hide();
+              $(".front-face .screen1").fadeIn();
             } else {
               showErrorToast("Registration failed: " + res.message);
-              window.location.href = "dashboard.html";
+              // window.location.href = "dashboard.html";
             }
           },
           error: function () {
