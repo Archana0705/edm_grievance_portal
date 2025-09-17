@@ -638,110 +638,122 @@
           const nameAttr = `name="${field.paramName}"`;
           const dataColAttr = `data-col="${col}"`;
 
-          // Handle multiple file attachments (optional)
+          // Handle multiple file attachments
           if (col === "4opt" || col === "4man") {
             const wrapperId = `wrapper_${inputId}`;
             const html = `
-                <div id="${wrapperId}" class="mb-3 file-wrapper">
-                  <label>${field.label}</label>
-                  <div class="file-row row align-items-center mb-2">
-                    
-                    <!-- Column 1: Description -->
-                    <div class="col-md-4">
-                      <input type="text" class="form-control file-desc" placeholder="Enter document description">
-                    </div>
-                    
-                    <!-- Column 2: File input -->
-                    <div class="col-md-4">
-                      <input type="file" class="form-control file-input">
-                      <small class="text-muted file-label">File 1</small>
-                    </div>
-                    
-                    <!-- Column 3: Buttons -->
-                    <div class="col-md-4 d-flex gap-2">
-                      <button type="button" class="btn btn-primary btn-sm btn-add-file">Add More</button>
-                      <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
-                    </div>
-                  </div>
-                </div>
-              `;
+    <div id="${wrapperId}" class="mb-3 file-wrapper">
+      <label class="form-label">${field.label}</label>
+
+      <!-- Table-like header -->
+      <div class="row fw-bold border-bottom pb-2 mb-2">
+        <div class="col-md-1">S No</div>
+        <div class="col-md-4">Attachment Description</div>
+        <div class="col-md-4">Attachment <small class="text-muted">(max 2MB each)</small></div>
+        <div class="col-md-3">Actions</div>
+      </div>
+
+      <!-- File rows will be inserted here -->
+      <div class="file-rows">
+        <div class="file-row row align-items-center mb-2">
+          <div class="col-md-1">
+            <span class="fw-bold file-label">1</span>
+          </div>
+          <div class="col-md-4">
+            <input type="text" class="form-control file-desc" placeholder="Enter document description">
+          </div>
+          <div class="col-md-4">
+            <input type="file" class="form-control file-input">
+          </div>
+          <div class="col-md-3">
+            <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Common Add More -->
+      <div class="mt-2">
+        <button type="button" class="btn btn-primary btn-sm btn-add-file">Add More</button>
+      </div>
+    </div>
+  `;
             $container.append(html);
-          } else {
+          }
+          else {
+            // Normal fields
             let fieldHtml = '';
             if (field.type === "textarea") {
               fieldHtml = `
-              <div class="mb-3">
-                <label for="${inputId}">
-                  ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
-                </label>
-                <textarea id="${inputId}" class="form-control" ${nameAttr} ${dataColAttr} ${mandatoryAttr}></textarea>
-              </div>`;
-            }
-
-            else {
+          <div class="mb-3">
+            <label for="${inputId}">
+              ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
+            </label>
+            <textarea id="${inputId}" class="form-control" ${nameAttr} ${dataColAttr} ${mandatoryAttr}></textarea>
+          </div>`;
+            } else {
               fieldHtml = `
-                  <div class="mb-3">
-                    <label for="${inputId}">
-                      ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
-                    </label>
-                    <input id="${inputId}" type="${field.type}" class="form-control" ${nameAttr} ${dataColAttr} ${mandatoryAttr}>
-                  </div>`;
+          <div class="mb-3">
+            <label for="${inputId}">
+              ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
+            </label>
+            <input id="${inputId}" type="${field.type}" class="form-control" ${nameAttr} ${dataColAttr} ${mandatoryAttr}>
+          </div>`;
             }
-
-
-
             $container.append(fieldHtml);
           }
         });
       }
 
-      //   $(document).on('click', '.btn-add-file', function () {
-      //     const $wrapper = $(this).closest('.file-wrapper');
-      //     const currentCount = $wrapper.find('.file-row').length;
-
-      //     if (currentCount >= 3) {
-      //       alert("You can only add up to 3 attachments.");
-      //       return;
-      //     }
-
-      //     const $newRow = $(`
-      //     <div class="file-row d-flex align-items-center mb-2">
-      //         <input type="file" class="form-control me-2 file-input">
-      //         <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
-      //     </div>
-      // `);
-      //     $(this).before($newRow);
-      //   });
-
-      //   $(document).on('click', '.btn-delete-file', function () {
-      //     $(this).closest('.file-row').remove();
-      //   });
-
-
+      // Add new row
       $(document).on("click", ".btn-add-file", function () {
         const $wrapper = $(this).closest(".file-wrapper");
-        const count = $wrapper.find(".file-row").length + 1;
+        const $rowsContainer = $wrapper.find(".file-rows");
+        const rowCount = $rowsContainer.find(".file-row").length + 1;
 
-        if (count > 3) {
-          alert("You can upload maximum 3 files only!");
+        if (rowCount >= 4) {
+          showErrorToast("Maximum 3 attachments allowed.");
           return;
         }
-
         const newRow = `
     <div class="file-row row align-items-center mb-2">
+      <div class="col-md-1">
+        <span class="fw-bold file-label">${rowCount}</span>
+      </div>
       <div class="col-md-4">
-        <input type="text" class="form-control file-desc" placeholder="Enter document description">
+        <input type="text" maxlength="25"  data-max="25" class="form-control file-desc" placeholder="Enter document description">
       </div>
       <div class="col-md-4">
         <input type="file" class="form-control file-input">
-        <small class="text-muted file-label">File ${count}</small>
       </div>
-      <div class="col-md-4 d-flex gap-2">
+      <div class="col-md-3">
         <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
       </div>
     </div>
   `;
-        $wrapper.append(newRow);
+
+        $rowsContainer.append(newRow);
+      });
+
+      // Delete row and renumber
+      $(document).on("click", ".btn-delete-file", function () {
+        const $wrapper = $(this).closest(".file-wrapper");
+        $(this).closest(".file-row").remove();
+
+        // Renumber S No
+        $wrapper.find(".file-row").each(function (i) {
+          $(this).find(".file-label").text(i + 1);
+        });
+      });
+
+      // ✅ Delete handler + re-index serial numbers
+      $(document).on("click", ".btn-delete-file", function () {
+        const $wrapper = $(this).closest(".file-wrapper");
+        $(this).closest(".file-row").remove();
+
+        // Re-index serial numbers
+        $wrapper.find(".file-row").each(function (index) {
+          $(this).find(".file-label").text(index + 1);
+        });
       });
 
       // Delete row
@@ -759,6 +771,30 @@
         const file = this.files[0];
         if (!file) return;
 
+        // ✅ Allowed file types
+        const allowedTypes = [
+          "application/pdf",
+          "image/jpeg",
+          "image/png",
+          "image/jpg"
+        ];
+
+        const maxSize = 2 * 1024 * 1024;
+
+        // 🔹 Validate file type
+        if (!allowedTypes.includes(file.type)) {
+          showErrorToast("Invalid file type! Only PDF, JPEG, and PNG files are allowed.");
+          $(this).val(""); // reset input
+          return;
+        }
+
+        // 🔹 Validate file size
+        if (file.size > maxSize) {
+          showErrorToast("File size exceeds 2MB limit!");
+          $(this).val(""); // reset input
+          return;
+        }
+
         const sessionId = localStorage.getItem("session_id") || "session_id_00000";
         const userId = localStorage.getItem("user_id");
 
@@ -769,7 +805,7 @@
           params: {
             p_session_id: sessionId,
             p_file_name: file.name,
-            p_file_path: `/uploads/${file.name}`,  // backend will replace with actual path
+            p_file_path: `/uploads/${file.name}`, // backend will replace with actual path
             p_mime_type: file.type,
             p_uploaded_by: userId
           }
@@ -787,11 +823,11 @@
           processData: false,
           success: function (response) {
             console.log("Upload success:", response);
-            alert("File uploaded successfully!");
+            showSuccessToast("File uploaded successfully!");
           },
           error: function (xhr, status, error) {
             console.error("Upload failed:", error);
-            alert("File upload failed!");
+            showErrorToast("File upload failed!");
           }
         });
       });
