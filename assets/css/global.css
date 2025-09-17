@@ -1,0 +1,11 @@
+.dataTables_paginate a {
+    text-decoration: none !important;
+    border: 1px solid grey;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+td {
+    text-align: left;
+}
