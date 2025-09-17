@@ -262,26 +262,17 @@
       <button class="btn btn-light" id="sidebarToggle">
         <i class="bi bi-list fs-4"></i>
       </button>
-      <span class="fw-bold ms-3 fs-5">Operator Dashboard</span>
+      <span class="fw-bold ms-3 fs-5">My Dashboard</span>
       <div class="ms-auto d-flex align-items-center gap-3">
         <span id="currentDateTime" class="me-3"></span>
-        <div class="dropdown">
-          <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
-            <i class="bi bi-person-circle fs-4"></i> <span class="d-none d-lg-inline fw-semibold">John</span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-            <li><a class="dropdown-item" href="profile.html">Profile</a></li>
-            <li><a class="dropdown-item" href="index.html">Logout</a></li>
-          </ul>
-        </div>
+        <div id="globalProfileDropdown"></div>
       </div>
     </div>
   </nav>
   <!-- Sidebar -->
   <div id="sidebar">
     <a href="dashboard.html"><i class="bi bi-house"></i><span>Dashboard</span></a>
-    <a href="report-issue-ajax.html"><i class="bi bi-file-earmark-text"></i><span>Report Issue - Self</span></a>
-    <a href="raise-ticket-behalf.html"><i class="bi bi-eye"></i><span>Report Issue - Behalf</span></a>
+    <a href="report-global-page.html"><i class="bi bi-file-earmark-text"></i><span>Report Issue</span></a>
     <a href="profile.html"><i class="bi bi-person"></i><span>Profile</span></a>
     <a href="faq.html" class="active"><i class="bi bi-question-circle"></i><span>FAQ</span></a>
   </div>
@@ -362,6 +353,7 @@
   <script src="assets/js/jquery-3.7.1.min.js"></script>
   <script src="assets/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/aos.js"></script>
+  <script src="assets/js/globalProfileDropdown.js"></script>
 
   <script>
     // Sidebar toggle
