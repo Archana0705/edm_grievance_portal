@@ -403,9 +403,9 @@
                       </select>
                       <input type="text" id="mobileField" class="form-control mb-2" readonly>
                       <select id="districtField" class="form-select mb-2" required>
-                        <option value="">Select District</option>
+                        <!-- <option value="">Select District</option>
                         <option>Coimbatore</option>
-                        <option>Madurai</option>
+                        <option>Madurai</option> -->
                       </select>
                       <input type="email" id="emailField" class="form-control mb-3"
                         placeholder="Enter your Email (optional)">
@@ -529,10 +529,44 @@
         return /^[6-9]\d{9}$/.test(num || "");
       }
 
+      function isValidEmail(email) {
+        // Basic RFC 5322 compliant pattern (simple version for most cases)
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email || "");
+      }
+
       function sanitizeInput(str) {
         return String(str || "").replace(/[<>"'%;()&+]/g, "");
       }
 
+      const payload = {
+        action: "function_call",
+        function_name: "fn_district_list",
+        params: {}
+      };
+      function loadDistricts() {
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: 'json',
+          success: function (response) {
+            const decrypted = decryptData(response.data);
+            const $dropdown = $("#districtField");
+            $dropdown.empty().append('<option value="" class="placeholder">--Select District--</option>');
+
+            decrypted.forEach(item => {
+              $dropdown.append(`<option value="${item.id}">${item.district}</option>`);
+            });
+
+          },
+          error: function () {
+            alert('Failed to load districts. Please try again.');
+          }
+        });
+      }
+
+      // Call function on page load
+      loadDistricts();
       // 👉 Init
       $(".front-face .screen, .back-face .screen").hide();
       $(".front-face .screen1, .back-face .screen1").show();
@@ -759,6 +793,7 @@
                 localStorage.setItem("login_id", user.login_id || "");
                 localStorage.setItem("role_id", user.role_id || "");
                 localStorage.setItem("district", user.district || "");
+                localStorage.setItem("district_id", user.district_id || "");
 
                 showSuccessToast("Login successful!");
                 setTimeout(() => window.location.href = "dashboard.html", 1000);
@@ -824,6 +859,9 @@
         if (!name) return showErrorToast("Please enter your name.");
         if (!gender) return showErrorToast("Please select gender.");
         if (!district) return showErrorToast("Please select district.");
+        if (email && !isValidEmail(email)) {
+          return showErrorToast("Please enter a valid email address.");
+        }
         if ($face.find("#declarationCheck").length && !$face.find("#declarationCheck").is(":checked")) {
           return showErrorToast("Please agree to the declaration.");
         }
@@ -848,10 +886,14 @@
               localStorage.setItem("userMobile", mobile);
 
               showSuccessToast("Registration successful!");
-              window.location.href = "dashboard.html";
+              // window.location.href = "dashboard.html";
+              localStorage.clear();
+              $(".flip-container").removeClass("flipped");
+              $(".front-face .screen").hide();
+              $(".front-face .screen1").fadeIn();
             } else {
               showErrorToast("Registration failed: " + res.message);
-              window.location.href = "dashboard.html";
+              // window.location.href = "dashboard.html";
             }
           },
           error: function () {

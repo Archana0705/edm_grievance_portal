@@ -32,9 +32,32 @@ window.showErrorToast = function (message) {
     }
 };
 
+// window.loadToastLayout = function (callback) {
+//     const currentPath = window.location.pathname;
+//     const isInEdmPortal = currentPath.includes("/edm_grievance_portal/");
+//     const toastPath = isInEdmPortal
+//         ? "assets/partials/toastLayout.html"
+//         : "/assets/partials/toastLayout.html";
+
+//     fetch(toastPath)
+//         .then(response => response.text())
+//         .then(html => {
+//             const div = document.createElement('div');
+//             div.innerHTML = html;
+//             document.body.appendChild(div);
+//             console.log('Toast layout loaded.');
+//             if (typeof callback === 'function') {
+//                 callback();
+//             }
+//         })
+//         .catch(err => console.error('Toast layout load failed:', err));
+// };
+
 window.loadToastLayout = function (callback) {
     const currentPath = window.location.pathname;
-    const isInEdmPortal = currentPath.includes("/edm_grievance_portal/");
+    // Fix: match the actual folder name
+    const isInEdmPortal = currentPath.includes("/edm-grievance-portal/");
+
     const toastPath = isInEdmPortal
         ? "assets/partials/toastLayout.html"
         : "/assets/partials/toastLayout.html";
