@@ -1169,7 +1169,7 @@
               $("#closedCount").eq(4).text(data.SelfTickets.Closed);
 
               // --- Bind On-Behalf Tickets --- tab count value  
-              $("#behalfallCount").eq(0).text(data.SelfTickets.Total);
+              $("#behalfallCount").eq(0).text(data.OnBehalfTickets.Total);
               $("#behalfinProgressCount").eq(0).text(data.OnBehalfTickets.InProgress);
               $("#behalfreturnedCount").eq(1).text(data.OnBehalfTickets.Returned);
               $("#behalfresolvedCount").eq(2).text(data.OnBehalfTickets.Resolved);
@@ -1402,7 +1402,7 @@
           <button class="btn btn-sm btn-info viewTicketBtn" 
                 data-ticket='${JSON.stringify(data)}' 
                 data-ticketid='${data.TicketId || ''}'>
-            <i class="bi bi-eye-fill text-white"></i>
+           View</i>
           </button>
         </td>` : ""
                   }

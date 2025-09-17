@@ -245,46 +245,55 @@
 </head>
 
 <body>
-  <!-- Header -->
-  <nav class="navbar navbar-expand-lg fixed-top">
-    <div class="container-fluid d-flex align-items-center">
-      <button class="btn btn-light" id="sidebarToggle">
-        <i class="bi bi-list fs-4"></i>
-      </button>
-      <span class="fw-bold ms-3 fs-5">Operator Dashboard</span>
-      <div class="ms-auto d-flex align-items-center gap-3">
-        <span id="currentDateTime" class="me-3"></span>
-        <!-- <div class="dropdown">
-          <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
-            <i class="bi bi-person-circle fs-4"></i> <span class="d-none d-lg-inline fw-semibold">John</span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-            <li><a class="dropdown-item" href="profile.html">Profile</a></li>
-            <li><a class="dropdown-item" href="index.html">Logout</a></li>
-          </ul>
-        </div> -->
-        <div id="globalProfileDropdown"></div>
 
-      </div>
-    </div>
-  </nav>
-  <!-- Sidebar -->
-  <div id="sidebar">
-    <a href="dashboard.html"><i class="bi bi-house"></i><span>Dashboard</span></a>
-    <a href="report-issue-ajax.html"><i class="bi bi-file-earmark-text"></i><span>Report Issue - Self</span></a>
-    <a href="raise-ticket-behalf.html" class="active"><i class="bi bi-eye"></i><span>Report Issue - Behalf</span></a>
-    <a href="profile.html"><i class="bi bi-person"></i><span>Profile</span></a>
-    <a href="faq.html"><i class="bi bi-question-circle"></i><span>FAQ</span></a>
-  </div>
+
   <!-- Main Content -->
-  <div id="mainContent">
+  <div class="card p-4" data-aos="fade-up">
+    <!-- Step 1: Mobile OTP Verification -->
+    <!-- <div id="step1">
+      <h4 class="step-title mb-3">Citizen Verification - Behalf</h4>
+      <div class="row">
+        <div class="mb-3 col-lg-4">
+          <label class="form-label">Relationship Type</label>
+          <select id="genderField" class="form-select mb-2">
+            <option selected="">Select Relationship Type</option>
+            <option>Sister</option>
+            <option>Friend</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="mb-3 col-md-4">
+          <label class="form-label">Mobile Number</label>
+          <input type="text" class="form-control" id="citizenMobile" placeholder="Enter mobile number" maxlength="10"
+            pattern="^[6-9]\d{9}$" title="Enter a valid 10-digit mobile number starting with 6-9">
+        </div>
+        <div class="mb-3 col-md-4 d-flex align-items-center">
+          <button class="btn btn-primary mt-4" id="sendOtpBtn">Send OTP</button>
+        </div>
+      </div>
 
-    <div class="container">
-      <div class="card p-4" data-aos="fade-up">
-        <!-- Step 1: Mobile OTP Verification -->
-        <div id="step1">
-          <h4 class="step-title mb-3">Citizen Verification - Behalf</h4>
+      <div id="otpSection" class="hidden mt-3 col-md-4">
+        <label class="form-label">Enter OTP</label>
+        <input type="text" class="form-control" id="citizenOtp" placeholder="Enter 6-digit OTP">
+        <button class="btn btn-success mt-2" id="verifyOtpBtn">Verify OTP</button>
+        <p id="otpTimer" class="text-muted small mt-2"></p>
+      </div>
+      <div class="success-check text-center mt-3" id="otpSuccess">✔</div>
+    </div> -->
+
+    <!-- Step 2: Ticket Form -->
+    <div id="step1" class="">
+      <!-- <h4 class="step-title mb-3">Raise Ticket (On Behalf of Citizen)</h4> -->
+
+
+      <!-- <h2 class="page-title mb-2"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i> Report an Issue
+        (On Behalf of Citizen)</h2> -->
+      <div class="form-section">
+        <!-- Main Form -->
+        <form id="issueForm" class="needs-validation" novalidate>
           <div class="row">
+
+            <!-- Citizen Details -->
             <div class="mb-3 col-lg-4">
               <label class="form-label">Relationship Type</label>
               <select id="genderField" class="form-select mb-2">
@@ -294,137 +303,98 @@
                 <option>Other</option>
               </select>
             </div>
-            <div class="mb-3 col-md-4">
-              <label class="form-label">Mobile Number</label>
-              <input type="text" class="form-control" id="citizenMobile" placeholder="Enter mobile number"
-                maxlength="10" pattern="^[6-9]\d{9}$" title="Enter a valid 10-digit mobile number starting with 6-9">
+            <div class="mb-3 col-lg-4">
+              <label class="form-label">Citizen Name</label>
+              <input type="text" class="form-control" id="citizenName" placeholder="Enter Citizen Name">
             </div>
-            <div class="mb-3 col-md-4 d-flex align-items-center">
-              <button class="btn btn-primary mt-4" id="sendOtpBtn">Send OTP</button>
+            <!-- <div class="mb-3 col-lg-4">
+              <label class="form-label">Mobile</label>
+              <input type="text" class="form-control" value="(Verified Mobile)" readonly>
+            </div> -->
+            <div class="mb-3 col-lg-4">
+              <label class="form-label">Gender</label>
+              <select id="genderField" class="form-select mb-2">
+                <option selected="">Select Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <!-- <div class="mb-3 col-lg-4">
+              <label class="form-label">District</label>
+              <select id="districtField" class="form-select mb-2">
+                <option selected="">Select District</option>
+                <option>Coimbatore</option>
+                <option>Madurai</option>
+              </select>
+            </div> -->
+            <div class="mb-3 col-lg-4">
+              <label class="form-label">Email</label>
+              <input type="email" id="emailField" class="form-control mb-3" placeholder="Enter your Email">
+            </div>
+
+            <div class="clear-both"></div>
+
+            <div class="mb-3 col-lg-4">
+              <label>Type</label>
+              <select id="typeSelectBehalf" class="form-control">
+                <option value="">Select Type</option>
+              </select>
+            </div>
+            <div class="mb-3 col-lg-4">
+              <label>Category</label>
+              <select id="categorySelectBehalf" class="form-control">
+                <option value="">Select Category</option>
+              </select>
+            </div>
+            <div class="mb-3 col-lg-4">
+              <label>Sub-Category</label>
+              <select id="subCategorySelectBehalf" class="form-control">
+                <option value="">Select Sub-Category</option>
+              </select>
+            </div>
+
+          </div>
+          <!-- Dynamic Form -->
+          <div id="dynamicFieldsContainerBehalf" class="mt-4"></div>
+
+          <!-- Declaration Component -->
+          <div class="alert alert-light border rounded-3 shadow-sm p-3 mb-4" role="alert">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-info-circle-fill text-primary fs-4 me-3"></i>
+              <div>
+                <h6 class="fw-bold mb-2">Declaration</h6>
+                <p class="mb-2 small text-muted">
+                  I hereby declare that the information provided in this portal is true and correct
+                  to the best of my knowledge. Any false information may lead to rejection of the grievance.
+                </p>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="declarationCheck">
+                  <label class="form-check-label small" for="declarationCheck">
+                    I agree to the terms of this declaration
+                  </label>
+                </div>
+                <span class="text-danger small" id="declarationError" style="display:none;"></span>
+
+              </div>
             </div>
           </div>
 
-          <div id="otpSection" class="hidden mt-3 col-md-4">
-            <label class="form-label">Enter OTP</label>
-            <input type="text" class="form-control" id="citizenOtp" placeholder="Enter 6-digit OTP">
-            <button class="btn btn-success mt-2" id="verifyOtpBtn">Verify OTP</button>
-            <p id="otpTimer" class="text-muted small mt-2"></p>
+
+          <!-- Submit -->
+          <div class="col-lg-4 d-flex align-items-center">
+            <button type="submit" id="submitBtn" class="btn btn-primary px-4 py-2">
+              <i class="bi bi-send-fill me-2"></i> Submit Issue
+            </button>
           </div>
-          <div class="success-check text-center mt-3" id="otpSuccess">✔</div>
-        </div>
-
-        <!-- Step 2: Ticket Form -->
-        <div id="step2" class="hidden mt-4">
-          <!-- <h4 class="step-title mb-3">Raise Ticket (On Behalf of Citizen)</h4> -->
+        </form>
 
 
-          <h2 class="page-title mb-2"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i> Report an Issue
-            (On Behalf of Citizen)</h2>
-          <div class="form-section">
-            <!-- Main Form -->
-            <form id="issueForm" class="needs-validation" novalidate>
-              <div class="row g-3">
-
-                <!-- Citizen Details -->
-                <div class="mb-3 col-lg-4">
-                  <label class="form-label">Citizen Name</label>
-                  <input type="text" class="form-control" id="citizenName" placeholder="Enter Citizen Name">
-                </div>
-                <div class="mb-3 col-lg-4">
-                  <label class="form-label">Mobile</label>
-                  <input type="text" class="form-control" value="(Verified Mobile)" readonly>
-                </div>
-                <div class="mb-3 col-lg-4">
-                  <label class="form-label">Gender</label>
-                  <select id="genderField" class="form-select mb-2">
-                    <option selected="">Select Gender</option>
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Other</option>
-                  </select>
-                </div>
-                <div class="mb-3 col-lg-4">
-                  <label class="form-label">District</label>
-                  <select id="districtField" class="form-select mb-2">
-                    <option selected="">Select District</option>
-                    <option>Coimbatore</option>
-                    <option>Madurai</option>
-                  </select>
-                </div>
-                <div class="mb-3 col-lg-4">
-                  <label class="form-label">Email</label>
-                  <input type="email" id="emailField" class="form-control mb-3" placeholder="Enter your Email">
-                </div>
-
-                <div class="clear-both"></div>
-
-                <div class="mb-3 col-lg-4">
-                  <label>Type</label>
-                  <select id="typeSelect" class="form-control">
-                    <option value="">Select Type</option>
-                  </select>
-                </div>
-                <div class="mb-3 col-lg-4">
-                  <label>Category</label>
-                  <select id="categorySelect" class="form-control">
-                    <option value="">Select Category</option>
-                  </select>
-                </div>
-                <div class="mb-3 col-lg-4">
-                  <label>Sub-Category</label>
-                  <select id="subCategorySelect" class="form-control">
-                    <option value="">Select Sub-Category</option>
-                  </select>
-                </div>
-
-              </div>
-              <!-- Dynamic Form -->
-              <div id="dynamicFieldsContainer" class="mt-4"></div>
-
-
-              <!-- Declaration Component -->
-              <div class="alert alert-light border rounded-3 shadow-sm p-3 mb-4" role="alert">
-                <div class="d-flex align-items-start">
-                  <i class="bi bi-info-circle-fill text-primary fs-4 me-3"></i>
-                  <div>
-                    <h6 class="fw-bold mb-2">Declaration</h6>
-                    <p class="mb-2 small text-muted">
-                      I hereby declare that the information provided in this portal is true and correct
-                      to the best of my knowledge. Any false information may lead to rejection of the grievance.
-                    </p>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="declarationCheck">
-                      <label class="form-check-label small" for="declarationCheck">
-                        I agree to the terms of this declaration
-                      </label>
-                    </div>
-                    <span class="text-danger small" id="declarationError" style="display:none;"></span>
-
-                  </div>
-                </div>
-              </div>
-
-
-              <!-- Submit -->
-              <div class="col-lg-4 d-flex align-items-center">
-                <button type="submit" id="submitBtn" class="btn btn-primary px-4 py-2">
-                  <i class="bi bi-send-fill me-2"></i> Submit Issue
-                </button>
-              </div>
-            </form>
-
-
-          </div>
-        </div>
       </div>
-
-
     </div>
   </div>
-  <!-- Footer -->
-  <footer>
-    &copy; 2025 My Dashboard. All rights reserved.
-  </footer>
+
+
   <div class="toast-container">
     <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive"
       aria-atomic="true">
@@ -437,19 +407,7 @@
       </div>
     </div>
   </div>
-  <!-- Bootstrap JS -->
 
-  <script src="assets/js/jquery-3.7.1.min.js"></script>
-  <!-- <script src="assets/js/bootstrap.bundle.min.js"></script> -->
-  <script src="assets/js/aos.js"></script>
-  <script src="assets/js/dataTableUtil.js"></script>
-  <script src="assets/js/crypto-js.min.js"></script>
-  <script src="assets/js/global.js"></script>
-  <script src="assets/js/encrypt_decrypt.js"></script>
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/js/toastUtil.js"></script>
-  <script src="assets/js/apiConfig.js"></script>
-  <script src="assets/js/globalProfileDropdown.js"></script>
   <script>
     // Sidebar toggle
 
@@ -487,6 +445,8 @@
   </script>
   <script>
     AOS.init();
+    const roleId = localStorage.getItem("role_id");
+
 
     const payload = {
       action: "function_call",
@@ -545,8 +505,220 @@
       });
     }
 
-    // Call function on page load
     loadDistricts();
+
+    function loadIssueType() {
+      const payload = {
+        action: "function_call",
+        function_name: "fn_issue_type",
+        params: {}
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(payload) },
+        dataType: "json",
+        success(response) {
+          const decrypted = decryptData(response.data);
+          const $dropdown = $("#typeSelectBehalf");
+          $dropdown.empty().append('<option value="" class="placeholder">--Select Type--</option>');
+
+          decrypted.forEach(item => {
+            $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
+          });
+        }
+      });
+    }
+
+    loadIssueType();
+
+    // Category dropdown
+    $('#typeSelectBehalf').on('change', function () {
+      debugger
+      const selectedType = $(this).val();
+      const operatorPayload = {
+        action: "function_call",
+        function_name: "fn_issue_category",
+        params: { type: selectedType || '', roleid: roleId }
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: 'POST',
+        data: { data: encryptData(operatorPayload) },
+        dataType: 'json',
+        success(response) {
+          const decrypted = decryptData(response.data);
+          const $dropdown = $('#categorySelectBehalf');
+          $dropdown.empty().append('<option value="" class="placeholder">--Select Category--</option>');
+
+          decrypted.forEach(item => {
+            $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
+          });
+        }
+      });
+    });
+
+    // Sub Category dropdown + field builder
+    $('#categorySelectBehalf').on('change', function () {
+      const selectedCategory = $(this).val();
+      const operatorPayload = {
+        action: "function_call",
+        function_name: "fn_issue_subcategory",
+        params: { type: selectedCategory || '', roleid: roleId }
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: 'POST',
+        data: { data: encryptData(operatorPayload) },
+        dataType: 'json',
+        success(response) {
+          const decrypted = decryptData(response.data);
+          const $dropdown = $('#subCategorySelectBehalf');
+          $dropdown.empty().append('<option value="" class="placeholder">--Select Sub Category--</option>');
+
+          decrypted.forEach(item => {
+            $dropdown.append(`<option value="${item.id}" data-columns="${item.relavant_columns || ''}">${item.issue_name}</option>`);
+          });
+
+          // Clear dynamic fields initially
+          $('#dynamicFieldsContainerBehalf').empty();
+        }
+      });
+    });
+
+
+    $('#subCategorySelectBehalf').on('change', function () {
+      const selectedOption = $(this).find('option:selected');
+      const columnsData = selectedOption.attr('data-columns'); // e.g., "3man,4opt,7man"
+      generateDynamicFields(columnsData);
+    });
+
+    const fieldMap = {
+      "1man": { label: "CAN Number (mandatory)", type: "text", required: true },
+      "1opt": { label: "CAN Number (optional)", type: "text", required: false },
+      "2man": { label: "Application number (mandatory)", type: "text", required: true },
+      "2opt": { label: "Application number (optional)", type: "text", required: false },
+      "3man": { label: "Description of changes and reason (mandatory)", type: "textarea", required: true },
+      "3opt": { label: "Description of the issue (Optional)", type: "textarea", required: false },
+      "4man": { label: "Multiple Attach supporting document (mandatory)", type: "file", required: true, multiple: true },
+      "4opt": { label: "Multiple Attach supporting document (optional)", type: "file", required: false, multiple: true },
+      "5man": { label: "Supporting document description (mandatory, short text)", type: "textarea", required: true },
+      "5opt": { label: "Multiple Supporting document description (optional, short text)", type: "textarea", required: false },
+      "6man": { label: "Enter eSevai log in ID (mandatory)", type: "text", required: true },
+      "7man": { label: "Enter eSevai centre ID against whom the grievance is lodged (mandatory)", type: "text", required: true },
+      "8man": { label: "Transaction number (mandatory)", type: "text", required: true },
+      "9man": { label: "Enter reason for ID block (mandatory)", type: "textarea", required: true },
+      "10opt": { label: "Enter name of official (optional)", type: "text", required: false }
+    };
+
+    function generateDynamicFields(columnsString) {
+      const $container = $('#dynamicFieldsContainerBehalf');
+      $container.empty();
+
+      if (!columnsString) {
+        $container.append('<p>No additional fields required for this subcategory.</p>');
+        return;
+      }
+
+      const columnsArray = columnsString.split(',');
+
+      columnsArray.forEach((col, index) => {
+        col = col.trim();
+        const field = fieldMap[col];
+        if (!field) return;
+
+        const inputId = `field_${col}_${index}`;
+        const isMandatory = col.endsWith('man');
+        const mandatoryAttr = isMandatory ? 'data-mandatory="true"' : '';
+        const nameAttr = `name="${field.paramName}"`;
+        const dataColAttr = `data-col="${col}"`;
+
+        // Handle multiple file attachments (optional)
+        if (col === "4opt") {
+          const wrapperId = `wrapper_${inputId}`;
+          const html = `
+                <div id="${wrapperId}" class="mb-3 file-wrapper">
+                    <label>${field.label}</label>
+                    <div class="file-row d-flex align-items-center mb-2">
+                        <input type="file" class="form-control me-2 file-input">
+                        <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm btn-add-file">Add More</button>
+                </div>
+            `;
+          $container.append(html);
+        } else {
+          let fieldHtml = '';
+          if (field.type === "textarea") {
+            fieldHtml = `
+                    <div class="mb-3">
+                        <label for="${inputId}">${field.label}</label>
+                        <textarea id="${inputId}" class="form-control" ${nameAttr} ${dataColAttr} ${mandatoryAttr}></textarea>
+                    </div>`;
+          } else {
+            fieldHtml = `
+                    <div class="mb-3">
+                        <label for="${inputId}">${field.label}</label>
+                        <input id="${inputId}" type="${field.type}" class="form-control" ${nameAttr} ${dataColAttr} ${mandatoryAttr}>
+                    </div>`;
+          }
+          $container.append(fieldHtml);
+        }
+      });
+    }
+
+    $(document).on('click', '.btn-add-file', function () {
+      const $wrapper = $(this).closest('.file-wrapper');
+      const currentCount = $wrapper.find('.file-row').length;
+
+      if (currentCount >= 3) {
+        alert("You can only add up to 3 attachments.");
+        return;
+      }
+
+      const $newRow = $(`
+        <div class="file-row d-flex align-items-center mb-2">
+            <input type="file" class="form-control me-2 file-input">
+            <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
+        </div>
+    `);
+      $(this).before($newRow);
+    });
+
+    $(document).on('click', '.btn-delete-file', function () {
+      $(this).closest('.file-row').remove();
+    });
+
+
+    $(document).on('input', '#dynamicFieldsContainerBehalf input[type="text"], #dynamicFieldsContainerBehalf textarea, #dynamicFieldsContainerBehalf select', function () {
+      const $this = $(this);
+      if ($this.data('mandatory') && $this.val().trim() === '') {
+        $this.addClass('is-invalid');
+        $this.next('.error-msg').remove();
+        $this.after('<span class="error-msg text-danger">This field is required</span>');
+      } else {
+        $this.removeClass('is-invalid');
+        $this.next('.error-msg').remove();
+      }
+    });
+
+    $(document).on('input change', '#dynamicFieldsContainerBehalf input, #dynamicFieldsContainerBehalf textarea, #dynamicFieldsContainerBehalf select', function () {
+      if ($(this).val().trim() !== '') {
+        $(this).removeClass('is-invalid');
+        $(this).next('.error-msg').remove();
+      }
+    });
+
+    // 2. Mandatory selects outside dynamic fields
+    $('#typeSelectBehalf, #categorySelectBehalf, #subCategorySelectBehalf').on('change', function () {
+      if ($(this).val() && $(this).val().trim() !== '') {
+        $(this).removeClass('is-invalid');
+        $(this).next('.error-msg').remove();
+      }
+    });
 
     function isValidMobile(num) {
       return /^[6-9]\d{9}$/.test(num || "");
@@ -562,215 +734,16 @@
       return regex.test(email);
     }
 
-    // OTP flow simulation
-    let otpTimer;
-    $('#sendOtpBtn').click(function () {
-      debugger
-      const $mobile = $('#citizenMobile');
-      const mobile = sanitizeInput($mobile.val());
-
-      if (!isValidMobile(mobile)) {
-        $mobile.addClass("is-invalid");
-        showErrorToast("Please enter a valid 10-digit mobile number.");
-
-        // ✅ Remove error highlight after 3 seconds
-        setTimeout(() => {
-          $mobile.removeClass("is-invalid");
-        }, 1000);
-
-        return;
-      }
-
-      $mobile.removeClass("is-invalid");
-
-
-      $('#otpSection').removeClass('hidden');
-      let timeLeft = 120; // 2 min timer
-      $('#otpTimer').text("OTP sent. Expires in 120s");
-      otpTimer = setInterval(function () {
-        timeLeft--;
-        $('#otpTimer').text("OTP sent. Expires in " + timeLeft + "s");
-        if (timeLeft <= 0) { clearInterval(otpTimer); $('#otpTimer').text("OTP expired. Please resend."); }
-      }, 1000);
-    });
-
-    $('#verifyOtpBtn').click(function () {
-      let otp = $('#citizenOtp').val().trim();
-
-      if (otp === "123456") { // ✅ Demo OTP validation
-        clearInterval(otpTimer);
-        $('#otpSuccess').fadeIn();
-
-        let mobile = $('#citizenMobile').val();
-        $('input[readonly][value="(Verified Mobile)"]').val(mobile);
-
-        setTimeout(function () {
-          $('#step1').hide();
-          $('#step2').removeClass('hidden').hide().fadeIn();
-        }, 1000);
-
-      } else {
-        $('#citizenOtp').addClass("is-invalid"); // Bootstrap red border
-        showErrorToast("Invalid OTP. Please try again.");
-      }
-    });
 
   </script>
 
   <script>
 
-    const maxFiles = 3;
-
-    function updateFileRowButtons() {
-      const $rows = $(".file-group-wrapper .file-group");
-      const total = $rows.length;
-
-      $rows.each(function (index) {
-        const $row = $(this);
-        const $btnCol = $row.find(".col-md-3");
-        $btnCol.empty();
-
-        if (index === 0 && total === 1) {
-          $btnCol.append(`
-          <button type="button" class="btn btn-outline-primary add-file-row w-100">
-            <i class="bi bi-plus-circle"></i> Add
-          </button>
-        `);
-        } else if (index === total - 1 && total < maxFiles) {
-          $btnCol.append(`
-          <div class="d-flex w-100 gap-2">
-            <button type="button" class="btn btn-outline-primary add-file-row flex-fill">
-              <i class="bi bi-plus-circle"></i> Add
-            </button>
-            <button type="button" class="btn btn-outline-danger remove-file-row flex-fill">
-              <i class="bi bi-dash-circle"></i> Remove
-            </button>
-          </div>
-        `);
-        } else if (index === total - 1 && total === maxFiles) {
-          $btnCol.append(`
-          <button type="button" class="btn btn-outline-danger remove-file-row w-100">
-            <i class="bi bi-dash-circle"></i> Remove
-          </button>
-        `);
-        } else {
-          $btnCol.append(`
-          <div class="d-flex w-100 gap-2">
-            <button type="button" class="btn btn-outline-primary add-file-row flex-fill">
-              <i class="bi bi-plus-circle"></i> Add
-            </button>
-            <button type="button" class="btn btn-outline-danger remove-file-row flex-fill">
-              <i class="bi bi-dash-circle"></i> Remove
-            </button>
-          </div>
-        `);
-        }
-      });
-    }
-
-    $(document).on("click", ".add-file-row", function () {
-      const total = $(".file-group-wrapper .file-group").length;
-      if (total < maxFiles) {
-        const newRow = `
-        <div class="row g-2 align-items-end file-group mb-2">
-          <div class="col-md-5">
-            <label class="form-label fw-semibold">Attach Supporting Documents *</label>
-            <input type="file" class="form-control" required multiple>
-            <small class="text-danger">* Max. file size allowed is 1 MB</small>
-          </div>
-          <div class="col-md-3"></div>
-        </div>`;
-        $(".file-group-wrapper").append(newRow);
-        updateFileRowButtons();
-      }
-    });
-
-    $(document).on("click", ".remove-file-row", function () {
-      $(this).closest(".file-group").remove();
-      updateFileRowButtons();
-    });
 
     // ---------------- API CALLS ----------------
     $(document).ready(function () {
       const roleId = localStorage.getItem("role_id");
 
-      // Type dropdown
-      const payload = {
-        action: "function_call",
-        function_name: "fn_issue_type",
-        params: {}
-      };
-
-      $.ajax({
-        url: `${BASE_API_URL}/commonfunction`,
-        method: "POST",
-        data: { data: encryptData(payload) },
-        dataType: "json",
-        success(response) {
-          const decrypted = decryptData(response.data);
-          const $dropdown = $("#typeSelect");
-          $dropdown.empty().append('<option value="" class="placeholder">--Select Type--</option>');
-
-          decrypted.forEach(item => {
-            $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
-          });
-        }
-      });
-
-      // Category dropdown
-      $('#typeSelect').on('change', function () {
-        const selectedType = $(this).val();
-        const operatorPayload = {
-          action: "function_call",
-          function_name: "fn_issue_category",
-          params: { type: selectedType || '', roleid: roleId }
-        };
-
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: 'POST',
-          data: { data: encryptData(operatorPayload) },
-          dataType: 'json',
-          success(response) {
-            const decrypted = decryptData(response.data);
-            const $dropdown = $('#categorySelect');
-            $dropdown.empty().append('<option value="" class="placeholder">--Select Category--</option>');
-
-            decrypted.forEach(item => {
-              $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
-            });
-          }
-        });
-      });
-
-      // Sub Category dropdown + field builder
-      $('#categorySelect').on('change', function () {
-        const selectedCategory = $(this).val();
-        const operatorPayload = {
-          action: "function_call",
-          function_name: "fn_issue_subcategory",
-          params: { type: selectedCategory || '', roleid: roleId }
-        };
-
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: 'POST',
-          data: { data: encryptData(operatorPayload) },
-          dataType: 'json',
-          success(response) {
-            const decrypted = decryptData(response.data);
-            const $dropdown = $('#subCategorySelect');
-            $dropdown.empty().append('<option value="" class="placeholder">--Select Sub Category--</option>');
-
-            decrypted.forEach(item => {
-              $dropdown.append(`<option value="${item.id}" data-columns="${item.relavant_columns || ''}">${item.issue_name}</option>`);
-            });
-
-            // Clear dynamic fields initially
-            $('#dynamicFieldsContainer').empty();
-          }
-        });
-      });
 
 
       const fieldMap = {
@@ -792,118 +765,6 @@
       };
 
 
-      $('#subCategorySelect').on('change', function () {
-        const selectedOption = $(this).find('option:selected');
-        const columnsData = selectedOption.attr('data-columns'); // e.g., "3man,4opt,7man"
-        generateDynamicFields(columnsData);
-      });
-
-
-      function generateDynamicFields(columnsString) {
-        const $container = $('#dynamicFieldsContainer');
-        $container.empty();
-
-        if (!columnsString) {
-          $container.append('<p>No additional fields required for this subcategory.</p>');
-          return;
-        }
-
-        const columnsArray = columnsString.split(',');
-
-        columnsArray.forEach((col, index) => {
-          col = col.trim();
-          const field = fieldMap[col];
-          if (!field) return;
-
-          const inputId = `field_${col}_${index}`;
-          const isMandatory = col.endsWith('man');
-          const mandatoryAttr = isMandatory ? 'data-mandatory="true"' : '';
-          const nameAttr = `name="${field.paramName}"`;
-          const dataColAttr = `data-col="${col}"`;
-
-          // Handle multiple file attachments (optional)
-          if (col === "4opt") {
-            const wrapperId = `wrapper_${inputId}`;
-            const html = `
-                <div id="${wrapperId}" class="mb-3 file-wrapper">
-                    <label>${field.label}</label>
-                    <div class="file-row d-flex align-items-center mb-2">
-                        <input type="file" class="form-control me-2 file-input">
-                        <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
-                    </div>
-                    <button type="button" class="btn btn-primary btn-sm btn-add-file">Add More</button>
-                </div>
-            `;
-            $container.append(html);
-          } else {
-            let fieldHtml = '';
-            if (field.type === "textarea") {
-              fieldHtml = `
-                    <div class="mb-3">
-                        <label for="${inputId}">${field.label}</label>
-                        <textarea id="${inputId}" class="form-control" ${nameAttr} ${dataColAttr} ${mandatoryAttr}></textarea>
-                    </div>`;
-            } else {
-              fieldHtml = `
-                    <div class="mb-3">
-                        <label for="${inputId}">${field.label}</label>
-                        <input id="${inputId}" type="${field.type}" class="form-control" ${nameAttr} ${dataColAttr} ${mandatoryAttr}>
-                    </div>`;
-            }
-            $container.append(fieldHtml);
-          }
-        });
-      }
-
-      $(document).on('click', '.btn-add-file', function () {
-        const $wrapper = $(this).closest('.file-wrapper');
-        const currentCount = $wrapper.find('.file-row').length;
-
-        if (currentCount >= 3) {
-          alert("You can only add up to 3 attachments.");
-          return;
-        }
-
-        const $newRow = $(`
-        <div class="file-row d-flex align-items-center mb-2">
-            <input type="file" class="form-control me-2 file-input">
-            <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
-        </div>
-    `);
-        $(this).before($newRow);
-      });
-
-      $(document).on('click', '.btn-delete-file', function () {
-        $(this).closest('.file-row').remove();
-      });
-
-
-      $(document).on('input', '#dynamicFieldsContainer input[type="text"], #dynamicFieldsContainer textarea, #dynamicFieldsContainer select', function () {
-        const $this = $(this);
-        if ($this.data('mandatory') && $this.val().trim() === '') {
-          $this.addClass('is-invalid');
-          $this.next('.error-msg').remove();
-          $this.after('<span class="error-msg text-danger">This field is required</span>');
-        } else {
-          $this.removeClass('is-invalid');
-          $this.next('.error-msg').remove();
-        }
-      });
-
-      $(document).on('input change', '#dynamicFieldsContainer input, #dynamicFieldsContainer textarea, #dynamicFieldsContainer select', function () {
-        if ($(this).val().trim() !== '') {
-          $(this).removeClass('is-invalid');
-          $(this).next('.error-msg').remove();
-        }
-      });
-
-      // 2. Mandatory selects outside dynamic fields
-      $('#typeSelect, #categorySelect, #subCategorySelect').on('change', function () {
-        if ($(this).val() && $(this).val().trim() !== '') {
-          $(this).removeClass('is-invalid');
-          $(this).next('.error-msg').remove();
-        }
-      });
 
       function safeVal(val) {
         if (val === undefined || val === null) return null;
@@ -914,7 +775,7 @@
       async function processFiles() {
         const filesArray = [];
 
-        $('#dynamicFieldsContainer input[type="file"]').each(function () {
+        $('#dynamicFieldsContainerBehalf input[type="file"]').each(function () {
           const files = this.files;
           const desc = $(this).closest('.file-group').find('.file-desc').val() || '';
 
@@ -974,7 +835,7 @@
         });
 
         // ✅ Validate type, category, subcategory
-        ['#typeSelect', '#categorySelect', '#subCategorySelect'].forEach(selector => {
+        ['#typeSelectBehalf', '#categorySelectBehalf', '#subCategorySelectBehalf'].forEach(selector => {
           const $el = $(selector);
           if (!$el.val() || $el.val().trim() === '') {
             $el.addClass('is-invalid');
@@ -988,7 +849,7 @@
         });
 
         // ✅ Validate mandatory dynamic fields
-        $('#dynamicFieldsContainer [data-mandatory="true"]').each(function () {
+        $('#dynamicFieldsContainerBehalf [data-mandatory="true"]').each(function () {
           if ($(this).val().trim() === '') {
             $(this).addClass('is-invalid');
             $(this).next('.error-msg').remove();
@@ -1010,7 +871,7 @@
           const uploadedFiles = await processFiles();
 
           // ✅ Get relevant columns for selected subcategory
-          const selectedOption = $('#subCategorySelect').find('option:selected');
+          const selectedOption = $('#subCategorySelectBehalf').find('option:selected');
           const columnsData = selectedOption.attr('data-columns'); // e.g., "3man,4opt,7man"
           const columnsArray = columnsData ? columnsData.split(',').map(c => c.trim()) : [];
 
@@ -1048,9 +909,9 @@
           allParams.p_email = safeVal(localStorage.getItem('email'));
           // allParams.p_district_id = safeVal(localStorage.getItem('district'));
           allParams.p_created_by_user_id = safeVal(localStorage.getItem('user_id'));
-          allParams.p_issue_id = safeVal($('#typeSelect').val());
-          allParams.p_category_id = safeVal($('#categorySelect').val());
-          allParams.p_subcategory_id = safeVal($('#subCategorySelect').val());
+          allParams.p_issue_id = safeVal($('#typeSelectBehalf').val());
+          allParams.p_category_id = safeVal($('#categorySelectBehalf').val());
+          allParams.p_subcategory_id = safeVal($('#subCategorySelectBehalf').val());
           allParams.p_priority = safeVal($('#priority').val());
           allParams.p_description = safeVal($('#description').val());
           allParams.p_onbehalf_name = safeVal($('#citizenName').val());
@@ -1070,7 +931,7 @@
               return;
             }
 
-            const $input = $(`#dynamicFieldsContainer [data-col="${col}"]`);
+            const $input = $(`#dynamicFieldsContainerBehalf [data-col="${col}"]`);
             if ($input.length) {
               const paramName = `p${col}`;
               allParams[paramName] = safeVal($input.val());
