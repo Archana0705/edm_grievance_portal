@@ -596,8 +596,8 @@
         "2opt": { label: "Application number", type: "text", required: false },
         "3man": { label: "Description of changes and reason", type: "textarea", required: true },
         "3opt": { label: "Description of the issue", type: "textarea", required: false },
-        "4man": { label: "Multiple Attach supporting document", type: "file", required: true, multiple: true },
-        "4opt": { label: "Multiple Attach supporting document", type: "file", required: false, multiple: true },
+        "4man": { label: "Attachments", type: "file", required: true, multiple: true },
+        "4opt": { label: "Attachments", type: "file", required: false, multiple: true },
         "5man": { label: "Supporting document description (short text)", type: "textarea", required: true },
         "5opt": { label: "Multiple Supporting document description (short text)", type: "textarea", required: false },
         "6man": { label: "Enter eSevai log in ID", type: "text", required: true },
@@ -759,13 +759,29 @@
         const file = this.files[0];
         if (!file) return;
 
+        const sessionId = localStorage.getItem("session_id") || "session_id_00000";
+        const userId = localStorage.getItem("user_id");
+
+        // 🔹 Prepare payload for fn_temp_ticket_attachments
+        const payload = {
+          action: "function_call",
+          function_name: "fn_temp_ticket_attachments",
+          params: {
+            p_session_id: sessionId,
+            p_file_name: file.name,
+            p_file_path: `/uploads/${file.name}`,  // backend will replace with actual path
+            p_mime_type: file.type,
+            p_uploaded_by: userId
+          }
+        };
+
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append("data", encryptData(payload)); // encrypted payload
+        formData.append("file", file); // actual file binary
 
         $.ajax({
           url: `${BASE_API_URL}/commonfunction`,
-          method: 'POST',
-          data: { data: encryptData(payload) },
+          method: "POST",
           data: formData,
           contentType: false,
           processData: false,
@@ -773,7 +789,8 @@
             console.log("Upload success:", response);
             alert("File uploaded successfully!");
           },
-          error: function () {
+          error: function (xhr, status, error) {
+            console.error("Upload failed:", error);
             alert("File upload failed!");
           }
         });
@@ -824,7 +841,7 @@
             const file = files[i];
             filesArray.push({
               file_name: file.name,
-              file_path: `/uploads/${file.name}`, // ⚡ adjust if backend returns actual path
+              file_path: `/uploads/${file.name}`,
               mime_type: file.type,
               attachment_desc: desc
             });
@@ -896,6 +913,7 @@
 
           // ✅ All possible params with default null
           const allParams = {
+            p_session_id: 1,
             p_complainant_name: null,
             p_mobile: null,
             p_email: null,
@@ -913,7 +931,7 @@
             p1man: null, p1opt: null,
             p2man: null, p2opt: null,
             p3man: null, p3opt: null,
-            p4man: null, p4opt: null,
+            // p4man: null, p4opt: null,
             p5man: null, p5opt: null,
             p6man: null,
             p7man: null,
@@ -938,17 +956,9 @@
           allParams.p_onbehalf_email = safeVal($('#onbehalf_email').val());
           allParams.p_onbehalf_district_id = safeVal($('#onbehalf_district_id').val());
 
-          // ✅ Declaration
-          // allParams.p_declaration = $('#declarationCheck').is(':checked') ? "Yes" : "No";
-
-          // ✅ Populate dynamic fields (except files)
           columnsArray.forEach(col => {
             col = col.trim();
 
-            if (col === "4opt" || col === "4man") {
-              // handled separately
-              return;
-            }
 
             const $input = $(`#dynamicFieldsContainer [data-col="${col}"]`);
             if ($input.length) {
@@ -957,20 +967,12 @@
             }
           });
 
-          // ✅ Bind file params (p4man / p4opt) properly
-          uploadedFiles.forEach(fileObj => {
-            if (fileObj.mandatory) {
-              allParams.p4man = JSON.stringify([fileObj]);
-            } else {
-              allParams.p4opt = JSON.stringify([fileObj]);
-            }
-          });
-
           const payload = {
             action: "function_call",
             function_name: "fn_citizen_create_ticket",
             params: allParams
           };
+
 
           console.log("Final Payload:", payload);
 
