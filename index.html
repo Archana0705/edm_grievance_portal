@@ -10,6 +10,52 @@
   <link href="assets/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/font/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/css/aos.css" rel="stylesheet">
+<style>
+/* Base button */
+.continueBtn {
+  position: relative;
+  overflow: hidden;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #4b6cb7, #182848);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.4s ease;
+  z-index: 1;
+}
+
+/* Hover gradient shine effect */
+.continueBtn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(120deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+  transform: skewX(-25deg);
+  transition: all 0.6s ease;
+  z-index: -1;
+}
+
+/* On hover: shine animation + scale */
+.continueBtn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+.continueBtn:hover::before {
+  left: 100%;
+}
+
+/* On click: press effect */
+.continueBtn:active {
+  transform: scale(0.98);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+</style>
+
 
   <style type="text/css">
     .front-face .card,
@@ -272,13 +318,15 @@
                   <!-- Screen 1: Mobile -->
                   <div class="screen screen1">
                     <i class="bi bi-phone step-icon"></i>
-                    <h4 class="mb-3">Citizen Login – Mobile</h4>
+                    <h4 class="mb-3 brief-heading">Citizen Login – Mobile</h4>
                     <div class="mb-3 text-start">
                       <label class="form-label fw-semibold">Mobile Number</label>
                       <input type="text" class="form-control mobileInput" placeholder="Enter mobile number"
                         maxlength="10" pattern="^[6-9]\d{9}$"
-                        title="Enter a valid 10-digit mobile number starting with 6-9"> <small
-                        class="form-text text-muted">OTP will be sent to your number.</small>
+                        title="Enter a valid 10-digit mobile number starting with 6-9"> 
+                        <small
+                        class="form-text text-muted">OTP will be sent to your number.
+                        </small>
                       <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
                     </div>
                     <button class="btn btn-primary w-100 continueBtn" id="loginContinueBtn">Continue</button>
@@ -312,7 +360,7 @@
                     <!-- Screen 1 (Register mobile) -->
                     <div class="screen screen1">
                       <i class="bi bi-phone step-icon"></i>
-                      <h4 class="mb-3">Register – Mobile</h4>
+                      <h4 class="mb-3 brief-heading">Register – Mobile</h4>
                       <div class="mb-3 text-start">
                         <label class="form-label fw-semibold">Mobile Number</label>
                         <input type="text" class="form-control mobileInput" placeholder="Enter mobile number"
