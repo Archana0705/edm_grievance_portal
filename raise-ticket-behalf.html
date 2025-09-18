@@ -242,6 +242,76 @@
       }
     }
   </style>
+  <style>
+    .hover-shadow:hover {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s;
+    }
+
+    .card h3 {
+      font-weight: 600;
+    }
+
+    .card i {
+      transition: transform 0.3s;
+    }
+
+    .card:hover i {
+      transform: scale(1.2);
+    }
+
+    .table-hover tbody tr:hover {
+      background-color: #f1f3f5;
+    }
+  </style>
+  <!-- main content -->
+  <!-- page css -->
+  <style>
+    body {
+      background: #f8f9fa;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .form-section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-label {
+      font-weight: 500;
+    }
+
+    .btn-submit {
+      background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: 0.3s;
+    }
+
+    .btn-submit:hover {
+      transform: scale(1.03);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+  <style>
+    /* Toast positioning */
+    .toast-container {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 2000;
+    }
+  </style>
+  <!-- page css -->
 </head>
 
 <body>
@@ -336,20 +406,21 @@
             <div class="clear-both"></div>
 
             <div class="mb-3 col-lg-4">
-              <label>Type</label>
-              <select id="typeSelectBehalf" class="form-control">
+              <label for="typeSelectBehalf">Type <span class="text-danger">*</span></label>
+
+              <select id="typeSelectBehalf" class="form-control" required>
                 <option value="">Select Type</option>
               </select>
             </div>
             <div class="mb-3 col-lg-4">
-              <label>Category</label>
-              <select id="categorySelectBehalf" class="form-control">
+              <label for="categorySelectBehalf">Category <span class="text-danger">*</span></label>
+              <select id="categorySelectBehalf" class="form-control" required>
                 <option value="">Select Category</option>
               </select>
             </div>
             <div class="mb-3 col-lg-4">
-              <label>Sub-Category</label>
-              <select id="subCategorySelectBehalf" class="form-control">
+              <label for="subCategorySelectBehalf">Sub-Category <span class="text-danger">*</span></label>
+              <select id="subCategorySelectBehalf" class="form-control" required>
                 <option value="">Select Sub-Category</option>
               </select>
             </div>
@@ -383,7 +454,7 @@
 
           <!-- Submit -->
           <div class="col-lg-4 d-flex align-items-center">
-            <button type="submit" id="submitBtn" class="btn btn-primary px-4 py-2">
+            <button type="submit" id="submitBtnBehalf" class="btn btn-primary px-4 py-2">
               <i class="bi bi-send-fill me-2"></i> Submit Issue
             </button>
           </div>
@@ -855,7 +926,7 @@
       }
     });
 
-    function isValidMobile(num) {
+    function isValidBehalfMobile(num) {
       return /^[6-9]\d{9}$/.test(num || "");
     }
 
@@ -863,7 +934,7 @@
       return String(str || "").replace(/[<>"'%;()&+]/g, "");
     }
 
-    function isValidEmail(email) {
+    function isValidBehalfEmail(email) {
       // Basic email regex
       const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return regex.test(email);
@@ -896,21 +967,21 @@
       $('#emailField').on('blur', function () {
         let email = $(this).val().trim();
 
-        if (!isValidEmail(email)) {
+        if (!isValidBehalfEmail(email)) {
           $(this).addClass("is-invalid");
         } else {
           $(this).removeClass("is-invalid"); // ✅ hide red highlight when correct
         }
       });
 
-      $('#submitBtn').on('click', async function (event) {
+      $('#submitBtnBehalf').on('click', async function (event) {
         debugger
         event.preventDefault();
 
-        let isValid = true;
+        let isValidBehalf = true;
         let email = $('#emailField').val().trim();
 
-        if (!isValidEmail(email)) {
+        if (!isValidBehalfEmail(email)) {
           $('#emailField').addClass("is-invalid");
           showErrorToast("Please enter a valid email address."); // if you’re using toast
           return;
@@ -922,7 +993,7 @@
         // ✅ Validate declaration checkbox
         if (!$('#declarationCheck').is(':checked')) {
           $('#declarationError').text('You must agree to the declaration.').show();
-          isValid = false;
+          isValidBehalf = false;
         } else {
           $('#declarationError').hide();
         }
@@ -940,7 +1011,7 @@
             $el.addClass('is-invalid');
             $el.next('.error-msg').remove();
             $el.after('<span class="error-msg text-danger">This field is required</span>');
-            isValid = false;
+            isValidBehalf = false;
           } else {
             $el.removeClass('is-invalid');
             $el.next('.error-msg').remove();
@@ -953,14 +1024,14 @@
             $(this).addClass('is-invalid');
             $(this).next('.error-msg').remove();
             $(this).after('<span class="error-msg text-danger">This field is required</span>');
-            isValid = false;
+            isValidBehalf = false;
           } else {
             $(this).removeClass('is-invalid');
             $(this).next('.error-msg').remove();
           }
         });
 
-        if (!isValid) {
+        if (!isValidBehalf) {
           showErrorToast('Please fill in all mandatory fields.');
           return;
         }
