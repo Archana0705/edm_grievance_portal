@@ -420,7 +420,7 @@
             </div>
 
             <div class="file-rows">
-              <div class="file-row row align-items-center mb-2">
+              <div class="file-row row align-items-center1 mb-2">
                 <div class="col-md-1">
                   <span class="fw-bold file-label">1</span>
                 </div>
@@ -428,6 +428,7 @@
                 <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">                </div>
                 <div class="col-md-4">
                   <input type="file" class="form-control ${fileInputClass}">
+                   <small>jpg and pdf only allowed</small>
                 </div>
                 <div class="col-md-3">
                   <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
@@ -609,7 +610,7 @@
             return;
           }
           const newRow = `
-        <div class="file-row row align-items-center mb-2">
+        <div class="file-row row align-items-center1 mb-2">
           <div class="col-md-1">
             <span class="fw-bold file-label">${rowCount}</span>
           </div>
@@ -617,6 +618,7 @@
           <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">          </div>
           <div class="col-md-4">
             <input type="file" class="form-control ${fileInputClass}">
+              <small>jpg and pdf only allowed</small>
           </div>
           <div class="col-md-3">
             <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>

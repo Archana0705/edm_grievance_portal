@@ -615,12 +615,14 @@
             <div class="col-md-3">Actions</div>
           </div>
           <div class="file-rows">
-            <div class="file-row row align-items-center mb-2">
+            <div class="file-row row align-items-center1 mb-2">
               <div class="col-md-1"><span class="fw-bold file-label">1</span></div>
               <div class="col-md-4">
                   <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">
                 </div>
-              <div class="col-md-4"><input type="file" class="form-control ${fileInputClassBehalf}"></div>
+              <div class="col-md-4"><input type="file" class="form-control ${fileInputClassBehalf}">
+              <small>jpg and pdf only allowed</small>
+              </div>
               <div class="col-md-3"><button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button></div>
             </div>
           </div>
@@ -689,11 +691,12 @@
       const newRow = `
       <div class="file-row row align-items-center mb-2">
         <div class="col-md-1"><span class="fw-bold file-label">${newIndex}</span></div>
-<div class="col-md-4">
-  <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">
-  <small class="text-muted char-count">0 / ${MAX_FILE_DESC}</small>
-</div>
-        <div class="col-md-4"><input type="file" class="form-control ${fileInputClassBehalf}"></div>
+        <div class="col-md-4">
+          <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">
+        </div>
+        <div class="col-md-4"><input type="file" class="form-control ${fileInputClassBehalf}">
+           <small>jpg and pdf only allowed</small>
+          </div>
         <div class="col-md-3"><button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button></div>
       </div>`;
       $rows.append(newRow);
