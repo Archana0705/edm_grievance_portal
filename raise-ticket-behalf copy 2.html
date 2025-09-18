@@ -383,10 +383,8 @@
               <div>
                 <h6 class="fw-bold mb-2">Declaration</h6>
                 <p class="mb-2 small text-muted">
-                  I hereby declare that the information given above and in the enclosed documents is true to the best of
-                  my knowledge and belief and nothing has been concealed therein. I understand that if the information
-                  given by me is proved false/not true, I will have to face the punishment as per the law. Also, all the
-                  benefits availed by me shall be summarily withdrawn.
+                  I hereby declare that the information provided in this portal is true and correct
+                  to the best of my knowledge. Any false information may lead to rejection of the grievance.
                 </p>
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" id="declarationCheck">
@@ -453,11 +451,14 @@
   <script>
     AOS.init();
     const roleId = localStorage.getItem("role_id");
-    const fileInputClassBehalf = "file-input-behalf"; // Unique file input class
 
-    // ✅ Load Relationship dropdown
+    // ✅ Relationship dropdown (scoped)
     function loadRelationship() {
-      const payload = { action: "function_call", function_name: "fn_relationship", params: {} };
+      const payload = {
+        action: "function_call",
+        function_name: "fn_relationship",
+        params: {}
+      };
 
       $.ajax({
         url: `${BASE_API_URL}/commonfunction`,
@@ -468,16 +469,25 @@
           const decrypted = decryptData(response.data);
           const $dropdown = $("#behalfPane #relationshipField");
           $dropdown.empty().append('<option value="" class="placeholder">--Select Relationship--</option>');
-          decrypted.forEach(item => $dropdown.append(`<option value="${item.relationship}">${item.relationship}</option>`));
+
+          decrypted.forEach(item => {
+            $dropdown.append(`<option value="${item.relationship}">${item.relationship}</option>`);
+          });
         },
-        error: function () { alert('Failed to load relationship list. Please try again.'); }
+        error: function () {
+          alert('Failed to load relationship list. Please try again.');
+        }
       });
     }
     loadRelationship();
 
-    // ✅ Load Issue Type dropdown
+    // ✅ Issue Type
     function loadIssueType() {
-      const payload = { action: "function_call", function_name: "fn_issue_type", params: {} };
+      const payload = {
+        action: "function_call",
+        function_name: "fn_issue_type",
+        params: {}
+      };
 
       $.ajax({
         url: `${BASE_API_URL}/commonfunction`,
@@ -488,52 +498,65 @@
           const decrypted = decryptData(response.data);
           const $dropdown = $("#behalfPane #typeSelectBehalf");
           $dropdown.empty().append('<option value="" class="placeholder">--Select Type--</option>');
-          decrypted.forEach(item => $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`));
+
+          decrypted.forEach(item => {
+            $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
+          });
         }
       });
     }
     loadIssueType();
 
-    // ✅ Load Category based on Type
+    // ✅ Category
     $("#behalfPane #typeSelectBehalf").on("change", function () {
       const selectedType = $(this).val();
-      const payload = {
+      const operatorPayload = {
         action: "function_call",
         function_name: "fn_issue_category",
         params: { type: selectedType || '', roleid: roleId }
       };
+
       $.ajax({
         url: `${BASE_API_URL}/commonfunction`,
         method: 'POST',
-        data: { data: encryptData(payload) },
+        data: { data: encryptData(operatorPayload) },
         dataType: 'json',
         success(response) {
           const decrypted = decryptData(response.data);
           const $dropdown = $("#behalfPane #categorySelectBehalf");
           $dropdown.empty().append('<option value="" class="placeholder">--Select Category--</option>');
-          decrypted.forEach(item => $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`));
+
+          decrypted.forEach(item => {
+            $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`);
+          });
         }
       });
     });
 
-    // ✅ Load Subcategory based on Category
+    // ✅ Sub Category + dynamic fields
     $("#behalfPane #categorySelectBehalf").on("change", function () {
       const selectedCategory = $(this).val();
-      const payload = {
+      const operatorPayload = {
         action: "function_call",
         function_name: "fn_issue_subcategory",
         params: { type: selectedCategory || '', roleid: roleId }
       };
+
       $.ajax({
         url: `${BASE_API_URL}/commonfunction`,
         method: 'POST',
-        data: { data: encryptData(payload) },
+        data: { data: encryptData(operatorPayload) },
         dataType: 'json',
         success(response) {
           const decrypted = decryptData(response.data);
           const $dropdown = $("#behalfPane #subCategorySelectBehalf");
           $dropdown.empty().append('<option value="" class="placeholder">--Select Sub Category--</option>');
-          decrypted.forEach(item => $dropdown.append(`<option value="${item.id}" data-columns="${item.relavant_columns || ''}">${item.issue_name}</option>`));
+
+          decrypted.forEach(item => {
+            $dropdown.append(`<option value="${item.id}" data-columns="${item.relavant_columns || ''}">${item.issue_name}</option>`);
+          });
+
+          // Clear old dynamic fields
           $("#behalfPane #dynamicFieldsContainerBehalf").empty();
         }
       });
@@ -546,9 +569,10 @@
       "2opt": { label: "Application number", type: "text", required: false },
       "3man": { label: "Description of changes and reason", type: "textarea", required: true },
       "3opt": { label: "Description of the issue", type: "textarea", required: false },
-      "4man": { label: "Attachments(Maximum 3 attachments allowed)", type: "file", required: true, multiple: true },
-      "4opt": { label: "Attachments(Maximum 3 attachments allowed)", type: "file", required: false, multiple: true },
+      "4man": { label: "Attachments", type: "file", required: true, multiple: true },
+      "4opt": { label: "Attachments", type: "file", required: false, multiple: true },
       "5man": { label: "Supporting document description", type: "textarea", required: true },
+      // "5opt": { label: "Supporting document description", type: "textarea", required: false },
       "6man": { label: "Enter eSevai log in ID", type: "text", required: true },
       "7man": { label: "Enter eSevai centre ID", type: "text", required: true },
       "8man": { label: "Transaction number", type: "text", required: true },
@@ -556,7 +580,6 @@
       "10opt": { label: "Enter name of official", type: "text", required: false }
     };
 
-    // ✅ Generate dynamic fields based on subcategory
     $("#behalfPane #subCategorySelectBehalf").on("change", function () {
       const selectedOption = $(this).find("option:selected");
       const columnsData = selectedOption.attr("data-columns");
@@ -578,180 +601,218 @@
         const field = fieldMapBehalf[col];
         if (!field) return;
 
-        const inputIdBehalf = `behalf_field_${col}_${index}`;
-        const wrapperId = `behalf_wrapper_${col}_${index}`;
+        const inputIdBehalf = `field_${col}_${index}`;
         const isMandatoryBehalf = col.endsWith("man");
         const mandatoryAttrBehalf = isMandatoryBehalf ? 'data-mandatory="true"' : '';
         const dataColAttrBehalf = `data-col="${col}"`;
 
-
-        $("#behalfPane").on("input", ".file-desc", function () {
-          const maxLength = 250;
-          const length = $(this).val().length;
-          $(this).siblings(".char-count").text(`${length} / ${maxLength}`);
-        });
-
         if (col === "4opt" || col === "4man") {
-          // File input section
+          const wrapperId = `wrapper_${inputIdBehalf}`;
           const html = `
-        <div id="${wrapperId}" class="mb-3 file-wrapper" ${dataColAttrBehalf} ${mandatoryAttrBehalf}>
-          <label class="form-label">${field.label}${isMandatoryBehalf ? ' <span class="text-danger">*</span>' : ''}</label>
-          <div class="row fw-bold border-bottom pb-2 mb-2">
-            <div class="col-md-1">S No</div>
-            <div class="col-md-4">Attachment Description</div>
-            <div class="col-md-4">Attachment <small class="text-muted text-danger">(max 2MB each)</small></div>
-            <div class="col-md-3">Actions</div>
-          </div>
-          <div class="file-rows">
-            <div class="file-row row align-items-center mb-2">
-              <div class="col-md-1"><span class="fw-bold file-label">1</span></div>
-              <div class="col-md-4"><input type="text" maxlength="250" class="form-control file-desc" placeholder="Enter document description"></div>
-              <div class="col-md-4"><input type="file" class="form-control ${fileInputClassBehalf}"></div>
-              <div class="col-md-3"><button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button></div>
+          <div id="${wrapperId}" class="mb-3 file-wrapper" ${dataColAttrBehalf} ${mandatoryAttrBehalf}>
+            <label class="form-label">${field.label}${isMandatoryBehalf ? ' <span class="text-danger">*</span>' : ''}</label>
+
+            <div class="row fw-bold border-bottom pb-2 mb-2">
+              <div class="col-md-1">S No</div>
+              <div class="col-md-4">Attachment Description</div>
+              <div class="col-md-4">Attachment <small class="text-muted text-danger">(max 2MB each)</small></div>
+              <div class="col-md-3">Actions</div>
+            </div>
+
+            <div class="file-rows">
+              <div class="file-row row align-items-center mb-2">
+                <div class="col-md-1">
+                  <span class="fw-bold file-label">1</span>
+                </div>
+                <div class="col-md-4">
+                  <input type="text" maxlength="250" class="form-control file-desc" placeholder="Enter document description">
+                </div>
+                <div class="col-md-4">
+                  <input type="file" class="form-control ${fileInputClass}">
+                </div>
+                <div class="col-md-3">
+                  <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-2">
+              <button type="button" class="btn btn-primary btn-sm btn-add-file">Add More</button>
             </div>
           </div>
-          <div class="mt-2"><button type="button" class="btn btn-primary btn-sm btn-add-file">Add More</button></div>
-        </div>`;
+        `;
           $container.append(html);
         } else {
-          // Text/textarea input
-          let fieldHtml = field.type === "textarea"
-            ? `<div class="mb-3">
-              <label for="${inputIdBehalf}">${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}</label>
-              <textarea id="${inputIdBehalf}" class="form-control" ${dataColAttrBehalf} ${mandatoryAttrBehalf}></textarea>
-            </div>`
-            : `<div class="mb-3">
-              <label for="${inputIdBehalf}">${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}</label>
-              <input id="${inputIdBehalf}" type="${field.type}" class="form-control" ${dataColAttrBehalf} ${mandatoryAttrBehalf}>
-            </div>`;
+
+          let fieldHtml = "";
+          if (field.type === "textarea") {
+            fieldHtml = `
+        <div class="mb-3">
+          <label for="${inputIdBehalf}">${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}</label>
+          <textarea id="${inputIdBehalf}" class="form-control" ${dataColAttrBehalf} ${mandatoryAttrBehalf}></textarea>
+        </div>`;
+          } else if (field.type === "file") {
+            fieldHtml = `
+        <div class="mb-3">
+          <label for="${inputIdBehalf}">${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}</label>
+          <input id="${inputIdBehalf}" type="file" class="form-control file-input-behalf" ${dataColAttrBehalf} ${mandatoryAttrBehalf}>
+        </div>`;
+          } else {
+            fieldHtml = `
+        <div class="mb-3">
+          <label for="${inputIdBehalf}">${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}</label>
+          <input id="${inputIdBehalf}" type="${field.type}" class="form-control" ${dataColAttrBehalf} ${mandatoryAttrBehalf}>
+        </div>`;
+          }
           $container.append(fieldHtml);
         }
       });
     }
 
-    // ✅ File upload validation and API
-    $("#behalfPane").on('change', `input[type="file"].${fileInputClassBehalf}`, function () {
-      const file = this.files[0];
-      if (!file) return;
-
-      const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"];
-      if (!allowedTypes.includes(file.type)) { showErrorToast("Invalid file type!"); $(this).val(""); return; }
-      if (file.size > 2 * 1024 * 1024) { showErrorToast("File exceeds 2MB!"); $(this).val(""); return; }
-
-      const sessionId = localStorage.getItem("session_id") || "session_id_00000";
-      const userId = localStorage.getItem("user_id");
-
-      const tempPayload = {
-        action: "function_call",
-        function_name: "fn_temp_ticket_attachments",
-        params: { p_session_id: sessionId, p_file_name: file.name, p_file_path: `/uploads/${file.name}`, p_mime_type: file.type, p_uploaded_by: userId }
-      };
-
-      const formData = new FormData();
-      formData.append("data", encryptData(tempPayload));
-      formData.append("file", file);
-
-      $.ajax({
-        url: `${BASE_API_URL}/commonfunction`,
-        method: "POST",
-        data: formData,
-        contentType: false,
-        processData: false,
-        dataType: 'json',
-        success: () => showSuccessToast("File uploaded successfully!"),
-        error: () => showErrorToast("File upload failed!")
-      });
-    });
-
-    // ✅ Add/Delete file rows
-    $("#behalfPane").on('click', '.btn-add-file', function () {
-      const $wrapper = $(this).closest('.file-wrapper');
-      const $rows = $wrapper.find('.file-rows');
-      const newIndex = $rows.children().length + 1;
-      if (newIndex >= 4) {
-        showErrorToast("Maximum 3 attachments allowed.");
-        return;
-      }
-      const newRow = `
-      <div class="file-row row align-items-center mb-2">
-        <div class="col-md-1"><span class="fw-bold file-label">${newIndex}</span></div>
-        <div class="col-md-4"><input type="text" maxlength="250" class="form-control file-desc" placeholder="Enter document description"></div>
-        <div class="col-md-4"><input type="file" class="form-control ${fileInputClassBehalf}"></div>
-        <div class="col-md-3"><button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button></div>
-      </div>`;
-      $rows.append(newRow);
-    });
-
-    $("#behalfPane").on('click', '.btn-delete-file', function () {
-      $(this).closest('.file-row').remove();
-      // Update S No
-      $(this).closest('.file-rows').find('.file-label').each((i, el) => $(el).text(i + 1));
-    });
-
-    // ✅ Form submission
+    // ✅ Validation fix
     $("#behalfPane #submitBtnBehalf").on("click", async function (event) {
+      debugger
       event.preventDefault();
-      let isValid = true;
-      const requiredSelectors = ["#relationshipField", "#citizenName", "#genderField", "#typeSelectBehalf", "#categorySelectBehalf", "#subCategorySelectBehalf"];
+      let isValidBehalf = true;
+
+      // validate mandatory fields
+      const requiredSelectors = [
+        "#relationshipField",
+        "#citizenName",
+        "#genderField",
+        "#typeSelectBehalf",
+        "#categorySelectBehalf",
+        "#subCategorySelectBehalf"
+      ];
+
       requiredSelectors.forEach(sel => {
         const $el = $(`#behalfPane ${sel}`);
-        if (!$el.val() || $el.val().trim() === "") { $el.addClass("is-invalid"); isValid = false; } else { $el.removeClass("is-invalid"); }
-      });
-      if (!isValid) { showErrorToast("Fill all mandatory fields."); return; }
-
-      const safeVal = val => val === undefined || val === null || val.trim() === "" ? null : val;
-      const user_id = localStorage.getItem('user_id');
-
-      const selectedOption = $('#subCategorySelectBehalf').find('option:selected');
-      const columnsData = selectedOption.attr('data-columns');
-      const columnsArray = columnsData ? columnsData.split(',').map(c => c.trim()) : [];
-
-      const allParams = {
-        p_session_id: user_id,
-        p_complainant_name: safeVal(localStorage.getItem('user_name')),
-        p_mobile: safeVal(localStorage.getItem('mobile')),
-        p_email: safeVal(localStorage.getItem('email')),
-        p_district_id: null,
-        p_issue_id: safeVal($('#typeSelectBehalf').val()),
-        p_created_by: safeVal(user_id),
-        p_category_id: safeVal($('#categorySelectBehalf').val()),
-        p_subcategory_id: safeVal($('#subCategorySelectBehalf').val()),
-        p_priority: safeVal($('#priority').val()),
-        p_relationship: safeVal($('#relationshipField').val()),
-        p_onbehalf_name: safeVal($('#citizenName').val()),
-        p_onbehalf_mobile: safeVal($('#citizenMobile').val()),
-        p_onbehalf_email: safeVal($('#emailField').val()),
-        p_onbehalf_district_id: safeVal($('#districtField').val()),
-        p1man: null, p1opt: null,
-        p2man: null, p2opt: null,
-        p3man: null, p3opt: null,
-        p5man: null, p5opt: null,
-        p6man: null,
-        p7man: null,
-        p8man: null,
-        p9man: null,
-        p10opt: null
-      };
-
-      columnsArray.forEach(col => {
-        if (col === "4man" || col === "4opt") return;
-        const $input = $(`#dynamicFieldsContainerBehalf [data-col="${col}"]`);
-        if ($input.length) allParams[`p${col}`] = safeVal($input.val());
+        if (!$el.val() || $el.val().trim() === "") {
+          $el.addClass("is-invalid");
+          $el.next(".error-msg").remove();
+          $el.after('<span class="error-msg text-danger">This field is required</span>');
+          isValidBehalf = false;
+        } else {
+          $el.removeClass("is-invalid");
+          $el.next(".error-msg").remove();
+        }
       });
 
-      const payload = { action: "function_call", function_name: "fn_citizen_create_ticket", params: allParams };
+      if (!isValidBehalf) {
+        showErrorToast("Please fill in all mandatory fields.");
+        return;
+      }
 
-      $.ajax({
-        url: `${BASE_API_URL}/commonfunction`,
-        method: 'POST',
-        data: { data: encryptData(payload) },
-        dataType: 'json',
-        success: (response) => { alert("Submitted successfully!"); setTimeout(() => location.reload(), 1000); },
-        error: (xhr, status, error) => { console.error(error); alert("Failed to submit form."); }
-      });
+      function safeVal(val) {
+        if (val === undefined || val === null) return null;
+        if (typeof val === "string" && val.trim() === "") return null;
+        return val;
+      }
+      try {
+        var user_id = localStorage.getItem('user_id');
+
+        // ✅ Get relevant columns for selected subcategory
+        const selectedOption = $('#subCategorySelectBehalf').find('option:selected');
+        const columnsData = selectedOption.attr('data-columns'); // e.g., "3man,4opt,7man"
+        const columnsArrayBehalf = columnsData ? columnsData.split(',').map(c => c.trim()) : [];
+
+        // ✅ All possible params with default null
+        const allParams = {
+          p_session_id: user_id,
+          p_complainant_name: null,
+          p_mobile: null,
+          p_email: null,
+          p_district_id: null,
+          p_issue_id: null,
+          p_created_by: null,
+          p_category_id: null,
+          p_subcategory_id: null,
+          p_priority: null,
+          p_relationship: null,
+          p_description: null,
+          p_onbehalf_name: null,
+          p_onbehalf_mobile: null,
+          p_onbehalf_email: null,
+          p_onbehalf_district_id: null,
+          p1man: null, p1opt: null,
+          p2man: null, p2opt: null,
+          p3man: null, p3opt: null,
+          // p4man: null, p4opt: null,
+          p5man: null, p5opt: null,
+          p6man: null,
+          p7man: null,
+          p8man: null,
+          p9man: null,
+          p10opt: null,
+        };
+
+        // ✅ Populate static fields
+        allParams.p_complainant_name = safeVal(localStorage.getItem('user_name'));
+        allParams.p_mobile = safeVal(localStorage.getItem('mobile'));
+        allParams.p_email = safeVal(localStorage.getItem('email'));
+        // allParams.p_district_id = safeVal(localStorage.getItem('district'));
+        allParams.p_created_by = safeVal(localStorage.getItem('user_id'));
+        allParams.p_issue_id = safeVal($('#typeSelectBehalf').val());
+        allParams.p_category_id = safeVal($('#categorySelectBehalf').val());
+        allParams.p_subcategory_id = safeVal($('#subCategorySelectBehalf').val());
+        allParams.p_priority = safeVal($('#priority').val());
+        allParams.p_relationship = safeVal($('#relationshipField').val());
+        allParams.p_description = safeVal($('#description').val());
+        allParams.p_onbehalf_name = safeVal($('#citizenName').val());
+        allParams.p_onbehalf_mobile = safeVal($('#citizenMobile').val());
+        allParams.p_onbehalf_email = safeVal($('#emailField').val());
+        allParams.p_onbehalf_district_id = safeVal($('#districtField').val());
+
+        // ✅ Declaration
+        // allParams.p_declaration = $('#declarationCheck').is(':checked') ? "Yes" : "No";
+
+        // ✅ Populate dynamic fields (except files)
+        columnsArrayBehalf.forEach(col => {
+          col = col.trim();
+
+          if (col === "4opt" || col === "4man") {
+            // handled separately
+            return;
+          }
+
+          const $input = $(`#dynamicFieldsContainerBehalf [data-col="${col}"]`);
+          if ($input.length) {
+            const paramName = `p${col}`;
+            allParams[paramName] = safeVal($input.val());
+          }
+        });
+
+        const payload = {
+          action: "function_call",
+          function_name: "fn_citizen_create_ticket",
+          params: allParams
+        };
+
+        console.log("Final Payload:", payload);
+
+        // ✅ Submit via AJAX
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: 'POST',
+          data: { data: encryptData(payload) },
+          dataType: 'json',
+          success: function (response) {
+            console.log("Form submitted successfully:", response);
+            alert("Submitted successfully.");
+            setTimeout(() => location.reload(), 1000);
+          },
+          error: function (xhr, status, error) {
+            console.error("API Error:", error);
+            alert("Failed to submit form.");
+          }
+        });
+
+      } catch (err) {
+        console.error("Error in submission:", err);
+        alert("Something went wrong while preparing the form data.");
+      }
     });
   </script>
-
 
 
 
