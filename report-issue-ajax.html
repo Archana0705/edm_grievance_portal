@@ -351,7 +351,7 @@
   <script>
     $(document).ready(function () {
       const roleId = localStorage.getItem("role_id") || null;
-
+      const MAX_FILE_DESC = 25;
       // common field map (unchanged)
       const fieldMap = {
         "1man": { label: "CAN Number", type: "text", required: true },
@@ -377,6 +377,11 @@
         if (typeof val === "string" && val.trim() === "") return null;
         return val;
       }
+      $(document).on("input", ".file-desc", function () {
+        if (this.value.length > MAX_FILE_DESC) {
+          this.value = this.value.slice(0, MAX_FILE_DESC);
+        }
+      });
 
       // Helper: generate dynamic fields (prefix ensures unique IDs)
       function generateDynamicFields(columnsString, prefix, $container, fileInputClass) {
@@ -420,8 +425,7 @@
                   <span class="fw-bold file-label">1</span>
                 </div>
                 <div class="col-md-4">
-                  <input type="text" maxlength="250" class="form-control file-desc" placeholder="Enter document description">
-                </div>
+                <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">                </div>
                 <div class="col-md-4">
                   <input type="file" class="form-control ${fileInputClass}">
                 </div>
@@ -610,8 +614,7 @@
             <span class="fw-bold file-label">${rowCount}</span>
           </div>
           <div class="col-md-4">
-            <input type="text" maxlength="250" class="form-control file-desc" placeholder="Enter document description">
-          </div>
+          <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">          </div>
           <div class="col-md-4">
             <input type="file" class="form-control ${fileInputClass}">
           </div>
