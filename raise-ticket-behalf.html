@@ -470,7 +470,7 @@
           $dropdown.empty().append('<option value="" class="placeholder">--Select Relationship--</option>');
           decrypted.forEach(item => $dropdown.append(`<option value="${item.relationship}">${item.relationship}</option>`));
         },
-        error: function () { alert('Failed to load relationship list. Please try again.'); }
+        error: function () { showErrorToast('Failed to load relationship list. Please try again.'); }
       });
     }
     loadRelationship();
@@ -622,7 +622,7 @@
           </div>
           <div class="col-md-4">
             <input type="file" class="form-control ${fileInputClassBehalf}" accept=".jpg,.jpeg,.png,.pdf">
-            <small>jpg and pdf only allowed</small>
+            <small>jpg, jpeg, png, pdf only allowed</small>
           </div>
           <div class="col-md-3">
             <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
@@ -705,7 +705,7 @@
           <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">
         </div>
         <div class="col-md-4"><input type="file" class="form-control ${fileInputClassBehalf}" accept=".jpg,.jpeg,.png,.pdf">
-           <small>jpg and pdf only allowed</small>
+           <small>jpg, jpeg, png, pdf only allowed</small>
           </div>
         <div class="col-md-3"><button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button></div>
       </div>`;
@@ -782,8 +782,8 @@
         method: 'POST',
         data: { data: encryptData(payload) },
         dataType: 'json',
-        success: (response) => { alert("Submitted successfully!"); setTimeout(() => location.reload(), 1000); },
-        error: (xhr, status, error) => { console.error(error); alert("Failed to submit form."); }
+        success: (response) => { showSuccessToast("Submitted successfully!"); setTimeout(() => location.reload(), 1000); },
+        error: (xhr, status, error) => { console.error(error); showErrorToast("Failed to submit form."); }
       });
     });
   </script>

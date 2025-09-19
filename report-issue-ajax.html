@@ -427,8 +427,8 @@
                 <div class="col-md-4">
                 <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">                </div>
                 <div class="col-md-4">
-                  <input type="file" class="form-control ${fileInputClass}">
-                   <small>jpg and pdf only allowed</small>
+                  <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf">
+                   <small>jpg, jpeg, png, pdf only allowed</small>
                 </div>
                 <div class="col-md-3">
                   <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
@@ -437,7 +437,7 @@
             </div>
 
             <div class="mt-2">
-              <button type="button" class="btn btn-primary btn-sm btn-add-file">Add More</button>
+              <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button>
             </div>
           </div>
         `;
@@ -617,8 +617,8 @@
           <div class="col-md-4">
           <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">          </div>
           <div class="col-md-4">
-            <input type="file" class="form-control ${fileInputClass}">
-              <small>jpg and pdf only allowed</small>
+           <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf">
+          <small>jpg, jpeg, png, pdf only allowed</small>
           </div>
           <div class="col-md-3">
             <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
@@ -626,6 +626,7 @@
         </div>
       `;
           $rowsContainer.append(newRow);
+          $wrapper.find(".btn-add-file").prop("disabled", true);
         });
 
         // Container-scoped: delete file row and renumber
@@ -635,11 +636,15 @@
           $wrapper.find(".file-row").each(function (i) {
             $(this).find(".file-label").text(i + 1);
           });
+          if ($wrapper.find('input[type="file"]').length === 0) {
+            $wrapper.find('.btn-add-file').prop("disabled", true);
+          }
         });
 
         // Container-scoped: file change -> upload only that file (AJAX)
         $dyn.on('change', `input[type="file"].${fileInputClass}`, function () {
-          const file = this.files[0];
+          const fileInputEl = this;
+          const file = fileInputEl.files[0];
           if (!file) return;
 
           const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"];
@@ -688,6 +693,8 @@
               const serverMsg = (response && response.message) ? response.message : "File uploaded successfully!";
               console.log("serverMsg:", serverMsg);
               showSuccessToast("File uploaded successfully!", serverMsg);
+              const $wrapper = $(fileInputEl).closest(".file-wrapper");
+              $wrapper.find(".btn-add-file").prop("disabled", false);
             },
             error: function (xhr, status, error) {
               console.error("Upload failed:", error);
