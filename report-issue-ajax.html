@@ -351,20 +351,20 @@
   <script>
     $(document).ready(function () {
       const roleId = localStorage.getItem("role_id") || null;
-
+      const MAX_FILE_DESC = 25;
       // common field map (unchanged)
       const fieldMap = {
         "1man": { label: "CAN Number", type: "text", required: true },
         "1opt": { label: "CAN Number", type: "text", required: false },
         "2man": { label: "Application number", type: "text", required: true },
         "2opt": { label: "Application number", type: "text", required: false },
-        "3man": { label: "Description of changes and reason", type: "textarea", required: true },
+        "3man": { label: "Issue Description", type: "textarea", required: true },
         "3opt": { label: "Description of the issue", type: "textarea", required: false },
         "4man": { label: "Attachments(Maximum 3 attachments allowed)", type: "file", required: true, multiple: true },
         "4opt": { label: "Attachments(Maximum 3 attachments allowed)", type: "file", required: false, multiple: true },
         // "5man": { label: "Supporting document description (short text)", type: "textarea", required: true },
         // "5opt": { label: "Multiple Supporting document description (short text)", type: "textarea", required: false },
-        "6man": { label: "Enter eSevai log in ID", type: "text", required: true },
+        "6man": { label: "Enter eSevai ID", type: "text", required: true },
         "7man": { label: "Enter eSevai centre ID against whom the grievance is lodged", type: "text", required: true },
         "8man": { label: "Transaction number", type: "text", required: true },
         "9man": { label: "Enter reason for ID block", type: "textarea", required: true },
@@ -377,6 +377,11 @@
         if (typeof val === "string" && val.trim() === "") return null;
         return val;
       }
+      $(document).on("input", ".file-desc", function () {
+        if (this.value.length > MAX_FILE_DESC) {
+          this.value = this.value.slice(0, MAX_FILE_DESC);
+        }
+      });
 
       // Helper: generate dynamic fields (prefix ensures unique IDs)
       function generateDynamicFields(columnsString, prefix, $container, fileInputClass) {
@@ -415,15 +420,15 @@
             </div>
 
             <div class="file-rows">
-              <div class="file-row row align-items-center mb-2">
+              <div class="file-row row align-items-center1 mb-2">
                 <div class="col-md-1">
                   <span class="fw-bold file-label">1</span>
                 </div>
                 <div class="col-md-4">
-                  <input type="text" maxlength="250" class="form-control file-desc" placeholder="Enter document description">
-                </div>
+                <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">                </div>
                 <div class="col-md-4">
-                  <input type="file" class="form-control ${fileInputClass}">
+                  <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf">
+                   <small>jpg, jpeg, png, pdf only allowed</small>
                 </div>
                 <div class="col-md-3">
                   <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
@@ -432,7 +437,7 @@
             </div>
 
             <div class="mt-2">
-              <button type="button" class="btn btn-primary btn-sm btn-add-file">Add More</button>
+              <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button>
             </div>
           </div>
         `;
@@ -605,15 +610,15 @@
             return;
           }
           const newRow = `
-        <div class="file-row row align-items-center mb-2">
+        <div class="file-row row align-items-center1 mb-2">
           <div class="col-md-1">
             <span class="fw-bold file-label">${rowCount}</span>
           </div>
           <div class="col-md-4">
-            <input type="text" maxlength="250" class="form-control file-desc" placeholder="Enter document description">
-          </div>
+          <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">          </div>
           <div class="col-md-4">
-            <input type="file" class="form-control ${fileInputClass}">
+           <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf">
+          <small>jpg, jpeg, png, pdf only allowed</small>
           </div>
           <div class="col-md-3">
             <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
@@ -621,6 +626,7 @@
         </div>
       `;
           $rowsContainer.append(newRow);
+          $wrapper.find(".btn-add-file").prop("disabled", true);
         });
 
         // Container-scoped: delete file row and renumber
@@ -630,11 +636,15 @@
           $wrapper.find(".file-row").each(function (i) {
             $(this).find(".file-label").text(i + 1);
           });
+          if ($wrapper.find('input[type="file"]').length === 0) {
+            $wrapper.find('.btn-add-file').prop("disabled", true);
+          }
         });
 
         // Container-scoped: file change -> upload only that file (AJAX)
         $dyn.on('change', `input[type="file"].${fileInputClass}`, function () {
-          const file = this.files[0];
+          const fileInputEl = this;
+          const file = fileInputEl.files[0];
           if (!file) return;
 
           const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"];
@@ -683,6 +693,8 @@
               const serverMsg = (response && response.message) ? response.message : "File uploaded successfully!";
               console.log("serverMsg:", serverMsg);
               showSuccessToast("File uploaded successfully!", serverMsg);
+              const $wrapper = $(fileInputEl).closest(".file-wrapper");
+              $wrapper.find(".btn-add-file").prop("disabled", false);
             },
             error: function (xhr, status, error) {
               console.error("Upload failed:", error);
