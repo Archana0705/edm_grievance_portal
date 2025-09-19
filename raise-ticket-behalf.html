@@ -606,30 +606,37 @@
         if (col === "4opt" || col === "4man") {
           // File input section
           const html = `
-        <div id="${wrapperId}" class="mb-3 file-wrapper" ${dataColAttrBehalf} ${mandatoryAttrBehalf}>
-          <label class="form-label">${field.label}${isMandatoryBehalf ? ' <span class="text-danger">*</span>' : ''}</label>
-          <div class="row fw-bold border-bottom pb-2 mb-2">
-            <div class="col-md-1">S No</div>
-            <div class="col-md-4">Attachment Description</div>
-            <div class="col-md-4">Attachment <small class="text-muted text-danger">(max 2MB each)</small></div>
-            <div class="col-md-3">Actions</div>
+    <div id="${wrapperId}" class="mb-3 file-wrapper" ${dataColAttrBehalf} ${mandatoryAttrBehalf}>
+      <label class="form-label">${field.label}${isMandatoryBehalf ? ' <span class="text-danger">*</span>' : ''}</label>
+      <div class="row fw-bold border-bottom pb-2 mb-2">
+        <div class="col-md-1">S No</div>
+        <div class="col-md-4">Attachment Description</div>
+        <div class="col-md-4">Attachment <small class="text-muted text-danger">(max 2MB each)</small></div>
+        <div class="col-md-3">Actions</div>
+      </div>
+      <div class="file-rows">
+        <div class="file-row row align-items-center1 mb-2">
+          <div class="col-md-1"><span class="fw-bold file-label">1</span></div>
+          <div class="col-md-4">
+            <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">
           </div>
-          <div class="file-rows">
-            <div class="file-row row align-items-center1 mb-2">
-              <div class="col-md-1"><span class="fw-bold file-label">1</span></div>
-              <div class="col-md-4">
-                  <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">
-                </div>
-              <div class="col-md-4"><input type="file" class="form-control ${fileInputClassBehalf}">
-              <small>jpg and pdf only allowed</small>
-              </div>
-              <div class="col-md-3"><button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button></div>
-            </div>
+          <div class="col-md-4">
+            <input type="file" class="form-control ${fileInputClassBehalf}" accept=".jpg,.jpeg,.png,.pdf">
+            <small>jpg and pdf only allowed</small>
           </div>
-          <div class="mt-2"><button type="button" class="btn btn-primary btn-sm btn-add-file">Add More</button></div>
-        </div>`;
+          <div class="col-md-3">
+            <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
+          </div>
+        </div>
+      </div>
+      <!-- 🔒 Disabled by default -->
+     <div class="mt-2">
+      <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>
+        Add More</button></div>
+    </div>`;
           $container.append(html);
-        } else {
+        }
+        else {
           // Text/textarea input
           let fieldHtml = field.type === "textarea"
             ? `<div class="mb-3">
@@ -649,7 +656,6 @@
     $("#behalfPane").on('change', `input[type="file"].${fileInputClassBehalf}`, function () {
       const file = this.files[0];
       if (!file) return;
-
       const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"];
       if (!allowedTypes.includes(file.type)) { showErrorToast("Invalid file type!"); $(this).val(""); return; }
       if (file.size > 2 * 1024 * 1024) { showErrorToast("File exceeds 2MB!"); $(this).val(""); return; }
@@ -674,7 +680,11 @@
         contentType: false,
         processData: false,
         dataType: 'json',
-        success: () => showSuccessToast("File uploaded successfully!"),
+        success: () => {
+          showSuccessToast("File uploaded successfully!")
+          const $wrapper = $(this).closest(".file-wrapper");
+          $wrapper.find(".btn-add-file").prop("disabled", false);
+        },
         error: () => showErrorToast("File upload failed!")
       });
     });
@@ -689,23 +699,29 @@
         return;
       }
       const newRow = `
-      <div class="file-row row align-items-center mb-2">
+      <div class="file-row row align-items-center1 mb-2">
         <div class="col-md-1"><span class="fw-bold file-label">${newIndex}</span></div>
         <div class="col-md-4">
           <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">
         </div>
-        <div class="col-md-4"><input type="file" class="form-control ${fileInputClassBehalf}">
+        <div class="col-md-4"><input type="file" class="form-control ${fileInputClassBehalf}" accept=".jpg,.jpeg,.png,.pdf">
            <small>jpg and pdf only allowed</small>
           </div>
         <div class="col-md-3"><button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button></div>
       </div>`;
       $rows.append(newRow);
+      $wrapper.find(".btn-add-file").prop("disabled", true);
     });
 
     $("#behalfPane").on('click', '.btn-delete-file', function () {
       $(this).closest('.file-row').remove();
       // Update S No
       $(this).closest('.file-rows').find('.file-label').each((i, el) => $(el).text(i + 1));
+
+      const $wrapper = $(this).closest('.file-wrapper');
+      if ($wrapper.find('input[type="file"]').length === 0) {
+        $wrapper.find('.btn-add-file').prop("disabled", true);
+      }
     });
 
     // ✅ Form submission
@@ -771,12 +787,6 @@
       });
     });
   </script>
-
-
-
-
-
-
 
 
 </body>
