@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acknowledgement</title>
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/font/bootstrap-icons.css" rel="stylesheet"> 
+  <style>
+    body {
+      background: #f8f9fa;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+    .ack-card {
+      background: #fff;
+      border: 1px solid #000;
+      border-radius: 8px;
+      padding: 25px 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin: 40px auto;
+      max-width: 850px;
+    }
+    .ack-card h5 {
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      border-bottom: 2px solid #000;
+      padding-bottom: 6px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+    .ack-label {
+      font-weight: 500;
+      width: 250px;
+    }
+    .ack-row {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="ackCard" class="ack-card">
+  <h5>Acknowledgement</h5>
+  <p class="mb-4">We acknowledge the receipt of your grievance with the following details:</p>
+
+  <div class="ack-row d-flex">
+    <div class="ack-label">Requested By:</div>
+    <div>(e.g., Satheesan G, or eSevai operator ID)</div>
+  </div>
+
+  <div class="ack-row d-flex">
+    <div class="ack-label">Type of user:</div>
+    <div>(e.g., Citizen , eSevai operator)</div>
+  </div>
+
+  <div class="ack-row d-flex">
+    <div class="ack-label">Name of the complainant:</div>
+    <div>__________________________</div>
+  </div>
+
+  <div class="ack-row d-flex">
+    <div class="ack-label">Mobile number of the complainant:</div>
+    <div>__________________________</div>
+  </div>
+
+  <div class="ack-row d-flex">
+    <div class="ack-label">District:</div>
+    <div>(e.g., Dharmapuri)</div>
+  </div>
+
+  <div class="ack-row d-flex">
+    <div class="ack-label">Date:</div>
+    <div>Auto-filled with timestamp (e.g., 28-04-2025 11:43 AM)</div>
+  </div>
+
+  <div class="ack-row d-flex">
+    <div class="ack-label">Issue type:</div>
+    <div>(e.g., eSevai portal and services)</div>
+  </div>
+
+  <div class="ack-row d-flex">
+    <div class="ack-label">Issue category:</div>
+    <div>(e.g., CAN Related)</div>
+  </div>
+
+  <div class="ack-row d-flex">
+    <div class="ack-label">Issue subcategory:</div>
+    <div>(e.g., CAN Edit)</div>
+  </div>
+
+  <div class="ack-row d-flex">
+    <div class="ack-label">Acknowledgement number:</div>
+    <div>__________________________</div>
+  </div>
+
+  <p class="mt-4"><strong>Please note the acknowledgment number for tracking your application status.</strong></p>
+</div>
+
+<!-- Button outside -->
+<div class="text-center">
+  <button onclick="downloadPDF()" class="btn btn-primary mt-3">
+    Download as PDF
+  </button>
+</div>
+
+<!-- html2canvas + jsPDF -->
+<script src="assets/js/html2canvas.min.js"></script>
+<script src="assets/js/jspdf.umd.min.js"></script>
+<script>
+  function downloadPDF() {
+    const { jsPDF } = window.jspdf;
+    const card = document.getElementById('ackCard');
+    html2canvas(card).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const imgWidth = pdfWidth - 20; // margin
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+      pdf.save("acknowledgement.pdf");
+    });
+  }
+</script>
+
+</body>
+</html>
