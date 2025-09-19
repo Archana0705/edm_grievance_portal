@@ -1,142 +1,387 @@
+
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Operator Dashboard</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-     <style>
-.timeline {
-  position: relative;
-  margin: 0;
-  padding: 0 0 0 20px;
-  border-left: 2px solid #dee2e6;
-}
-.timeline li {
-  margin-bottom: 20px;
-  position: relative;
-  opacity: 0;
-  animation: fadeInUp 0.6s ease forwards;
-}
-.timeline li:nth-child(1) { animation-delay: 0.2s; }
-.timeline li:nth-child(2) { animation-delay: 0.6s; }
-.timeline li:nth-child(3) { animation-delay: 1s; }
 
-.timeline-badge {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  position: absolute;
-  left: -7px;
-  top: 5px;
-}
-.timeline-panel {
-  margin-left: 20px;
-  background: #f8f9fa;
-  padding: 10px;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-</style>
-    <style>
-      :root{
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Operator Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/css/aos.css" rel="stylesheet">
+  <link href="../assets/vendor/datatable/css/dataTables.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/vendor/datatable/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="../assets/css/global.css">
+
+  <!-- page css -->
+  <style>
+    .dataTables_length {
+      width: 50%;
+      float: left;
+    }
+
+    .custom-tabs .nav-link {
+      border: 1px solid #182848 !important;
+      border-radius: 15px;
+      color: #182848;
+    }
+
+    ul#reportTabsSelf,
+    ul#reportTabsBehalf {
+      border-bottom: 0;
+    }
+
+    /* Base tab styling */
+    .custom-tabs .nav-link {
+      color: #333;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      transition: all 0.4s ease;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Hover effect with gradient + white text */
+    .custom-tabs .nav-link:hover {
+      background: linear-gradient(90deg, #4b6cb7, #182848);
+      color: #fff !important;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Make icons white on hover */
+    .custom-tabs .nav-link:hover i {
+      color: #fff !important;
+    }
+
+    /* Active tab styling */
+    .custom-tabs .nav-link.active {
+      background: linear-gradient(90deg, #4b6cb7, #182848);
+      color: #fff !important;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    .custom-tabs .nav-link.active i {
+      color: #fff !important;
+    }
+  </style>
+  <style>
+    body {
+      background: #f8f9fa;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .form-section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-label {
+      font-weight: 500;
+    }
+
+    .btn-submit {
+      background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: 0.3s;
+    }
+
+    .btn-submit:hover {
+      transform: scale(1.03);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+  <!-- CSS -->
+  <style>
+    .timeline-wrapper {
+      position: relative;
+      padding-left: 30px;
+    }
+
+    .timeline {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 18px;
+      width: 3px;
+      height: 100%;
+      background: #dee2e6;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .timeline-icon {
+      position: absolute;
+      left: -2px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .timeline-content {
+      margin-left: 50px;
+      background: #fff;
+      padding: 12px 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .timeline-content h6 {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    td,
+    th {
+      white-space: nowrap;
+    }
+
+    .card-header.bg-dark,
+    th {
+      background: #182848 !important;
+      color: #fff !important;
+    }
+  </style>
+  <style>
+    :root {
       --card-radius: 16px;
-      --soft-shadow: 0 8px 24px rgba(0,0,0,.08);
-      }
-      body{ background:#f6f8fb; }
-      .page-title{ font-weight:800; letter-spacing:.3px; }
-      .subtle{ color:#6b7280; }
-      .kpi-card{
-      border:0; border-radius: var(--card-radius); box-shadow: var(--soft-shadow);
-      transition: transform .2s ease, box-shadow .2s ease; background:#fff;
-      }
-      .kpi-card:hover{ transform: translateY(-4px); box-shadow: 0 14px 32px rgba(0,0,0,.12); }
-      .kpi-icon{
-      width:56px; height:56px; border-radius:14px; display:flex; align-items:center; justify-content:center;
-      font-size:1.25rem; color:#fff;
-      }
-      .kpi-meta{ font-size:.85rem; color:#6b7280; }
-      .sticky-filters{
-      position: sticky; top: 0; z-index: 5; background: #f6f8fb; padding: 10px 0;
-      }
-      .legend .badge{ font-weight:600; }
-      .card-block{
-      border:0; border-radius: var(--card-radius); box-shadow: var(--soft-shadow); background:#fff;
-      }
-      /* table styles */
-      .table thead th{ color:#fff; border:0; vertical-align: middle; }
-      .table tbody td{ vertical-align: middle; }
-      .badge-48{ background:#ffed99; color:#7a5b00; }        /* 48+ hrs age badge */
-      .row-danger{ background:#fff2f2; }                      /* row hint for high priority */
-      .escalation-flag{ color:#dc3545; font-size:1rem; }      /* 🔺 icon or similar */
-      /* escalation alert */
-      .escalation-bar{
-      border-radius: 12px; padding: 14px 18px; display:flex; align-items:center; gap:12px;
+      --soft-shadow: 0 8px 24px rgba(0, 0, 0, .08);
+    }
+
+    body {
+      background: #f6f8fb;
+    }
+
+    .page-title {
+      font-weight: 800;
+      letter-spacing: .3px;
+    }
+
+    .subtle {
+      color: #6b7280;
+    }
+
+    .kpi-card {
+      border: 0;
+      border-radius: var(--card-radius);
+      box-shadow: var(--soft-shadow);
+      transition: transform .2s ease, box-shadow .2s ease;
+      background: #fff;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, .12);
+    }
+
+    .kpi-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: #fff;
+    }
+
+    .kpi-meta {
+      font-size: .85rem;
+      color: #6b7280;
+    }
+
+    .sticky-filters {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: #f6f8fb;
+      padding: 10px 0;
+    }
+
+    .legend .badge {
+      font-weight: 600;
+    }
+
+    .card-block {
+      border: 0;
+      border-radius: var(--card-radius);
+      box-shadow: var(--soft-shadow);
+      background: #fff;
+    }
+
+    /* table styles */
+    .table thead th {
+      color: #fff;
+      border: 0;
+      vertical-align: middle;
+    }
+
+    .table tbody td {
+      vertical-align: middle;
+    }
+
+    .badge-48 {
+      background: #ffed99;
+      color: #7a5b00;
+    }
+
+    /* 48+ hrs age badge */
+    .row-danger {
+      background: #fff2f2;
+    }
+
+    /* row hint for high priority */
+    .escalation-flag {
+      color: #dc3545;
+      font-size: 1rem;
+    }
+
+    /* 🔺 icon or similar */
+    /* escalation alert */
+    .escalation-bar {
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
       background: linear-gradient(135deg, #fff5f5, #fff);
-      border:1px solid #ffd2d2;
-      }
-      .escalation-bar i{ color:#dc3545; }
-      /* chart heights */
-      #chartStatus, #chartPriority, #chartTrend{ height: 280px; }
+      border: 1px solid #ffd2d2;
+    }
 
-      #parentTabs {
-        border-bottom: 0px !important;
-      }
-      #parentTabs li .nav-link.active {
-          background: #182848;
-          color: #fff;
-          border-radius: 4px 7px;
-      }
-      #parentTabs li .nav-link {
-          color: #182848;
-          border-radius: 4px 7px;
-          border: 1px solid #182848;
-      }
+    .escalation-bar i {
+      color: #dc3545;
+    }
 
+    /* chart heights */
+    #chartStatus,
+    #chartPriority,
+    #chartTrend {
+      height: 280px;
+    }
 
-    </style>
-    <style>
-      html, body {
+    #parentTabs {
+      border-bottom: 0px !important;
+    }
+
+    #parentTabs li .nav-link.active {
+      background: #182848;
+      color: #fff;
+      border-radius: 4px 7px;
+    }
+
+    #parentTabs li .nav-link {
+      color: #182848;
+      border-radius: 4px 7px;
+      border: 1px solid #182848;
+    }
+  </style>
+  <!-- page css -->
+  <!-- <style>
+      .kpi-card {
+        padding: 1.5rem; 
+        border-radius: 1rem;
+        color: #fff;
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+      }
+      .kpi-card:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+      
+      /* Gradient Variants */
+      .bg-gradient-info {
+        background: linear-gradient(135deg, #36d1dc, #5b86e5);
+      }
+      .bg-gradient-warning {
+        background: linear-gradient(135deg, #f7971e, #ffd200);
+      }
+      .bg-gradient-success {
+        background: linear-gradient(135deg, #56ab2f, #a8e063);
+      }
+      .bg-gradient-danger {
+        background: linear-gradient(135deg, #ff512f, #dd2476);
+      }
+      .bg-gradient-dark {
+        background: linear-gradient(135deg, #434343, #000000);
+      }
+      </style> -->
+  <style>
+    html,
+    body {
       height: 100%;
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f1f3f6;
       color: #333;
-      }
-      body {
+    }
+
+    body {
       display: flex;
       flex-direction: column;
       padding-top: 70px;
       transition: all 0.3s;
-      }
-      /* Header */
-      nav.navbar {
+    }
+
+    /* Header */
+    nav.navbar {
       background: linear-gradient(90deg, #4b6cb7, #182848);
       color: #fff;
       z-index: 1000;
       padding: 0.4rem 1rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      }
-      nav.navbar .navbar-brand, nav.navbar .btn, nav.navbar span {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    nav.navbar .navbar-brand,
+    nav.navbar .btn,
+    nav.navbar span {
       color: #fff;
-      }
-      nav.navbar .btn-light {
-      background: rgba(255,255,255,0.15);
+    }
+
+    nav.navbar .btn-light {
+      background: rgba(255, 255, 255, 0.15);
       border: none;
       color: #fff;
-      }
-      nav.navbar .btn-light:hover {
-      background: rgba(255,255,255,0.25);
-      }
-      /* Sidebar */
-      #sidebar {
+    }
+
+    nav.navbar .btn-light:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Sidebar */
+    #sidebar {
       position: fixed;
       top: 70px;
       left: 0;
@@ -147,10 +392,11 @@
       transition: all 0.3s;
       overflow-y: auto;
       border-right: 1px solid #e0e0e0;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
       z-index: 999;
-      }
-      #sidebar a {
+    }
+
+    #sidebar a {
       display: flex;
       align-items: center;
       padding: 12px 20px;
@@ -160,788 +406,740 @@
       border-radius: 8px;
       margin: 4px 10px;
       transition: all 0.2s ease-in-out;
-      }
-      #sidebar a:hover {
+    }
+
+    #sidebar a:hover {
       background: #4b6cb7;
       color: #fff;
       transform: translateX(5px);
-      }
-      #sidebar a.active {
+    }
+
+    #sidebar a.active {
       background: #182848;
       color: white;
-      }
-      #sidebar i {
+    }
+
+    #sidebar i {
       margin-right: 12px;
       font-size: 1.2rem;
-      }
-      .sidebar-collapsed #sidebar a {
+    }
+
+    .sidebar-collapsed #sidebar a {
       padding: 12px 0px;
-      } 
-      /* Collapsed sidebar */
-      body.sidebar-collapsed #sidebar {
+    }
+
+    /* Collapsed sidebar */
+    body.sidebar-collapsed #sidebar {
       width: 60px;
-      }
-      body.sidebar-collapsed #sidebar a span { display: none; }
-      body.sidebar-collapsed #sidebar a i {
+    }
+
+    body.sidebar-collapsed #sidebar a span {
+      display: none;
+    }
+
+    body.sidebar-collapsed #sidebar a i {
       margin-right: 0;
       width: 100%;
       text-align: center;
-      }
-      /* Main content */
-      #mainContent {
+    }
+
+    /* Main content */
+    #mainContent {
       margin-left: 220px;
       padding: 30px;
       flex: 1;
       transition: all 0.3s;
-      }
-      body.sidebar-collapsed #mainContent { margin-left: 60px; }
-      /* Cards for main content */
-      .card {
+    }
+
+    body.sidebar-collapsed #mainContent {
+      margin-left: 60px;
+    }
+
+    /* Cards for main content */
+    .card {
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
-      .card:hover {
+    }
+
+    /*.card:hover {
       transform: translateY(-5px);
       box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-      }
-      /* Footer */
-      footer {
+      }*/
+    /* Footer */
+    footer {
       background: #fff;
       text-align: center;
       padding: 15px;
       border-top: 1px solid #ddd;
       width: 100%;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
-      }
-      /* Mobile responsiveness */
-      @media (max-width: 992px) {
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 992px) {
       #sidebar {
-      left: -100%;
-      top: 0;
-      width: 220px;
-      height: 100%;
-      border-right: none;
-      box-shadow: 2px 0 15px rgba(0,0,0,0.2);
-      z-index: 9999; 
+        left: -100%;
+        top: 0;
+        width: 220px;
+        height: 100%;
+        border-right: none;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
       }
-      #sidebar.show { left: 0; }
-      #mainContent { margin-left: 0; padding: 20px 10px; }
-      body.sidebar-collapsed #mainContent { margin-left: 0; }
+
+      #sidebar.show {
+        left: 0;
       }
-      @media (max-width: 768px) {
-      #currentDateTime { display: none; }
-      .navbar .fw-bold { font-size: 1.1rem; }
-      #sidebarToggle { padding: 0.35rem 0.6rem; }
-      .dropdown-toggle span { display: none; }
+
+      #mainContent {
+        margin-left: 0;
+        padding: 20px 10px;
       }
-    </style>
-  </head>
-  <body>
-    <!-- Header -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-      <div class="container-fluid d-flex align-items-center">
-        <button class="btn btn-light" id="sidebarToggle">
+
+      body.sidebar-collapsed #mainContent {
+        margin-left: 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      #currentDateTime {
+        display: none;
+      }
+
+      .navbar .fw-bold {
+        font-size: 1.1rem;
+      }
+
+      #sidebarToggle {
+        padding: 0.35rem 0.6rem;
+      }
+
+      .dropdown-toggle span {
+        display: none;
+      }
+    }
+  </style>
+  <!-- main content -->
+  <style>
+    .hover-shadow:hover {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s;
+    }
+
+    .card h3 {
+      font-weight: 600;
+    }
+
+    .card i {
+      transition: transform 0.3s;
+    }
+
+    .card:hover i {
+      transform: scale(1.2);
+    }
+
+    .table-hover tbody tr:hover {
+      background-color: #f1f3f5;
+    }
+
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 15px;
+      border-left: 4px solid #4e73df;
+      padding-left: 10px;
+    }
+
+    .no-height {
+      height: 0px !important;
+    }
+  </style>
+  <!-- main content -->
+</head>
+
+<body>
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid d-flex align-items-center">
+      <button class="btn btn-light" id="sidebarToggle">
         <i class="bi bi-list fs-4"></i>
-        </button>
-        <span class="fw-bold ms-3 fs-5">Operator Dashboard</span>
-        <div class="ms-auto d-flex align-items-center gap-3">
-          <span id="currentDateTime" class="me-3"></span>
-          <div class="dropdown">
-            <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
-            <i class="bi bi-person-circle fs-4"></i> <span class="d-none d-lg-inline fw-semibold">John</span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-              <li><a class="dropdown-item" href="profile.html">Profile</a></li>
-              <li><a class="dropdown-item" href="index.html">Logout</a></li>
-            </ul>
+      </button>
+      <span class="fw-bold ms-3 fs-5">Operator Dashboard</span>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <span id="currentDateTime" class="me-3"></span>
+        <div id="globalProfileDropdown"><!-- profileDropdown.html -->
+<div class="dropdown">
+    <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
+        <i class="bi bi-person-circle fs-4"></i>
+        <span class="d-none d-lg-inline fw-semibold" id="userName">Ramesh Kumar</span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+        <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+        <li><a class="dropdown-item signOutBtn" href="#">Logout</a></li>
+    </ul>
+</div></div>
+      </div>
+    </div>
+  </nav>
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <a href="dashboard.html" class="active"><i class="bi bi-house"></i><span>Dashboard</span></a>
+    <a href="report-issue.html"><i class="bi bi-file-earmark-text"></i><span>Report Issue</span></a>
+    <a href="profile.html"><i class="bi bi-person"></i><span>Profile</span></a>
+    <a href="faq.html"><i class="bi bi-question-circle"></i><span>FAQ</span></a>
+  </div>
+  <!-- Main Content -->
+  <div id="mainContent">
+    <div class="row g-3 mb-3">
+      <!-- Self Tickets -->
+      <div id="selfTicketsCard" class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+        <div class="card kpi-card">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="kpi-icon bg-info"><i class="bi bi-person-badge"></i></div>
+              <div class="text-end">
+                <div class="subtle">Self Tickets</div>
+                <div class="h3 fw-bold mb-0">0</div>
+                <!-- API fills -->
+              </div>
+            </div>
+            <div class="kpi-meta mt-2">
+              In-Progress: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Returned: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              <span class="d-block no-height">&nbsp;</span>
+              Resolved: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Re-Opened: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Closed: <span class="fw-semibold">0</span>
+            </div>
           </div>
         </div>
       </div>
-    </nav>
-    <!-- Sidebar -->
-    <div id="sidebar">
-  <a href="dashboard.html" class="active"><i class="bi bi-speedometer2"></i><span>Dashboard</span></a>
-  <a href="raise-ticket-self.html"><i class="bi bi-person-plus"></i><span>Raise Ticket - Self</span></a>
-  <a href="raise-ticket-behalf.html"><i class="bi bi-people"></i><span>Raise Ticket - Behalf</span></a>
-  <!-- <a href="view-request.html"><i class="bi bi-card-list"></i><span>View Request</span></a> -->
-  <!-- <a href="report.html"><i class="bi bi-file-earmark-text"></i><span>Report</span></a> -->
-  <!-- <a href="notification.html"><i class="bi bi-bell"></i><span>Notification</span></a> -->
-  <a href="profile.html"><i class="bi bi-person-circle"></i><span>Profile</span></a>
-  <a href="faq.html"><i class="bi bi-person-circle"></i><span>FAQ</span></a>
-</div>
-
-    <!-- Main Content -->
-    <div id="mainContent">
-      <div class="container">
-        <!-- Header -->
-        <div class="d-flex flex-wrap align-items-end justify-content-between mb-3">
-          <div>
-            <h2 class="page-title mb-1" data-aos="fade-down">Operator Dashboard</h2>
-            <div class="subtle" data-aos="fade-down" data-aos-delay="50">
-              Welcome, <strong>Operator – Chennai</strong> • Last login: <span>2025-08-27 09:42 AM</span>
-            </div>
-          </div>
-          <div class="text-end">
-            <!-- <button class="btn btn-primary btn-sm"><i class="bi bi-plus-circle me-1"></i> Raise Ticket</button> -->
-            <!-- <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-gear me-1"></i> Settings</button> -->
-          </div>
-        </div>
-        <!-- KPI Cards (Self / On-Behalf / Overall) -->
-        <div class="row g-3 mb-3">
-          <!-- Total Tickets -->
-          <div class="col-md-3 d-flex" data-aos="fade-up">
-            <div class="card kpi-card w-100">
-              <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                  <div>
-                    <div class="kpi-icon bg-primary"><i class="bi bi-stack"></i></div>
-                  </div>
-                  <div class="text-end">
-                    <div class="subtle">Total Tickets</div>
-                    <div class="display-6 fw-bold">120</div>
-                  </div>
-                </div>
+      <!-- On-Behalf Tickets -->
+      <div id="onBehalfTicketsCard" class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="150">
+        <div class="card kpi-card">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="kpi-icon bg-warning"><i class="bi bi-people"></i></div>
+              <div class="text-end">
+                <div class="subtle">On-Behalf Tickets</div>
+                <div class="h3 fw-bold mb-0">0</div>
+                <!-- API fills -->
               </div>
             </div>
-          </div>
-          <!-- Self Tickets -->
-          <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
-            <div class="card kpi-card">
-              <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                  <div class="kpi-icon bg-info"><i class="bi bi-person-badge"></i></div>
-                  <div class="text-end">
-                    <div class="subtle">Self Tickets</div>
-                    <div class="h3 fw-bold mb-0">65</div>
-                  </div>
-                </div>
-                <div class="kpi-meta mt-2">
-                  Open: <span class="fw-semibold">20</span> &nbsp;|&nbsp;
-                  In-Progress: <span class="fw-semibold">15</span> &nbsp;|&nbsp;
-                  Closed: <span class="fw-semibold">30</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- On-Behalf Tickets -->
-          <div class="col-md-3" data-aos="fade-up" data-aos-delay="150">
-            <div class="card kpi-card">
-              <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                  <div class="kpi-icon bg-warning"><i class="bi bi-people"></i></div>
-                  <div class="text-end">
-                    <div class="subtle">On-Behalf Tickets</div>
-                    <div class="h3 fw-bold mb-0">55</div>
-                  </div>
-                </div>
-                <div class="kpi-meta mt-2">
-                  Open: <span class="fw-semibold">10</span> &nbsp;|&nbsp;
-                  In-Progress: <span class="fw-semibold">12</span> &nbsp;|&nbsp;
-                  Closed: <span class="fw-semibold">33</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Overall Tickets (Self + On-Behalf) -->
-          <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
-            <div class="card kpi-card">
-              <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                  <div class="kpi-icon bg-success"><i class="bi bi-collection"></i></div>
-                  <div class="text-end">
-                    <div class="subtle">Overall Tickets</div>
-                    <div class="h3 fw-bold mb-0">120</div>
-                  </div>
-                </div>
-                <div class="kpi-meta mt-2">
-                  Open: <span class="fw-semibold">30</span> &nbsp;|&nbsp;
-                  In-Progress: <span class="fw-semibold">27</span> &nbsp;|&nbsp;
-                  Closed: <span class="fw-semibold">63</span>
-                </div>
-              </div>
+            <div class="kpi-meta mt-2">
+              In-Progress: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Returned: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              <span class="d-block no-height">&nbsp;</span>
+              Resolved: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Re-Opened: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Closed: <span class="fw-semibold">0</span>
             </div>
           </div>
         </div>
-        <!-- Escalation Alert Bar -->
-        <div class="escalation-bar mb-3" data-aos="fade-up">
-          <i class="bi bi-exclamation-triangle-fill fs-5"></i>
-          <div class="me-auto">
-            <strong>5 escalated tickets</strong> require attention (3 self • 2 on-behalf).
-          </div>
-          <button class="btn btn-outline-danger btn-sm"><i class="bi bi-arrow-up-right-square me-1"></i> View Escalated</button>
-        </div>
-        <!-- Filters -->
-        <div class="sticky-filters" data-aos="fade-up">
-          <div class="card card-block">
-            <div class="card-body py-3">
-               <!-- Filters -->
-      <div class="d-flex align-items-center" data-aos="fade-up">
-        <span class="me-3">Filter:</span>
-        <button class="btn btn-outline-primary btn-sm me-2">Today</button>
-        <button class="btn btn-outline-primary btn-sm me-2">Yesterday</button>
-        <input type="date" class="form-control form-control-sm w-auto me-2">
-        <input type="date" class="form-control form-control-sm w-auto me-2">
-        <select class="form-select w-auto me-2" id="priorityFilter">
-          <option value="all">All Priorities</option>
-          <option value="high">High</option>
-          <option value="medium">Medium</option>
-          <option value="low">Low</option>
-        </select>
-        <input type="text" class="form-control w-auto me-2" placeholder="Search Ticket ID / Subject" id="searchTicket">
-        <input type="text" class="form-control w-auto me-2" placeholder="Search Mobile Number" id="searchTicket">
-        <button class="btn btn-primary btn-sm">Apply</button>
       </div>
+      <!-- Overall Tickets (Self + On-Behalf) -->
+      <div id="overallTicketsCard" class="col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+        <div class="card kpi-card">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="kpi-icon bg-success"><i class="bi bi-collection"></i></div>
+              <div class="text-end">
+                <div class="subtle">Overall Tickets</div>
+                <div class="h3 fw-bold mb-0">0</div>
+                <!-- API fills -->
+              </div>
+            </div>
+            <div class="kpi-meta mt-2">
+              In-Progress: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Returned: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              <span class="d-block no-height">&nbsp;</span>
+              Resolved: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Re-Opened: <span class="fw-semibold">0</span> &nbsp;|&nbsp;
+              Closed: <span class="fw-semibold">0</span>
             </div>
           </div>
         </div>
-       
-
-        <!-- Parent Tabs -->
-      <ul class="nav nav-tabs my-3" id="parentTabs" role="tablist" data-aos="fade-up">
-        <li class="nav-item" role="presentation"><button class="nav-link active" id="self-tab" data-bs-toggle="tab" data-bs-target="#selfTickets" type="button"><i class="bi bi-person-plus"></i> Self Tickets</button></li>
-        <li class="nav-item mx-2" role="presentation"><button class="nav-link" id="behalf-tab" data-bs-toggle="tab" data-bs-target="#behalfTickets" type="button"><i class="bi bi-people"></i> On-Behalf Tickets</button></li>
+      </div>
+    </div>
+    <div class="">
+      <ul class="nav nav-tabs my-3" id="parentTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="self-tab" data-bs-toggle="tab" data-bs-target="#selfTickets" type="button"
+            aria-selected="true" role="tab">
+            <i class="bi bi-person-plus"></i> Self Tickets
+          </button>
+        </li>
+        <li class="nav-item mx-2" role="presentation">
+          <button class="nav-link" id="behalf-tab" data-bs-toggle="tab" data-bs-target="#behalfTickets" type="button"
+            aria-selected="false" role="tab">
+            <i class="bi bi-people"></i> On-Behalf Tickets
+          </button>
+        </li>
       </ul>
-      <!-- Parent Tab Contents -->
       <div class="tab-content" id="parentTabsContent">
-        <!-- Self Tickets Parent Tab -->
-        <div class="tab-pane fade show active" id="selfTickets" role="tabpanel">
-          <!-- Sub-Tabs -->
-          <ul class="nav nav-pills mt-2" id="selfSubTabs" role="tablist">
-            <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#selfNew">New</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#selfOpen">Open</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#selfClosed">Closed</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#selfReopened">Reopened</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#selfResolved">Resolved</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#selfSendBack">Send-Back</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#selfEscalate">Escalated</button></li>
-          </ul>
-          <div class="tab-content mt-3">
-            <!-- 🔹 Legend Section -->
-            <div class="mb-3">
-              <span class="badge bg-danger">High Priority</span>
-              <span class="badge bg-warning text-dark">Medium Priority</span>
-              <span class="badge bg-success">Low Priority</span>
-              <span class="badge bg-warning text-dark">48+ hrs Old</span>
-              <span class="badge bg-info text-dark">Escalated</span>
-            </div>
-            <div class="tab-pane fade show active" id="selfNew">
-              <!-- Tickets Table -->
-              <!-- 🔹 Ticket Table -->
-              <div class="table-responsive">
-                <table class="table table-striped align-middle">
-                  <thead class="table-dark">
-                    <tr>
-                      <th>Request Number</th>
-                      <th>Issue Type</th>
-                      <th>Category</th>
-                      <th>Sub-category</th>
-                      <th>Created On</th>
-                      <th>Requested By</th>
-                      <th>Requested District</th>
-                      <th>Assigned To</th>
-                      <th>Current Status</th>
-                      <th>Priority</th>
-                      <th>Escalated</th>
-                      <!-- 🔹 New Column -->
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Operator101</td>
-                      <td>Complaint</td>
-                      <td>Infrastructure</td>
-                      <td>Road Damage</td>
-                      <td>24-08-2025 <span class="badge bg-warning text-dark">48+ hrs</span></td>
-                      <td>John Doe</td>
-                      <td>Chennai</td>
-                      <td>Helpdesk A</td>
-                      <td>New</td>
-                      <td><span class="badge bg-danger">High</span></td>
-                      <td><span class="badge bg-info text-dark">Yes</span></td>
-                      <!-- Escalated -->
-                      <td>
-                        <button class="btn btn-sm btn-primary viewBtn" data-bs-toggle="modal" data-bs-target=".ticketModalSelf">View</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Operator102</td>
-                      <td>Service Request</td>
-                      <td>Water Supply</td>
-                      <td>Pipeline Issue</td>
-                      <td>27-08-2025</td>
-                      <td>Mary Jane</td>
-                      <td>Coimbatore</td>
-                      <td>Helpdesk B</td>
-                      <td>New</td>
-                      <td><span class="badge bg-success">Low</span></td>
-                      <td><span class="badge bg-secondary">No</span></td>
-                      <!-- Not Escalated -->
-                      <td>
-                        <button class="btn btn-sm btn-primary viewBtn" data-bs-toggle="modal" data-bs-target=".ticketModalSelf">View</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Operator103</td>
-                      <td>Follow-up</td>
-                      <td>Electricity</td>
-                      <td>Power Outage</td>
-                      <td>24-08-2025 <span class="badge bg-warning text-dark">48+ hrs</span></td>
-                      <td>Ravi Kumar</td>
-                      <td>Madurai</td>
-                      <td>Helpdesk C</td>
-                      <td>New</td>
-                      <td><span class="badge bg-warning text-dark">Medium</span></td>
-                      <td><span class="badge bg-info text-dark">Yes</span></td>
-                      <!-- Escalated -->
-                      <td>
-                        <button class="btn btn-sm btn-primary viewBtn" data-bs-toggle="modal" data-bs-target=".ticketModalSelf">View</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Operator104</td>
-                      <td>Complaint</td>
-                      <td>Sanitation</td>
-                      <td>Garbage Collection</td>
-                      <td>26-08-2025</td>
-                      <td>Priya Singh</td>
-                      <td>Salem</td>
-                      <td>Helpdesk D</td>
-                      <td>New</td>
-                      <td><span class="badge bg-danger">High</span></td>
-                      <td><span class="badge bg-secondary">No</span></td>
-                      <!-- Not Escalated -->
-                      <td>
-                        <button class="btn btn-sm btn-primary viewBtn" data-bs-toggle="modal" data-bs-target=".ticketModalSelf">View</button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="tab-pane fade" id="selfOpen">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Subject</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Operator002</td>
-                    <td>Electricity Outage</td>
-                    <td>Medium</td>
-                    <td>Open</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="tab-pane fade" id="selfClosed">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Subject</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Operator003</td>
-                    <td>Road Repair Completed</td>
-                    <td>Low</td>
-                    <td>Closed</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="tab-pane fade" id="selfReopened">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Subject</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Operator004</td>
-                    <td>Pothole Issue Reopened</td>
-                    <td>Medium</td>
-                    <td>Reopened</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="tab-pane fade" id="selfResolved">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Subject</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Operator005</td>
-                    <td>Park Maintenance Done</td>
-                    <td>High</td>
-                    <td>Resolved</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="tab-pane fade" id="selfSendBack">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Subject</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Operator006</td>
-                    <td>Garbage Issue Send-Back</td>
-                    <td>Low</td>
-                    <td>Send-Back</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="tab-pane fade" id="selfEscalate">
-              <div class="table-responsive">
-                <table class="table table-striped align-middle">
-                  <thead class="table-dark">
-                    <tr>
-                      <th>Request Number</th>
-                      <th>Issue Type</th>
-                      <th>Category</th>
-                      <th>Sub-category</th>
-                      <th>Created On</th>
-                      <th>Requested By</th>
-                      <th>Requested District</th>
-                      <th>Assigned To</th>
-                      <th>Current Status</th>
-                      <th>Priority</th>
-                      <th>Escalated</th>
-                      <!-- 🔹 New Column -->
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Operator101</td>
-                      <td>Complaint</td>
-                      <td>Infrastructure</td>
-                      <td>Road Damage</td>
-                      <td>24-08-2025 <span class="badge bg-warning text-dark">48+ hrs</span></td>
-                      <td>John Doe</td>
-                      <td>Chennai</td>
-                      <td>Helpdesk A</td>
-                      <td>New</td>
-                      <td><span class="badge bg-danger">High</span></td>
-                      <td><span class="badge bg-info text-dark">Yes</span></td>
-                      <!-- Escalated -->
-                      <td>
-                        <button class="btn btn-sm btn-primary viewBtn" data-bs-toggle="modal" data-bs-target=".ticketModalSelf">View</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Operator102</td>
-                      <td>Service Request</td>
-                      <td>Water Supply</td>
-                      <td>Pipeline Issue</td>
-                      <td>27-08-2025</td>
-                      <td>Mary Jane</td>
-                      <td>Coimbatore</td>
-                      <td>Helpdesk B</td>
-                      <td>New</td>
-                      <td><span class="badge bg-success">Low</span></td>
-                      <td><span class="badge bg-secondary">No</span></td>
-                      <!-- Not Escalated -->
-                      <td>
-                        <button class="btn btn-sm btn-primary viewBtn" data-bs-toggle="modal" data-bs-target=".ticketModalSelf">View</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Operator103</td>
-                      <td>Follow-up</td>
-                      <td>Electricity</td>
-                      <td>Power Outage</td>
-                      <td>24-08-2025 <span class="badge bg-warning text-dark">48+ hrs</span></td>
-                      <td>Ravi Kumar</td>
-                      <td>Madurai</td>
-                      <td>Helpdesk C</td>
-                      <td>New</td>
-                      <td><span class="badge bg-warning text-dark">Medium</span></td>
-                      <td><span class="badge bg-info text-dark">Yes</span></td>
-                      <!-- Escalated -->
-                      <td>
-                        <button class="btn btn-sm btn-primary viewBtn" data-bs-toggle="modal" data-bs-target=".ticketModalSelf">View</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Operator104</td>
-                      <td>Complaint</td>
-                      <td>Sanitation</td>
-                      <td>Garbage Collection</td>
-                      <td>26-08-2025</td>
-                      <td>Priya Singh</td>
-                      <td>Salem</td>
-                      <td>Helpdesk D</td>
-                      <td>New</td>
-                      <td><span class="badge bg-danger">High</span></td>
-                      <td><span class="badge bg-secondary">No</span></td>
-                      <!-- Not Escalated -->
-                      <td>
-                        <button class="btn btn-sm btn-primary viewBtn" data-bs-toggle="modal" data-bs-target=".ticketModalSelf">View</button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+        <!-- Self Tickets -->
+        <div class="tab-pane fade show active" id="selfTickets" role="tabpanel" aria-labelledby="self-tab">
+          <div class="card shadow-sm mt-3">
+            <div class="card-header bg-dark text-white">Issue History</div>
+            <div class="card-body">
+              <!-- <ul class="nav nav-tabs" id="reportTabsSelf" role="tablist">
+                  <li class="nav-item">
+                    <button class="nav-link active" id="self-open" data-bs-toggle="tab" data-bs-target="#openSelf"
+                      type="button" role="tab">In-Progress
+                      <span class="badge rounded-pill text-bg-primary" id="inProgressCount">0</span>
+                    </button>
+                  </li>
+                  <li class="nav-item">
+                    <button class="nav-link" id="self-returned" data-bs-toggle="tab" data-bs-target="#returnedSelf"
+                      type="button" role="tab">Returned
+                    <span class="badge rounded-pill text-bg-primary" id="returnedCount"></span>
+                  </button>
+                  </li>
+                  <li class="nav-item">
+                    <button class="nav-link" id="self-resolved" data-bs-toggle="tab" data-bs-target="#resolvedSelf"
+                      type="button" role="tab">Resolved
+                      <span class="badge rounded-pill text-bg-primary" id="resolvedCount"></span>
+                    </button>
+                  </li>
+                  <li class="nav-item">
+                    <button class="nav-link" id="self-reopen" data-bs-toggle="tab" data-bs-target="#reopenSelf"
+                      type="button" role="tab">Re-opened
+                      <span class="badge rounded-pill text-bg-primary" id="reopenedCount"></span>
+                    </button>
+                  </li>
+                  <li class="nav-item">
+                    <button class="nav-link" id="self-closed" data-bs-toggle="tab" data-bs-target="#closedSelf"
+                      type="button" role="tab">Closed
+                    <span class="badge rounded-pill text-bg-primary" id="closedCount"></span>
+                  </button>
+                  </li>
+                  </ul> -->
+              <ul class="nav nav-tabs custom-tabs" id="reportTabsSelf" role="tablist">
+
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="self-all" data-bs-toggle="tab" data-bs-target="#openall"
+                    type="button" role="tab" aria-selected="true">
+                    <i class="bi bi-list-check me-1"></i> All
+                    <span class="badge rounded-pill text-bg-primary" id="allCount">0</span>
+                  </button>
+                </li>
+
+                <li class="nav-item mx-2" role="presentation">
+                  <button class="nav-link" id="self-open" data-bs-toggle="tab" data-bs-target="#openSelf" type="button"
+                    role="tab" aria-selected="true">
+                    <i class="bi bi-hourglass-split me-1"></i> In-Progress
+                    <span class="badge rounded-pill text-bg-primary" id="inProgressCount">0</span>
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="self-returned" data-bs-toggle="tab" data-bs-target="#returnedSelf"
+                    type="button" role="tab" aria-selected="false" tabindex="-1">
+                    <i class="bi bi-arrow-return-left me-1"></i> Returned
+                    <span class="badge rounded-pill text-bg-primary" id="returnedCount">0</span>
+                  </button>
+                </li>
+                <li class="nav-item mx-2" role="presentation">
+                  <button class="nav-link" id="self-resolved" data-bs-toggle="tab" data-bs-target="#resolvedSelf"
+                    type="button" role="tab" aria-selected="false" tabindex="-1">
+                    <i class="bi bi-check-circle-fill me-1"></i> Resolved
+                    <span class="badge rounded-pill text-bg-primary" id="resolvedCount">0</span>
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="self-reopen" data-bs-toggle="tab" data-bs-target="#reopenSelf"
+                    type="button" role="tab" aria-selected="false" tabindex="-1">
+                    <i class="bi bi-arrow-clockwise me-1"></i> Re-opened
+                    <span class="badge rounded-pill text-bg-primary" id="reopenedCount">0</span>
+                  </button>
+                </li>
+                <li class="nav-item mx-2" role="presentation">
+                  <button class="nav-link" id="self-closed" data-bs-toggle="tab" data-bs-target="#closedSelf"
+                    type="button" role="tab" aria-selected="false" tabindex="-1">
+                    <i class="bi bi-lock-fill me-1"></i> Closed
+                    <span class="badge rounded-pill text-bg-primary" id="closedCount">0</span>
+                  </button>
+                </li>
+              </ul>
+              <div class="tab-content mt-4">
+                <!-- All -->
+                <div class="tab-pane fade show active" id="openall" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center" id="allSelfTable1"
+                      style="width:100%">
+                      <thead>
+                        <tr>
+
+                          <th>Ticket Id</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Sub Category</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="odd">
+      
+      <td class="sorting_1">CIT/2025-09-01/00006</td>
+      <td>eSevai centre related</td>
+      <td>Centre-related complaints/ grievances</td>
+      <td>Non-compliance with centre guidelines</td>
+      <td>
+        <span class="badge bg-info text-dark status-badge" style="cursor:pointer;">
+          In-Progress
+        </span>
+      </td>
+    </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="openSelf" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center" id="openSelfTable1"
+                      style="width:100%">
+                      <thead>
+                        <tr>
+                          <th>View</th>
+                          <th>Ticket Id</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Sub Category</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="odd">
+      
+        <td class="sorting_1">
+          <button class="btn btn-sm btn-info viewTicketBtn" data-bs-toggle="modal" data-bs-target="#ticketDetailsModal">
+           View
+          </button>
+        </td>
+      <td>CIT/2025-09-01/00007</td>
+      <td>eSevai centre related</td>
+      <td>Centre-related complaints/ grievances</td>
+      <td>Non-compliance with centre guidelines</td>
+      <td>
+        <span class="badge bg-info text-dark status-badge" style="cursor:pointer;">
+          In-Progress
+        </span>
+      </td>
+    </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- Returned -->
+                <div class="tab-pane fade" id="returnedSelf" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center" id="returnedSelfTable"
+                      style="width:100%">
+                      <thead>
+                        <tr>
+                          <th>View</th>
+                          <th>Ticket Id</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Sub Category</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- Resolved -->
+                <div class="tab-pane fade" id="resolvedSelf" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center" id="resolvedSelfTable"
+                      style="width:100%">
+                      <thead>
+                        <tr>
+                          <th>View</th>
+                          <th>Ticket Id</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Sub Category</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- Re-opened -->
+                <div class="tab-pane fade" id="reopenSelf" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center" id="reopenSelfTable"
+                      style="width:100%">
+                      <thead>
+                        <tr>
+                          <th>View</th>
+                          <th>Ticket Id</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Sub Category</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- Closed -->
+                <div class="tab-pane fade" id="closedSelf" role="tabpanel">
+                  <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-striped table-hover align-middle text-center" id="closedSelfTable"
+                      style="width:100%">
+                      <thead>
+                        <tr>
+                          <th>View</th>
+                          <th>Ticket Id</th>
+                          <th>Issue Type</th>
+                          <th>Category</th>
+                          <th>Sub Category</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <!-- On-Behalf Tickets Parent Tab -->
-        <div class="tab-pane fade" id="behalfTickets" role="tabpanel">
-          <!-- Sub-Tabs -->
-          <ul class="nav nav-pills mt-2" id="behalfSubTabs" role="tablist">
-            <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#behalfNew">New</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#behalfOpen">Open</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#behalfClosed">Closed</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#behalfReopened">Reopened</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#behalfResolved">Resolved</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#behalfSendBack">Send-Back</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#behalfEscalate">Escalated</button></li>
-          </ul>
-          <div class="tab-content mt-3">
-            <!-- Legend for Highlights -->
-            <div class="mb-3">
-              <span class="badge bg-danger me-2">High Priority</span>
-              <span class="badge bg-warning text-dark me-2">Older than 48h</span>
-            </div>
-            <div class="tab-pane fade show active" id="behalfNew">
-              <div class="table-responsive mt-3">
-                <table class="table table-bordered table-hover align-middle">
-                  <thead class="table-dark text-center">
-                    <tr>
-                      <th>Request Number</th>
-                      <th>Name</th>
-                      <th>Mobile</th>
-                      <th>District</th>
-                      <th>Issue / Category / Sub-category</th>
-                      <th>Remarks</th>
-                      <th>Attachment</th>
-                      <th>Solution</th>
-                      <th>Helpdesk Notes / Upload</th>
-                      <th>Current Status</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody class="text-center">
-                    <tr>
-                      <td>REQ-1001</td>
-                      <td>Ravi Kumar</td>
-                      <td>9876543210</td>
-                      <td>Nilgiris</td>
-                      <td>Water Supply / Leakage / Pipeline</td>
-                      <td>Major leakage near main road</td>
-                      <td><a href="#" class="btn btn-sm btn-outline-primary">Download</a></td>
-                      <td>Work order issued</td>
-                      <td>Site inspection done</td>
-                      <td><span class="badge bg-warning">Open</span></td>
-                      <!-- <td><span class="badge bg-primary">New</span></td> -->
-                      <td><button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target=".ticketModal">View</button></td>
-                    </tr>
-                    <tr>
-                      <td>REQ-1002</td>
-                      <td>Anitha Raj</td>
-                      <td>9123456780</td>
-                      <td>Coimbatore</td>
-                      <td>Street Light / Faulty Bulb / Replacement</td>
-                      <td>Street light not working in my area</td>
-                      <td>-</td>
-                      <td>Pending technician visit</td>
-                      <td>-</td>
-                      <td><span class="badge bg-primary">New</span></td>
-                      <td><button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target=".ticketModal">View</button></td>
-                    </tr>
-                    <tr>
-                      <td>REQ-1003</td>
-                      <td>Mohan Das</td>
-                      <td>9001234567</td>
-                      <td>Salem</td>
-                      <td>Road / Pothole / Urgent Repair</td>
-                      <td>Huge pothole blocking traffic</td>
-                      <td><a href="#" class="btn btn-sm btn-outline-primary">Download</a></td>
-                      <td>Repaired & Closed</td>
-                      <td>Uploaded completion photo</td>
-                      <td><span class="badge bg-success">Resolved</span></td>
-                      <td><button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target=".ticketModal">View</button></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="tab-pane fade" id="behalfOpen">
-              content...
-            </div>
-            <!-- Other On-Behalf sub-tabs with minimal content -->
-            <div class="tab-pane fade" id="behalfClosed">
-              <p class="text-muted">Closed tickets will appear here</p>
-            </div>
-            <div class="tab-pane fade" id="behalfReopened">
-              <p class="text-muted">Reopened tickets will appear here</p>
-            </div>
-            <div class="tab-pane fade" id="behalfResolved">
-              <p class="text-muted">Resolved tickets will appear here</p>
-            </div>
-            <div class="tab-pane fade" id="behalfSendBack">
-              <p class="text-muted">Send-Back tickets will appear here</p>
-            </div>
-            <div class="tab-pane fade" id="behalfEscalate">
-              <p class="text-muted">Escalated  tickets will appear here</p>
-            </div>
-          </div>
-        </div>
       </div>
-
-
-
-
-      </div>
-    </div>
-    <!-- Footer -->
-    <footer>
-      &copy; 2025 My Dashboard. All rights reserved.
-    </footer>
-
-     <!-- citizen modal -->
-    <!-- Ticket Details Modal -->
-    <div class="modal fade ticketModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header bg-dark text-white">
-            <h5 class="modal-title">Ticket Details</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <!-- Ticket Details -->
-            <div class="mb-3">
-              <strong>Request Number:</strong> REQ101<br>
-              <strong>Name:</strong> Arun Kumar<br>
-              <strong>Mobile:</strong> 9876543210<br>
-              <strong>District:</strong> Nilgiris<br>
-              <strong>Issue / Category / Sub-category:</strong> Water Supply / Pipeline / Leakage<br>
-              <strong>Remarks:</strong> Severe leakage near main road<br>
-              <strong>Attachment:</strong> <a href="#">Download</a><br>
-              <strong>Solution:</strong> Temporary fix applied<br>
-              <strong>Helpdesk Notes / Upload:</strong> Follow-up scheduled<br>
-              <strong>Current Status:</strong> <span class="badge bg-warning">Open</span>
-            </div>
-            <hr>
-            <!-- Timeline -->
-            <h6>Timeline</h6>
-            <ul class="timeline list-unstyled">
-              <li>
-                <div class="timeline-badge bg-primary"></div>
-                <div class="timeline-panel">
-                  <p><strong>Created:</strong> 2025-08-25 10:15 AM</p>
-                </div>
+      <!-- On-Behalf Tickets (fixed pane ids and tables) -->
+      <div class="tab-pane fade" id="behalfTickets" role="tabpanel" aria-labelledby="behalf-tab">
+        <div class="card shadow-sm mt-3">
+          <div class="card-header bg-dark text-white">Issue History</div>
+          <div class="card-body">
+            <ul class="nav nav-tabs custom-tabs" id="reportTabsBehalf" role="tablist">
+              <li class="nav-item"><button class="nav-link active" id="behalf-all" data-bs-toggle="tab"
+                  data-bs-target="#allReports" type="button" role="tab"><i class="bi bi-list-check me-1"></i> All
+                  <span class="badge rounded-pill text-bg-primary" id="behalfallCount">0</span>
+                </button>
               </li>
-              <li>
-                <div class="timeline-badge bg-info"></div>
-                <div class="timeline-panel">
-                  <p><strong>Assigned:</strong> 2025-08-25 11:00 AM</p>
-                </div>
+              <li class="nav-item mx-2"><button class="nav-link" id="behalf-open" data-bs-toggle="tab"
+                  data-bs-target="#openReports" type="button" role="tab"><i class="bi bi-hourglass-split me-1"></i>
+                  In-Progress
+                  <span class="badge rounded-pill text-bg-primary" id="behalfinProgressCount">0</span>
+                </button>
               </li>
-              <li>
-                <div class="timeline-badge bg-success"></div>
-                <div class="timeline-panel">
-                  <p><strong>In Progress:</strong> 2025-08-26 09:30 AM</p>
-                </div>
+              <li class="nav-item"><button class="nav-link" id="behalf-returned" data-bs-toggle="tab"
+                  data-bs-target="#returnedReports" type="button" role="tab"><i
+                    class="bi bi-arrow-return-left me-1"></i> Returned
+                  <span class="badge rounded-pill text-bg-primary" id="behalfreturnedCount">0</span>
+                </button>
+              </li>
+              <li class="nav-item mx-2"><button class="nav-link" id="behalf-resolved" data-bs-toggle="tab"
+                  data-bs-target="#resolvedReports" type="button" role="tab"><i
+                    class="bi bi-check-circle-fill me-1"></i> Resolved
+                  <span class="badge rounded-pill text-bg-primary" id="behalfresolvedCount">0</span>
+                </button>
+              </li>
+              <li class="nav-item"><button class="nav-link" id="behalf-reopen" data-bs-toggle="tab"
+                  data-bs-target="#reopenReports" type="button" role="tab"><i class="bi bi-arrow-clockwise me-1"></i>
+                  Re-opened
+                  <span class="badge rounded-pill text-bg-primary" id="behalfreopenedCount">0</span>
+                </button>
+              </li>
+              <li class="nav-item mx-2"><button class="nav-link" id="behalf-closed" data-bs-toggle="tab"
+                  data-bs-target="#closedReports" type="button" role="tab"><i class="bi bi-lock-fill me-1"></i> Closed
+                  <span class="badge rounded-pill text-bg-primary" id="behalfclosedCount">0</span>
+                </button>
               </li>
             </ul>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-danger escalate-btn">Escalate</button>
-            <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- citizen modal -->
-    <!-- ticket self -->
-    <div class="modal fade ticketModalSelf" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title">Ticket Details – REQ101</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <dl class="row">
-              <dt class="col-sm-3">Request Number</dt>
-              <dd class="col-sm-9">REQ101</dd>
-              <dt class="col-sm-3">Issue Type</dt>
-              <dd class="col-sm-9">Complaint</dd>
-              <dt class="col-sm-3">Category</dt>
-              <dd class="col-sm-9">Infrastructure</dd>
-              <dt class="col-sm-3">Sub-category</dt>
-              <dd class="col-sm-9">Road Damage</dd>
-              <dt class="col-sm-3">Created On</dt>
-              <dd class="col-sm-9">2025-08-20</dd>
-              <dt class="col-sm-3">Requested By</dt>
-              <dd class="col-sm-9">Ravi Kumar</dd>
-              <dt class="col-sm-3">Requested District</dt>
-              <dd class="col-sm-9">Nilgiris</dd>
-              <dt class="col-sm-3">Assigned To</dt>
-              <dd class="col-sm-9">Officer A</dd>
-              <dt class="col-sm-3">Current Status</dt>
-              <dd class="col-sm-9"><span class="badge bg-warning">In Progress</span></dd>
-              <dt class="col-sm-3">Priority</dt>
-              <dd class="col-sm-9"><span class="badge bg-danger">High</span></dd>
-            </dl>
-            <h6 class="mt-4">📌 Timeline</h6>
-            <ul class="timeline" id="timeline">
-              <li class="timeline-item"><strong>2025-08-20 10:15 AM</strong> – Ticket Created</li>
-              <li class="timeline-item"><strong>2025-08-20 12:30 PM</strong> – Assigned to Officer A</li>
-              <li class="timeline-item"><strong>2025-08-21 09:00 AM</strong> – Work In Progress</li>
-              <li class="timeline-item"><strong>2025-08-22 05:00 PM</strong> – Estimated Resolution</li>
-            </ul>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-danger escalate-btn">Escalate</button> 
-            <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- ticket self -->
+            <div class="tab-content mt-4">
+              <!-- all -->
+              <div class="tab-pane fade show active" id="allReports" role="tabpanel">
+                <div class="table-responsive shadow-sm rounded">
+                  <table class="table table-striped table-hover align-middle text-center" id="allReportsTable"
+                    style="width:100%">
+                    <thead>
+                      <tr>
 
+                        <th>Ticket Id</th>
+                        <th>Issue Type</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- openReports -->
+              <div class="tab-pane fade" id="openReports" role="tabpanel">
+                <div class="table-responsive shadow-sm rounded">
+                  <table class="table table-striped table-hover align-middle text-center" id="openReportsTable"
+                    style="width:100%">
+                    <thead>
+                      <tr>
+                        <th>View</th>
+                        <th>Ticket Id</th>
+                        <th>Issue Type</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- returnedReports -->
+              <div class="tab-pane fade" id="returnedReports" role="tabpanel">
+                <div class="table-responsive shadow-sm rounded">
+                  <table class="table table-striped table-hover align-middle text-center" id="returnedReportsTable"
+                    style="width:100%">
+                    <thead>
+                      <tr>
+                        <th>View</th>
+                        <th>Ticket Id</th>
+                        <th>Issue Type</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- resolvedReports -->
+              <div class="tab-pane fade" id="resolvedReports" role="tabpanel">
+                <div class="table-responsive shadow-sm rounded">
+                  <table class="table table-striped table-hover align-middle text-center" id="resolvedReportsTable"
+                    style="width:100%">
+                    <thead>
+                      <tr>
+                        <th>View</th>
+                        <th>Ticket Id</th>
+                        <th>Issue Type</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- reopenReports -->
+              <div class="tab-pane fade" id="reopenReports" role="tabpanel">
+                <div class="table-responsive shadow-sm rounded">
+                  <table class="table table-striped table-hover align-middle text-center" id="reopenReportsTable"
+                    style="width:100%">
+                    <thead>
+                      <tr>
+                        <th>View</th>
+                        <th>Ticket Id</th>
+                        <th>Issue Type</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- closedReports -->
+              <div class="tab-pane fade" id="closedReports" role="tabpanel">
+                <div class="table-responsive shadow-sm rounded">
+                  <table class="table table-striped table-hover align-middle text-center" id="closedReportsTable"
+                    style="width:100%">
+                    <thead>
+                      <tr>
+                        <th>View</th>
+                        <th>Ticket Id</th>
+                        <th>Issue Type</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 My Dashboard. All rights reserved.
+  </footer>
+
+
+  
+  <div class="modal fade" id="ticketDetailsModal" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title">Issue Details</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-sm table-bordered" id="ticketDetailsTable">
+            <tr><th>Ticket ID</th><td>CIT/2025-09-01/00007</td></tr>
+            <tr><th>Name</th><td>Ramesh</td></tr>
+            <tr><th>Email</th><td>ramesh@example.com</td></tr>
+            <tr><th>Mobile</th><td>9876543210</td></tr>
+            <tr><th>District</th><td>Cuddalore</td></tr>
+            <tr><th>Created Date</th><td>01/09/2025, 06:34 pm</td></tr>
+            <tr><th>Category</th><td>Centre-related complaints/ grievances</td></tr>
+            <tr><th>Subcategory</th><td>Non-compliance with centre guidelines</td></tr>
+            <tr><th>Priority</th><td>High</td></tr>
+            <tr><th>Status</th><td>In-Progress</td></tr>
+           
+            <tr><th>Remarks</th><td>Street light not working</td></tr>
+          </table>
+          <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
+          <ul class="timeline" id="ticketTimeline">
+                <li class="timeline-item">
+                  <div class="timeline-icon bg-primary">
+                    <i class="bi bi-clock-history text-white"></i>
+                  </div>
+                  <div class="timeline-content">
+                    <h6 class="mb-1">Created by citizen</h6>
+                    <small class="text-muted">
+                      Citizen → New <br>
+                      01/09/2025, 06:34 pm
+                    </small>
+                  </div>
+                </li>
+              </ul>
+        </div>
+      </div>
+    </div>
+    <!-- </div> -->
+   
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="../assets/js/jquery-3.7.1.min.js"></script>
+    <script src="../assets/js/global.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- <script src="assets/js/bootstrap.bundle.min.js"></script> -->
+    <script src="../assets/js/aos.js"></script>
+    <script src="../assets/js/dataTableUtil.js"></script>
+    <script src="../assets/js/crypto-js.min.js"></script>
+    <script src="../assets/js/encrypt_decrypt.js"></script>
+    <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/toastUtil.js"></script>
+    <script src="../assets/js/apiConfig.js"></script>
+    <script src="../assets/js/globalProfileDropdown.js"></script>
     <script>
       // Sidebar toggle
       const sidebarToggle = document.getElementById('sidebarToggle');
       const sidebar = document.getElementById('sidebar');
-      
+
       sidebarToggle.addEventListener('click', () => {
         if (window.innerWidth < 992) {
           // Mobile: slide in/out
@@ -951,16 +1149,16 @@
           document.body.classList.toggle('sidebar-collapsed');
         }
       });
-      
+
       // Close mobile sidebar when clicking outside
-      document.addEventListener('click', function(e) {
+      document.addEventListener('click', function (e) {
         if (window.innerWidth < 992) {
           if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
             sidebar.classList.remove('show');
           }
         }
       });
-      
+
       // Display current date and time
       function updateDateTime() {
         const now = new Date();
@@ -971,77 +1169,569 @@
       setInterval(updateDateTime, 1000);
       updateDateTime();
     </script>
+    <!-- <script>
+      var options = {
+        chart: { type: 'line', height: 250 },
+        series: [{ name: 'Requests', data: [10, 15, 8, 12, 20, 25, 18] }],
+        xaxis: { categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] }
+      };
+      var chart = new ApexCharts(document.querySelector("#requestsChart"), options);
+      chart.render();
+      
+      </script> -->
+   
+    <!-- datatable-->
     <script>
-      AOS.init({ duration: 700, once: true });
-      
-      // Quick date filters
-      const pad = n => String(n).padStart(2,'0');
-      const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-      $('#btnToday').on('click', ()=>{
-        const d = new Date();
-        $('#fromDate').val(fmt(d)); $('#toDate').val(fmt(d));
+      $(document).ready(function () {
+        console.log('jQuery loaded?', typeof jQuery !== 'undefined');
+        console.log('DataTable loaded?', typeof $.fn.DataTable !== 'undefined'); // should be true
+
+        $('#pressReleaseTable').DataTable();
       });
-      $('#btnYesterday').on('click', ()=>{
-        const d = new Date(); d.setDate(d.getDate()-1);
-        $('#fromDate').val(fmt(d)); $('#toDate').val(fmt(d));
-      });
-      $('#applyFilters').on('click', ()=> alert('Filters applied (static demo)'));
-      $('#resetFilters').on('click', ()=>{
-        $('#fromDate,#toDate').val(''); $('#priorityFilter').val('');
-      });
-      
-      // ---- Charts (static placeholders) ----
-      const statusChart = new ApexCharts(document.querySelector("#chartStatus"), {
-        chart:{ type:'donut', height:280 },
-        series:[30,27,63], // Open, In-Progress, Closed (overall)
-        labels:['Open','In-Progress','Closed'],
-        legend:{ position:'bottom' },
-        dataLabels:{ enabled:true },
-        stroke:{ show:false }
-      });
-      statusChart.render();
-      
-      const priorityChart = new ApexCharts(document.querySelector("#chartPriority"), {
-        chart:{ type:'bar', height:280 },
-        series:[{ name:'Tickets', data:[22, 45, 53] }], // High, Medium, Low (example)
-        xaxis:{ categories:['High','Medium','Low'] },
-        plotOptions:{ bar:{ borderRadius:6, columnWidth:'45%' } },
-        dataLabels:{ enabled:true },
-        legend:{ show:false }
-      });
-      priorityChart.render();
-      
-      const trendChart = new ApexCharts(document.querySelector("#chartTrend"), {
-        chart:{ type:'area', height:280, toolbar:{ show:false } },
-        series:[
-          { name:'New', data:[4,5,7,6,8,6,7,5,6,9,8,7,6,5] },
-          { name:'Closed', data:[3,4,5,4,6,7,6,5,7,8,7,9,8,7] }
-        ],
-        xaxis:{ categories:['D-14','D-13','D-12','D-11','D-10','D-9','D-8','D-7','D-6','D-5','D-4','D-3','D-2','D-1'] },
-        dataLabels:{ enabled:false },
-        stroke:{ curve:'smooth', width:2 },
-        fill:{ opacity:.25 }
-      });
-      trendChart.render();
     </script>
     <script>
-      // Animate timeline items when modal opens
-      const ticketModalSelf = document.getElementByClassName('ticketModalSelf');
-      ticketModalSelf.addEventListener('shown.bs.modal', function () {
-        const items = document.querySelectorAll('#timeline .timeline-item');
-        items.forEach((item, index) => {
-          setTimeout(() => {
-            item.classList.add('show');
-          }, index * 600); // delay each item
+      console.log("✅ DataTables loaded?", typeof $.fn.DataTable); 
+    </script>
+    <script>
+      $(document).ready(function () {
+        var userId = localStorage.getItem('user_id');
+
+        const statusMap = {
+          "self-all": null,
+          "self-open": "In-Progress",
+          "self-returned": "Returned",
+          "self-resolved": "Resolved",
+          "self-reopen": "Re-opened",
+          "self-closed": "Closed",
+          "behalf-all": null,
+          "behalf-open": "In-Progress",
+          "behalf-returned": "Returned",
+          "behalf-resolved": "Resolved",
+          "behalf-reopen": "Re-Opened",
+          "behalf-closed": "Closed"
+        };
+
+        const tableIdMap = {
+          "self-all": "allSelfTable",
+          "self-open": "openSelfTable",
+          "self-returned": "returnedSelfTable",
+          "self-resolved": "resolvedSelfTable",
+          "self-reopen": "reopenSelfTable",
+          "self-closed": "closedSelfTable",
+          "behalf-all": "allReportsTable",
+          "behalf-open": "openReportsTable",
+          "behalf-returned": "returnedReportsTable",
+          "behalf-resolved": "resolvedReportsTable",
+          "behalf-reopen": "reopenReportsTable",
+          "behalf-closed": "closedReportsTable"
+        };
+
+        // improved global loader: dynamic colspan and defensiveness
+        window.loadDataToTable = function ({
+          tableId,
+          apiUrl,
+          httpMethod = 'POST',
+          payload,
+          rowBuilder,
+          onTableInit = () => { } // callback to return DataTable instance
+        }) {
+          const tableSelector = `#${tableId}`;
+          const tableBody = $(`${tableSelector} tbody`);
+
+          // compute column count from thead so loading / no-data rows use correct colspan
+          const colCount = Math.max($(tableSelector + ' thead th').length, 1);
+          tableBody.html(`<tr><td colspan="${colCount}" class="text-center">Loading...</td></tr>`);
+
+          $.ajax({
+            url: apiUrl,
+            method: httpMethod.toUpperCase(),
+            headers: {
+              "X-App-Key": "edm_grievance_portal",
+              "X-App-Name": "edm_grievance_portal"
+            },
+            data: { data: payload },
+            dataType: 'json',
+            cache: false,
+            success: function (response) {
+              let decrypted;
+
+              try {
+                decrypted = decryptData(response.data);
+                console.log("Decrypted response:", decrypted);
+              } catch (err) {
+                console.error("Decryption failed:", err);
+                decrypted = [];
+              }
+
+              let data = Array.isArray(decrypted) ? decrypted : [];
+
+              let rows = data.map(rowBuilder).join('').trim();
+
+              if (!rows) {
+                rows = `
+      <tr>
+        <td colspan="${colCount}" class="text-center text-muted fw-bold">
+          No Data Found
+        </td>
+      </tr>`;
+              }
+
+              tableBody.html(rows);
+
+              // re-init DataTable (destroy first if necessary)
+              if ($.fn.DataTable.isDataTable(tableSelector)) {
+                $(tableSelector).DataTable().destroy();
+              }
+
+              const dt = $(tableSelector).DataTable({
+                destroy: true,
+                responsive: true,
+                ordering: true,
+                searching: true,
+                pageLength: 10,
+                lengthChange: true,
+                language: {
+                  emptyTable: "No Data Found"
+                }
+              });
+
+              dt.on('draw', function () {
+                const $tbody = $(`${tableSelector} tbody`);
+                if ($tbody.children().length === 0 || $tbody.find('tr').length === 0) {
+                  $tbody.html(`
+                    <tr>
+                      <td colspan="${colCount}" class="text-center text-muted fw-bold">No data found</td>
+                    </tr>`);
+                }
+              });
+
+              onTableInit(dt);
+            },
+            error(xhr, status, error) {
+              console.error("API Error:", error);
+              const colCountErr = Math.max($(tableSelector + ' thead th').length, 1);
+              tableBody.html(`<tr><td colspan="${colCountErr}" class="text-center">No Data Found</td></tr>`);
+            }
+          });
+        };
+
+        function getStatusBadgeClass(status) {
+          switch (status) {
+            case "In-Progress":
+              return "bg-info text-dark";
+            case "Returned":
+              return "bg-danger";
+            case "Resolved":
+              return "bg-success";
+            case "Re-Opened":
+              return "bg-primary";
+            case "Closed":
+              return "bg-secondary";
+            default:
+              return "bg-info text-dark"; // fallback
+          }
+        }
+
+        function loadRequestsData(issueStatus, ticketType, tableId) {
+          const payload = {
+            action: "function_call",
+            function_name: "fn_cit_opr_edm_cms_dep_view_requests",
+            params: {
+              userid: userId,
+              issue_status: issueStatus,
+              ticket_type: ticketType
+            }
+          };
+
+          console.log("Loading Data →", payload, "into table:", tableId);
+
+          loadDataToTable({
+            tableId: tableId,
+            apiUrl: `${BASE_API_URL}/commonfunction`,
+            httpMethod: 'POST',
+            payload: encryptData(payload),
+            rowBuilder: (item) => {
+              let parsed = [];
+
+              try {
+                if (item.fn_cit_opr_edm_cms_dep_view_requests) {
+                  parsed = JSON.parse(item.fn_cit_opr_edm_cms_dep_view_requests);
+                }
+              } catch (e) {
+                console.error("JSON parse error:", e);
+                parsed = [];
+              }
+
+              if (!parsed || parsed.length === 0) {
+                return ""; // global loader will render "No Data Found"
+              }
+
+              return parsed.map(entry => {
+                const data = entry.jsonb_build_object;
+
+                let attachments = "N/A";
+                if (Array.isArray(data.Attachments) && data.Attachments.length > 0) {
+                  attachments = data.Attachments
+                    .map(att => `<a href="${att.FilePath}" target="_blank">${att.FileName}</a>`)
+                    .join(", ");
+                }
+
+                // check if this table has View column
+                const hasViewColumn = (tableId !== "allSelfTable" && tableId !== "allReportsTable");
+
+                return `
+    <tr>
+      ${hasViewColumn ? `
+        <td>
+          <button class="btn btn-sm btn-info viewTicketBtn" 
+                data-ticket='${JSON.stringify(data)}' 
+                data-ticketid='${data.TicketId || ''}'>
+           View</i>
+          </button>
+        </td>` : ""
+                  }
+      <td>${data.TicketId || 'N/A'}</td>
+      <td>${data.IssueType || 'N/A'}</td>
+      <td>${data.Category || 'N/A'}</td>
+      <td>${data.Subcategory || 'N/A'}</td>
+      <td>
+        <span class="badge ${getStatusBadgeClass(data.Status)} status-badge" style="cursor:pointer;">
+          ${data.Status || 'N/A'}
+        </span>
+      </td>
+    </tr>`;
+              }).join("");
+
+            },
+
+            onTableInit: function (dtRef) {
+              window[tableId + "Ref"] = dtRef;
+            }
+          });
+        }
+
+        // Attach a click handler to all tables
+        $(document).on("click", "table tbody tr", function () {
+          const status = $(this).find("td:last").text().trim(); // last column is Status
+          const tableId = $(this).closest("table").attr("id");  // which table was clicked
+
+          console.log("Clicked status:", status, "from table:", tableId);
+
+          let targetTab = null;
+
+          // 🔹 Self tickets navigation
+          if (tableId.includes("Self")) {
+            $("#self-tab").tab("show"); // open parent Self tab
+
+            if (status === "In-Progress") targetTab = "#self-open";
+            else if (status === "Returned") targetTab = "#self-returned";
+            else if (status === "Resolved") targetTab = "#self-resolved";
+            else if (status === "Re-Opened") targetTab = "#self-reopen";
+            else if (status === "Closed") targetTab = "#self-closed";
+            else targetTab = "#self-all";
+          }
+
+          // 🔹 On-Behalf tickets navigation
+          else if (tableId.includes("Reports")) {
+            $("#behalf-tab").tab("show"); // open parent Behalf tab
+
+            if (status === "In-Progress") targetTab = "#behalf-open";
+            else if (status === "Returned") targetTab = "#behalf-returned";
+            else if (status === "Resolved") targetTab = "#behalf-resolved";
+            else if (status === "Re-Opened") targetTab = "#behalf-reopen";
+            else if (status === "Closed") targetTab = "#behalf-closed";
+            else targetTab = "#behalf-all";
+          }
+
+          // 🔹 Switch to the matched tab
+          if (targetTab) {
+            $(targetTab).tab("show");
+
+            // reload relevant table
+            setTimeout(() => {
+              if (targetTab === "#self-open") {
+                loadRequestsData("In-Progress", "Self", "openSelfTable");
+              } else if (targetTab === "#self-returned") {
+                loadRequestsData("Returned", "Self", "returnedSelfTable");
+              } else if (targetTab === "#self-resolved") {
+                loadRequestsData("Resolved", "Self", "resolvedSelfTable");
+              } else if (targetTab === "#self-reopen") {
+                loadRequestsData("Re-Opened", "Self", "reopenSelfTable");
+              } else if (targetTab === "#self-closed") {
+                loadRequestsData("Closed", "Self", "closedSelfTable");
+              }
+
+              else if (targetTab === "#behalf-open") {
+                loadRequestsData("In-Progress", "Behalf", "openReportsTable");
+              } else if (targetTab === "#behalf-returned") {
+                loadRequestsData("Returned", "Behalf", "returnedReportsTable");
+              } else if (targetTab === "#behalf-resolved") {
+                loadRequestsData("Resolved", "Behalf", "resolvedReportsTable");
+              } else if (targetTab === "#behalf-reopen") {
+                loadRequestsData("Re-Opened", "Behalf", "reopenReportsTable");
+              } else if (targetTab === "#behalf-closed") {
+                loadRequestsData("Closed", "Behalf", "closedReportsTable");
+              }
+            }, 200);
+          }
         });
-      });
-      
-      // Reset timeline on modal close
-      ticketModalSelf.addEventListener('hidden.bs.modal', function () {
-        document.querySelectorAll('#timeline .timeline-item').forEach(item => {
-          item.classList.remove('show');
+
+
+        $(document).on('shown.bs.tab', 'button[data-bs-toggle="tab"]', function (e) {
+          let activatedId = e.target.id;
+
+          if (activatedId === 'self-tab') {
+            activatedId = 'self-open';
+          } else if (activatedId === 'behalf-tab') {
+            activatedId = 'behalf-all';
+          }
+
+          const issueStatus = statusMap[activatedId] || null;
+          const ticketType = activatedId.startsWith('self-') ? 'Self' : 'Behalf';
+          const tableId = tableIdMap[activatedId];
+
+          if (!tableId) {
+            console.warn('No tableId mapped for activated tab:', activatedId);
+            return;
+          }
+
+          loadRequestsData(issueStatus, ticketType, tableId);
         });
+
+        $(document).ready(function () {
+          let activeTabId = $('#parentTabs .nav-link.active').attr('id');
+
+          if (activeTabId === 'self-tab') {
+            activeTabId = 'self-all'; // default to in-progress for self
+          } else if (activeTabId === 'behalf-tab') {
+            activeTabId = 'behalf-all'; // default to in-progress for behalf
+          }
+
+          const issueStatus = statusMap[activeTabId] || null;
+          const ticketType = activeTabId.startsWith('self-') ? 'Self' : 'Behalf';
+          const tableId = tableIdMap[activeTabId];
+
+          if (tableId) {
+            loadRequestsData(issueStatus, ticketType, tableId);
+          } else {
+            console.warn("No tableId found for:", activeTabId);
+          }
+        });
+
+
+
+        //     $(document).on("click", ".viewTicketBtn", function () {
+        //       const ticketData = $(this).data("ticket");
+
+        //       // Populate Basic Details Table with all fields
+        //       const $table = $("#ticketDetailsTable");
+        //       $table.empty();
+        //       $table.append(`
+        //   <tr><th>Ticket ID</th><td>${ticketData.TicketId || 'N/A'}</td></tr>
+        //   <tr><th>Type Of User</th><td>${ticketData.TypeOfUser || 'N/A'}</td></tr>
+        //   <tr><th>Name</th><td>${ticketData.Name || 'N/A'}</td></tr>
+        //   <tr><th>Mobile</th><td>${ticketData.Mobile || 'N/A'}</td></tr>
+        //   <tr><th>District</th><td>${ticketData.District || 'N/A'}</td></tr>
+        //   <tr><th>Created Date</th><td>${ticketData.CreatedDate || 'N/A'}</td></tr>
+        //   <tr><th>Issue Type</th><td>${ticketData.IssueType || 'N/A'}</td></tr>
+        //   <tr><th>Category</th><td>${ticketData.Category || 'N/A'}</td></tr>
+        //   <tr><th>Subcategory</th><td>${ticketData.Subcategory || 'N/A'}</td></tr>
+        //   <tr><th>Attachments</th><td>${Array.isArray(ticketData.Attachments) && ticketData.Attachments.length > 0
+        //           ? ticketData.Attachments.map(att => `<a href="${att.FilePath}" target="_blank">${att.FileName}</a>`).join(", ")
+        //           : "N/A"
+        //         }</td></tr>
+        //   <tr><th>Remarks</th><td>${ticketData.Remarks || 'N/A'}</td></tr>
+        // `);
+
+        //       // Populate Timeline dynamically only if In-Progress
+        //       const $timeline = $("#ticketTimeline");
+        //       $timeline.empty();
+        //       if (ticketData.Status && ticketData.Status.toLowerCase() === "in-progress") {
+        //         $timeline.append(`
+        //     <li class="timeline-item">
+        //       <div class="timeline-icon bg-success">
+        //         <i class="bi bi-check-circle-fill text-white"></i>
+        //       </div>
+        //       <div class="timeline-content">
+        //         <h6 class="mb-1">Citizen submitted issue</h6>
+        //         <small class="text-muted">${ticketData.CreatedDate || 'N/A'}</small>
+        //       </div>
+        //     </li>
+        //   `);
+        //       } else {
+        //         $timeline.append(`<li class="text-muted">No timeline available</li>`);
+        //       }
+
+        //       // Show the modal
+        //       new bootstrap.Modal(document.getElementById('ticketDetailsModal')).show();
+        //     });
+
+
+        // 🔹 Helper function to format datetime
+        function formatDateTime(dateStr) {
+          if (!dateStr) return "N/A";
+          const date = new Date(dateStr);
+          if (isNaN(date)) return dateStr; // fallback if invalid
+          return date.toLocaleString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
+          });
+        }
+
+        $(document).on("click", ".viewTicketBtn", function () {
+          const ticketId = $(this).data("ticketid");
+
+          if (!ticketId) {
+            return showErrorToast("Ticket ID not found.");
+          }
+
+          const payload = {
+            action: "function_call",
+            function_name: "fn_get_ticket_details",
+            params: { p_ticket_id: ticketId }
+          };
+
+          $.ajax({
+            url: `${BASE_API_URL}/commonfunction`,
+            method: "POST",
+            data: { data: encryptData(payload) },
+            dataType: "json",
+            beforeSend: function () {
+              $("#ticketDetailsTable").html(
+                `<tr><td colspan="2" class="text-center text-muted">Loading...</td></tr>`
+              );
+              $("#ticketTimeline").html(
+                `<li class="text-muted">Loading timeline...</li>`
+              );
+            },
+            success: function (res) {
+              if (!res.success) {
+                return showErrorToast("Failed to fetch ticket details.");
+              }
+
+              try {
+                const decrypted = decryptData(res.data);
+                let parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
+
+                if (Array.isArray(parsed)) parsed = parsed[0];
+
+                const rawData = parsed.fn_get_ticket_details
+                  ? JSON.parse(parsed.fn_get_ticket_details)
+                  : {};
+
+                const ticketDetails = rawData.ticket_details || {};
+                const attachments = rawData.attachments || [];
+                const timeline = rawData.progress_timeline || [];
+
+                // Basic Details Table
+                const $table = $("#ticketDetailsTable");
+                $table.empty();
+                $table.append(`
+            <tr><th>Ticket ID</th><td>${ticketDetails.ticket_id || 'N/A'}</td></tr>
+            <tr><th>Name</th><td>${ticketDetails.complainant_name || 'N/A'}</td></tr>
+            <tr><th>Email</th><td>${ticketDetails.complainant_email || 'N/A'}</td></tr>
+            <tr><th>Mobile</th><td>${ticketDetails.complainant_mobile || 'N/A'}</td></tr>
+            <tr><th>District</th><td>${ticketDetails.district || 'N/A'}</td></tr>
+            <tr><th>Created Date</th><td>${formatDateTime(ticketDetails.created_at)}</td></tr>
+            <tr><th>Category</th><td>${ticketDetails.category || 'N/A'}</td></tr>
+            <tr><th>Subcategory</th><td>${ticketDetails.subcategory || 'N/A'}</td></tr>
+            <tr><th>Priority</th><td>${ticketDetails.priority || 'N/A'}</td></tr>
+            <tr><th>Status</th><td>${ticketDetails.status || 'N/A'}</td></tr>
+           
+            <tr><th>Remarks</th><td>${ticketDetails.remarks || 'N/A'}</td></tr>
+          `);
+
+                // Timeline
+                const $timeline = $("#ticketTimeline");
+                $timeline.empty();
+                if (timeline.length > 0) {
+                  timeline.forEach(item => {
+                    $timeline.append(`
+                <li class="timeline-item">
+                  <div class="timeline-icon bg-primary">
+                    <i class="bi bi-clock-history text-white"></i>
+                  </div>
+                  <div class="timeline-content">
+                    <h6 class="mb-1">${item.notes || 'Update'}</h6>
+                    <small class="text-muted">
+                      ${item.role_name || 'N/A'} → ${item.to_status || 'N/A'} <br>
+                      ${formatDateTime(item.start_time)}
+                    </small>
+                  </div>
+                </li>
+              `);
+                  });
+                } else {
+                  $timeline.append(`<li class="text-muted">No timeline available</li>`);
+                }
+
+                // Show Modal
+                new bootstrap.Modal(document.getElementById('ticketDetailsModal')).show();
+
+              } catch (err) {
+                console.error("Error parsing ticket details:", err);
+                showErrorToast("Something went wrong while loading ticket details.");
+              }
+            },
+            error: function () {
+              showErrorToast("API error while fetching ticket details.");
+            }
+          });
+        });
+
       });
     </script>
-  </body>
+    <script>
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+
 </html>
+<!-- 
+  <tr><th>Attachments</th><td>${attachments.length > 0
+                   ? attachments.map(att => `<a href="${att.FilePath}" target="_blank">${att.FileName}</a>`).join(", ")
+                   : "N/A"
+                 }</td></tr> -->

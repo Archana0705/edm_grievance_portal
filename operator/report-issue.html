@@ -1,0 +1,608 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Enhanced Dashboard</title>
+  <!-- Bootstrap CSS -->
+
+ <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/css/aos.css" rel="stylesheet">
+  <link href="../assets/vendor/datatable/css/dataTables.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/vendor/datatable/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="../assets/css/global.css">
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f1f3f6;
+      color: #333;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      padding-top: 70px;
+      transition: all 0.3s;
+    }
+
+    /* Header */
+    nav.navbar {
+      background: linear-gradient(90deg, #4b6cb7, #182848);
+      color: #fff;
+      z-index: 1000;
+      padding: 0.4rem 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    nav.navbar .navbar-brand,
+    nav.navbar .btn,
+    nav.navbar span {
+      color: #fff;
+    }
+
+    nav.navbar .btn-light {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: #fff;
+    }
+
+    nav.navbar .btn-light:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Sidebar */
+    #sidebar {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 220px;
+      height: calc(100% - 70px);
+      background: #fff;
+      padding-top: 1rem;
+      transition: all 0.3s;
+      overflow-y: auto;
+      border-right: 1px solid #e0e0e0;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+      z-index: 999;
+    }
+
+    #sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: #495057;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 8px;
+      margin: 4px 10px;
+      transition: all 0.2s ease-in-out;
+    }
+
+    #sidebar a:hover {
+      background: #4b6cb7;
+      color: #fff;
+      transform: translateX(5px);
+    }
+
+    #sidebar a.active {
+      background: #182848;
+      color: white;
+    }
+
+    #sidebar i {
+      margin-right: 12px;
+      font-size: 1.2rem;
+    }
+
+    .sidebar-collapsed #sidebar a {
+      padding: 12px 0px;
+    }
+
+    /* Collapsed sidebar */
+    body.sidebar-collapsed #sidebar {
+      width: 60px;
+    }
+
+    body.sidebar-collapsed #sidebar a span {
+      display: none;
+    }
+
+    body.sidebar-collapsed #sidebar a i {
+      margin-right: 0;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Main content */
+    #mainContent {
+      margin-left: 220px;
+      padding: 30px;
+      flex: 1;
+      transition: all 0.3s;
+    }
+
+    body.sidebar-collapsed #mainContent {
+      margin-left: 60px;
+    }
+
+    /* Cards for main content */
+    .card {
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Footer */
+    footer {
+      background: #fff;
+      text-align: center;
+      padding: 15px;
+      border-top: 1px solid #ddd;
+      width: 100%;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 992px) {
+      #sidebar {
+        left: -100%;
+        top: 0;
+        width: 220px;
+        height: 100%;
+        border-right: none;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+      }
+
+      #sidebar.show {
+        left: 0;
+      }
+
+      #mainContent {
+        margin-left: 0;
+        padding: 20px 10px;
+      }
+
+      body.sidebar-collapsed #mainContent {
+        margin-left: 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      #currentDateTime {
+        display: none;
+      }
+
+      .navbar .fw-bold {
+        font-size: 1.1rem;
+      }
+
+      #sidebarToggle {
+        padding: 0.35rem 0.6rem;
+      }
+
+      .dropdown-toggle span {
+        display: none;
+      }
+    }
+  </style>
+  <!-- main content -->
+  <style>
+    .hover-shadow:hover {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s;
+    }
+
+    .card h3 {
+      font-weight: 600;
+    }
+
+    .card i {
+      transition: transform 0.3s;
+    }
+
+    .card:hover i {
+      transform: scale(1.2);
+    }
+
+    .table-hover tbody tr:hover {
+      background-color: #f1f3f5;
+    }
+  </style>
+  <!-- main content -->
+  <!-- page css -->
+  <style>
+    body {
+      background: #f8f9fa;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .form-section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-label {
+      font-weight: 500;
+    }
+
+    .btn-submit {
+      background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: 0.3s;
+    }
+
+    .btn-submit:hover {
+      transform: scale(1.03);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+  <style>
+    /* Toast positioning */
+    .toast-container {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 2000;
+    }
+  </style>
+  <!-- page css -->
+</head>
+
+<body>
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid d-flex align-items-center">
+      <button class="btn btn-light" id="sidebarToggle">
+        <i class="bi bi-list fs-4"></i>
+      </button>
+      <span class="fw-bold ms-3 fs-5">My Dashboard</span>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <span id="currentDateTime" class="me-3"></span>
+        <!-- <div class="dropdown">
+          <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
+            <i class="bi bi-person-circle fs-4"></i> <span class="d-none d-lg-inline fw-semibold">John</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+            <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+            <li><a class="dropdown-item" href="index.html">Logout</a></li>
+          </ul>
+        </div> -->
+        <div id="globalProfileDropdown"><!-- profileDropdown.html -->
+<div class="dropdown">
+    <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
+        <i class="bi bi-person-circle fs-4"></i>
+        <span class="d-none d-lg-inline fw-semibold" id="userName">Ramesh Kumar</span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+        <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+        <li><a class="dropdown-item signOutBtn" href="#">Logout</a></li>
+    </ul>
+</div></div>
+
+      </div>
+    </div>
+  </nav>
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <a href="dashboard.html" ><i class="bi bi-house"></i><span>Dashboard</span></a>
+    <a href="report-issue.html" class="active"><i class="bi bi-file-earmark-text"></i><span>Report Issue</span></a>
+    <a href="profile.html"><i class="bi bi-person"></i><span>Profile</span></a>
+    <a href="faq.html"><i class="bi bi-question-circle"></i><span>FAQ</span></a> 
+  </div>
+  <!-- Main Content -->
+  <div id="mainContent">
+    <div class="container">
+      <h2 class="page-title"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i> Report an Issue
+      </h2>
+      <div class="mt-4">
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs" id="reportTabs" role="tablist">
+          <li class=" nav-item" role="presentation">
+            <button class="nav-link active" id="self-tab" data-bs-toggle="tab" data-bs-target="#selfPane" type="button"
+              role="tab">
+              Report for Self
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="behalf-tab" data-bs-toggle="tab" data-bs-target="#behalfPane" type="button"
+              role="tab">
+              Report on Behalf
+            </button>
+          </li>
+        </ul>
+
+        <!-- Tab Panes -->
+        <div class="tab-content mt-3" id="reportTabsContent">
+          <div class="tab-pane fade show active" id="selfPane" role="tabpanel" aria-labelledby="self-tab">
+            <!-- ✅ Load self-report.html content here -->
+
+            <div id="selfContent"> 
+              <div class="form-section">
+    <!-- Main Form -->
+    <form id="issueForm" class="needs-validation" novalidate="" enctype="multipart/form-data">
+      <div class="row g-3">
+        <!-- Dropdowns -->
+        <div class="mb-3 col-lg-4">
+          <label for="typeSelect">Type <span class="text-danger">*</span></label>
+          <select id="typeSelect" class="form-control" required=""><option value="" class="placeholder">--Select Type--</option><option value="1">eSevai centre related</option><option value="2">eSevai officials related</option><option value="3">eSevai portal and services</option></select>
+        </div>
+
+        <div class="mb-3 col-lg-4">
+          <label for="categorySelect">Category <span class="text-danger">*</span></label>
+          <select id="categorySelect" class="form-control" required="">
+            <option value="">Select Category</option>
+          </select>
+        </div>
+
+        <div class="mb-3 col-lg-4">
+          <label for="subCategorySelect">Sub-Category <span class="text-danger">*</span></label>
+          <select id="subCategorySelect" class="form-control" required="">
+            <option value="">Select Sub-Category</option>
+          </select>
+        </div>
+
+      </div>
+      <!-- Dynamic Form -->
+
+      <div id="dynamicFieldsContainer" class="mt-4"></div>
+
+      <!-- Declaration Component -->
+      <div class="alert alert-light border rounded-3 shadow-sm p-3 mb-4" role="alert">
+        <div class="d-flex align-items-start">
+          <i class="bi bi-info-circle-fill text-primary fs-4 me-3"></i>
+          <div>
+            <h6 class="fw-bold mb-2">Declaration</h6>
+            <p class="mb-2 small text-muted">
+              I hereby declare that the information given above and in the enclosed documents is true to the best of
+              my knowledge and belief and nothing has been concealed therein. I understand that if the information
+              given by me is proved false/not true, I will have to face the punishment as per the law. Also, all the
+              benefits availed by me shall be summarily withdrawn.
+            </p>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="declarationCheck">
+              <label class="form-check-label small" for="declarationCheck">
+                I agree to the terms of this declaration
+              </label>
+            </div>
+            <span class="text-danger small" id="declarationError" style="display:none;"></span>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 d-flex align-items-center mt-2">
+        <button type="submit" id="submitBtn" class="btn btn-primary px-4 py-2">
+          <i class="bi bi-send-fill me-2"></i> Submit Issue
+        </button>
+      </div>
+    </form>
+
+  </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="behalfPane" role="tabpanel" aria-labelledby="behalf-tab">
+            <!-- ✅ Load behalf-report.html content here -->
+            <div id="behalfContent">
+              <div class="card p-4 aos-init aos-animate" data-aos="fade-up">
+
+    <div id="step1" class="">
+      <div class="form-section">
+        <form id="issueForm" class="needs-validation" novalidate="">
+          <div class="row">
+            <div class="mb-3 col-lg-4">
+              <label for="relationshipField">Relationship Type <span class="text-danger">*</span></label>
+              <select id="relationshipField" class="form-select mb-2"><option value="" class="placeholder">--Select Relationship--</option><option value="Children">Children</option><option value="Grandchildren">Grandchildren</option><option value="Grandparents">Grandparents</option><option value="Parents">Parents</option><option value="Siblings">Siblings</option><option value="Spouse">Spouse</option></select>
+            </div>
+            <div class="mb-3 col-lg-4">
+              <label for="citizenName">Citizen Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="citizenName" placeholder="Enter Citizen Name">
+            </div>
+            <div class="mb-3 col-lg-4">
+              <label for="genderField">Gender <span class="text-danger">*</span></label>
+              <select id="genderField" class="form-select mb-2">
+                <option selected="">Select Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="mb-3 col-lg-4">
+              <label class="form-label">Email</label>
+              <input type="email" id="emailField" class="form-control mb-3" placeholder="Enter your Email">
+            </div>
+
+            <div class="clear-both"></div>
+
+            <div class="mb-3 col-lg-4">
+              <label for="typeSelectBehalf">Type <span class="text-danger">*</span></label>
+
+              <select id="typeSelectBehalf" class="form-control" required=""><option value="" class="placeholder">--Select Type--</option><option value="1">eSevai centre related</option><option value="2">eSevai officials related</option><option value="3">eSevai portal and services</option></select>
+            </div>
+            <div class="mb-3 col-lg-4">
+              <label for="categorySelectBehalf">Category <span class="text-danger">*</span></label>
+              <select id="categorySelectBehalf" class="form-control" required="">
+                <option value="">Select Category</option>
+              </select>
+            </div>
+            <div class="mb-3 col-lg-4">
+              <label for="subCategorySelectBehalf">Sub-Category <span class="text-danger">*</span></label>
+              <select id="subCategorySelectBehalf" class="form-control" required="">
+                <option value="">Select Sub-Category</option>
+              </select>
+            </div>
+
+          </div>
+          <!-- Dynamic Form -->
+          <div id="dynamicFieldsContainerBehalf" class="mt-4"></div>
+
+          <!-- Declaration Component -->
+          <div class="alert alert-light border rounded-3 shadow-sm p-3 mb-4" role="alert">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-info-circle-fill text-primary fs-4 me-3"></i>
+              <div>
+                <h6 class="fw-bold mb-2">Declaration</h6>
+                <p class="mb-2 small text-muted">
+                  I hereby declare that the information given above and in the enclosed documents is true to the best of
+                  my knowledge and belief and nothing has been concealed therein. I understand that if the information
+                  given by me is proved false/not true, I will have to face the punishment as per the law. Also, all the
+                  benefits availed by me shall be summarily withdrawn.
+                </p>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="declarationCheck">
+                  <label class="form-check-label small" for="declarationCheck">
+                    I agree to the terms of this declaration
+                  </label>
+                </div>
+                <span class="text-danger small" id="declarationError" style="display:none;"></span>
+
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Submit -->
+          <div class="col-lg-4 d-flex align-items-center">
+            <button type="submit" id="submitBtnBehalf" class="btn btn-primary px-4 py-2">
+              <i class="bi bi-send-fill me-2"></i> Submit Issue
+            </button>
+          </div>
+        </form>
+
+
+      </div>
+    </div>
+  </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 My Dashboard. All rights reserved.
+  </footer>
+
+
+  <script src="../assets/js/jquery-3.7.1.min.js"></script>
+    <script src="../assets/js/global.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- <script src="assets/js/bootstrap.bundle.min.js"></script> -->
+    <script src="../assets/js/aos.js"></script>
+    <script src="../assets/js/dataTableUtil.js"></script>
+    <script src="../assets/js/crypto-js.min.js"></script>
+    <script src="../assets/js/encrypt_decrypt.js"></script>
+    <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/toastUtil.js"></script>
+    <script src="../assets/js/apiConfig.js"></script>
+    <script src="../assets/js/globalProfileDropdown.js"></script>
+
+  <script>
+    // Sidebar toggle
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+
+    sidebarToggle.addEventListener('click', () => {
+      if (window.innerWidth < 992) {
+        // Mobile: slide in/out
+        sidebar.classList.toggle('show');
+      } else {
+        // Desktop: collapse sidebar
+        document.body.classList.toggle('sidebar-collapsed');
+      }
+    });
+
+    // Close mobile sidebar when clicking outside
+    document.addEventListener('click', function (e) {
+      if (window.innerWidth < 992) {
+        if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+          sidebar.classList.remove('show');
+        }
+      }
+    });
+
+    // Display current date and time
+    function updateDateTime() {
+      const now = new Date();
+      const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+      const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('currentDateTime').textContent = now.toLocaleDateString(undefined, options) + ' ' + timeString;
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+  </script>
+
+  <script>
+    // Dynamically load your existing separate pages into the tabs
+    $(function () {
+      $("#selfContent").load("report-issue-ajax.html");
+      $("#behalfContent").load("raise-ticket-behalf.html");
+    });
+  </script>
+
+
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+
+</html>
