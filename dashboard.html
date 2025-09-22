@@ -1125,17 +1125,10 @@
           dataType: "json",
           success: function (res) {
             try {
-              // 🔑 Step 1: decrypt API response
               const decrypted = decryptData(res.data);
-
-              // 🔑 Step 2: parse decrypted JSON (string → object)
               const parsed = (typeof decrypted === "string") ? JSON.parse(decrypted) : decrypted;
-
-              // 🔑 Step 3: extract the actual counts string
               const dataStr = parsed[0].fn_dashboard_citizen_edmopr_counts;
               const data = JSON.parse(dataStr);
-
-              // --- Bind Self Tickets ---
               $("#selfTicketsCard .h3").text(data.SelfTickets.Total);
               $("#selfTicketsCard .kpi-meta span").eq(0).text(data.SelfTickets.InProgress);
               $("#selfTicketsCard .kpi-meta span").eq(1).text(data.SelfTickets.Returned);
@@ -1395,26 +1388,26 @@
                 const hasViewColumn = (tableId !== "allSelfTable" && tableId !== "allReportsTable");
 
                 return `
-    <tr>
-      ${hasViewColumn ? `
-        <td>
-          <button class="btn btn-sm btn-info viewTicketBtn" 
-                data-ticket='${JSON.stringify(data)}' 
-                data-ticketid='${data.TicketId || ''}'>
-           View</i>
-          </button>
-        </td>` : ""
+                <tr>
+                  ${hasViewColumn ? `
+                    <td>
+                      <button class="btn btn-sm btn-info viewTicketBtn" 
+                            data-ticket='${JSON.stringify(data)}' 
+                            data-ticketid='${data.TicketId || ''}'>
+                      View</i>
+                      </button>
+                    </td>` : ""
                   }
-      <td>${data.TicketId || 'N/A'}</td>
-      <td>${data.IssueType || 'N/A'}</td>
-      <td>${data.Category || 'N/A'}</td>
-      <td>${data.Subcategory || 'N/A'}</td>
-      <td>
-        <span class="badge ${getStatusBadgeClass(data.Status)} status-badge" style="cursor:pointer;">
-          ${data.Status || 'N/A'}
-        </span>
-      </td>
-    </tr>`;
+                  <td>${data.TicketId || 'N/A'}</td>
+                  <td>${data.IssueType || 'N/A'}</td>
+                  <td>${data.Category || 'N/A'}</td>
+                  <td>${data.Subcategory || 'N/A'}</td>
+                  <td>
+                    <span class="badge ${getStatusBadgeClass(data.Status)} status-badge" style="cursor:pointer;">
+                      ${data.Status || 'N/A'}
+                    </span>
+                  </td>
+                </tr>`;
               }).join("");
 
             },
