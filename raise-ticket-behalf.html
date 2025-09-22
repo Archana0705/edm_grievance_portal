@@ -413,6 +413,69 @@
       </div>
     </div>
   </div>
+  <!-- Behalf Acknowledgement Modal -->
+  <div class="modal fade" id="successModalBehalf" tabindex="-1" aria-labelledby="successModalBehalfLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header py-1">
+          <button class="btn download-pdf btn-outline-secondary"><i class="bi bi-download"></i> Download as PDF</button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body pt-1 mt-1">
+          <div id="ackCardBehalf" class="ack-card">
+            <h5>Acknowledgement</h5>
+            <p class="mb-4">We acknowledge the receipt of your grievance with the following details:</p>
+
+            <div class="ack-row d-flex">
+              <div class="ack-label">Requested By:</div>
+              <div id="ackRequestedByBehalf"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">Type of user:</div>
+              <div id="ackUserTypeBehalf"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">Name of the complainant:</div>
+              <div id="ackComplainantBehalf"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">Mobile number of the complainant:</div>
+              <div id="ackMobileBehalf"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">District:</div>
+              <div id="ackDistrictBehalf"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">Date:</div>
+              <div id="ackDateBehalf"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">Issue type:</div>
+              <div id="ackIssueTypeBehalf"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">Issue category:</div>
+              <div id="ackCategoryBehalf"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">Issue subcategory:</div>
+              <div id="ackSubCategoryBehalf"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">Acknowledgement number:</div>
+              <div id="ackNumberBehalf"></div>
+            </div>
+
+            <p class="mt-4"><strong>Please note the acknowledgment number for tracking your application status.</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <script>
     // Sidebar toggle
@@ -449,6 +512,7 @@
     setInterval(updateDateTime, 1000);
     updateDateTime();
   </script>
+
 
   <script>
     AOS.init();
@@ -725,13 +789,165 @@
     });
 
     // ✅ Form submission
+    // $("#behalfPane #submitBtnBehalf").on("click", async function (event) {
+    //   event.preventDefault();
+    //   let isValid = true;
+    //   const requiredSelectors = ["#relationshipField", "#citizenName", "#genderField", "#typeSelectBehalf", "#categorySelectBehalf", "#subCategorySelectBehalf"];
+    //   requiredSelectors.forEach(sel => {
+    //     const $el = $(`#behalfPane ${sel}`);
+    //     if (!$el.val() || $el.val().trim() === "") { $el.addClass("is-invalid"); isValid = false; } else { $el.removeClass("is-invalid"); }
+    //   });
+    //   if (!isValid) { showErrorToast("Fill all mandatory fields."); return; }
+
+    //   const safeVal = val => val === undefined || val === null || val.trim() === "" ? null : val;
+    //   const user_id = localStorage.getItem('user_id');
+
+    //   const selectedOption = $('#subCategorySelectBehalf').find('option:selected');
+    //   const columnsData = selectedOption.attr('data-columns');
+    //   const columnsArray = columnsData ? columnsData.split(',').map(c => c.trim()) : [];
+
+    //   const allParams = {
+    //     p_session_id: user_id,
+    //     p_complainant_name: safeVal(localStorage.getItem('user_name')),
+    //     p_mobile: safeVal(localStorage.getItem('mobile')),
+    //     p_email: safeVal(localStorage.getItem('email')),
+    //     p_district_id: null,
+    //     p_issue_id: safeVal($('#typeSelectBehalf').val()),
+    //     p_created_by: safeVal(user_id),
+    //     p_category_id: safeVal($('#categorySelectBehalf').val()),
+    //     p_subcategory_id: safeVal($('#subCategorySelectBehalf').val()),
+    //     p_priority: safeVal($('#priority').val()),
+    //     p_relationship: safeVal($('#relationshipField').val()),
+    //     p_onbehalf_name: safeVal($('#citizenName').val()),
+    //     p_onbehalf_mobile: safeVal($('#citizenMobile').val()),
+    //     p_onbehalf_email: safeVal($('#emailField').val()),
+    //     p_onbehalf_district_id: safeVal($('#districtField').val()),
+    //     p1man: null, p1opt: null,
+    //     p2man: null, p2opt: null,
+    //     p3man: null, p3opt: null,
+    //     p5man: null, p5opt: null,
+    //     p6man: null,
+    //     p7man: null,
+    //     p8man: null,
+    //     p9man: null,
+    //     p10opt: null
+    //   };
+
+    //   columnsArray.forEach(col => {
+    //     if (col === "4man" || col === "4opt") return;
+    //     const $input = $(`#dynamicFieldsContainerBehalf [data-col="${col}"]`);
+    //     if ($input.length) allParams[`p${col}`] = safeVal($input.val());
+    //   });
+
+    //   const payload = { action: "function_call", function_name: "fn_citizen_create_ticket", params: allParams };
+
+    //   $.ajax({
+    //     url: `${BASE_API_URL}/commonfunction`,
+    //     method: 'POST',
+    //     data: { data: encryptData(payload) },
+    //     dataType: 'json',
+    //     success: function (response) {
+    //       const decrypted = decryptData(response.data);
+    //       const ticketId = decrypted[0]?.fn_citizen_create_ticket || null;
+    //       const msg = ticketId ? `Ticket raised successfully: ${ticketId}` : "Submitted successfully.";
+    //       showSuccessToast(msg);
+
+    //       if (ticketId) {
+    //         setTimeout(() => {
+    //           showAcknowledgementModal(ticketId);
+    //         }, 3000);
+    //       }
+
+    //       function showAcknowledgementModal(ticketId) {
+    //         const payload = {
+    //           action: "function_call",
+    //           function_name: "fn_acknowledge_download",
+    //           params: { ticketId: ticketId }
+    //         };
+
+    //         $.ajax({
+    //           url: `${BASE_API_URL}/commonfunction`,
+    //           method: "POST",
+    //           data: { data: encryptData(payload) },
+    //           success: function (res) {
+    //             try {
+    //               const decrypted = decryptData(res.data);
+    //               const ackDataRaw = decrypted[0].fn_acknowledge_download;
+
+    //               let ackData = [];
+    //               if (ackDataRaw) {
+    //                 ackData = JSON.parse(ackDataRaw).map(item => item.jsonb_build_object);
+    //               }
+
+    //               if (ackData.length > 0) {
+    //                 const d = ackData[0];
+    //                 $("#ackRequestedBy").text(d.Requested_By);
+    //                 $("#ackUserType").text(d.type_user);
+    //                 $("#ackComplainant").text(d.name);
+    //                 $("#ackMobile").text(d.mobile);
+    //                 $("#ackDistrict").text(d.district);
+    //                 $("#ackDate").text(new Date(d.date).toLocaleString());
+    //                 $("#ackIssueType").text(d.issue);
+    //                 $("#ackCategory").text(d.category);
+    //                 $("#ackSubCategory").text(d.subcategory);
+    //                 $("#ackNumber").text(d.acknowledge_numbr);
+    //               } else {
+    //                 $("#ackCard").html("<p class='text-center text-muted'>No acknowledgement data available.</p>");
+    //               }
+
+    //               const successModalBehalfEl = document.getElementById('successModalBehalf');
+    //               const successModalBehalf = new bootstrap.Modal(successModalBehalfEl);
+    //               successModalBehalf.show();
+
+    //               // successModalBehalfEl.addEventListener('hidden.bs.modal', () => {
+    //               //   location.reload();
+    //               // });
+
+    //             } catch (e) {
+    //               $("#ackCard").html(`<p class="text-danger text-center">Error parsing acknowledgement.</p>`);
+    //             }
+    //           },
+    //           error: function () {
+    //             $("#ackCard").html(`<p class="text-danger text-center">Failed to load acknowledgement.</p>`);
+    //           }
+    //         });
+    //       }
+
+    //     },
+    //     error: (xhr, status, error) => { console.error(error); showErrorToast("Failed to submit form."); }
+    //   });
+
+
+    //   $(document).on('click', '#successModalBehalf .download-pdf', function () {
+    //     const { jsPDF } = window.jspdf;
+    //     const card = document.getElementById('ackCard');
+    //     if (!card) return;
+
+    //     html2canvas(card).then(canvas => {
+    //       const imgData = canvas.toDataURL('image/png');
+    //       const pdf = new jsPDF('p', 'mm', 'a4');
+    //       const pdfWidth = pdf.internal.pageSize.getWidth();
+    //       const imgWidth = pdfWidth - 20;
+    //       const imgHeight = canvas.height * imgWidth / canvas.width;
+    //       pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+    //       pdf.save("acknowledgement.pdf");
+    //     });
+    //   });
+
+    // });
+
+
+    // Behalf form submission
     $("#behalfPane #submitBtnBehalf").on("click", async function (event) {
       event.preventDefault();
+
+      // ✅ Validate required fields
       let isValid = true;
       const requiredSelectors = ["#relationshipField", "#citizenName", "#genderField", "#typeSelectBehalf", "#categorySelectBehalf", "#subCategorySelectBehalf"];
       requiredSelectors.forEach(sel => {
         const $el = $(`#behalfPane ${sel}`);
-        if (!$el.val() || $el.val().trim() === "") { $el.addClass("is-invalid"); isValid = false; } else { $el.removeClass("is-invalid"); }
+        if (!$el.val() || $el.val().trim() === "") { $el.addClass("is-invalid"); isValid = false; }
+        else { $el.removeClass("is-invalid"); }
       });
       if (!isValid) { showErrorToast("Fill all mandatory fields."); return; }
 
@@ -742,6 +958,7 @@
       const columnsData = selectedOption.attr('data-columns');
       const columnsArray = columnsData ? columnsData.split(',').map(c => c.trim()) : [];
 
+      // ✅ Prepare payload
       const allParams = {
         p_session_id: user_id,
         p_complainant_name: safeVal(localStorage.getItem('user_name')),
@@ -757,16 +974,7 @@
         p_onbehalf_name: safeVal($('#citizenName').val()),
         p_onbehalf_mobile: safeVal($('#citizenMobile').val()),
         p_onbehalf_email: safeVal($('#emailField').val()),
-        p_onbehalf_district_id: safeVal($('#districtField').val()),
-        p1man: null, p1opt: null,
-        p2man: null, p2opt: null,
-        p3man: null, p3opt: null,
-        p5man: null, p5opt: null,
-        p6man: null,
-        p7man: null,
-        p8man: null,
-        p9man: null,
-        p10opt: null
+        p_onbehalf_district_id: safeVal($('#districtField').val())
       };
 
       columnsArray.forEach(col => {
@@ -777,15 +985,97 @@
 
       const payload = { action: "function_call", function_name: "fn_citizen_create_ticket", params: allParams };
 
+      // ✅ Submit ticket
       $.ajax({
         url: `${BASE_API_URL}/commonfunction`,
         method: 'POST',
         data: { data: encryptData(payload) },
         dataType: 'json',
-        success: (response) => { showSuccessToast("Submitted successfully!"); setTimeout(() => location.reload(), 1000); },
+        success: function (response) {
+          const decrypted = decryptData(response.data);
+          const ticketId = decrypted[0]?.fn_citizen_create_ticket || null;
+          const msg = ticketId ? `Ticket raised successfully: ${ticketId}` : "Submitted successfully.";
+
+          showSuccessToast(msg); // show toast
+
+          if (ticketId) {
+            // wait for toast to disappear (e.g., 2s)
+            setTimeout(() => {
+              fetchAcknowledgement(ticketId);
+            }, 2000); // adjust duration as per your toast
+          }
+
+          function fetchAcknowledgement(ticketId) {
+            const ackPayload = {
+              action: "function_call",
+              function_name: "fn_acknowledge_download",
+              params: { ticketId }
+            };
+
+            $.ajax({
+              url: `${BASE_API_URL}/commonfunction`,
+              method: "POST",
+              data: { data: encryptData(ackPayload) },
+              success: function (res) {
+                try {
+                  const decrypted = decryptData(res.data);
+                  const ackDataRaw = decrypted[0].fn_acknowledge_download;
+                  let ackData = [];
+                  if (ackDataRaw) ackData = JSON.parse(ackDataRaw).map(item => item.jsonb_build_object);
+
+                  if (ackData.length > 0) {
+                    const d = ackData[0];
+                    $("#ackRequestedByBehalf").text(d.Requested_By);
+                    $("#ackUserTypeBehalf").text(d.type_user);
+                    $("#ackComplainantBehalf").text(d.name);
+                    $("#ackMobileBehalf").text(d.mobile);
+                    $("#ackDistrictBehalf").text(d.district);
+                    $("#ackDateBehalf").text(new Date(d.date).toLocaleString());
+                    $("#ackIssueTypeBehalf").text(d.issue);
+                    $("#ackCategoryBehalf").text(d.category);
+                    $("#ackSubCategoryBehalf").text(d.subcategory);
+                    $("#ackNumberBehalf").text(d.acknowledge_numbr);
+                  } else {
+                    $("#ackCardBehalf").html("<p class='text-center text-muted'>No acknowledgement data available.</p>");
+                  }
+
+                  const modalEl = document.getElementById('successModalBehalf');
+                  const modal = new bootstrap.Modal(modalEl);
+                  modal.show();
+                  modalEl.addEventListener('hidden.bs.modal', () => location.reload());
+
+                } catch (e) {
+                  $("#ackCardBehalf").html(`<p class="text-danger text-center">Error parsing acknowledgement.</p>`);
+                }
+              },
+              error: function () {
+                $("#ackCardBehalf").html(`<p class="text-danger text-center">Failed to load acknowledgement.</p>`);
+              }
+            });
+          }
+
+        },
         error: (xhr, status, error) => { console.error(error); showErrorToast("Failed to submit form."); }
       });
     });
+
+    // ✅ Download PDF
+    $(document).on('click', '#successModalBehalf .download-pdf', function () {
+      const { jsPDF } = window.jspdf;
+      const card = document.getElementById('ackCardBehalf');
+      if (!card) return;
+
+      html2canvas(card).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const imgWidth = pdfWidth - 20;
+        const imgHeight = canvas.height * imgWidth / canvas.width;
+        pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+        pdf.save("acknowledgement.pdf");
+      });
+    });
+
   </script>
 
 
