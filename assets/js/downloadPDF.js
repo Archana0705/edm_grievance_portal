@@ -1,7 +1,17 @@
 window.downloadPDF = function () {
+    // Check if jsPDF is loaded
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+        console.error("jspdf library is not loaded.");
+        return;
+    }
+
     const { jsPDF } = window.jspdf;
+
     const card = document.getElementById('ackCard');
-    if (!card) return;
+    if (!card) {
+        console.error("ackCard element not found.");
+        return;
+    }
 
     html2canvas(card).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
