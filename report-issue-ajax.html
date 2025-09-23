@@ -556,6 +556,7 @@
           const inputId = `field_${prefix}_${col}_${index}`;
           const isMandatory = col.endsWith('man');
           const mandatoryAttr = isMandatory ? 'data-mandatory="true"' : '';
+          const dataParamAttr = `data-param="p${col}"`; // maps 1man → p1man
           const dataColAttr = `data-col="${col}"`;
 
           // file wrapper (we store data-col on wrapper to detect mandatory)
@@ -604,7 +605,7 @@
               <label for="${inputId}">
                 ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
               </label>
-              <textarea id="${inputId}" class="form-control" ${dataColAttr} ${mandatoryAttr}></textarea>
+              <textarea id="${inputId}" class="form-control" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}></textarea>
             </div>`;
             } else {
               fieldHtml = `
@@ -612,7 +613,7 @@
               <label for="${inputId}">
                 ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
               </label>
-              <input id="${inputId}" type="${field.type}" class="form-control" ${dataColAttr} ${mandatoryAttr}>
+              <input id="${inputId}" type="${field.type}" class="form-control" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}>
             </div>`;
             }
             $container.append(fieldHtml);
@@ -974,18 +975,11 @@
             allParams.p_priority = safeVal($('#priority').val());
             // allParams.p_description = safeVal($('#description').val());
 
-            // optional behalf-specific fields — keep your existing selectors (they may not exist for self pane)
-            if (prefix === 'behalf') {
-              allParams.p_onbehalf_name = safeVal($('#citizenName').val());
-              allParams.p_onbehalf_mobile = safeVal($('#citizenMobile').val());
-              allParams.p_onbehalf_email = safeVal($('#emailField').val());
-              allParams.p_onbehalf_district_id = safeVal($('#districtField').val());
-            } else {
-              allParams.p_onbehalf_name = safeVal($('#onbehalf_name').val());
-              allParams.p_onbehalf_mobile = safeVal($('#onbehalf_mobile').val());
-              allParams.p_onbehalf_email = safeVal($('#onbehalf_email').val());
-              allParams.p_onbehalf_district_id = safeVal($('#onbehalf_district_id').val());
-            }
+            $dyn.find('[data-param]').each(function () {
+              const key = $(this).data('param'); // expects data-param="p1man"
+              const val = $(this).val()?.trim() || null;
+              allParams[key] = val;
+            });
 
             allParams.p5man = manDescArray.length ? JSON.stringify(manDescArray) : null;
             allParams.p5opt = optDescArray.length ? JSON.stringify(optDescArray) : null;

@@ -612,7 +612,7 @@
       "3opt": { label: "Description of the issue", type: "textarea", required: false },
       "4man": { label: "Attachments(Maximum 3 attachments allowed)", type: "file", required: true, multiple: true },
       "4opt": { label: "Attachments(Maximum 3 attachments allowed)", type: "file", required: false, multiple: true },
-      "5man": { label: "Supporting document description", type: "textarea", required: true },
+      // "5man": { label: "Supporting document description", type: "textarea", required: true },
       "6man": { label: "Enter eSevai ID", type: "text", required: true },
       "7man": { label: "Enter eSevai centre ID", type: "text", required: true },
       "8man": { label: "Transaction number", type: "text", required: true },
@@ -938,78 +938,256 @@
 
 
     // Behalf form submission
+    // $("#behalfPane #submitBtnBehalf").on("click", async function (event) {
+    //   event.preventDefault();
+
+    //   // ✅ Validate required fields
+    //   let isValid = true;
+    //   const requiredSelectors = ["#relationshipField", "#citizenName", "#genderField", "#typeSelectBehalf", "#categorySelectBehalf", "#subCategorySelectBehalf"];
+    //   requiredSelectors.forEach(sel => {
+    //     const $el = $(`#behalfPane ${sel}`);
+    //     if (!$el.val() || $el.val().trim() === "") { $el.addClass("is-invalid"); isValid = false; }
+    //     else { $el.removeClass("is-invalid"); }
+    //   });
+    //   if (!isValid) { showErrorToast("Fill all mandatory fields."); return; }
+
+    //   const safeVal = val => val === undefined || val === null || val.trim() === "" ? null : val;
+    //   const user_id = localStorage.getItem('user_id');
+
+    //   const selectedOption = $('#subCategorySelectBehalf').find('option:selected');
+    //   const columnsData = selectedOption.attr('data-columns');
+    //   const columnsArray = columnsData ? columnsData.split(',').map(c => c.trim()) : [];
+
+    //   // ✅ Prepare payload
+    //   const allParams = {
+    //     p_session_id: user_id,
+    //     p_complainant_name: safeVal(localStorage.getItem('user_name')),
+    //     p_mobile: safeVal(localStorage.getItem('mobile')),
+    //     p_email: safeVal(localStorage.getItem('email')),
+    //     p_district_id: null,
+    //     p_issue_id: safeVal($('#typeSelectBehalf').val()),
+    //     p_created_by: safeVal(user_id),
+    //     p_category_id: safeVal($('#categorySelectBehalf').val()),
+    //     p_subcategory_id: safeVal($('#subCategorySelectBehalf').val()),
+    //     p_priority: safeVal($('#priority').val()),
+    //     p_relationship: safeVal($('#relationshipField').val()),
+    //     p_onbehalf_name: safeVal($('#citizenName').val()),
+    //     p_onbehalf_mobile: safeVal($('#citizenMobile').val()),
+    //     p_onbehalf_email: safeVal($('#emailField').val()),
+    //     p_onbehalf_district_id: safeVal($('#districtField').val())
+    //   };
+
+    //   columnsArray.forEach(col => {
+    //     if (col === "4man" || col === "4opt") return;
+    //     const $input = $(`#dynamicFieldsContainerBehalf [data-col="${col}"]`);
+    //     if ($input.length) allParams[`p${col}`] = safeVal($input.val());
+    //   });
+
+    //   const payload = { action: "function_call", function_name: "fn_citizen_create_ticket", params: allParams };
+
+    //   // ✅ Submit ticket
+    //   $.ajax({
+    //     url: `${BASE_API_URL}/commonfunction`,
+    //     method: 'POST',
+    //     data: { data: encryptData(payload) },
+    //     dataType: 'json',
+    //     success: function (response) {
+    //       const decrypted = decryptData(response.data);
+    //       const ticketId = decrypted[0]?.fn_citizen_create_ticket || null;
+    //       const msg = ticketId ? `Ticket raised successfully: ${ticketId}` : "Submitted successfully.";
+
+    //       showSuccessToast(msg); // show toast
+
+    //       if (ticketId) {
+    //         // wait for toast to disappear (e.g., 2s)
+    //         setTimeout(() => {
+    //           fetchAcknowledgement(ticketId);
+    //         }, 2000); // adjust duration as per your toast
+    //       }
+
+    //       function fetchAcknowledgement(ticketId) {
+    //         const ackPayload = {
+    //           action: "function_call",
+    //           function_name: "fn_acknowledge_download",
+    //           params: { ticketId }
+    //         };
+
+    //         $.ajax({
+    //           url: `${BASE_API_URL}/commonfunction`,
+    //           method: "POST",
+    //           data: { data: encryptData(ackPayload) },
+    //           success: function (res) {
+    //             try {
+    //               const decrypted = decryptData(res.data);
+    //               const ackDataRaw = decrypted[0].fn_acknowledge_download;
+    //               let ackData = [];
+    //               if (ackDataRaw) ackData = JSON.parse(ackDataRaw).map(item => item.jsonb_build_object);
+
+    //               if (ackData.length > 0) {
+    //                 const d = ackData[0];
+    //                 $("#ackRequestedByBehalf").text(d.Requested_By);
+    //                 $("#ackUserTypeBehalf").text(d.type_user);
+    //                 $("#ackComplainantBehalf").text(d.name);
+    //                 $("#ackMobileBehalf").text(d.mobile);
+    //                 $("#ackDistrictBehalf").text(d.district);
+    //                 $("#ackDateBehalf").text(new Date(d.date).toLocaleString());
+    //                 $("#ackIssueTypeBehalf").text(d.issue);
+    //                 $("#ackCategoryBehalf").text(d.category);
+    //                 $("#ackSubCategoryBehalf").text(d.subcategory);
+    //                 $("#ackNumberBehalf").text(d.acknowledge_numbr);
+    //               } else {
+    //                 $("#ackCardBehalf").html("<p class='text-center text-muted'>No acknowledgement data available.</p>");
+    //               }
+
+    //               const modalEl = document.getElementById('successModalBehalf');
+    //               const modal = new bootstrap.Modal(modalEl);
+    //               modal.show();
+    //               modalEl.addEventListener('hidden.bs.modal', () => location.reload());
+
+    //             } catch (e) {
+    //               $("#ackCardBehalf").html(`<p class="text-danger text-center">Error parsing acknowledgement.</p>`);
+    //             }
+    //           },
+    //           error: function () {
+    //             $("#ackCardBehalf").html(`<p class="text-danger text-center">Failed to load acknowledgement.</p>`);
+    //           }
+    //         });
+    //       }
+
+    //     },
+    //     error: (xhr, status, error) => { console.error(error); showErrorToast("Failed to submit form."); }
+    //   });
+    // });
+
     $("#behalfPane #submitBtnBehalf").on("click", async function (event) {
       event.preventDefault();
 
-      // ✅ Validate required fields
+      // validation (same as before)
       let isValid = true;
-      const requiredSelectors = ["#relationshipField", "#citizenName", "#genderField", "#typeSelectBehalf", "#categorySelectBehalf", "#subCategorySelectBehalf"];
+      const requiredSelectors = [
+        "#relationshipField",
+        "#citizenName",
+        "#genderField",
+        "#typeSelectBehalf",
+        "#categorySelectBehalf",
+        "#subCategorySelectBehalf"
+      ];
       requiredSelectors.forEach(sel => {
         const $el = $(`#behalfPane ${sel}`);
-        if (!$el.val() || $el.val().trim() === "") { $el.addClass("is-invalid"); isValid = false; }
-        else { $el.removeClass("is-invalid"); }
+        if (!$el.val() || $el.val().trim() === "") {
+          $el.addClass("is-invalid");
+          isValid = false;
+        } else {
+          $el.removeClass("is-invalid");
+        }
       });
       if (!isValid) { showErrorToast("Fill all mandatory fields."); return; }
 
-      const safeVal = val => val === undefined || val === null || val.trim() === "" ? null : val;
-      const user_id = localStorage.getItem('user_id');
+      // helper
+      const safeVal = val =>
+        val === undefined || val === null || String(val).trim() === "" ? null : String(val).trim();
 
-      const selectedOption = $('#subCategorySelectBehalf').find('option:selected');
-      const columnsData = selectedOption.attr('data-columns');
-      const columnsArray = columnsData ? columnsData.split(',').map(c => c.trim()) : [];
+      const user_id = localStorage.getItem("user_id");
+      const selectedOption = $("#subCategorySelectBehalf").find("option:selected");
+      const columnsData = selectedOption.attr("data-columns") || "";
+      const columnsArray = columnsData ? columnsData.split(",").map(c => c.trim()) : [];
 
-      // ✅ Prepare payload
-      const allParams = {
-        p_session_id: user_id,
-        p_complainant_name: safeVal(localStorage.getItem('user_name')),
-        p_mobile: safeVal(localStorage.getItem('mobile')),
-        p_email: safeVal(localStorage.getItem('email')),
+      // exact ordered keys (as you specified)
+      const orderedKeys = [
+        "p_session_id",
+        "p_complainant_name",
+        "p_mobile",
+        "p_email",
+        "p_district_id",
+        "p_issue_id",
+        "p_created_by",
+        "p_category_id",
+        "p_subcategory_id",
+        "p_priority",
+        "p_relationship",
+        "p_onbehalf_name",
+        "p_onbehalf_mobile",
+        "p_onbehalf_email",
+        "p_onbehalf_district_id",
+        "p1man", "p1opt",
+        "p2man", "p2opt",
+        "p3man", "p3opt",
+        "p5man", "p5opt",
+        "p6man",
+        "p7man",
+        "p8man",
+        "p9man",
+        "p10opt"
+      ];
+
+      // base values (explicit)
+      const baseMap = {
+        p_session_id: safeVal(user_id),
+        p_complainant_name: safeVal(localStorage.getItem("user_name")),
+        p_mobile: safeVal(localStorage.getItem("mobile")),
+        p_email: safeVal(localStorage.getItem("email")),
         p_district_id: null,
-        p_issue_id: safeVal($('#typeSelectBehalf').val()),
+        p_issue_id: safeVal($("#typeSelectBehalf").val()),
         p_created_by: safeVal(user_id),
-        p_category_id: safeVal($('#categorySelectBehalf').val()),
-        p_subcategory_id: safeVal($('#subCategorySelectBehalf').val()),
-        p_priority: safeVal($('#priority').val()),
-        p_relationship: safeVal($('#relationshipField').val()),
-        p_onbehalf_name: safeVal($('#citizenName').val()),
-        p_onbehalf_mobile: safeVal($('#citizenMobile').val()),
-        p_onbehalf_email: safeVal($('#emailField').val()),
-        p_onbehalf_district_id: safeVal($('#districtField').val())
+        p_category_id: safeVal($("#categorySelectBehalf").val()),
+        p_subcategory_id: safeVal($("#subCategorySelectBehalf").val()),
+        p_priority: safeVal($("#priority").val()),
+        p_relationship: safeVal($("#relationshipField").val()),
+        p_onbehalf_name: safeVal($("#citizenName").val()),
+        p_onbehalf_mobile: safeVal($("#citizenMobile").val()),
+        p_onbehalf_email: safeVal($("#emailField").val()),
+        p_onbehalf_district_id: safeVal($("#districtField").val())
       };
 
-      columnsArray.forEach(col => {
-        if (col === "4man" || col === "4opt") return;
-        const $input = $(`#dynamicFieldsContainerBehalf [data-col="${col}"]`);
-        if ($input.length) allParams[`p${col}`] = safeVal($input.val());
+      // Build params in that exact order — dynamic p{col} keys filled from inputs if present, else null
+      const allParams = {};
+      orderedKeys.forEach(key => {
+        if (baseMap.hasOwnProperty(key)) {
+          allParams[key] = baseMap[key];
+        } else {
+          // dynamic keys like 'p6man' -> data-col = '6man'
+          const col = key.substring(1); // removes leading 'p'
+          const $input = $(`#dynamicFieldsContainerBehalf [data-col="${col}"]`);
+          allParams[key] = $input.length ? safeVal($input.val()) : null;
+        }
       });
 
-      const payload = { action: "function_call", function_name: "fn_citizen_create_ticket", params: allParams };
+      // payload and submission
+      const payload = {
+        action: "function_call",
+        function_name: "fn_citizen_create_ticket",
+        params: allParams
+      };
 
-      // ✅ Submit ticket
+      // For debug: uncomment to inspect the exact ordered JSON you will send
+      // console.log(JSON.stringify(payload, null, 2));
+
       $.ajax({
         url: `${BASE_API_URL}/commonfunction`,
-        method: 'POST',
+        method: "POST",
         data: { data: encryptData(payload) },
-        dataType: 'json',
+        dataType: "json",
         success: function (response) {
           const decrypted = decryptData(response.data);
           const ticketId = decrypted[0]?.fn_citizen_create_ticket || null;
-          const msg = ticketId ? `Ticket raised successfully: ${ticketId}` : "Submitted successfully.";
+          const msg = ticketId
+            ? `Ticket raised successfully: ${ticketId}`
+            : "Submitted successfully.";
 
-          showSuccessToast(msg); // show toast
+          showSuccessToast(msg);
 
           if (ticketId) {
-            // wait for toast to disappear (e.g., 2s)
             setTimeout(() => {
               fetchAcknowledgement(ticketId);
-            }, 2000); // adjust duration as per your toast
+            }, 2000);
           }
 
+          // 🔽 acknowledgement fetcher
           function fetchAcknowledgement(ticketId) {
             const ackPayload = {
               action: "function_call",
               function_name: "fn_acknowledge_download",
-              params: { ticketId }
+              params: { ticketId: safeVal(ticketId) }
             };
 
             $.ajax({
@@ -1021,7 +1199,11 @@
                   const decrypted = decryptData(res.data);
                   const ackDataRaw = decrypted[0].fn_acknowledge_download;
                   let ackData = [];
-                  if (ackDataRaw) ackData = JSON.parse(ackDataRaw).map(item => item.jsonb_build_object);
+                  if (ackDataRaw) {
+                    ackData = JSON.parse(ackDataRaw).map(
+                      item => item.jsonb_build_object
+                    );
+                  }
 
                   if (ackData.length > 0) {
                     const d = ackData[0];
@@ -1030,32 +1212,43 @@
                     $("#ackComplainantBehalf").text(d.name);
                     $("#ackMobileBehalf").text(d.mobile);
                     $("#ackDistrictBehalf").text(d.district);
-                    $("#ackDateBehalf").text(new Date(d.date).toLocaleString());
+                    $("#ackDateBehalf").text(
+                      new Date(d.date).toLocaleString()
+                    );
                     $("#ackIssueTypeBehalf").text(d.issue);
                     $("#ackCategoryBehalf").text(d.category);
                     $("#ackSubCategoryBehalf").text(d.subcategory);
                     $("#ackNumberBehalf").text(d.acknowledge_numbr);
                   } else {
-                    $("#ackCardBehalf").html("<p class='text-center text-muted'>No acknowledgement data available.</p>");
+                    $("#ackCardBehalf").html(
+                      "<p class='text-center text-muted'>No acknowledgement data available.</p>"
+                    );
                   }
 
-                  const modalEl = document.getElementById('successModalBehalf');
+                  const modalEl = document.getElementById("successModalBehalf");
                   const modal = new bootstrap.Modal(modalEl);
                   modal.show();
-                  modalEl.addEventListener('hidden.bs.modal', () => location.reload());
-
+                  modalEl.addEventListener("hidden.bs.modal", () =>
+                    location.reload()
+                  );
                 } catch (e) {
-                  $("#ackCardBehalf").html(`<p class="text-danger text-center">Error parsing acknowledgement.</p>`);
+                  $("#ackCardBehalf").html(
+                    `<p class="text-danger text-center">Error parsing acknowledgement.</p>`
+                  );
                 }
               },
               error: function () {
-                $("#ackCardBehalf").html(`<p class="text-danger text-center">Failed to load acknowledgement.</p>`);
+                $("#ackCardBehalf").html(
+                  `<p class="text-danger text-center">Failed to load acknowledgement.</p>`
+                );
               }
             });
           }
-
         },
-        error: (xhr, status, error) => { console.error(error); showErrorToast("Failed to submit form."); }
+        error: (xhr, status, error) => {
+          console.error(error);
+          showErrorToast("Failed to submit form.");
+        }
       });
     });
 
