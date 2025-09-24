@@ -807,7 +807,7 @@
           debugger
           const responseData = decryptData(response.data);
           const serverMsg = responseData && responseData.length > 0
-            ? `File uploaded successfully! (ID: ${responseData[0].fn_temp_ticket_attachments})`
+            ? `File uploaded successfully!`
             : "File uploaded successfully!";
           showSuccessToast(serverMsg);
           const $wrapper = $(fileInputEl).closest(".file-wrapper");
@@ -815,7 +815,7 @@
 
           // ✅ tick icon
           $(fileInputEl).next(".upload-status-icon").remove();
-          $(fileInputEl).after(`<span class="upload-status-icon text-success ms-2">✔</span>`);
+          $(fileInputEl).after(`<span class="upload-status-icon text-success ms-2">✔ ${serverMsg}</span>`);
 
           // ✅ hide <small>
           $wrapper.find("small").hide();
