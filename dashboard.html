@@ -1293,6 +1293,8 @@
                 $(tableSelector).DataTable().destroy();
               }
 
+              const hasView = !(tableId === "allSelfTable" || tableId === "allReportsTable");
+
               const dt = $(tableSelector).DataTable({
                 destroy: true,
                 responsive: true,
@@ -1302,7 +1304,10 @@
                 lengthChange: true,
                 language: {
                   emptyTable: "No Data Found"
-                }
+                },
+                columnDefs: hasView ? [
+                  { targets: 0, orderable: false } // disable sorting for the View column
+                ] : []
               });
 
               dt.on('draw', function () {
