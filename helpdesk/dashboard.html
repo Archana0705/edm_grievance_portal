@@ -208,24 +208,29 @@
         <!-- <h2 class="mb-4">Helpdesk Dashboard</h2> -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
-            <i class="bi bi-person me-1"></i> Citizen
+            <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
+            <i class="bi bi-person me-1"></i> All 
             </button>
           </li>
           <li class="nav-item mx-2" role="presentation">
+            <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
+            <i class="bi bi-person me-1"></i> Citizen
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
             <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false" tabindex="-1">
             <i class="bi bi-pc-display me-1"></i> e-Sevai Operator
             </button>
           </li>
-          <li class="nav-item" role="presentation">
+          <li class="nav-item mx-2" role="presentation">
             <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false" tabindex="-1">
             <i class="bi bi-building me-1"></i> Department
             </button>
           </li>
-          <li class="nav-item mx-2" role="presentation">
+          <li class="nav-item" role="presentation">
             <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" tabindex="-1">
             <i class="bi bi-gear me-1"></i> EDM
-            </button>
+            </button>  
           </li>
           <li class="nav-item mx-2" role="presentation">
             <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane1" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" tabindex="-1">
@@ -234,43 +239,39 @@
           </li>
         </ul>
         <div class="tab-content mt-3" id="myTabContent">
-          <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-            <!-- Filters -->
-            <!--   <div class="card mb-4">
-              <div class="card-body filter-bar">
-                <div class="row g-3 align-items-end">
-                  <div class="col-md-3">
-                    <label class="form-label">Status</label>
-                    <select class="form-select">
-                      <option value="">All</option>
-                      <option>Pending</option>
-                      <option>In-Progress</option>
-                      <option>Resolved</option>
-                      <option>Closed</option>
-                      <option>Escalated</option>
-                    </select>
-                  </div>
-                  <div class="col-md-3">
-                    <label class="form-label">Priority</label>
-                    <select class="form-select">
-                      <option value="">All</option>
-                      <option>Low</option>
-                      <option>Medium</option>
-                      <option>High</option>
-                      <option>Critical</option>
-                    </select>
-                  </div>
-                  <div class="col-md-3">
-                    <label class="form-label">Date Range</label>
-                    <input type="date" class="form-control">
-                  </div>
-                  <div class="col-md-3 text-end">
-                    <button class="btn btn-primary"><i class="bi bi-search"></i> Apply</button>
-                    <button class="btn btn-light"><i class="bi bi-arrow-repeat"></i> Reset</button>
-                  </div>
+          <div class="tab-pane fade show active" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
+            
+            <!-- Stats Cards -->
+            <div class="row g-4 mb-4">
+              <div class="col-md-3">
+                <div class="card text-center p-3 shadow">
+                  <h5>Total Tickets</h5>
+                  <h3 class="text-primary">120</h3>
                 </div>
               </div>
-              </div> -->
+              <div class="col-md-3">
+                <div class="card text-center p-3 shadow">
+                  <h5>Pending</h5>
+                  <h3 class="text-warning">45</h3>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card text-center p-3 shadow">
+                  <h5>Resolved</h5>
+                  <h3 class="text-success">60</h3>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card text-center p-3 shadow">
+                  <h5>Re-open</h5>
+                  <h3 class="text-danger">15</h3>
+                </div>
+              </div>
+            </div>
+           
+          </div>
+          <div class="tab-pane fade" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+            
             <!-- Stats Cards -->
             <div class="row g-4 mb-4">
               <div class="col-md-3">
@@ -340,6 +341,9 @@
                 </ul>
                 <div class="tab-content" id="myTabContent">
                   <div class="tab-pane fade show active" id="home-tab-pane1" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                    <div class="d-flex justify-content-end mb-2">
+                  <button class="btn btn-sm btn-success"><i class="bi bi-check2-all"></i> Resolve Selected</button>
+                </div>
                     <table class="table table-bordered table-hover ticket-table align-middle">
                   <thead>
                     <tr>
@@ -377,8 +381,23 @@
                     </tr>
                   </tbody>
                 </table>
+                <div class="card-footer d-flex justify-content-end">
+                
+                <nav>
+                  <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                  </ul>
+                </nav>
+              </div>
                   </div>
                   <div class="tab-pane fade" id="profile-tab-pane1" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                    <div class="d-flex justify-content-end mb-2">
+                  <button class="btn btn-sm btn-success"><i class="bi bi-check2-all"></i> Resolve Selected</button>
+                </div>
                     <table class="table table-bordered table-hover ticket-table align-middle">
                   <thead>
                     <tr>
@@ -418,6 +437,9 @@
                 </table>
                   </div>
                   <div class="tab-pane fade" id="contact-tab-pane1" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+                   <div class="d-flex justify-content-end mb-2">
+                  <button class="btn btn-sm btn-success"><i class="bi bi-check2-all"></i> Resolve Selected</button>
+                </div>
                     <table class="table table-bordered table-hover ticket-table align-middle">
                   <thead>
                     <tr>
@@ -539,20 +561,7 @@
                 </div>
               </div>
               <!-- Bulk Actions -->
-              <div class="card-footer d-flex justify-content-between">
-                <div>
-                  <button class="btn btn-sm btn-success"><i class="bi bi-check2-all"></i> Resolve Selected</button>
-                </div>
-                <nav>
-                  <ul class="pagination pagination-sm mb-0">
-                    <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                  </ul>
-                </nav>
-              </div>
+              
             </div>
           </div>
           <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
