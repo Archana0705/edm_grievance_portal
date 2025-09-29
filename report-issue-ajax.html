@@ -787,10 +787,11 @@
               // open in new tab
               window.open("https://tnedistrict.tn.gov.in/tneda/", "_blank");
               $dyn.hide(); // optional
+              $submitBtn.prop('disabled', true);
             }
             else if (subCatText === "Grievance") {
               $dyn.show();
-
+              $submitBtn.prop('disabled', true);
               // build grievance UI fresh
               const trackingHtml = `
   <div id="ticketTracking" class="mt-3">
@@ -915,8 +916,12 @@
                   }
                 });
               });
-
             }
+            else {
+              // enable submit button for all other subcategories
+              $submitBtn.prop('disabled', false);
+            }
+
           });
 
 
@@ -1042,8 +1047,6 @@
               }
             });
           });
-
-
 
           // Container-scoped input validation helpers
           $dyn.on('input change', 'input, textarea, select', function () {
