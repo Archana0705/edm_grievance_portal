@@ -486,7 +486,7 @@
         <div class="modal-body">
           <table class="table table-sm table-bordered" id="ticketDetailsTableBehalf"></table>
           <h6 class="fw-bold mt-4 mb-3">Attachments</h6>
-          <ul class="list-group list-group-flush" id="ticketAttachments"></ul>
+          <ul class="list-group list-group-flush" id="ticketAttachmentsBehalf"></ul>
           <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
           <ul class="timeline" id="ticketTimelineBehalf"></ul>
         </div>
@@ -748,7 +748,7 @@
       <a href="${f.file_path}" target="_blank">${f.file_name}</a>
     </li>`;
                 });
-                $("#ticketAttachments").html(attHtml || "<li class='list-group-item'>No attachments</li>");
+                $("#ticketAttachmentsBehalf").html(attHtml || "<li class='list-group-item'>No attachments</li>");
 
                 // Fill timeline
                 const tl = details.progress_timeline || [];
