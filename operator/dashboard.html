@@ -764,7 +764,7 @@
                 <!-- All -->
                 <div class="tab-pane fade show active" id="openall" role="tabpanel">
                   <div class="table-responsive shadow-sm rounded">
-                    <table class="table table-striped table-hover align-middle text-center" id="allSelfTable1"
+                    <table class="table table-striped table-hover align-middle text-center" id="allSelfTable"
                       style="width:100%">
                       <thead>
                         <tr>
@@ -777,25 +777,14 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr class="odd">
-      
-      <td class="sorting_1">CIT/2025-09-01/00006</td>
-      <td>eSevai centre related</td>
-      <td>Centre-related complaints/ grievances</td>
-      <td>Non-compliance with centre guidelines</td>
-      <td>
-        <span class="badge bg-info text-dark status-badge" style="cursor:pointer;">
-          In-Progress
-        </span>
-      </td>
-    </tr>
+                        
                       </tbody>
                     </table>
                   </div>
                 </div>
                 <div class="tab-pane fade" id="openSelf" role="tabpanel">
                   <div class="table-responsive shadow-sm rounded">
-                    <table class="table table-striped table-hover align-middle text-center" id="openSelfTable1"
+                    <table class="table table-striped table-hover align-middle text-center" id="openSelfTable"
                       style="width:100%">
                       <thead>
                         <tr>
@@ -808,23 +797,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr class="odd">
-      
-        <td class="sorting_1">
-          <button class="btn btn-sm btn-info viewTicketBtn" data-bs-toggle="modal" data-bs-target="#ticketDetailsModal">
-           View
-          </button>
-        </td>
-      <td>CIT/2025-09-01/00007</td>
-      <td>eSevai centre related</td>
-      <td>Centre-related complaints/ grievances</td>
-      <td>Non-compliance with centre guidelines</td>
-      <td>
-        <span class="badge bg-info text-dark status-badge" style="cursor:pointer;">
-          In-Progress
-        </span>
-      </td>
-    </tr>
+                        
                       </tbody>
                     </table>
                   </div>
@@ -1169,17 +1142,99 @@
       setInterval(updateDateTime, 1000);
       updateDateTime();
     </script>
-    <!-- <script>
-      var options = {
-        chart: { type: 'line', height: 250 },
-        series: [{ name: 'Requests', data: [10, 15, 8, 12, 20, 25, 18] }],
-        xaxis: { categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] }
-      };
-      var chart = new ApexCharts(document.querySelector("#requestsChart"), options);
-      chart.render();
-      
-      </script> -->
    
+
+    <script>
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+
+    <!-- kpi values -->
+    <script>
+      // var userid = localStorage.getItem("user_id") || 0;
+      var userid = 14;
+      function bindDashboardCounts(userId) {
+        debugger
+        const payload = {
+          action: "function_call",
+          function_name: "fn_dashboard_citizen_edmopr_counts",
+          params: { p_user_id: userId }    
+        };
+ 
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: "json",
+          success: function (res) {
+            try {
+              const decrypted = decryptData(res.data);
+              const parsed = (typeof decrypted === "string") ? JSON.parse(decrypted) : decrypted;
+              const dataStr = parsed[0].fn_dashboard_citizen_edmopr_counts;
+              const data = JSON.parse(dataStr);
+              $("#selfTicketsCard .h3").text(data.SelfTickets.Total);
+              $("#selfTicketsCard .kpi-meta span").eq(0).text(data.SelfTickets.InProgress);
+              $("#selfTicketsCard .kpi-meta span").eq(1).text(data.SelfTickets.Returned);
+              $("#selfTicketsCard .kpi-meta span").eq(2).text(data.SelfTickets.Resolved);
+              $("#selfTicketsCard .kpi-meta span").eq(3).text(data.SelfTickets.ReOpened);
+              $("#selfTicketsCard .kpi-meta span").eq(4).text(data.SelfTickets.Closed);
+
+              // --- Bind On-Behalf Tickets ---
+              $("#onBehalfTicketsCard .h3").text(data.OnBehalfTickets.Total);
+              $("#onBehalfTicketsCard .kpi-meta span").eq(0).text(data.OnBehalfTickets.InProgress);
+              $("#onBehalfTicketsCard .kpi-meta span").eq(1).text(data.OnBehalfTickets.Returned);
+              $("#onBehalfTicketsCard .kpi-meta span").eq(2).text(data.OnBehalfTickets.Resolved);
+              $("#onBehalfTicketsCard .kpi-meta span").eq(3).text(data.OnBehalfTickets.ReOpened);
+              $("#onBehalfTicketsCard .kpi-meta span").eq(4).text(data.OnBehalfTickets.Closed);
+
+              // --- Bind Overall Tickets ---
+              $("#overallTicketsCard .h3").text(data.OverallTickets.Total);
+              $("#overallTicketsCard .kpi-meta span").eq(0).text(data.OverallTickets.InProgress);
+              $("#overallTicketsCard .kpi-meta span").eq(1).text(data.OverallTickets.Returned);
+              $("#overallTicketsCard .kpi-meta span").eq(2).text(data.OverallTickets.Resolved);
+              $("#overallTicketsCard .kpi-meta span").eq(3).text(data.OverallTickets.ReOpened);
+              $("#overallTicketsCard .kpi-meta span").eq(4).text(data.OverallTickets.Closed);
+
+              // --- Bind Self Tickets --- tab count value
+              $("#allCount").eq(0).text(data.SelfTickets.Total);
+              $("#inProgressCount").eq(0).text(data.SelfTickets.InProgress);
+              $("#returnedCount").eq(1).text(data.SelfTickets.Returned);
+              $("#resolvedCount").eq(2).text(data.SelfTickets.Resolved);
+              $("#reopenedCount").eq(3).text(data.SelfTickets.ReOpened);
+              $("#closedCount").eq(4).text(data.SelfTickets.Closed);
+
+              // --- Bind On-Behalf Tickets --- tab count value  
+              $("#behalfallCount").eq(0).text(data.OnBehalfTickets.Total);
+              $("#behalfinProgressCount").eq(0).text(data.OnBehalfTickets.InProgress);
+              $("#behalfreturnedCount").eq(1).text(data.OnBehalfTickets.Returned);
+              $("#behalfresolvedCount").eq(2).text(data.OnBehalfTickets.Resolved);
+              $("#behalfreopenedCount").eq(3).text(data.OnBehalfTickets.ReOpened);
+              $("#behalfclosedCount").eq(4).text(data.OnBehalfTickets.Closed);
+
+
+            } catch (err) {
+              console.error("Error parsing dashboard data:", err);
+              showErrorToast("Failed to parse dashboard data.");
+            }
+          },
+          error: function () {
+            showErrorToast("Dashboard API error.");
+          }
+        });
+      }
+
+      // --- Initialize ---
+      // const userId = localStorage.getItem("login_user_id") || 0;
+      const userId = 14; 
+      // bindDashboardCounts(userId);
+      bindDashboardCounts(14);
+
+      // Optional: refresh every 60s
+      setInterval(() => bindDashboardCounts(userId), 60000);
+
+    </script>
+    <!-- kpi values -->
+
     <!-- datatable-->
     <script>
       $(document).ready(function () {
@@ -1192,9 +1247,12 @@
     <script>
       console.log("✅ DataTables loaded?", typeof $.fn.DataTable); 
     </script>
+
+    <!-- view tabs -->
     <script>
       $(document).ready(function () {
-        var userId = localStorage.getItem('user_id');
+        // var userId = localStorage.getItem('user_id');
+        var userId = 14; 
 
         const statusMap = {
           "self-all": null,
@@ -1283,6 +1341,8 @@
                 $(tableSelector).DataTable().destroy();
               }
 
+              const hasView = !(tableId === "allSelfTable" || tableId === "allReportsTable");
+
               const dt = $(tableSelector).DataTable({
                 destroy: true,
                 responsive: true,
@@ -1292,7 +1352,10 @@
                 lengthChange: true,
                 language: {
                   emptyTable: "No Data Found"
-                }
+                },
+                columnDefs: hasView ? [
+                  { targets: 0, orderable: false } // disable sorting for the View column
+                ] : []
               });
 
               dt.on('draw', function () {
@@ -1337,7 +1400,7 @@
             action: "function_call",
             function_name: "fn_cit_opr_edm_cms_dep_view_requests",
             params: {
-              userid: userId,
+              userid: userId, 
               issue_status: issueStatus,
               ticket_type: ticketType
             }
@@ -1380,26 +1443,26 @@
                 const hasViewColumn = (tableId !== "allSelfTable" && tableId !== "allReportsTable");
 
                 return `
-    <tr>
-      ${hasViewColumn ? `
-        <td>
-          <button class="btn btn-sm btn-info viewTicketBtn" 
-                data-ticket='${JSON.stringify(data)}' 
-                data-ticketid='${data.TicketId || ''}'>
-           View</i>
-          </button>
-        </td>` : ""
+                <tr>
+                  ${hasViewColumn ? `
+                    <td>
+                      <button class="btn btn-sm btn-info viewTicketBtn" 
+                            data-ticket='${JSON.stringify(data)}' 
+                            data-ticketid='${data.TicketId || ''}'>
+                      View</i>
+                      </button>
+                    </td>` : ""
                   }
-      <td>${data.TicketId || 'N/A'}</td>
-      <td>${data.IssueType || 'N/A'}</td>
-      <td>${data.Category || 'N/A'}</td>
-      <td>${data.Subcategory || 'N/A'}</td>
-      <td>
-        <span class="badge ${getStatusBadgeClass(data.Status)} status-badge" style="cursor:pointer;">
-          ${data.Status || 'N/A'}
-        </span>
-      </td>
-    </tr>`;
+                  <td>${data.TicketId || 'N/A'}</td>
+                  <td>${data.IssueType || 'N/A'}</td>
+                  <td>${data.Category || 'N/A'}</td>
+                  <td>${data.Subcategory || 'N/A'}</td>
+                  <td>
+                    <span class="badge ${getStatusBadgeClass(data.Status)} status-badge" style="cursor:pointer;">
+                      ${data.Status || 'N/A'}
+                    </span>
+                  </td>
+                </tr>`;
               }).join("");
 
             },
@@ -1519,54 +1582,6 @@
         });
 
 
-
-        //     $(document).on("click", ".viewTicketBtn", function () {
-        //       const ticketData = $(this).data("ticket");
-
-        //       // Populate Basic Details Table with all fields
-        //       const $table = $("#ticketDetailsTable");
-        //       $table.empty();
-        //       $table.append(`
-        //   <tr><th>Ticket ID</th><td>${ticketData.TicketId || 'N/A'}</td></tr>
-        //   <tr><th>Type Of User</th><td>${ticketData.TypeOfUser || 'N/A'}</td></tr>
-        //   <tr><th>Name</th><td>${ticketData.Name || 'N/A'}</td></tr>
-        //   <tr><th>Mobile</th><td>${ticketData.Mobile || 'N/A'}</td></tr>
-        //   <tr><th>District</th><td>${ticketData.District || 'N/A'}</td></tr>
-        //   <tr><th>Created Date</th><td>${ticketData.CreatedDate || 'N/A'}</td></tr>
-        //   <tr><th>Issue Type</th><td>${ticketData.IssueType || 'N/A'}</td></tr>
-        //   <tr><th>Category</th><td>${ticketData.Category || 'N/A'}</td></tr>
-        //   <tr><th>Subcategory</th><td>${ticketData.Subcategory || 'N/A'}</td></tr>
-        //   <tr><th>Attachments</th><td>${Array.isArray(ticketData.Attachments) && ticketData.Attachments.length > 0
-        //           ? ticketData.Attachments.map(att => `<a href="${att.FilePath}" target="_blank">${att.FileName}</a>`).join(", ")
-        //           : "N/A"
-        //         }</td></tr>
-        //   <tr><th>Remarks</th><td>${ticketData.Remarks || 'N/A'}</td></tr>
-        // `);
-
-        //       // Populate Timeline dynamically only if In-Progress
-        //       const $timeline = $("#ticketTimeline");
-        //       $timeline.empty();
-        //       if (ticketData.Status && ticketData.Status.toLowerCase() === "in-progress") {
-        //         $timeline.append(`
-        //     <li class="timeline-item">
-        //       <div class="timeline-icon bg-success">
-        //         <i class="bi bi-check-circle-fill text-white"></i>
-        //       </div>
-        //       <div class="timeline-content">
-        //         <h6 class="mb-1">Citizen submitted issue</h6>
-        //         <small class="text-muted">${ticketData.CreatedDate || 'N/A'}</small>
-        //       </div>
-        //     </li>
-        //   `);
-        //       } else {
-        //         $timeline.append(`<li class="text-muted">No timeline available</li>`);
-        //       }
-
-        //       // Show the modal
-        //       new bootstrap.Modal(document.getElementById('ticketDetailsModal')).show();
-        //     });
-
-
         // 🔹 Helper function to format datetime
         function formatDateTime(dateStr) {
           if (!dateStr) return "N/A";
@@ -1580,10 +1595,12 @@
             minute: "2-digit",
             hour12: true
           });
-        }
+        } 
 
         $(document).on("click", ".viewTicketBtn", function () {
           const ticketId = $(this).data("ticketid");
+
+          alert(ticketId);
 
           if (!ticketId) {
             return showErrorToast("Ticket ID not found.");
@@ -1601,12 +1618,9 @@
             data: { data: encryptData(payload) },
             dataType: "json",
             beforeSend: function () {
-              $("#ticketDetailsTable").html(
-                `<tr><td colspan="2" class="text-center text-muted">Loading...</td></tr>`
-              );
-              $("#ticketTimeline").html(
-                `<li class="text-muted">Loading timeline...</li>`
-              );
+              $("#ticketDetailsTable").html(`<tr><td colspan="2" class="text-center text-muted">Loading...</td></tr>`);
+              $("#ticketTimeline").html(`<li class="text-muted">Loading timeline...</li>`);
+              $("#ticketAttachments").html(`<li class="text-muted">Loading attachments...</li>`);
             },
             success: function (res) {
               if (!res.success) {
@@ -1619,9 +1633,7 @@
 
                 if (Array.isArray(parsed)) parsed = parsed[0];
 
-                const rawData = parsed.fn_get_ticket_details
-                  ? JSON.parse(parsed.fn_get_ticket_details)
-                  : {};
+                const rawData = parsed.fn_get_ticket_details ? JSON.parse(parsed.fn_get_ticket_details) : {};
 
                 const ticketDetails = rawData.ticket_details || {};
                 const attachments = rawData.attachments || [];
@@ -1631,19 +1643,18 @@
                 const $table = $("#ticketDetailsTable");
                 $table.empty();
                 $table.append(`
-            <tr><th>Ticket ID</th><td>${ticketDetails.ticket_id || 'N/A'}</td></tr>
-            <tr><th>Name</th><td>${ticketDetails.complainant_name || 'N/A'}</td></tr>
-            <tr><th>Email</th><td>${ticketDetails.complainant_email || 'N/A'}</td></tr>
-            <tr><th>Mobile</th><td>${ticketDetails.complainant_mobile || 'N/A'}</td></tr>
-            <tr><th>District</th><td>${ticketDetails.district || 'N/A'}</td></tr>
-            <tr><th>Created Date</th><td>${formatDateTime(ticketDetails.created_at)}</td></tr>
-            <tr><th>Category</th><td>${ticketDetails.category || 'N/A'}</td></tr>
-            <tr><th>Subcategory</th><td>${ticketDetails.subcategory || 'N/A'}</td></tr>
-            <tr><th>Priority</th><td>${ticketDetails.priority || 'N/A'}</td></tr>
-            <tr><th>Status</th><td>${ticketDetails.status || 'N/A'}</td></tr>
-           
-            <tr><th>Remarks</th><td>${ticketDetails.remarks || 'N/A'}</td></tr>
-          `);
+          <tr><th>Ticket ID</th><td>${ticketDetails.ticket_id || 'N/A'}</td></tr>
+          <tr><th>Name</th><td>${ticketDetails.complainant_name || 'N/A'}</td></tr>
+          <tr><th>Email</th><td>${ticketDetails.complainant_email || 'N/A'}</td></tr>
+          <tr><th>Mobile</th><td>${ticketDetails.complainant_mobile || 'N/A'}</td></tr>
+          <tr><th>District</th><td>${ticketDetails.district || 'N/A'}</td></tr>
+          <tr><th>Created Date</th><td>${formatDateTime(ticketDetails.created_at)}</td></tr>
+          <tr><th>Category</th><td>${ticketDetails.category || 'N/A'}</td></tr>
+          <tr><th>Subcategory</th><td>${ticketDetails.subcategory || 'N/A'}</td></tr>
+          <tr><th>Priority</th><td>${ticketDetails.priority || 'N/A'}</td></tr>
+          <tr><th>Status</th><td>${ticketDetails.status || 'N/A'}</td></tr>
+          <tr><th>Remarks</th><td>${ticketDetails.remarks || 'N/A'}</td></tr>
+        `);
 
                 // Timeline
                 const $timeline = $("#ticketTimeline");
@@ -1651,22 +1662,39 @@
                 if (timeline.length > 0) {
                   timeline.forEach(item => {
                     $timeline.append(`
-                <li class="timeline-item">
-                  <div class="timeline-icon bg-primary">
-                    <i class="bi bi-clock-history text-white"></i>
-                  </div>
-                  <div class="timeline-content">
-                    <h6 class="mb-1">${item.notes || 'Update'}</h6>
-                    <small class="text-muted">
-                      ${item.role_name || 'N/A'} → ${item.to_status || 'N/A'} <br>
-                      ${formatDateTime(item.start_time)}
-                    </small>
-                  </div>
-                </li>
-              `);
+              <li class="timeline-item">
+                <div class="timeline-icon bg-primary">
+                  <i class="bi bi-clock-history text-white"></i>
+                </div>
+                <div class="timeline-content">
+                  <h6 class="mb-1">${item.notes || 'Update'}</h6>
+                  <small class="text-muted">
+                    ${item.role_name || 'N/A'} → ${item.to_status || 'N/A'} <br>
+                    ${formatDateTime(item.start_time)}
+                  </small>
+                </div>
+              </li>
+            `);
                   });
                 } else {
                   $timeline.append(`<li class="text-muted">No timeline available</li>`);
+                }
+
+                // Attachments
+                const $attachments = $("#ticketAttachments");
+                $attachments.empty();
+                if (attachments.length > 0) {
+                  attachments.forEach(file => {
+                    const fileUrl = `${window.BASE_UPLOAD_URL}${file.file_name}`;
+                    $attachments.append(`
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <span>${file.file_name}</span>
+                      <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-outline-primary">View / Download</a>
+                    </li>
+                  `);
+                  });
+                } else {
+                  $attachments.append(`<li class="list-group-item text-muted">No attachments available</li>`);
                 }
 
                 // Show Modal
@@ -1685,53 +1713,8 @@
 
       });
     </script>
-    <script>
-      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-    </script>
-<!-- Code injected by live-server -->
-<script>
-	// <![CDATA[  <-- For SVG support
-	if ('WebSocket' in window) {
-		(function () {
-			function refreshCSS() {
-				var sheets = [].slice.call(document.getElementsByTagName("link"));
-				var head = document.getElementsByTagName("head")[0];
-				for (var i = 0; i < sheets.length; ++i) {
-					var elem = sheets[i];
-					var parent = elem.parentElement || head;
-					parent.removeChild(elem);
-					var rel = elem.rel;
-					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
-						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
-					}
-					parent.appendChild(elem);
-				}
-			}
-			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-			var address = protocol + window.location.host + window.location.pathname + '/ws';
-			var socket = new WebSocket(address);
-			socket.onmessage = function (msg) {
-				if (msg.data == 'reload') window.location.reload();
-				else if (msg.data == 'refreshcss') refreshCSS();
-			};
-			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-				console.log('Live reload enabled.');
-				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-			}
-		})();
-	}
-	else {
-		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-	}
-	// ]]>
-</script>
+    <!-- view tabs -->
+
 </body>
 
 </html>
-<!-- 
-  <tr><th>Attachments</th><td>${attachments.length > 0
-                   ? attachments.map(att => `<a href="${att.FilePath}" target="_blank">${att.FileName}</a>`).join(", ")
-                   : "N/A"
-                 }</td></tr> -->
