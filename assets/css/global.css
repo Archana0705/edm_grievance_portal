@@ -9,3 +9,12 @@
 td {
     text-align: left;
 }
+
+.placeholder {
+    display: inline-block;
+    min-height: 1em;
+    vertical-align: middle;
+    cursor: wait;
+    background-color: transparent !important;
+    opacity: .5;
+}

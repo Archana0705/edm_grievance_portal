@@ -10,6 +10,7 @@
   <link href="assets/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/font/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/css/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/global.css">
 
   <style>
     html,
@@ -538,7 +539,16 @@
           "6man": { label: "Enter eSevai centre ID", type: "text", required: true },
           "7man": { label: "Enter eSevai centre ID against whom the grievance is lodged", type: "text", required: true },
           "8man": { label: "Transaction number", type: "text", required: true },
-          "9man": { label: "Enter reason for ID block", type: "textarea", required: true },
+          "9man": {
+            label: "Enter reason for ID block",
+            type: "dropdown",
+            required: true,
+            options: [
+              "ID blocked due to Zero transactions",
+              "ID blocked due to overcharging issues",
+              "Don’t know"
+            ]
+          },
           "10opt": { label: "Enter name of official", type: "text", required: false }
         };
 
@@ -614,28 +624,47 @@
           </div>
         `;
               $container.append(html);
-            } else {
+            }
+            else {
               // normal fields
               let fieldHtml = '';
-              if (field.type === "textarea") {
+
+              // special case: 9man should be a dropdown
+              if (col === "9man") {
                 fieldHtml = `
-            <div class="mb-3">
-              <label for="${inputId}">
-                ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
-              </label>
-              <textarea id="${inputId}" class="form-control" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}></textarea>
-            </div>`;
-              } else {
-                fieldHtml = `
-            <div class="mb-3">
-              <label for="${inputId}">
-                ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
-              </label>
-              <input id="${inputId}" type="${field.type}" class="form-control" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}>
-            </div>`;
+      <div class="mb-3">
+        <label for="${inputId}">
+          ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
+        </label>
+        <select id="${inputId}" class="form-select" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}>
+          <option value="ID blocked due to Zero transactions">ID blocked due to Zero transactions</option>
+          <option value="ID blocked due to overcharging issues">ID blocked due to overcharging issues</option>
+          <option value="Don’t know">Don’t know</option>
+        </select>
+      </div>`;
               }
+              else if (field.type === "textarea") {
+                fieldHtml = `
+      <div class="mb-3">
+        <label for="${inputId}">
+          ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
+        </label>
+        <textarea id="${inputId}" class="form-control" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}></textarea>
+      </div>`;
+              }
+              else {
+                fieldHtml = `
+      <div class="mb-3">
+        <label for="${inputId}">
+          ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
+        </label>
+        <input id="${inputId}" type="${field.type}" class="form-control" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}>
+      </div>`;
+              }
+
               $container.append(fieldHtml);
             }
+
           });
         }
 
@@ -765,12 +794,6 @@
             });
           });
 
-          // when subcategory chosen -> build dynamic fields
-          // $subCat.on('change', function () {
-          //   const selectedOption = $(this).find('option:selected');
-          //   const columnsData = selectedOption.attr('data-columns') || '';
-          //   generateDynamicFields(columnsData, prefix, $dyn, fileInputClass);
-          // });
           $subCat.on('change', function () {
             const selectedOption = $(this).find('option:selected');
             const columnsData = selectedOption.attr('data-columns') || '';
@@ -794,12 +817,12 @@
               $submitBtn.prop('disabled', true);
               // build grievance UI fresh
               const trackingHtml = `
-  <div id="ticketTracking" class="mt-3">
-    <label for="ticketId">Enter Ticket ID:</label>
-    <input type="text" id="ticketId" class="form-control mb-2" placeholder="Enter Ticket ID">
-    <button id="trackBtn" type="button" class="btn btn-primary btn-sm">Track Status</button>
-  </div>
-`;
+              <div id="ticketTracking" class="mt-3">
+                <label for="ticketId">Enter Ticket ID:</label>
+                <input type="text" id="ticketId" class="form-control mb-2" placeholder="Enter Ticket ID">
+                <button id="trackBtn" type="button" class="btn btn-primary btn-sm">Track Status</button>
+              </div>
+            `;
               $dyn.append(trackingHtml);
 
               $(document).off("click", "#trackBtn").on("click", "#trackBtn", function (e) {
@@ -923,7 +946,6 @@
             }
 
           });
-
 
           // Container-scoped: add more file row
           $dyn.on('click', '.btn-add-file', function () {
@@ -1168,7 +1190,7 @@
 
               $dyn.find('[data-param]').each(function () {
                 const key = $(this).data('param'); // expects data-param="p1man"
-                const val = $(this).val()?.trim() || null;
+                const val = $(this).is('select') ? $(this).find('option:selected').text().trim() : $(this).val()?.trim() || null;
                 allParams[key] = val;
               });
 
