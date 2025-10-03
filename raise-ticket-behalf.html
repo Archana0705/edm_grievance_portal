@@ -1014,6 +1014,14 @@
       });
 
 
+      $(document).on("input", "#behalfPane input[type='text'],input[type='email'], #behalfPane textarea", function () {
+        const forbidden = /[<>"'&/\\;`]/g;
+        if (forbidden.test(this.value)) {
+          this.value = this.value.replace(forbidden, ""); // remove forbidden chars immediately
+          showErrorToast("Special characters < > \" ' & / \\ ; ` are not allowed.");
+        }
+      });
+
       $("#behalfPane #submitBtnBehalf").on("click", async function (event) {
         event.preventDefault();
 
@@ -1077,8 +1085,28 @@
           $("#declarationError").hide();
         }
         // helper
-        const safeVal = val =>
-          val === undefined || val === null || String(val).trim() === "" ? null : String(val).trim();
+        function sanitizeInput(value) {
+          if (value === undefined || value === null) return "";
+          return String(value).replace(/[<>]/g, ""); // removes < and >
+        }
+
+        const safeVal = val => {
+          if (val === undefined || val === null) return null;
+          let cleaned = String(val).trim();
+
+          // Disallow HTML injection characters
+          // < > " ' & / \ ; `
+          const forbidden = /[<>"'&/\\;`]/g;
+          if (forbidden.test(cleaned)) {
+            // Option 1: block entire value
+            return null;
+
+            // Option 2 (if you prefer to clean instead of block):
+            // cleaned = cleaned.replace(forbidden, "");
+          }
+
+          return cleaned === "" ? null : cleaned;
+        };
 
         const user_id = localStorage.getItem("user_id");
         const selectedOption = $("#subCategorySelectBehalf").find("option:selected");

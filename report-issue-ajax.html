@@ -564,6 +564,14 @@
           }
         });
 
+        $(document).on("input", "#selfPane input[type='text'],input[type='email'], #selfPane textarea", function () {
+          const forbidden = /[<>"'&/\\;`]/g;
+          if (forbidden.test(this.value)) {
+            this.value = this.value.replace(forbidden, ""); // remove forbidden chars immediately
+            showErrorToast("Special characters < > \" ' & / \\ ; ` are not allowed.");
+          }
+        });
+
         // Helper: generate dynamic fields (prefix ensures unique IDs)
         function generateDynamicFields(columnsString, prefix, $container, fileInputClass) {
           debugger
@@ -637,6 +645,7 @@
           ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
         </label>
         <select id="${inputId}" class="form-select" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}>
+          <option value="">-- Select --</option>
           <option value="ID blocked due to Zero transactions">ID blocked due to Zero transactions</option>
           <option value="ID blocked due to overcharging issues">ID blocked due to overcharging issues</option>
           <option value="Don’t know">Don’t know</option>
