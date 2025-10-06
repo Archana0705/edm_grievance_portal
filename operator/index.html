@@ -1,12 +1,14 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>eSevai Operator Login</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Bootstrap 5.3 -->
+  <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/css/aos.css" rel="stylesheet">
   <style>
     body {
       background: linear-gradient(135deg, #1565c0, #42a5f5);
@@ -16,125 +18,436 @@
       justify-content: center;
       font-family: 'Poppins', sans-serif;
     }
+
     .login-card {
       background: #fff;
       border-radius: 1rem;
       padding: 2.5rem 2rem;
       max-width: 420px;
       width: 100%;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
       position: relative;
       overflow: hidden;
     }
+
     .login-card h3 {
       font-weight: 700;
       color: #1565c0;
       margin-bottom: 1.5rem;
       text-align: center;
     }
+
     .form-control {
       border-radius: 50px;
       padding: 12px 20px;
     }
+
     .login-btn {
       border-radius: 50px;
       padding: 10px 0;
       font-weight: 600;
       transition: 0.3s;
     }
-    .login-btn:hover { transform: translateY(-2px); }
-    .otp-section { display: none; margin-top: 15px; }
-    .login-footer { text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: #555; }
-    .icon-input { position: relative; }
-    .icon-input i {
-      position: absolute; top: 50%; left: 15px; transform: translateY(-50%); color: #1565c0;
+
+    .login-btn:hover {
+      transform: translateY(-2px);
     }
-    .icon-input input, .icon-input select { padding-left: 40px; }
+
+    .otp-section {
+      display: none;
+      margin-top: 15px;
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    .icon-input {
+      position: relative;
+    }
+
+    .icon-input i {
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transform: translateY(-50%);
+      color: #1565c0;
+    }
+
+    .icon-input input,
+    .icon-input select {
+      padding-left: 40px;
+    }
+
     .recovery-link {
       display: block;
       margin-top: 10px;
       text-align: right;
       font-size: 0.85rem;
     }
-    .recovery-link a { text-decoration: none; color: #1565c0; font-weight: 500; }
-    .recovery-link a:hover { text-decoration: underline; }
-  </style>
-</head>
-<body>
 
-<div class="login-card" data-aos="fade-up">
-  <h3>eSevai Operator Login</h3>
-
-  <!-- Login Form -->
-  <form id="loginForm">
-    <!-- eSevai ID -->
-    <div class="mb-3 icon-input">
-      <i class="fas fa-id-badge"></i>
-      <input type="text" class="form-control" id="esevaiId" placeholder="Enter eSevai ID" required>
-    </div>
-
-    <!-- OTP Delivery Option -->
-    <div class="mb-3 icon-input">
-      <i class="fas fa-envelope"></i>
-      <select class="form-select" id="otpMethod" required>
-        <option value="" disabled selected>Select OTP Delivery Method</option>
-        <option value="mobile">Send OTP to Registered Mobile</option>
-        <option value="email">Send OTP to Registered Email</option>
-      </select>
-    </div>
-
-    <button type="button" class="btn btn-primary w-100 login-btn" id="sendOtpBtn">Send OTP</button>
-
-    <!-- OTP Section -->
-    <div class="otp-section" id="otpSection">
-      <div class="mb-3 icon-input mt-3">
-        <i class="fas fa-key"></i>
-        <input type="text" class="form-control" id="otpInput" placeholder="Enter OTP" required>
-      </div>
-      <button type="submit" class="btn btn-success w-100 login-btn">Login</button>
-    </div>
-
-    <!-- Recovery Option -->
-    <div class="recovery-link">
-      <a href="recovery.html">Change registered mobile/email?</a>
-    </div>
-  </form>
-
-  <div class="login-footer">
-    <p>eSevai Operator Portal</p>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<script>
-  AOS.init();
-
-  const sendOtpBtn = document.getElementById('sendOtpBtn');
-  const otpSection = document.getElementById('otpSection');
-  const loginForm = document.getElementById('loginForm');
-
-  sendOtpBtn.addEventListener('click', () => {
-    const esevaId = document.getElementById('esevaiId').value;
-    const otpMethod = document.getElementById('otpMethod').value;
-
-    if (!esevaId || !otpMethod) {
-      alert("Please enter eSevai ID and select OTP delivery method.");
-      return;
+    .recovery-link a {
+      text-decoration: none;
+      color: #1565c0;
+      font-weight: 500;
     }
 
-    // Simulate sending OTP
-    otpSection.style.display = 'block';
-    sendOtpBtn.disabled = true;
-    sendOtpBtn.innerText = "OTP Sent ✅ (" + otpMethod + ")";
-  });
+    .recovery-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
 
-  loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    alert('Logged in successfully!');
-    // Here integrate actual OTP verification and login logic
-    window.location.href = 'dashboard.html'; 
-  });
-</script>
+<body>
+
+  <div class="login-card" data-aos="fade-up">
+    <h3>eSevai Operator Login</h3>
+
+    <!-- Login Form -->
+    <form id="loginForm">
+      <!-- eSevai ID -->
+      <div class="mb-3 icon-input">
+        <i class="fas fa-id-badge"></i>
+        <input type="text" class="form-control" id="esevaiId" placeholder="Enter eSevai ID" required>
+      </div>
+
+      <!-- OTP Delivery Option -->
+      <div class="mb-3 icon-input">
+        <i class="fas fa-envelope"></i>
+        <select class="form-select" id="otpMethod" required>
+          <option value="" disabled selected>Select OTP Delivery Method</option>
+          <option value="mobile">Send OTP to Registered Mobile</option>
+          <option value="email">Send OTP to Registered Email</option>
+        </select>
+      </div>
+
+      <button type="button" class="btn btn-primary w-100 login-btn" id="sendOtpBtn">Send OTP</button>
+
+      <!-- OTP Section -->
+      <div class="otp-section" id="otpSection">
+        <div class="mb-3 icon-input mt-3">
+          <i class="fas fa-key"></i>
+          <input type="text" class="form-control" id="otpInput" placeholder="Enter OTP" required>
+        </div>
+        <button type="submit" class="btn btn-success w-100 login-btn">Login</button>
+      </div>
+
+      <!-- Recovery Option -->
+      <div class="recovery-link">
+        <a href="recovery.html">Change registered mobile/email?</a>
+      </div>
+    </form>
+
+    <div class="login-footer">
+      <p>eSevai Operator Portal</p>
+    </div>
+  </div>
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script> -->
+  <!-- <script>
+    AOS.init();
+
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const otpSection = document.getElementById('otpSection');
+    const loginForm = document.getElementById('loginForm');
+
+    sendOtpBtn.addEventListener('click', () => {
+      const esevaId = document.getElementById('esevaiId').value;
+      const otpMethod = document.getElementById('otpMethod').value;
+
+      if (!esevaId || !otpMethod) {
+        alert("Please enter eSevai ID and select OTP delivery method.");
+        return;
+      }
+
+      // Simulate sending OTP
+      otpSection.style.display = 'block';
+      sendOtpBtn.disabled = true;
+      sendOtpBtn.innerText = "OTP Sent ✅ (" + otpMethod + ")";
+    });
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Logged in successfully!');
+      // Here integrate actual OTP verification and login logic
+      window.location.href = 'dashboard.html';
+    });
+  </script> -->
+  <!-- AOS JS -->
+  <script src="../assets/js/jquery-3.7.1.min.js"></script>
+  <script src="../assets/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/aos.js"></script>
+  <script src="../assets/js/dataTableUtil.js"></script>
+  <script src="../assets/js/crypto-js.min.js"></script>
+  <script src="../assets/js/global.js"></script>
+  <script src="../assets/js/encrypt_decrypt.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/toastUtil.js"></script>
+  <script src="../assets/js/apiConfig.js"></script>
+
+  <!-- <script>
+    AOS.init();
+
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const otpSection = document.getElementById('otpSection');
+    const loginForm = document.getElementById('loginForm');
+
+    // ✅ Send OTP Button
+    sendOtpBtn.addEventListener('click', () => {
+      const esevaId = document.getElementById('esevaiId').value.trim();
+      const otpMethod = document.getElementById('otpMethod').value;
+
+      if (!esevaId || !otpMethod) {
+        alert("Please enter eSevai ID and select OTP delivery method.");
+        return;
+      }
+
+      // 🔹 API call to fetch operator login details
+      const payload = {
+        action: "function_call",
+        function_name: "fn_operator_login_by_mobile_email",
+        params: {
+          p_operator_id: esevaId,
+          p_mobile: otpMethod,
+
+        }
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(payload) },
+        dataType: "json",
+        success: function (res) {
+          if (!res.success) {
+            alert("Login API failed: " + (res.message || "Unknown error"));
+            return;
+          }
+
+          const decrypted = decryptData(res.data);
+          const apiResponse = JSON.parse(decrypted[0].fn_operator_login_by_mobile_email);
+
+          if (apiResponse.status === "error") {
+            alert(apiResponse.message || "Invalid eSevai ID.");
+            return;
+          }
+
+          // ✅ Simulate OTP send success
+          otpSection.style.display = 'block';
+          sendOtpBtn.disabled = true;
+          sendOtpBtn.innerText = "OTP Sent Successfully";
+
+          // sendOtpBtn.innerText = apiResponse.message;
+          showSuccessToast(apiResponse.message);
+        },
+        error: function () {
+          alert("Login API error. Please try again.");
+        }
+      });
+    });
+
+    // ✅ OTP Verification & Login
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const otpInput = document.getElementById('otpInput').value.trim();
+      const esevaId = document.getElementById('esevaiId').value.trim();
+
+      if (otpInput.length !== 6) {
+        alert("Please enter a valid 6-digit OTP.");
+        return;
+      }
+      const payload = {
+        action: "function_call",
+        function_name: "fn_user_details_by_mobile_email",
+        params: {
+        
+        }
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(payload) },
+        dataType: "json",
+        success: function (res) {
+          if (!res.success) {
+            alert("Login API failed: " + (res.message || "Unknown error"));
+            return;
+          }
+
+          const decrypted = decryptData(res.data);
+          const apiResponse = JSON.parse(decrypted[0].fn_operator_login_by_mobile_email);
+
+          if (apiResponse.status === "error") {
+            alert(apiResponse.message || "Invalid eSevai ID.");
+            return;
+          }
+
+          // ✅ Simulate OTP send success
+          otpSection.style.display = 'block';
+          sendOtpBtn.disabled = true;
+          sendOtpBtn.innerText = "OTP Sent Successfully";
+
+          // sendOtpBtn.innerText = apiResponse.message;
+          showSuccessToast(apiResponse.message);
+        },
+        error: function () {
+          alert("Login API error. Please try again.");
+        }
+      });
+
+    });
+  </script> -->
+  <script>
+    AOS.init();
+
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const otpSection = document.getElementById('otpSection');
+    const loginForm = document.getElementById('loginForm');
+
+    // 🔹 Global variables to store OTP contact info
+    let contactValue = null;
+    let selectedOtpMethod = null;
+
+    // ✅ Send OTP Button
+    sendOtpBtn.addEventListener('click', () => {
+      const esevaId = document.getElementById('esevaiId').value.trim();
+      selectedOtpMethod = document.getElementById('otpMethod').value;
+
+      if (!esevaId || !selectedOtpMethod) {
+        alert("Please enter eSevai ID and select OTP delivery method.");
+        return;
+      }
+
+      // 🔹 API call to send OTP
+      const payload = {
+        action: "function_call",
+        function_name: "fn_operator_login_by_mobile_email", // ✅ unchanged
+        params: {
+          p_operator_id: esevaId,
+          p_mobile: selectedOtpMethod,
+
+        }
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(payload) },
+        dataType: "json",
+        success: function (res) {
+          if (!res.success) {
+            alert("Login API failed: " + (res.message || "Unknown error"));
+            return;
+          }
+
+          const decrypted = decryptData(res.data);
+          const apiResponse = JSON.parse(decrypted[0].fn_operator_login_by_mobile_email);
+
+          if (apiResponse.status === "error") {
+            alert(apiResponse.message || "Invalid eSevai ID.");
+            return;
+          }
+
+          // ✅ Extract contact (email or mobile) from message
+          if (selectedOtpMethod === "mobile") {
+            const match = apiResponse.message.match(/\b\d{10}\b/);
+            contactValue = match ? match[0] : null;
+          } else if (selectedOtpMethod === "email") {
+            const match = apiResponse.message.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}/);
+            contactValue = match ? match[0] : null;
+          }
+
+          // ✅ Show OTP input section
+          otpSection.style.display = 'block';
+          sendOtpBtn.disabled = true;
+          sendOtpBtn.innerText = "OTP Sent ✅";
+          showSuccessToast(apiResponse.message);
+        },
+        error: function () {
+          alert("Login API error. Please try again.");
+        }
+      });
+    });
+
+    // ✅ OTP Verification & Login
+    loginForm.addEventListener('submit', (e) => {
+      debugger
+      e.preventDefault();
+
+      const otpInput = document.getElementById('otpInput').value.trim();
+      const esevaId = document.getElementById('esevaiId').value.trim();
+
+      if (otpInput.length !== 6) {
+        alert("Please enter a valid 6-digit OTP.");
+        return;
+      }
+
+      if (!contactValue) {
+        alert("Contact info not found. Please resend OTP.");
+        return;
+      }
+
+      // 🔹 API call for verifying OTP & login
+      const payload = {
+        action: "function_call",
+        function_name: "fn_user_details_by_mobile_email", // ✅ unchanged
+        params: {
+          p_mobile: contactValue
+        }
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(payload) },
+        dataType: "json",
+        success: function (res) {
+          if (!res.success) {
+            alert("Login verification failed: " + (res.message || "Unknown error"));
+            return;
+          }
+
+          const decrypted = decryptData(res.data);
+          console.log("Decrypted:", decrypted);
+
+          // decrypted itself contains the array of user details
+          const apiResponse = Array.isArray(decrypted) ? decrypted : JSON.parse(decrypted);
+
+          if (!Array.isArray(apiResponse) || apiResponse.length === 0) {
+            alert("Invalid user details.");
+            return;
+          }
+
+          const user = apiResponse[0];
+
+          // ✅ Store user details in localStorage
+          localStorage.setItem("user_id", user.user_id);
+          localStorage.setItem("operator_id", user.operator_id);
+          localStorage.setItem("user_name", user.user_name);
+          localStorage.setItem("email", user.email);
+          localStorage.setItem("mobile", user.mobile);
+          localStorage.setItem("role_id", user.role_id);
+          localStorage.setItem("district", user.district);
+
+          showSuccessToast("Login successful!");
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1500);
+
+        },
+        error: function () {
+          alert("Login API error. Please try again.");
+        }
+      });
+    });
+  </script>
+
 </body>
+
 </html>
