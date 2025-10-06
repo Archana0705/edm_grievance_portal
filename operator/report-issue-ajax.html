@@ -556,36 +556,46 @@
 
     <script>
       $(document).ready(function () {
-        // const roleId = localStorage.getItem("role_id") || null;
-        const roleId = "14";
+        const roleId = localStorage.getItem("role_id") || null;
         const MAX_FILE_DESC = 25;
         // common field map (unchanged)
         const fieldMap = {
-          CAN_Number_Optional: "p1opt",
-          Application_Number: "p2man",
-          Application_Number_Optional: "p2opt",
-          Description_Reason: "p3man",
-          Description_Optional: "p3opt",
-          Support_Document_Desc: "p5man",
-          Support_Document_Desc_Optional: "p5opt",
-          CAN_Number: "p1man",
-          eSevai_Centre_ID: "p6man",
-          Transaction_Number: "p8man",
-          ID_Block_Reason: "p9man",
-          Official_Name: "p10opt",
-          Recharge_Amount: "p11man",
-          Move_Rural_to_Urban: "p12man",
-          Current_Operator_Name: "p13man",
-          Current_Operator_Mobile: "p14man",
-          Current_Address: "p15man",
-          New_Operator_Mobile: "p16man",
-          New_Operator_Name: "p17man",
-          Device_Type: "p18man",
-          Device_Model: "p19man",
-          Recharge_Request_Date: "p20man",
-          Reason_For_Change: "p21man",
-          Error_Message: "p22opt",
-          New_Address: "p23man"
+          "p1opt": { label: "CAN Number", type: "text", required: false },
+          "p2man": { label: "Application Number", type: "text", required: true },
+          "p2opt": { label: "Application Number", type: "text", required: false },
+          "p3man": { label: "Description of changes and reason", type: "textarea", required: true },
+          "p3opt": { label: "Description (optional)", type: "textarea", required: false },
+          "p4man": { label: "Attachments(Maximum 3 attachments allowed)", type: "file", required: true, multiple: true },
+          "p4opt": { label: "Attachments(Maximum 3 attachments allowed)", type: "file", required: false, multiple: true },
+          // "p5man": { label: "Supporting document description (short text)", type: "textarea", required: true },
+          // "p5opt": { label: "Supporting document description (optional)", type: "textarea", required: false },
+          "p1man": { label: "CAN Number", type: "text", required: true },
+          "p6man": { label: "Enter eSevai Centre ID", type: "text", required: true },
+          "p8man": { label: "Transaction Number", type: "text", required: true },
+          "p9man": {
+            label: "Enter reason for ID block",
+            type: "dropdown",
+            required: true,
+            options: [
+              "ID blocked due to Zero transactions",
+              "ID blocked due to overcharging issues",
+              "Don’t know"
+            ]
+          },
+          "p10opt": { label: "Enter name of official", type: "text", required: false },
+          "p11man": { label: "Enter recharge amount", type: "number", required: true },
+          "p12man": { label: "Move from Rural to Urban?", type: "dropdown", required: true, options: ["Yes", "No"] },
+          "p13man": { label: "Current Operator Name", type: "text", required: true },
+          "p14man": { label: "Current Operator Mobile", type: "text", required: true },
+          "p15man": { label: "Current Address", type: "textarea", required: true },
+          "p16man": { label: "New Operator Mobile", type: "text", required: true },
+          "p17man": { label: "New Operator Name", type: "text", required: true },
+          "p18man": { label: "Device Type", type: "text", required: true },
+          "p19man": { label: "Device Model", type: "text", required: true },
+          "p20man": { label: "Recharge Request Date", type: "date", required: true },
+          "p21man": { label: "Reason for Change", type: "textarea", required: true },
+          "p22opt": { label: "Error Message (optional)", type: "textarea", required: false },
+          "p23man": { label: "New Address", type: "textarea", required: true }
         };
 
         // Helper: safeVal as you had it
@@ -610,7 +620,7 @@
 
         // Helper: generate dynamic fields (prefix ensures unique IDs)
         function generateDynamicFields(columnsString, prefix, $container, fileInputClass) {
-          debugger
+          debugger;
           $container.empty();
 
           if (!columnsString) {
@@ -622,94 +632,141 @@
 
           columnsArray.forEach((colRaw, index) => {
             const col = colRaw.trim();
-            const field = fieldMap[col];
+            const field = fieldMap[`p${col}`]; // ✅ Use prefixed key
             if (!field) return;
 
             const inputId = `field_${prefix}_${col}_${index}`;
             const isMandatory = col.endsWith('man');
             const mandatoryAttr = isMandatory ? 'data-mandatory="true"' : '';
-            const dataParamAttr = `data-param="p${col}"`; // maps 1man → p1man
+            const dataParamAttr = `data-param="p${col}"`;
             const dataColAttr = `data-col="${col}"`;
 
-            // file wrapper (we store data-col on wrapper to detect mandatory)
+            // ============================
+            // 📁 FILE UPLOAD HANDLING
+            // ============================
             if (col === "4opt" || col === "4man") {
               const wrapperId = `wrapper_${inputId}`;
               const html = `
-          <div id="${wrapperId}" class="mb-3 file-wrapper" ${dataColAttr}>
-            <label class="form-label">${field.label}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+        <div id="${wrapperId}" class="mb-3 file-wrapper" ${dataColAttr} ${mandatoryAttr}>
+          <label class="form-label">${field.label}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
 
-            <div class="row fw-bold border-bottom pb-2 mb-2">
-              <div class="col-md-1">S No</div>
-              <div class="col-md-4">Attachment Description</div>
-              <div class="col-md-4">Attachment <small class="text-muted text-danger">(max 2MB each)</small></div>
-              <div class="col-md-3">Actions</div>
-            </div>
+          <div class="row fw-bold border-bottom pb-2 mb-2">
+            <div class="col-md-1">S No</div>
+            <div class="col-md-4">Attachment Description</div>
+            <div class="col-md-4">Attachment <small class="text-muted text-danger">(max 2MB each)</small></div>
+            <div class="col-md-3">Actions</div>
+          </div>
 
-            <div class="file-rows">
-              <div class="file-row row align-items-center1 mb-2">
-                <div class="col-md-1">
-                  <span class="fw-bold file-label">1</span>
-                </div>
-                <div class="col-md-4">
-                <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">                </div>
-                <div class="col-md-4">
-                  <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf">
-                   <small class="text-danger">jpg, jpeg, png, pdf only allowed</small>
-                </div>
-                <div class="col-md-3">
-                  <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
-                </div>
+          <div class="file-rows">
+            <div class="file-row row align-items-center mb-2">
+              <div class="col-md-1"><span class="fw-bold file-label">1</span></div>
+              <div class="col-md-4">
+                <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">
+              </div>
+              <div class="col-md-4">
+                <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf">
+                <small class="text-danger">jpg, jpeg, png, pdf only allowed</small>
+              </div>
+              <div class="col-md-3">
+                <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
               </div>
             </div>
+          </div>
 
-            <div class="mt-2">
-              <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button>
+          <div class="mt-2">
+            <button type="button" class="btn btn-primary btn-sm btn-add-file">Add More</button>
+          </div>
+        </div>
+      `;
+              $container.append(html);
+
+              // ============================
+              // 🧩 Dynamic File Add/Delete Logic
+              // ============================
+              const $wrapper = $(`#${wrapperId}`);
+
+              $wrapper.on("click", ".btn-add-file", function () {
+                const $rows = $wrapper.find(".file-rows .file-row");
+                const fileCount = $rows.length;
+                if (fileCount >= 3) {
+                  alert("Maximum 3 attachments allowed.");
+                  return;
+                }
+
+                const newIndex = fileCount + 1;
+                const newRow = `
+          <div class="file-row row align-items-center mb-2">
+            <div class="col-md-1"><span class="fw-bold file-label">${newIndex}</span></div>
+            <div class="col-md-4">
+              <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">
+            </div>
+            <div class="col-md-4">
+              <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf">
+              <small class="text-danger">jpg, jpeg, png, pdf only allowed</small>
+            </div>
+            <div class="col-md-3">
+              <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
             </div>
           </div>
         `;
-              $container.append(html);
+                $wrapper.find(".file-rows").append(newRow);
+                updateFileRowLabels($wrapper);
+              });
+
+              $wrapper.on("click", ".btn-delete-file", function () {
+                $(this).closest(".file-row").remove();
+                updateFileRowLabels($wrapper);
+              });
+
+              function updateFileRowLabels($wrapper) {
+                $wrapper.find(".file-label").each(function (i) {
+                  $(this).text(i + 1);
+                });
+              }
+
+              return; // Skip to next column
+            }
+
+            // ============================
+            // 🧾 NORMAL INPUT FIELDS
+            // ============================
+            let fieldHtml = '';
+
+            if (col === "9man") {
+              // Dropdown special case
+              fieldHtml = `
+        <div class="mb-3">
+          <label for="${inputId}">
+            ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
+          </label>
+          <select id="${inputId}" class="form-select" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}>
+            <option value="">-- Select --</option>
+            <option value="ID blocked due to Zero transactions">ID blocked due to Zero transactions</option>
+            <option value="ID blocked due to overcharging issues">ID blocked due to overcharging issues</option>
+            <option value="Don’t know">Don’t know</option>
+          </select>
+        </div>`;
+            }
+            else if (field.type === "textarea") {
+              fieldHtml = `
+        <div class="mb-3">
+          <label for="${inputId}">
+            ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
+          </label>
+          <textarea id="${inputId}" class="form-control" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}></textarea>
+        </div>`;
             }
             else {
-              // normal fields
-              let fieldHtml = '';
-
-              // special case: 9man should be a dropdown
-              if (col === "9man") {
-                fieldHtml = `
-      <div class="mb-3">
-        <label for="${inputId}">
-          ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
-        </label>
-        <select id="${inputId}" class="form-select" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}>
-          <option value="">-- Select --</option>
-          <option value="ID blocked due to Zero transactions">ID blocked due to Zero transactions</option>
-          <option value="ID blocked due to overcharging issues">ID blocked due to overcharging issues</option>
-          <option value="Don’t know">Don’t know</option>
-        </select>
-      </div>`;
-              }
-              else if (field.type === "textarea") {
-                fieldHtml = `
-      <div class="mb-3">
-        <label for="${inputId}">
-          ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
-        </label>
-        <textarea id="${inputId}" class="form-control" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}></textarea>
-      </div>`;
-              }
-              else {
-                fieldHtml = `
-      <div class="mb-3">
-        <label for="${inputId}">
-          ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
-        </label>
-        <input id="${inputId}" type="${field.type}" class="form-control" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}>
-      </div>`;
-              }
-
-              $container.append(fieldHtml);
+              fieldHtml = `
+        <div class="mb-3">
+          <label for="${inputId}">
+            ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
+          </label>
+          <input id="${inputId}" type="${field.type}" class="form-control" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}>
+        </div>`;
             }
 
+            $container.append(fieldHtml);
           });
         }
 
