@@ -632,7 +632,7 @@
 
           columnsArray.forEach((colRaw, index) => {
             const col = colRaw.trim();
-            const field = fieldMap[`p${col}`]; // ✅ Use prefixed key
+            const field = fieldMap[`p${col}`]; // prefixed key
             if (!field) return;
 
             const inputId = `field_${prefix}_${col}_${index}`;
@@ -674,16 +674,20 @@
           </div>
 
           <div class="mt-2">
-            <button type="button" class="btn btn-primary btn-sm btn-add-file">Add More</button>
+            <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button>
           </div>
         </div>
       `;
               $container.append(html);
 
-              // ============================
-              // 🧩 Dynamic File Add/Delete Logic
-              // ============================
               const $wrapper = $(`#${wrapperId}`);
+              const $addBtn = $wrapper.find(".btn-add-file");
+
+              // Enable Add More button only when a file is selected
+              $wrapper.on("change", `input[type="file"].${fileInputClass}`, function () {
+                const fileSelected = $(this).val() !== "";
+                $addBtn.prop("disabled", !fileSelected);
+              });
 
               $wrapper.on("click", ".btn-add-file", function () {
                 const $rows = $wrapper.find(".file-rows .file-row");
@@ -711,11 +715,20 @@
         `;
                 $wrapper.find(".file-rows").append(newRow);
                 updateFileRowLabels($wrapper);
+
+                // Disable Add More on new empty row until a file is selected
+                $addBtn.prop("disabled", true);
               });
 
               $wrapper.on("click", ".btn-delete-file", function () {
                 $(this).closest(".file-row").remove();
                 updateFileRowLabels($wrapper);
+
+                // Recheck if Add More should be enabled
+                const anyFileFilled = $wrapper.find(`input[type="file"].${fileInputClass}`).filter(function () {
+                  return $(this).val() !== "";
+                }).length > 0;
+                $addBtn.prop("disabled", !anyFileFilled);
               });
 
               function updateFileRowLabels($wrapper) {
@@ -746,8 +759,7 @@
             <option value="Don’t know">Don’t know</option>
           </select>
         </div>`;
-            }
-            else if (field.type === "textarea") {
+            } else if (field.type === "textarea") {
               fieldHtml = `
         <div class="mb-3">
           <label for="${inputId}">
@@ -755,8 +767,7 @@
           </label>
           <textarea id="${inputId}" class="form-control" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}></textarea>
         </div>`;
-            }
-            else {
+            } else {
               fieldHtml = `
         <div class="mb-3">
           <label for="${inputId}">
@@ -1275,6 +1286,20 @@
                 p8man: null,
                 p9man: null,
                 p10opt: null,
+                p11man: null,
+                p12man: null,
+                p13man: null,
+                p14man: null,
+                p15man: null,
+                p16man: null,
+                p17man: null,
+                p18man: null,
+                p19man: null,
+                p20man: null,
+                p21man: null,
+                p22opt: null,
+                p23man: null,
+
                 // p4man/p4opt handled below
               };
 
