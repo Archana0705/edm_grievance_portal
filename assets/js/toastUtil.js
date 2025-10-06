@@ -104,20 +104,34 @@ window.showErrorToast = function (message) {
 };
 
 window.loadToastLayout = function (callback) {
-    const baseUrl = window.location.origin + '/edm-grievance-portal';
-    const toastPath = `${baseUrl}/assets/partials/toastLayout.html`;
+    let toastPath = '';
+
+    // If running locally (Live Server)
+    if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+        toastPath = '../assets/partials/toastLayout.html'; // adjust based on page location
+    } else {
+        // On staging or production
+        const script = document.currentScript || document.getElementsByTagName('script')[document.getElementsByTagName('script').length - 1];
+        const fullSrc = script.src;
+        const baseUrl = fullSrc.substring(0, fullSrc.indexOf('/assets/js/'));
+        toastPath = `${baseUrl}/assets/partials/toastLayout.html`;
+    }
 
     fetch(toastPath)
-        .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.text();
+        })
         .then(html => {
             const div = document.createElement('div');
             div.innerHTML = html;
             document.body.appendChild(div);
-            console.log('✅ Toast layout loaded:', toastPath);
-            if (callback) callback();
+            console.log(`✅ Toast layout loaded from: ${toastPath}`);
+            if (typeof callback === 'function') callback();
         })
         .catch(err => console.error('❌ Toast layout load failed:', err));
 };
+
 
 // ✅ Auto-load toast layout after DOM ready
 document.addEventListener('DOMContentLoaded', () => {

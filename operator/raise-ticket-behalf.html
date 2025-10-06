@@ -392,12 +392,12 @@
                   benefits availed by me shall be summarily withdrawn.
                 </p>
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="declarationCheck">
-                  <label class="form-check-label small" for="declarationCheck">
+                  <input class="form-check-input" type="checkbox" id="declarationCheckBehalf">
+                  <label class="form-check-label small" for="declarationCheckBehalf">
                     I agree to the terms of this declaration
                   </label>
                 </div>
-                <span class="text-danger small" id="declarationError" style="display:none;"></span>
+                <span class="text-danger small" id="declarationErrorBehalf" style="display:none;"></span>
 
               </div>
             </div>
@@ -1088,14 +1088,14 @@
 
         if (!isValid) { showErrorToast("Fill all mandatory fields."); return; }
 
-        if (!$("#declarationCheck").is(":checked")) {
-          $("#declarationError")
+        if (!$("#declarationCheckBehalf").is(":checked")) {
+          $("#declarationErrorBehalf")
             .text("You must agree to the declaration before submitting.")
             .show();
           showErrorToast("You must agree to the declaration before submitting.");
           return;
         } else {
-          $("#declarationError").hide();
+          $("#declarationErrorBehalf").hide();
         }
         // helper
         function sanitizeInput(value) {
@@ -1130,47 +1130,59 @@
         const orderedKeys = [
           "p_session_id",
           "p_complainant_name",
-          "p_mobile",
-          "p_email",
-          "p_district_id",
-          "p_issue_id",
+          "p_district",
+          "p_issue",
           "p_created_by",
-          "p_category_id",
-          "p_subcategory_id",
+          "p_category",
+          "p_subcategory",
           "p_priority",
           "p_relationship",
           "p_onbehalf_name",
           "p_onbehalf_mobile",
           "p_onbehalf_email",
-          "p_onbehalf_district_id",
+          "p_operator_eid",
           "p1man", "p1opt",
           "p2man", "p2opt",
           "p3man", "p3opt",
           "p5man", "p5opt",
           "p6man",
-          "p7man",
           "p8man",
           "p9man",
-          "p10opt"
+          "p10opt",
+          "p11man",
+          "p12man",
+          "p13man",
+          "p14man",
+          "p15man",
+          "p16man",
+          "p17man",
+          "p18man",
+          "p19man",
+          "p20man",
+          "p21man",
+          "p22opt",
+          "p23man",
+
         ];
 
         // base values (explicit)
         const baseMap = {
           p_session_id: safeVal(user_id),
           p_complainant_name: safeVal(localStorage.getItem("user_name")),
-          p_mobile: safeVal(localStorage.getItem("mobile")),
-          p_email: safeVal(localStorage.getItem("email")),
-          p_district_id: null,
-          p_issue_id: safeVal($("#typeSelectBehalf").val()),
+          // p_mobile: safeVal(localStorage.getItem("mobile")),
+          // p_email: safeVal(localStorage.getItem("email")),
+          p_district: null,
+          p_issue: safeVal($("#typeSelectBehalf").val()),
           p_created_by: safeVal(user_id),
-          p_category_id: safeVal($("#categorySelectBehalf").val()),
-          p_subcategory_id: safeVal($("#subCategorySelectBehalf").val()),
+          p_category: safeVal($("#categorySelectBehalf").val()),
+          p_subcategory: safeVal($("#subCategorySelectBehalf").val()),
           p_priority: safeVal($("#priority").val()),
           p_relationship: safeVal($("#relationshipField").val()),
           p_onbehalf_name: safeVal($("#citizenName").val()),
           p_onbehalf_mobile: safeVal($("#citizenMobile").val()),
           p_onbehalf_email: safeVal($("#emailField").val()),
-          p_onbehalf_district_id: safeVal($("#districtField").val())
+          p_onbehalf_district_id: safeVal($("#districtField").val()),
+          p_operator_eid: safeVal(localStorage.getItem("operator_id")),
         };
 
         // Build params in that exact order — dynamic p{col} keys filled from inputs if present, else null
@@ -1201,7 +1213,7 @@
         // payload and submission
         const payload = {
           action: "function_call",
-          function_name: "fn_citizen_create_ticket",
+          function_name: "fn_operator_create_ticket",
           params: allParams
         };
 
@@ -1215,7 +1227,7 @@
           dataType: "json",
           success: function (response) {
             const decrypted = decryptData(response.data);
-            const ticketId = decrypted[0]?.fn_citizen_create_ticket || null;
+            const ticketId = decrypted[0]?.fn_operator_create_ticket || null;
             const msg = ticketId
               ? `Ticket raised successfully: ${ticketId}`
               : "Submitted successfully.";
