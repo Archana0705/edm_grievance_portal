@@ -644,7 +644,20 @@
             "Don’t know"
           ]
         },
-        "10opt": { label: "Enter name of official", type: "text", required: false }
+        "10opt": { label: "Enter name of official", type: "text", required: false },
+        "11man": { label: "Enter recharge amount", type: "number", required: true },
+        "12man": { label: "Move from Rural to Urban?", type: "dropdown", required: true, options: ["Yes", "No"] },
+        "13man": { label: "Current Operator Name", type: "text", required: true },
+        "14man": { label: "Current Operator Mobile", type: "text", required: true },
+        "15man": { label: "Current Address", type: "textarea", required: true },
+        "16man": { label: "New Operator Mobile", type: "text", required: true },
+        "17man": { label: "New Operator Name", type: "text", required: true },
+        "18man": { label: "Device Type", type: "text", required: true },
+        "19man": { label: "Device Model", type: "text", required: true },
+        "20man": { label: "Recharge Request Date", type: "date", required: true },
+        "21man": { label: "Reason for Change", type: "textarea", required: true },
+        "22opt": { label: "Error Message (optional)", type: "textarea", required: false },
+        "23man": { label: "New Address", type: "textarea", required: true }
       };
 
       $("#behalfPane #subCategorySelectBehalf").on("change", function () {
@@ -1303,6 +1316,7 @@
       });
 
     </script>
+
 
 </body>
 
