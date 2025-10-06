@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acknowledgement</title>
+  <!-- Bootstrap CSS -->
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/css/aos.css" rel="stylesheet">
+  <link href="assets/vendor/datatable/css/dataTables.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/vendor/datatable/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="assets/css/global.css">
+
+  <style>
+    body {
+      background: #f8f9fa;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .ack-card {
+      background: #fff;
+      border: 1px solid #000;
+      border-radius: 8px;
+      padding: 25px 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      margin: 40px auto;
+      max-width: 850px;
+    }
+
+    .ack-card h5 {
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      border-bottom: 2px solid #000;
+      padding-bottom: 6px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .ack-label {
+      font-weight: 500;
+      width: 250px;
+    }
+
+    .ack-row {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">@</span>
+        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <a href="#" class="btn btn-success">Submit</a>
+    </div>
+  </div>
+  <div id="ackCard" class="ack-card">
+    <h5>Acknowledgement</h5>
+    <p class="mb-4">We acknowledge the receipt of your grievance with the following details:</p>
+
+    <div class="ack-row d-flex">
+      <div class="ack-label">Requested By:</div>
+      <div>(e.g., Satheesan G, or eSevai operator ID)</div>
+    </div>
+
+    <div class="ack-row d-flex">
+      <div class="ack-label">Type of user:</div>
+      <div>(e.g., Citizen , eSevai operator)</div>
+    </div>
+
+    <div class="ack-row d-flex">
+      <div class="ack-label">Name of the complainant:</div>
+      <div>__________________________</div>
+    </div>
+
+    <div class="ack-row d-flex">
+      <div class="ack-label">Mobile number of the complainant:</div>
+      <div>__________________________</div>
+    </div>
+
+    <div class="ack-row d-flex">
+      <div class="ack-label">District:</div>
+      <div>(e.g., Dharmapuri)</div>
+    </div>
+
+    <div class="ack-row d-flex">
+      <div class="ack-label">Date:</div>
+      <div>Auto-filled with timestamp (e.g., 28-04-2025 11:43 AM)</div>
+    </div>
+
+    <div class="ack-row d-flex">
+      <div class="ack-label">Issue type:</div>
+      <div>(e.g., eSevai portal and services)</div>
+    </div>
+
+    <div class="ack-row d-flex">
+      <div class="ack-label">Issue category:</div>
+      <div>(e.g., CAN Related)</div>
+    </div>
+
+    <div class="ack-row d-flex">
+      <div class="ack-label">Issue subcategory:</div>
+      <div>(e.g., CAN Edit)</div>
+    </div>
+
+    <div class="ack-row d-flex">
+      <div class="ack-label">Acknowledgement number:</div>
+      <div>__________________________</div>
+    </div>
+
+    <p class="mt-4"><strong>Please note the acknowledgment number for tracking your application status.</strong></p>
+  </div>
+
+  <!-- Button outside -->
+  <div class="text-center">
+    <button onclick="downloadPDF()" class="btn btn-primary mt-3">
+      Download as PDF
+    </button>
+  </div>
+
+  <!-- html2canvas + jsPDF -->
+  <script src="assets/js/html2canvas.min.js"></script>
+  <script src="assets/js/jspdf.umd.min.js"></script>
+  <script>
+    function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const card = document.getElementById('ackCard');
+      html2canvas(card).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const imgWidth = pdfWidth - 20; // margin
+        const imgHeight = canvas.height * imgWidth / canvas.width;
+        pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+        pdf.save("acknowledgement.pdf");
+      });
+    }
+  </script>
+
+  <script>
+    const payload = {
+                  action: "function_call",
+                  function_name: "fn_get_ticket_details",
+                  params: { p_ticket_id: ticketId }
+                };
+
+                $.ajax({
+                  url: ${BASE_API_URL}/commonfunction,
+                  method: "POST",
+                  data: { data: encryptData(payload) },
+                  dataType: "json",
+                  success: function (res) {
+                    const decrypted = decryptData(res.data);
+                    const raw = decrypted[0]?.fn_get_ticket_details;
+
+                    if (!raw) {
+                      alert("No ticket details found.");
+                      return;
+                    }
+
+                    const details = JSON.parse(raw);
+
+                    // 1️⃣ Ticket Details
+                    // 1️⃣ Ticket Details
+                    const td = details.ticket_details;
+                    let detailsHtml = "";
+                    for (const [key, value] of Object.entries(td)) {
+                      let displayValue = value;
+
+                      // Format created_at or any other date field to date-only
+                      if (key.toLowerCase() === "created_at" && value) {
+                        const dateObj = new Date(value);
+                        if (!isNaN(dateObj)) {
+                          displayValue = dateObj.toLocaleDateString('en-GB', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric'
+                          });
+                        }
+                      }
+
+                      detailsHtml += `
+                  <tr>
+                    <th class="bg-light text-capitalize">${key.replace(/_/g, " ")}</th>
+                    <td>${displayValue || "N/A"}</td>
+                  </tr>`;
+                    }
+                    $("#ticketDetailsTable").html(detailsHtml);
+
+
+                    // 2️⃣ Attachments
+                    const at = details.attachments || [];
+                    let attHtml = "";
+                    at.forEach(f => {
+                      const isImage = f.mime_type.startsWith("image/");
+                      const fileUrl = f.file_path;
+
+                      attHtml += `
+      <li class="list-group-item">
+        ${isImage
+                          ? <img src="${fileUrl}" alt="${f.file_name}" class="img-thumbnail me-2" style="max-height:80px">
+                          : <i class="bi bi-file-earmark-pdf text-danger me-2"></i>
+                        }
+        <a href="${fileUrl}" target="_blank">${f.file_name}</a>
+      </li>`;
+                    });
+                    $("#ticketAttachments").html(attHtml);
+
+                    // 3️⃣ Timeline
+                    // 3️⃣ Timeline
+                    const tl = details.progress_timeline || [];
+                    let tlHtml = "";
+                    tl.forEach(t => {
+                      let formattedDate = "";
+                      if (t.start_time) {
+                        const dateObj = new Date(t.start_time);
+                        if (!isNaN(dateObj)) {
+                          formattedDate = dateObj.toLocaleDateString('en-GB', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric'
+                          });
+                        }
+                      }
+
+                      tlHtml += `
+    <li>
+      <div><strong>${t.role_name}</strong> → <em>${t.to_status}</em></div>
+      <div class="small text-muted">${formattedDate}</div>
+      <div>${t.notes || ""}</div>
+    </li>`;
+                    });
+                    $("#ticketTimeline").html(tlHtml);
+
+
+
+                    // 4️⃣ Show modal
+                    $("#ticketDetailsModal").modal("show");
+                  },
+
+                  error: function () {
+                    alert("Failed to fetch ticket status.");
+                  }
+                });
+  </script>
+
+</body>
+
+</html>
