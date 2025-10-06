@@ -1263,16 +1263,19 @@
               // prepare params with defaults
               const allParams = {
                 p_session_id: 1,
-                p_complainant_name: null,
+                p_operator_eid: userId,
+                p_operator_name: userId,
                 p_mobile: null,
                 p_email: null,
+                p_name: null,
+                p_relationship: null,
                 p_district_id: null,
                 p_issue_id: null,
-                p_created_by: null,
                 p_category_id: null,
                 p_subcategory_id: null,
+                p_created_by: null,
                 p_priority: null,
-                p_relationship: null,
+                p_description: null,
                 p_onbehalf_name: null,
                 p_onbehalf_mobile: null,
                 p_onbehalf_email: null,
@@ -1326,7 +1329,7 @@
 
               const payload = {
                 action: "function_call",
-                function_name: "fn_citizen_create_ticket",
+                function_name: "fn_operator_create_ticket",
                 params: allParams
               };
 
