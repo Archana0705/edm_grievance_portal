@@ -1036,6 +1036,7 @@
       });
 
       $("#behalfPane #submitBtnBehalf").on("click", async function (event) {
+        debugger;
         event.preventDefault();
 
         // validation (same as before)
@@ -1070,6 +1071,7 @@
 
         // ✅ Validate dynamic mandatory fields
         $("#behalfPane [data-mandatory='true']").each(function () {
+
           const $el = $(this);
           if (!$el.val() || $el.val().trim() === "") {
             $el.addClass("is-invalid");
@@ -1245,7 +1247,7 @@
               const ackPayload = {
                 action: "function_call",
                 function_name: "fn_acknowledge_download",
-                params: { ticketId: safeVal(ticketId) }
+                params: { ticketid: ticketId }
               };
 
               $.ajax({

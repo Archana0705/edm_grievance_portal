@@ -1262,7 +1262,7 @@
 
               // prepare params with defaults
               const allParams = {
-                p_session_id: 1,
+                p_session_id: null,
                 p_complainant_name: null,
                 p_district: null,
                 p_issue: null,
@@ -1301,6 +1301,7 @@
               };
 
               // static fields (shared)
+              allParams.p_session_id = safeVal(localStorage.getItem('user_id'));
               allParams.p_complainant_name = safeVal(localStorage.getItem('user_name'));
               // allParams.p_mobile = safeVal(localStorage.getItem('mobile'));
               // allParams.p_email = safeVal(localStorage.getItem('email'));
