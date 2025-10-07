@@ -68,6 +68,9 @@
 // ==============================
 // toastUtil.js
 // ==============================
+// ==============================
+// toastUtil.js (Universal Version)
+// ==============================
 
 // ✅ Show Success Toast
 window.showSuccessToast = function (message) {
@@ -76,10 +79,7 @@ window.showSuccessToast = function (message) {
 
     if (toastElement && toastBody) {
         toastBody.textContent = message;
-        const toast = new bootstrap.Toast(toastElement, {
-            autohide: true,
-            delay: 3000
-        });
+        const toast = new bootstrap.Toast(toastElement, { autohide: true, delay: 3000 });
         toast.show();
     } else {
         console.warn('⚠️ Success toast layout not found in DOM.');
@@ -93,29 +93,37 @@ window.showErrorToast = function (message) {
 
     if (toastElement && toastBody) {
         toastBody.textContent = message;
-        const toast = new bootstrap.Toast(toastElement, {
-            autohide: true,
-            delay: 3000
-        });
+        const toast = new bootstrap.Toast(toastElement, { autohide: true, delay: 3000 });
         toast.show();
     } else {
         console.warn('⚠️ Error toast layout not found in DOM.');
     }
 };
 
+// ✅ Load Toast Layout (works in local / staging / production)
 window.loadToastLayout = function (callback) {
     try {
-        const script = document.currentScript || document.getElementsByTagName('script')[document.getElementsByTagName('script').length - 1];
-        const scriptSrc = script.src;
+        // Compute base path dynamically
+        let basePath = window.location.origin + window.location.pathname;
 
-        // Remove the file name (toastUtil.js) to get the base folder
-        const baseFolder = scriptSrc.substring(0, scriptSrc.lastIndexOf('/'));
+        // Remove any file name (like index.html, dashboard.html)
+        if (basePath.match(/\.html?$/)) {
+            basePath = basePath.substring(0, basePath.lastIndexOf('/'));
+        }
 
-        // Go up one folder and go to partials
-        const toastPath = `${baseFolder.replace('/js', '')}/partials/toastLayout.html`;
+        // Always locate "assets/partials/toastLayout.html" relative to site root
+        // Detect if "edm-grievance-portal" is part of the URL
+        const portalRoot = basePath.includes('/edm-grievance-portal/')
+            ? '/edm-grievance-portal'
+            : '';
+
+        const toastPath = `${portalRoot}/assets/partials/toastLayout.html`;
 
         fetch(toastPath)
-            .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.text(); })
+            .then(r => {
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                return r.text();
+            })
             .then(html => {
                 const div = document.createElement('div');
                 div.innerHTML = html;
@@ -129,10 +137,7 @@ window.loadToastLayout = function (callback) {
     }
 };
 
-// ✅ Auto-load toast layout after DOM ready
+// ✅ Auto-load toast layout on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
-    loadToastLayout(() => {
-        // Test example:
-        // showSuccessToast('Toast system ready!');
-    });
+    loadToastLayout();
 });
