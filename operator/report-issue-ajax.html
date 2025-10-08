@@ -658,7 +658,7 @@
           </div>
 
           <div class="file-rows">
-            <div class="file-row row align-items-center mb-2">
+            <div class="file-row row align-items-center1 mb-2">
               <div class="col-md-1"><span class="fw-bold file-label">1</span></div>
               <div class="col-md-4">
                 <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">
@@ -685,8 +685,14 @@
 
               // Enable Add More button only when a file is selected
               $wrapper.on("change", `input[type="file"].${fileInputClass}`, function () {
+                // const fileSelected = $(this).val() !== "";
+                // $addBtn.prop("disabled", !fileSelected);
                 const fileSelected = $(this).val() !== "";
-                $addBtn.prop("disabled", !fileSelected);
+                const currentRows = $wrapper.find(".file-row").length;
+                if (fileSelected && currentRows < 3) {
+                  $addBtn.prop("disabled", false);
+                }
+
               });
 
               $wrapper.on("click", ".btn-add-file", function () {
@@ -725,10 +731,17 @@
                 updateFileRowLabels($wrapper);
 
                 // Recheck if Add More should be enabled
-                const anyFileFilled = $wrapper.find(`input[type="file"].${fileInputClass}`).filter(function () {
-                  return $(this).val() !== "";
-                }).length > 0;
-                $addBtn.prop("disabled", !anyFileFilled);
+                // const anyFileFilled = $wrapper.find(`input[type="file"].${fileInputClass}`).filter(function () {
+                //   return $(this).val() !== "";
+                // }).length > 0;
+                // $addBtn.prop("disabled", !anyFileFilled);
+                const currentRows = $wrapper.find(".file-row").length;
+                if (currentRows >= 3) {
+                  $addBtn.prop("disabled", true);
+                } else {
+                  $addBtn.prop("disabled", false);
+                }
+
               });
 
               function updateFileRowLabels($wrapper) {
