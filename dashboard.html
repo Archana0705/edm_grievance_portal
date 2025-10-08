@@ -1308,7 +1308,8 @@
                 },
                 columnDefs: hasView ? [
                   { targets: 0, orderable: false } // disable sorting for the View column
-                ] : []
+                ] : [],
+                order: [[hasView ? 5 : 4, 'asc']]
               });
 
               dt.on('draw', function () {
@@ -1381,6 +1382,17 @@
               if (!parsed || parsed.length === 0) {
                 return ""; // global loader will render "No Data Found"
               }
+
+              parsed.sort((a, b) => {
+                const dA = a.jsonb_build_object.CreatedDate;
+                const dB = b.jsonb_build_object.CreatedDate;
+                if (!dA || !dB) return 0;
+
+                // Convert "DD-MM-YYYY HH:mm" → valid Date object
+                const dateA = new Date(dA.split(' ')[0].split('-').reverse().join('-') + ' ' + dA.split(' ')[1]);
+                const dateB = new Date(dB.split(' ')[0].split('-').reverse().join('-') + ' ' + dB.split(' ')[1]);
+                return dateB - dateA; // 🔹 DESC order (latest first)
+              });
 
               return parsed.map(entry => {
                 const data = entry.jsonb_build_object;
@@ -1743,7 +1755,7 @@
                 const $table = $("#ticketDetailsTable");
                 $table.empty();
                 $table.append(`
-          <tr><th>Ticket ID</th><td>${ticketDetails.ticket_id || 'N/A'}</td></tr>
+          <tr><th>Acknowledgement ID</th><td>${ticketDetails.ticket_id || 'N/A'}</td></tr>
           <tr><th>Name</th><td>${ticketDetails.complainant_name || 'N/A'}</td></tr>
           <tr><th>Email</th><td>${ticketDetails.complainant_email || 'N/A'}</td></tr>
           <tr><th>Mobile</th><td>${ticketDetails.complainant_mobile || 'N/A'}</td></tr>
