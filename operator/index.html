@@ -279,7 +279,7 @@
       selectedOtpMethod = (document.getElementById('otpMethod').value);
 
       if (!esevaId || !selectedOtpMethod) {
-        alert("Please enter eSevai ID and select OTP delivery method.");
+        showErrorToast("Please enter eSevai ID and select OTP delivery method.");
         return;
       }
 
@@ -301,7 +301,7 @@
         dataType: "json",
         success: function (res) {
           if (!res.success) {
-            alert("Login API failed: " + (res.message || "Unknown error"));
+            showErrorToast("Login API failed: " + (res.message || "Unknown error"));
             return;
           }
 
@@ -309,7 +309,7 @@
           const apiResponse = JSON.parse(decrypted[0].fn_operator_login_by_mobile_email);
 
           if (apiResponse.status === "error") {
-            alert(apiResponse.message || "Invalid eSevai ID.");
+            showErrorToast(apiResponse.message || "Invalid eSevai ID.");
             return;
           }
 
@@ -329,7 +329,7 @@
           showSuccessToast(apiResponse.message);
         },
         error: function () {
-          alert("Login API error. Please try again.");
+          showErrorToast("Login API error. Please try again.");
         }
       });
     });
@@ -343,12 +343,12 @@
       const esevaId = document.getElementById('esevaiId').value.trim();
 
       if (otpInput.length !== 6) {
-        alert("Please enter a valid 6-digit OTP.");
+        showErrorToast("Please enter a valid 6-digit OTP.");
         return;
       }
 
       if (!contactValue) {
-        alert("Contact info not found. Please resend OTP.");
+        showErrorToast("Contact info not found. Please resend OTP.");
         return;
       }
 
@@ -368,7 +368,7 @@
         dataType: "json",
         success: function (res) {
           if (!res.success) {
-            alert("Login verification failed: " + (res.message || "Unknown error"));
+            aleshowErrorToastrt("Login verification failed: " + (res.message || "Unknown error"));
             return;
           }
 
@@ -379,7 +379,7 @@
           const apiResponse = Array.isArray(decrypted) ? decrypted : JSON.parse(decrypted);
 
           if (!Array.isArray(apiResponse) || apiResponse.length === 0) {
-            alert("Invalid user details.");
+            showErrorToast("Invalid user details.");
             return;
           }
 
@@ -401,7 +401,7 @@
 
         },
         error: function () {
-          alert("Login API error. Please try again.");
+          showErrorToast("Login API error. Please try again.");
         }
       });
     });
