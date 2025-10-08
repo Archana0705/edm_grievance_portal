@@ -804,6 +804,112 @@
         }
       });
 
+      // function generateDynamicFieldsBehalf(columnsStringBehalf) {
+      //   const $container = $("#behalfPane #dynamicFieldsContainerBehalf");
+      //   $container.empty();
+
+      //   if (!columnsStringBehalf) {
+      //     $container.append('<p>No additional fields required.</p>');
+      //     return;
+      //   }
+
+      //   const columnsArrayBehalf = columnsStringBehalf.split(",");
+      //   columnsArrayBehalf.forEach((col, index) => {
+      //     col = col.trim();
+      //     const field = fieldMapBehalf[col];
+      //     if (!field) return;
+
+      //     const inputIdBehalf = `behalf_field_${col}_${index}`;
+      //     const wrapperId = `behalf_wrapper_${col}_${index}`;
+      //     const isMandatoryBehalf = col.endsWith("man");
+      //     const mandatoryAttrBehalf = isMandatoryBehalf ? 'data-mandatory="true"' : '';
+      //     const dataColAttrBehalf = `data-col="${col}"`;
+
+      //     // file description handlers
+      //     $("#behalfPane").on("input", ".file-desc", function () {
+      //       let val = $(this).val();
+      //       if (val.length > MAX_FILE_DESC) {
+      //         $(this).val(val.slice(0, MAX_FILE_DESC));
+      //         if (typeof showErrorToast === "function") {
+      //           showErrorToast(`Maximum ${MAX_FILE_DESC} characters allowed`);
+      //         }
+      //       }
+      //       $(this).siblings(".char-count").text(`${$(this).val().length} / ${MAX_FILE_DESC}`);
+      //     });
+
+      //     // file input
+      //     if (col === "4opt" || col === "4man") {
+      //       const html = `
+      //   <div id="${wrapperId}" class="mb-3 file-wrapper" ${dataColAttrBehalf} ${mandatoryAttrBehalf}>
+      //     <label class="form-label">${field.label}${isMandatoryBehalf ? ' <span class="text-danger">*</span>' : ''}</label>
+      //     <div class="row fw-bold border-bottom pb-2 mb-2">
+      //       <div class="col-md-1">S No</div>
+      //       <div class="col-md-4">Attachment Description</div>
+      //       <div class="col-md-4">Attachment <small class="text-muted text-danger">(max 2MB each)</small></div>
+      //       <div class="col-md-3">Actions</div>
+      //     </div>
+      //     <div class="file-rows">
+      //       <div class="file-row row align-items-center1 mb-2">
+      //         <div class="col-md-1"><span class="fw-bold file-label">1</span></div>
+      //         <div class="col-md-4">
+      //           <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">
+      //         </div>
+      //         <div class="col-md-4">
+      //           <input type="file" class="form-control ${fileInputClassBehalf}" accept=".jpg,.jpeg,.png,.pdf">
+      //           <small class="text-danger">jpg, jpeg, png, pdf only allowed</small>
+      //         </div>
+      //         <div class="col-md-3">
+      //           <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
+      //         </div>
+      //       </div>
+      //     </div>
+      //     <div class="mt-2">
+      //       <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button>
+      //     </div>
+      //   </div>`;
+      //       $container.append(html);
+      //     }
+      //     else {
+      //       // ✅ dropdown case
+      //       let fieldHtml = '';
+      //       if (field.type === "dropdown") {
+      //         const optionsHtml = field.options
+      //           .map(opt => `<option value="${opt}">${opt}</option>`)
+      //           .join('');
+      //         fieldHtml = `
+      //     <div class="mb-3">
+      //       <label for="${inputIdBehalf}">
+      //         ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
+      //       </label>
+      //       <select id="${inputIdBehalf}" class="form-select" ${dataColAttrBehalf} ${mandatoryAttrBehalf}>
+      //         <option value="">-- Select --</option>
+      //         ${optionsHtml}
+      //       </select>
+      //     </div>`;
+      //       }
+      //       else if (field.type === "textarea") {
+      //         fieldHtml = `
+      //     <div class="mb-3">
+      //       <label for="${inputIdBehalf}">
+      //         ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
+      //       </label>
+      //       <textarea id="${inputIdBehalf}" class="form-control" ${dataColAttrBehalf} ${mandatoryAttrBehalf}></textarea>
+      //     </div>`;
+      //       }
+      //       else {
+      //         fieldHtml = `
+      //     <div class="mb-3">
+      //       <label for="${inputIdBehalf}">
+      //         ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
+      //       </label>
+      //       <input id="${inputIdBehalf}" type="${field.type}" class="form-control" ${dataColAttrBehalf} ${mandatoryAttrBehalf}>
+      //     </div>`;
+      //       }
+      //       $container.append(fieldHtml);
+      //     }
+      //   });
+      // }
+
       function generateDynamicFieldsBehalf(columnsStringBehalf) {
         const $container = $("#behalfPane #dynamicFieldsContainerBehalf");
         $container.empty();
@@ -814,6 +920,7 @@
         }
 
         const columnsArrayBehalf = columnsStringBehalf.split(",");
+
         columnsArrayBehalf.forEach((col, index) => {
           col = col.trim();
           const field = fieldMapBehalf[col];
@@ -825,19 +932,9 @@
           const mandatoryAttrBehalf = isMandatoryBehalf ? 'data-mandatory="true"' : '';
           const dataColAttrBehalf = `data-col="${col}"`;
 
-          // file description handlers
-          $("#behalfPane").on("input", ".file-desc", function () {
-            let val = $(this).val();
-            if (val.length > MAX_FILE_DESC) {
-              $(this).val(val.slice(0, MAX_FILE_DESC));
-              if (typeof showErrorToast === "function") {
-                showErrorToast(`Maximum ${MAX_FILE_DESC} characters allowed`);
-              }
-            }
-            $(this).siblings(".char-count").text(`${$(this).val().length} / ${MAX_FILE_DESC}`);
-          });
-
-          // file input
+          // =====================================================
+          // 📁 FILE INPUT HANDLING
+          // =====================================================
           if (col === "4opt" || col === "4man") {
             const html = `
         <div id="${wrapperId}" class="mb-3 file-wrapper" ${dataColAttrBehalf} ${mandatoryAttrBehalf}>
@@ -867,46 +964,120 @@
             <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button>
           </div>
         </div>`;
+
             $container.append(html);
+
+            const $wrapper = $(`#${wrapperId}`);
+            const $addBtn = $wrapper.find(".btn-add-file");
+
+            // Enable Add button once a file is selected
+            $wrapper.on("change", `input[type="file"].${fileInputClassBehalf}`, function () {
+              const fileSelected = $(this).val() !== "";
+              const currentRows = $wrapper.find(".file-row").length;
+              if (fileSelected && currentRows < 3) {
+                $addBtn.prop("disabled", false);
+              }
+            });
+
+            // Handle Add More click
+            $wrapper.on("click", ".btn-add-file", function () {
+              const $rows = $wrapper.find(".file-rows .file-row");
+              const fileCount = $rows.length;
+              if (fileCount >= 3) {
+                alert("Maximum 3 attachments allowed.");
+                return;
+              }
+
+              const newIndex = fileCount + 1;
+              const newRow = `
+          <div class="file-row row align-items-center1 mb-2">
+            <div class="col-md-1"><span class="fw-bold file-label">${newIndex}</span></div>
+            <div class="col-md-4">
+              <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">
+            </div>
+            <div class="col-md-4">
+              <input type="file" class="form-control ${fileInputClassBehalf}" accept=".jpg,.jpeg,.png,.pdf">
+              <small class="text-danger">jpg, jpeg, png, pdf only allowed</small>
+            </div>
+            <div class="col-md-3">
+              <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
+            </div>
+          </div>`;
+              $wrapper.find(".file-rows").append(newRow);
+              updateFileRowLabels($wrapper);
+
+              // Disable Add More temporarily until next file is selected
+              $addBtn.prop("disabled", true);
+            });
+
+            // Handle Delete file row
+            $wrapper.on("click", ".btn-delete-file", function () {
+              $(this).closest(".file-row").remove();
+              updateFileRowLabels($wrapper);
+
+              // Re-enable Add More if rows < 3
+              const currentRows = $wrapper.find(".file-row").length;
+              if (currentRows < 3) {
+                $addBtn.prop("disabled", false);
+              }
+            });
+
+            // Character count validation for description
+            $wrapper.on("input", ".file-desc", function () {
+              let val = $(this).val();
+              if (val.length > MAX_FILE_DESC) {
+                $(this).val(val.slice(0, MAX_FILE_DESC));
+                if (typeof showErrorToast === "function") {
+                  showErrorToast(`Maximum ${MAX_FILE_DESC} characters allowed`);
+                }
+              }
+            });
+
+            function updateFileRowLabels($wrapper) {
+              $wrapper.find(".file-label").each(function (i) {
+                $(this).text(i + 1);
+              });
+            }
+
+            return; // Skip normal input rendering
           }
-          else {
-            // ✅ dropdown case
-            let fieldHtml = '';
-            if (field.type === "dropdown") {
-              const optionsHtml = field.options
-                .map(opt => `<option value="${opt}">${opt}</option>`)
-                .join('');
-              fieldHtml = `
-          <div class="mb-3">
-            <label for="${inputIdBehalf}">
-              ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
-            </label>
-            <select id="${inputIdBehalf}" class="form-select" ${dataColAttrBehalf} ${mandatoryAttrBehalf}>
-              <option value="">-- Select --</option>
-              ${optionsHtml}
-            </select>
-          </div>`;
-            }
-            else if (field.type === "textarea") {
-              fieldHtml = `
-          <div class="mb-3">
-            <label for="${inputIdBehalf}">
-              ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
-            </label>
-            <textarea id="${inputIdBehalf}" class="form-control" ${dataColAttrBehalf} ${mandatoryAttrBehalf}></textarea>
-          </div>`;
-            }
-            else {
-              fieldHtml = `
-          <div class="mb-3">
-            <label for="${inputIdBehalf}">
-              ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
-            </label>
-            <input id="${inputIdBehalf}" type="${field.type}" class="form-control" ${dataColAttrBehalf} ${mandatoryAttrBehalf}>
-          </div>`;
-            }
-            $container.append(fieldHtml);
+
+          // =====================================================
+          // 🧾 NORMAL INPUTS / DROPDOWNS / TEXTAREAS
+          // =====================================================
+          let fieldHtml = '';
+          if (field.type === "dropdown") {
+            const optionsHtml = field.options
+              .map(opt => `<option value="${opt}">${opt}</option>`)
+              .join('');
+            fieldHtml = `
+        <div class="mb-3">
+          <label for="${inputIdBehalf}">
+            ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
+          </label>
+          <select id="${inputIdBehalf}" class="form-select" ${dataColAttrBehalf} ${mandatoryAttrBehalf}>
+            <option value="">-- Select --</option>
+            ${optionsHtml}
+          </select>
+        </div>`;
+          } else if (field.type === "textarea") {
+            fieldHtml = `
+        <div class="mb-3">
+          <label for="${inputIdBehalf}">
+            ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
+          </label>
+          <textarea id="${inputIdBehalf}" class="form-control" ${dataColAttrBehalf} ${mandatoryAttrBehalf}></textarea>
+        </div>`;
+          } else {
+            fieldHtml = `
+        <div class="mb-3">
+          <label for="${inputIdBehalf}">
+            ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
+          </label>
+          <input id="${inputIdBehalf}" type="${field.type}" class="form-control" ${dataColAttrBehalf} ${mandatoryAttrBehalf}>
+        </div>`;
           }
+          $container.append(fieldHtml);
         });
       }
 
