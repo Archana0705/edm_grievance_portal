@@ -71,6 +71,9 @@
 // ==============================
 // toastUtil.js (Universal Version)
 // ==============================
+// ==============================
+// ✅ toastUtil.js — Works in Local, Staging, and Production
+// ==============================
 
 // ✅ Show Success Toast
 window.showSuccessToast = function (message) {
@@ -100,29 +103,26 @@ window.showErrorToast = function (message) {
     }
 };
 
-// ✅ Load Toast Layout (works in local / staging / production)
+// ✅ Universal Toast Layout Loader
 window.loadToastLayout = function (callback) {
     try {
-        // Compute base path dynamically
-        let basePath = window.location.origin + window.location.pathname;
+        // Dynamically find the folder path where this JS file is actually loaded from
+        const currentScript = document.currentScript ||
+            document.querySelector('script[src*="toastUtil.js"]');
+        const scriptSrc = currentScript ? currentScript.src : '';
 
-        // Remove any file name (like index.html, dashboard.html)
-        if (basePath.match(/\.html?$/)) {
-            basePath = basePath.substring(0, basePath.lastIndexOf('/'));
-        }
+        // Extract the base project folder automatically
+        // e.g. https://192.168.4.252/edm-grievance-portal/assets/js/toastUtil.js
+        // → https://192.168.4.252/edm-grievance-portal
+        const projectRoot = scriptSrc.substring(0, scriptSrc.indexOf('/assets/js/'));
 
-        // Always locate "assets/partials/toastLayout.html" relative to site root
-        // Detect if "edm-grievance-portal" is part of the URL
-        const portalRoot = basePath.includes('/edm-grievance-portal/')
-            ? '/edm-grievance-portal'
-            : '';
-
-        const toastPath = `${portalRoot}/assets/partials/toastLayout.html`;
+        // Construct correct toast layout path — works anywhere
+        const toastPath = `${projectRoot}/assets/partials/toastLayout.html`;
 
         fetch(toastPath)
-            .then(r => {
-                if (!r.ok) throw new Error(`HTTP ${r.status}`);
-                return r.text();
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.text();
             })
             .then(html => {
                 const div = document.createElement('div');
@@ -137,7 +137,7 @@ window.loadToastLayout = function (callback) {
     }
 };
 
-// ✅ Auto-load toast layout on DOM ready
+// ✅ Auto-load toast layout when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     loadToastLayout();
 });
