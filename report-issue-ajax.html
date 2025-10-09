@@ -990,44 +990,103 @@
 
           });
 
-          // Container-scoped: add more file row
+          //     // Container-scoped: add more file row
+          //     $dyn.on('click', '.btn-add-file', function () {
+          //       const $wrapper = $(this).closest(".file-wrapper");
+          //       const $rowsContainer = $wrapper.find(".file-rows");
+          //       const rowCount = $rowsContainer.find(".file-row").length + 1;
+          //       if (rowCount >= 4) {
+          //         showErrorToast("Maximum 3 attachments allowed.");
+          //         return;
+          //       }
+          //       const newRow = `
+          //   <div class="file-row row align-items-center1 mb-2">
+          //     <div class="col-md-1">
+          //       <span class="fw-bold file-label">${rowCount}</span>
+          //     </div>
+          //     <div class="col-md-4">
+          //     <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">          </div>
+          //     <div class="col-md-4">
+          //      <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf">
+          //     <small>jpg, jpeg, png, pdf only allowed</small>
+          //     </div>
+          //     <div class="col-md-3">
+          //       <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
+          //     </div>
+          //   </div>
+          // `;
+          //       $rowsContainer.append(newRow);
+          //       const newRowCount = $rowsContainer.find(".file-row").length;
+          //       $wrapper.find(".btn-add-file").prop("disabled", newRowCount >= 3);
+          //     });
+
+          //     // Container-scoped: delete file row and renumber
+          //     $dyn.on('click', '.btn-delete-file', function () {
+          //       const $wrapper = $(this).closest(".file-wrapper");
+          //       $(this).closest(".file-row").remove();
+
+          //       // Renumber remaining rows
+          //       $wrapper.find(".file-row").each(function (i) {
+          //         $(this).find(".file-label").text(i + 1);
+          //       });
+
+          //       // Enable/disable Add More button based on current row count
+          //       const rowCount = $wrapper.find('.file-row').length;
+          //       if (rowCount === 0) {
+          //         $wrapper.find('.btn-add-file').prop("disabled", true);
+          //       } else if (rowCount < 3) {
+          //         $wrapper.find('.btn-add-file').prop("disabled", false);
+          //       } else {
+          //         $wrapper.find('.btn-add-file').prop("disabled", true);
+          //       }
+          //     });
+
+          // Add file row
           $dyn.on('click', '.btn-add-file', function () {
             const $wrapper = $(this).closest(".file-wrapper");
             const $rowsContainer = $wrapper.find(".file-rows");
             const rowCount = $rowsContainer.find(".file-row").length + 1;
-            if (rowCount >= 4) {
+
+            if (rowCount > 3) {
               showErrorToast("Maximum 3 attachments allowed.");
               return;
             }
+
             const newRow = `
-        <div class="file-row row align-items-center1 mb-2">
-          <div class="col-md-1">
-            <span class="fw-bold file-label">${rowCount}</span>
-          </div>
-          <div class="col-md-4">
-          <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">          </div>
-          <div class="col-md-4">
-           <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf">
-          <small>jpg, jpeg, png, pdf only allowed</small>
-          </div>
-          <div class="col-md-3">
-            <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
-          </div>
-        </div>
-      `;
+    <div class="file-row row align-items-center1 mb-2">
+      <div class="col-md-1">
+        <span class="fw-bold file-label">${rowCount}</span>
+      </div>
+      <div class="col-md-4">
+        <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">
+      </div>
+      <div class="col-md-4">
+        <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf">
+        <small>jpg, jpeg, png, pdf only allowed</small>
+      </div>
+      <div class="col-md-3">
+        <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
+      </div>
+    </div>
+  `;
             $rowsContainer.append(newRow);
-            $wrapper.find(".btn-add-file").prop("disabled", true);
+
+            // Enable/disable Add button dynamically
+            $(this).prop("disabled", true);
           });
 
-          // Container-scoped: delete file row and renumber
+          // Delete file row
           $dyn.on('click', '.btn-delete-file', function () {
             const $wrapper = $(this).closest(".file-wrapper");
             $(this).closest(".file-row").remove();
+
+            // Renumber remaining rows
             $wrapper.find(".file-row").each(function (i) {
               $(this).find(".file-label").text(i + 1);
             });
-            if ($wrapper.find('input[type="file"]').length === 0) {
-              $wrapper.find('.btn-add-file').prop("disabled", true);
+
+            if ($wrapper.find(".file-row").length < 3) {
+              $wrapper.find(".btn-add-file").prop("disabled", false);
             }
           });
 
