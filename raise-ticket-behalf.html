@@ -961,18 +961,23 @@
             $(fileInputEl).next(".upload-status-icon").remove();
             $(fileInputEl).after(`<span class="upload-status-icon text-success ms-2">✔ ${serverMsg}</span>`);
 
-            // ✅ hide <small>
+            // Enable Add More now
+            $wrapper.find(".btn-add-file").prop("disabled", false);
+
+            // Hide <small>
             $wrapper.find("small").hide();
           },
           error: () => {
             showErrorToast("File upload failed!");
-
+            const $wrapper = $(fileInputEl).closest(".file-wrapper");
             // ❌ cross icon
             $(fileInputEl).next(".upload-status-icon").remove();
             $(fileInputEl).after(`<span class="upload-status-icon text-danger ms-2">✖</span>`);
 
-            // ❌ show <small>
-            $(fileInputEl).closest(".file-wrapper").find("small").show();
+
+            $wrapper.find("small").show();
+            $wrapper.find(".btn-add-file").prop("disabled", true);
+
           }
 
         });
@@ -999,19 +1004,22 @@
         <div class="col-md-3"><button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button></div>
       </div>`;
         $rows.append(newRow);
-        $wrapper.find(".btn-add-file").prop("disabled", true);
+        $(this).prop("disabled", true);
       });
 
       $("#behalfPane").on('click', '.btn-delete-file', function () {
-        $(this).closest('.file-row').remove();
-        // Update S No
-        $(this).closest('.file-rows').find('.file-label').each((i, el) => $(el).text(i + 1));
-
         const $wrapper = $(this).closest('.file-wrapper');
-        if ($wrapper.find('input[type="file"]').length === 0) {
-          $wrapper.find('.btn-add-file').prop("disabled", true);
+        $(this).closest('.file-row').remove();
+
+        // Update S No
+        $wrapper.find('.file-label').each((i, el) => $(el).text(i + 1));
+
+        // Enable Add More if less than 3 file rows exist
+        if ($wrapper.find('.file-row').length < 3) {
+          $wrapper.find('.btn-add-file').prop("disabled", false);
         }
       });
+
 
 
       $(document).on("input", "#behalfPane input[type='text'],input[type='email'], #behalfPane textarea", function () {
