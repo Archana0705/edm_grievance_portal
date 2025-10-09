@@ -270,11 +270,17 @@
         <div class="meta mb-3">Sign in to manage assigned tickets and escalate when needed.</div>
 
         <form id="loginForm" novalidate>
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <label class="form-label" for="email"><i class="bi bi-envelope me-1"></i>Email / Username</label>
             <input class="form-control form-control-lg" id="email" type="email" placeholder="agent@department.gov.in"
               required>
             <div class="invalid-feedback">Please enter a valid email.</div>
+          </div> -->
+
+          <div class="mb-3">
+            <label class="form-label" for="mobile"><i class="bi bi-phone me-1"></i>Mobile Number</label>
+            <input class="form-control form-control-lg" id="mobile" type="text" placeholder="9876543210" required>
+            <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
           </div>
 
           <div class="mb-2">
@@ -457,17 +463,17 @@
     });
 
     // Basic client-side validation + fake submit
-    const form = document.getElementById('loginForm');
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (!form.checkValidity()) {
-        form.classList.add('was-validated');
-        return;
-      }
-      // Simulate success -> redirect placeholder
-      showToast('Signed in successfully. Redirecting…');
-      setTimeout(() => { window.location.href = 'dashboard.html'; }, 900);
-    });
+    // const form = document.getElementById('loginForm');
+    // form.addEventListener('submit', (e) => {
+    //   e.preventDefault();
+    //   if (!form.checkValidity()) {
+    //     form.classList.add('was-validated');
+    //     return;
+    //   }
+    //   // Simulate success -> redirect placeholder
+    //   showToast('Signed in successfully. Redirecting…');
+    //   setTimeout(() => { window.location.href = 'dashboard.html'; }, 900);
+    // });
 
     // Forgot password
     document.getElementById('btnSendReset').addEventListener('click', () => {
@@ -487,6 +493,120 @@
       showToast('Recovery request sent to Lead/Admin.');
     });
   </script>
+  <script>
+    $(document).ready(function () {
+      // Toggle password visibility
+      $('#togglePwd').on('click', function () {
+        const pwd = $('#password');
+        const type = pwd.attr('type') === 'password' ? 'text' : 'password';
+        pwd.attr('type', type);
+        $(this).find('i').toggleClass('bi-eye bi-eye-slash');
+      });
+
+      // Form submit
+      $('#loginForm').on('submit', function (e) {
+        debugger
+        e.preventDefault();
+
+        const mobile = $('#mobile').val().trim();
+        const password = $('#password').val().trim();
+        let valid = true;
+
+        // Mobile validation
+        const mobileRegex = /^[6-9]\d{9}$/;
+        if (!mobileRegex.test(mobile)) {
+          $('#mobile').addClass('is-invalid');
+          valid = false;
+        } else {
+          $('#mobile').removeClass('is-invalid');
+        }
+
+        // Password validation (min 6 chars)
+        if (password.length < 6) {
+          $('#password').addClass('is-invalid');
+          valid = false;
+        } else {
+          $('#password').removeClass('is-invalid');
+        }
+
+        if (!valid) return;
+
+        const payload = {
+          action: "function_call",
+          function_name: "fn_helpdesk_login_by_mobile",
+          params: {
+            mobile: mobile,
+            password: password,
+          }
+        };
+
+        // AJAX call for login
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: "json",
+          success: function (res) {
+            if (!res || !res.success || !res.data) {
+              showErrorToast("Login API returned invalid response.");
+              return;
+            }
+
+            try {
+              // Decrypt response
+              const decrypted = decryptData(res.data);
+
+              // Parse the outer array
+              // const parsed = JSON.parse(decrypted);
+              let parsed;
+              if (typeof decrypted === "string") {
+                try {
+                  parsed = JSON.parse(decrypted);
+                } catch (err) {
+                  showErrorToast("Invalid login response format.");
+                  console.error("JSON parse error:", err);
+                  return;
+                }
+              } else if (typeof decrypted === "object") {
+                parsed = decrypted; // Already an object, no need to parse
+              } else {
+                showErrorToast("Unexpected login response type.");
+                return;
+              }
+
+              if (!parsed || !parsed.length || !parsed[0].fn_helpdesk_login_by_mobile) {
+                showErrorToast("Invalid login response structure.");
+                return;
+              }
+
+              // Parse the inner stringified JSON
+              const apiResponse = JSON.parse(parsed[0].fn_helpdesk_login_by_mobile);
+
+              if (apiResponse.status === "success") {
+                showSuccessToast("Login successful!");
+                // window.location.href = '/dashboard';
+                setTimeout(() => {
+                  window.location.href = "dashboard.html";
+                }, 1500);
+              } else {
+                showErrorToast("Login failed. Please check credentials.");
+              }
+
+            } catch (err) {
+              showErrorToast("Error processing login response.");
+              console.error("Login parse error:", err);
+            }
+          },
+          error: function () {
+            showErrorToast("Login API error. Please try again.");
+          }
+        });
+      });
+
+
+    });
+  </script>
+
 </body>
 
 </html>
