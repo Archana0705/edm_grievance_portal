@@ -771,10 +771,10 @@
                         <tr>
 
                           <th>Acknowledgement Id</th>
-                          <th>Issue Type</th>
                           <th>Category</th>
                           <th>Sub Category</th>
                           <th>Status</th>
+                          <th>Created Date</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -791,10 +791,10 @@
                         <tr>
                           <th>View</th>
                           <th>Acknowledgement Id</th>
-                          <th>Issue Type</th>
                           <th>Category</th>
                           <th>Sub Category</th>
                           <th>Status</th>
+                          <th>Created Date</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -812,10 +812,10 @@
                         <tr>
                           <th>View</th>
                           <th>Acknowledgement Id</th>
-                          <th>Issue Type</th>
                           <th>Category</th>
                           <th>Sub Category</th>
                           <th>Status</th>
+                          <th>Created Date</th>
                         </tr>
                       </thead>
                       <tbody></tbody>
@@ -831,10 +831,10 @@
                         <tr>
                           <th>View</th>
                           <th>Acknowledgement Id</th>
-                          <th>Issue Type</th>
                           <th>Category</th>
                           <th>Sub Category</th>
                           <th>Status</th>
+                          <th>Created Date</th>
                         </tr>
                       </thead>
                       <tbody></tbody>
@@ -850,10 +850,10 @@
                         <tr>
                           <th>View</th>
                           <th>Acknowledgement Id</th>
-                          <th>Issue Type</th>
                           <th>Category</th>
                           <th>Sub Category</th>
                           <th>Status</th>
+                          <th>Created Date</th>
                         </tr>
                       </thead>
                       <tbody></tbody>
@@ -869,10 +869,10 @@
                         <tr>
                           <th>View</th>
                           <th>Acknowledgement Id</th>
-                          <th>Issue Type</th>
                           <th>Category</th>
                           <th>Sub Category</th>
                           <th>Status</th>
+                          <th>Created Date</th>
                         </tr>
                       </thead>
                       <tbody></tbody>
@@ -935,10 +935,10 @@
                       <tr>
 
                         <th>Acknowledgement Id</th>
-                        <th>Issue Type</th>
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Status</th>
+                        <th>Created Date</th>
                       </tr>
                     </thead>
                     <tbody></tbody>
@@ -954,10 +954,10 @@
                       <tr>
                         <th>View</th>
                         <th>Acknowledgement Id</th>
-                        <th>Issue Type</th>
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Status</th>
+                        <th>Created Date</th>
                       </tr>
                     </thead>
                     <tbody></tbody>
@@ -973,10 +973,10 @@
                       <tr>
                         <th>View</th>
                         <th>Acknowledgement Id</th>
-                        <th>Issue Type</th>
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Status</th>
+                        <th>Created Date</th>
                       </tr>
                     </thead>
                     <tbody></tbody>
@@ -992,10 +992,10 @@
                       <tr>
                         <th>View</th>
                         <th>Acknowledgement Id</th>
-                        <th>Issue Type</th>
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Status</th>
+                        <th>Created Date</th>
                       </tr>
                     </thead>
                     <tbody></tbody>
@@ -1011,10 +1011,10 @@
                       <tr>
                         <th>View</th>
                         <th>Acknowledgement Id</th>
-                        <th>Issue Type</th>
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Status</th>
+                        <th>Created Date</th>
                       </tr>
                     </thead>
                     <tbody></tbody>
@@ -1030,10 +1030,10 @@
                       <tr>
                         <th>View</th>
                         <th>Acknowledgement Id</th>
-                        <th>Issue Type</th>
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Status</th>
+                        <th>Created Date</th>
                       </tr>
                     </thead>
                     <tbody></tbody>
@@ -1201,8 +1201,8 @@
       }
 
       // --- Initialize ---
-       const userId = localStorage.getItem("login_user_id") || 0;
-     
+      const userId = localStorage.getItem("login_user_id") || 0;
+
       // bindDashboardCounts(userId);
       bindDashboardCounts(14);
 
@@ -1429,7 +1429,13 @@
 
                 // check if this table has View column
                 const hasViewColumn = (tableId !== "allSelfTable" && tableId !== "allReportsTable");
-
+                function formatDate(dateStr) {
+                  if (!dateStr) return 'N/A';
+                  const dateObj = new Date(dateStr);
+                  if (isNaN(dateObj)) return 'N/A';
+                  const options = { day: '2-digit', month: 'short', year: 'numeric' };
+                  return dateObj.toLocaleDateString('en-GB', options); // e.g., 09-Oct-2025
+                }
                 return `
                 <tr>
                   ${hasViewColumn ? `
@@ -1442,7 +1448,6 @@
                     </td>` : ""
                   }
                   <td>${data.TicketId || 'N/A'}</td>
-                  <td>${data.IssueType || 'N/A'}</td>
                   <td>${data.Category || 'N/A'}</td>
                   <td>${data.Subcategory || 'N/A'}</td>
                   <td>
@@ -1450,6 +1455,7 @@
                       ${data.Status || 'N/A'}
                     </span>
                   </td>
+                   <td>${formatDate(data.CreatedDate || 'N/A')}</td>
                 </tr>`;
               }).join("");
 
