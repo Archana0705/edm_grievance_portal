@@ -453,14 +453,14 @@
       new bootstrap.Toast(toastEl, { delay: 2200 }).show();
     };
 
-    // Show/Hide password
-    const togglePwdBtn = document.getElementById('togglePwd');
-    const pwdInput = document.getElementById('password');
-    togglePwdBtn.addEventListener('click', () => {
-      const isPwd = pwdInput.type === 'password';
-      pwdInput.type = isPwd ? 'text' : 'password';
-      togglePwdBtn.innerHTML = isPwd ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
-    });
+    // // Show/Hide password
+    // const togglePwdBtn = document.getElementById('togglePwd');
+    // const pwdInput = document.getElementById('password');
+    // togglePwdBtn.addEventListener('click', () => {
+    //   const isPwd = pwdInput.type === 'password';
+    //   pwdInput.type = isPwd ? 'text' : 'password';
+    //   togglePwdBtn.innerHTML = isPwd ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+    // });
 
     // Basic client-side validation + fake submit
     // const form = document.getElementById('loginForm');
@@ -494,14 +494,29 @@
     });
   </script>
   <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const passwordInput = document.getElementById("password");
+      const toggleBtn = document.getElementById("togglePwd");
+      const toggleIcon = toggleBtn.querySelector("i");
+
+      toggleBtn.addEventListener("click", function () {
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text"; // Show password
+          toggleIcon.classList.remove("bi-eye");
+          toggleIcon.classList.add("bi-eye-slash");
+        } else {
+          passwordInput.type = "password"; // Hide password
+          toggleIcon.classList.remove("bi-eye-slash");
+          toggleIcon.classList.add("bi-eye");
+        }
+      });
+    });
+
+  </script>
+  <script>
     $(document).ready(function () {
       // Toggle password visibility
-      $('#togglePwd').on('click', function () {
-        const pwd = $('#password');
-        const type = pwd.attr('type') === 'password' ? 'text' : 'password';
-        pwd.attr('type', type);
-        $(this).find('i').toggleClass('bi-eye bi-eye-slash');
-      });
+
 
       // Form submit
       $('#loginForm').on('submit', function (e) {
