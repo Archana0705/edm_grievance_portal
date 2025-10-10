@@ -762,8 +762,8 @@
                           <th>Ticket Id</th>
                           <th>Category</th>
                           <th>Sub Category</th>
-                          <th>Status</th>
                           <th>Created Date</th>
+                          <th>Status</th>
                         </tr>
                       </thead>
                       <tbody></tbody>
@@ -780,8 +780,8 @@
                           <th>Ticket Id</th>
                           <th>Category</th>
                           <th>Sub Category</th>
-                          <th>Status</th>
                           <th>Created Date</th>
+                          <th>Status</th>
                         </tr>
                       </thead>
                       <tbody></tbody>
@@ -799,8 +799,8 @@
                           <th>Ticket Id</th>
                           <th>Category</th>
                           <th>Sub Category</th>
-                          <th>Status</th>
                           <th>Created Date</th>
+                          <th>Status</th>
                         </tr>
                       </thead>
                       <tbody></tbody>
@@ -818,8 +818,8 @@
                           <th>Ticket Id</th>
                           <th>Category</th>
                           <th>Sub Category</th>
-                          <th>Status</th>
                           <th>Created Date</th>
+                          <th>Status</th>
                         </tr>
                       </thead>
                       <tbody></tbody>
@@ -837,8 +837,8 @@
                           <th>Ticket Id</th>
                           <th>Category</th>
                           <th>Sub Category</th>
-                          <th>Status</th>
                           <th>Created Date</th>
+                          <th>Status</th>
                         </tr>
                       </thead>
                       <tbody></tbody>
@@ -856,8 +856,8 @@
                           <th>Ticket Id</th>
                           <th>Category</th>
                           <th>Sub Category</th>
-                          <th>Status</th>
                           <th>Created Date</th>
+                          <th>Status</th>
                         </tr>
                       </thead>
                       <tbody></tbody>
@@ -922,8 +922,8 @@
                         <th>Ticket Id</th>
                         <th>Category</th>
                         <th>Sub Category</th>
-                        <th>Status</th>
                         <th>Created Date</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody></tbody>
@@ -941,8 +941,8 @@
                         <th>Ticket Id</th>
                         <th>Category</th>
                         <th>Sub Category</th>
-                        <th>Status</th>
                         <th>Created Date</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody></tbody>
@@ -960,8 +960,8 @@
                         <th>Ticket Id</th>
                         <th>Category</th>
                         <th>Sub Category</th>
-                        <th>Status</th>
                         <th>Created Date</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody></tbody>
@@ -979,8 +979,8 @@
                         <th>Ticket Id</th>
                         <th>Category</th>
                         <th>Sub Category</th>
-                        <th>Status</th>
                         <th>Created Date</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody></tbody>
@@ -998,8 +998,8 @@
                         <th>Ticket Id</th>
                         <th>Category</th>
                         <th>Sub Category</th>
-                        <th>Status</th>
                         <th>Created Date</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody></tbody>
@@ -1017,8 +1017,8 @@
                         <th>Ticket Id</th>
                         <th>Category</th>
                         <th>Sub Category</th>
-                        <th>Status</th>
                         <th>Created Date</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody></tbody>
@@ -1427,12 +1427,12 @@
                   <td>${data.TicketId || 'N/A'}</td>
                   <td>${data.Category || 'N/A'}</td>
                   <td>${data.Subcategory || 'N/A'}</td>
+                  <td>${formatDate(data.CreatedDate || 'N/A')}</td>
                   <td>
                     <span class="badge ${getStatusBadgeClass(data.Status)} status-badge" style="cursor:pointer;">
                       ${data.Status || 'N/A'}
                     </span>
                   </td>
-                   <td>${formatDate(data.CreatedDate || 'N/A')}</td>
                 </tr>`;
               }).join("");
 
@@ -1458,6 +1458,7 @@
             $("#self-tab").tab("show"); // open parent Self tab
 
             if (status === "In-Progress") targetTab = "#self-open";
+            else if (status === "In-Progress") targetTab = "#self-open";
             else if (status === "Returned") targetTab = "#self-returned";
             else if (status === "Resolved") targetTab = "#self-resolved";
             else if (status === "Re-Opened") targetTab = "#self-reopen";
