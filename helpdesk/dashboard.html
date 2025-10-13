@@ -266,190 +266,145 @@
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
           <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button"
-            role="tab" aria-controls="home-tab-pane" aria-selected="true">
+            role="tab" aria-controls="citizen-tab-pane" aria-selected="true">
             <i class="bi bi-person me-1"></i> All
           </button>
         </li>
         <li class="nav-item mx-2" role="presentation">
-          <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button"
-            role="tab" aria-controls="home-tab-pane" aria-selected="true">
+          <button class="nav-link" id="citizen-tab" data-bs-toggle="tab" data-bs-target="#citizen-tab-pane"
+            type="button" role="tab" aria-controls="citizen-tab-pane" aria-selected="true">
             <i class="bi bi-person me-1"></i> Citizen
           </button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
-            type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false" tabindex="-1">
+          <button class="nav-link" id="operator-tab" data-bs-toggle="tab" data-bs-target="#operator-tab-pane"
+            type="button" role="tab" aria-controls="operator-tab-pane" aria-selected="false" tabindex="-1">
             <i class="bi bi-pc-display me-1"></i> e-Sevai Operator
           </button>
         </li>
         <li class="nav-item mx-2" role="presentation">
-          <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane"
-            type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false" tabindex="-1">
+          <button class="nav-link" id="department-tab" data-bs-toggle="tab" data-bs-target="#department-tab-pane"
+            type="button" role="tab" aria-controls="department-tab-pane" aria-selected="false" tabindex="-1">
             <i class="bi bi-building me-1"></i> Department
           </button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane"
-            type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" tabindex="-1">
+          <button class="nav-link" id="edm-tab" data-bs-toggle="tab" data-bs-target="#edm-tab-pane" type="button"
+            role="tab" aria-controls="edm-tab-pane" aria-selected="false" tabindex="-1">
             <i class="bi bi-gear me-1"></i> EDM
           </button>
         </li>
         <li class="nav-item mx-2" role="presentation">
-          <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane1"
-            type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" tabindex="-1">
+          <button class="nav-link" id="cm-helpline-tab" data-bs-toggle="tab" data-bs-target="#cm-helpline-tab-pane1"
+            type="button" role="tab" aria-controls="cm-helpline-tab-pane" aria-selected="false" tabindex="-1">
             <i class="bi bi-gear me-1"></i> CM Helpline
           </button>
         </li>
       </ul>
       <div class="tab-content mt-3" id="myTabContent">
         <div class="tab-pane fade show active" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
-
           <!-- Stats Cards -->
           <div class="row g-4 mb-4">
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Total Tickets</h5>
-                <h3 class="text-primary">120</h3>
+                <h3 class="text-primary" id="totalTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Pending</h5>
-                <h3 class="text-warning">45</h3>
+                <h3 class="text-warning" id="pendingTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Resolved</h5>
-                <h3 class="text-success">60</h3>
+                <h3 class="text-success" id="resolvedTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Re-open</h5>
-                <h3 class="text-danger">15</h3>
+                <h3 class="text-danger" id="reopenTickets">0</h3>
               </div>
             </div>
           </div>
-
         </div>
-        <div class="tab-pane fade" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-
+        <div class="tab-pane fade" id="citizen-tab-pane" role="tabpanel" aria-labelledby="citizen-tab" tabindex="0">
           <!-- Stats Cards -->
           <div class="row g-4 mb-4">
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Total Tickets</h5>
-                <h3 class="text-primary">120</h3>
+                <h3 id="CitizentotalTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Pending</h5>
-                <h3 class="text-warning">45</h3>
+                <h3 id="CitizenpendingTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Resolved</h5>
-                <h3 class="text-success">60</h3>
+                <h3 id="CitizenresolvedTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Re-open</h5>
-                <h3 class="text-danger">15</h3>
+                <h3 id="CitizenreopenTickets">0</h3>
               </div>
             </div>
           </div>
-          <!-- Charts -->
-          <!-- <div class="row g-4 mb-4">
-              <div class="col-md-6">
-                <div class="card p-3 shadow">
-                  <h5>Tickets by Status</h5>
-                  <div id="statusChart"></div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="card p-3 shadow">
-                  <h5>Tickets by Priority</h5>
-                  <div id="priorityChart"></div>
-                </div>
-              </div>
-              </div> -->
           <div class="card">
             <div class="card-body">
               <ul class="nav nav-tabs mb-2" id="myTab1" role="tablist">
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane1"
-                    type="button" role="tab" aria-controls="home-tab-pane1" aria-selected="true">All</button>
+                  <button class="nav-link active" id="citizen-tab" data-bs-toggle="tab"
+                    data-bs-target="#citizen-tab-pane1" type="button" role="tab" aria-controls="citizen-tab-pane1"
+                    aria-selected="true">All</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane1"
-                    type="button" role="tab" aria-controls="profile-tab-pane1" aria-selected="false">In
+                  <button class="nav-link" id="operator-tab" data-bs-toggle="tab" data-bs-target="#operator-tab-pane1"
+                    type="button" role="tab" aria-controls="operator-tab-pane1" aria-selected="false">In
                     Progress</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane1"
-                    type="button" role="tab" aria-controls="contact-tab-pane1" aria-selected="false">Re-open</button>
-                </li>
-                <!-- <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane1" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Send Back</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane2" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Re-Assign</button>
-                    </li> -->
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane3"
-                    type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Resolved</button>
+                  <button class="nav-link" id="department-tab" data-bs-toggle="tab"
+                    data-bs-target="#department-tab-pane1" type="button" role="tab" aria-controls="department-tab-pane1"
+                    aria-selected="false">Re-open</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane4"
-                    type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Closed</button>
+                  <button class="nav-link" id="edm-tab" data-bs-toggle="tab" data-bs-target="#edm-tab-pane3"
+                    type="button" role="tab" aria-controls="edm-tab-pane" aria-selected="false">Resolved</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="cm-helpline-tab" data-bs-toggle="tab"
+                    data-bs-target="#cm-helpline-tab-pane4" type="button" role="tab"
+                    aria-controls="cm-helpline-tab-pane" aria-selected="false">Closed</button>
                 </li>
               </ul>
               <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="home-tab-pane1" role="tabpanel" aria-labelledby="home-tab"
-                  tabindex="0">
-                  <div class="d-flex justify-content-end mb-2">
-                    <button class="btn btn-sm btn-success"><i class="bi bi-check2-all"></i> Resolve Selected</button>
-                  </div>
-                  <table class="table table-bordered table-hover ticket-table align-middle">
+                <div class="tab-pane fade show active" id="citizen-tab-pane1" role="tabpanel"
+                  aria-labelledby="citizen-tab" tabindex="0">
+
+                  <table id="citizenTable" class="table table-bordered table-striped align-middle">
                     <thead>
                       <tr>
                         <th>Ticket ID</th>
-                        <th>Issue Type</th>
+                        <th>Created On</th>
                         <th>Category</th>
                         <th>Sub Category</th>
-                        <th>Priority</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td>#TCK1234</td>
-                        <td>CIT/2025-09-18/00090</td>
-                        <td>eSevai officials related</td>
-                        <td>eDM</td>
-                        <td><span class="badge bg-danger">Critical</span></td>
-                        <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                        <td>
-                          <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                            class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>#TCK1234</td>
-                        <td>CIT/2025-09-18/00090</td>
-                        <td>eSevai officials related</td>
-                        <td>eDM</td>
-                        <td><span class="badge bg-danger">Critical</span></td>
-                        <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                        <td>
-                          <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                            class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                        </td>
+                        <td colspan="7" class="text-center text-muted">Loading...</td>
                       </tr>
                     </tbody>
                   </table>
@@ -466,11 +421,9 @@
                     </nav>
                   </div>
                 </div>
-                <div class="tab-pane fade" id="profile-tab-pane1" role="tabpanel" aria-labelledby="profile-tab"
+                <div class="tab-pane fade" id="operator-tab-pane1" role="tabpanel" aria-labelledby="operator-tab"
                   tabindex="0">
-                  <div class="d-flex justify-content-end mb-2">
-                    <button class="btn btn-sm btn-success"><i class="bi bi-check2-all"></i> Resolve Selected</button>
-                  </div>
+
                   <table class="table table-bordered table-hover ticket-table align-middle">
                     <thead>
                       <tr>
@@ -511,11 +464,9 @@
                     </tbody>
                   </table>
                 </div>
-                <div class="tab-pane fade" id="contact-tab-pane1" role="tabpanel" aria-labelledby="contact-tab"
+                <div class="tab-pane fade" id="department-tab-pane1" role="tabpanel" aria-labelledby="department-tab"
                   tabindex="0">
-                  <div class="d-flex justify-content-end mb-2">
-                    <button class="btn btn-sm btn-success"><i class="bi bi-check2-all"></i> Resolve Selected</button>
-                  </div>
+
                   <table class="table table-bordered table-hover ticket-table align-middle">
                     <thead>
                       <tr>
@@ -556,10 +507,9 @@
                     </tbody>
                   </table>
                 </div>
-                <!-- <div class="tab-pane fade" id="disabled-tab-pane1" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">...4</div>
-                    <div class="tab-pane fade" id="disabled-tab-pane2" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">...5</div> -->
-                <div class="tab-pane fade" id="disabled-tab-pane3" role="tabpanel" aria-labelledby="disabled-tab"
-                  tabindex="0">
+                <!-- <div class="tab-pane fade" id="cm-helpline-tab-pane1" role="tabpanel" aria-labelledby="cm-helpline-tab" tabindex="0">...4</div>
+                    <div class="tab-pane fade" id="cm-helpline-tab-pane2" role="tabpanel" aria-labelledby="cm-helpline-tab" tabindex="0">...5</div> -->
+                <div class="tab-pane fade" id="edm-tab-pane3" role="tabpanel" aria-labelledby="edm-tab" tabindex="0">
                   <table class="table table-bordered table-hover ticket-table align-middle">
                     <thead>
                       <tr>
@@ -600,7 +550,7 @@
                     </tbody>
                   </table>
                 </div>
-                <div class="tab-pane fade" id="disabled-tab-pane4" role="tabpanel" aria-labelledby="disabled-tab"
+                <div class="tab-pane fade" id="cm-helpline-tab-pane4" role="tabpanel" aria-labelledby="cm-helpline-tab"
                   tabindex="0">
                   <table class="table table-bordered table-hover ticket-table align-middle">
                     <thead>
@@ -648,67 +598,31 @@
 
           </div>
         </div>
-        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-          <!-- Filters -->
-          <!-- <div class="card mb-4">
-              <div class="card-body filter-bar">
-                <div class="row g-3 align-items-end">
-                  <div class="col-md-3">
-                    <label class="form-label">Status</label>
-                    <select class="form-select">
-                      <option value="">All</option>
-                      <option>Pending</option>
-                      <option>In-Progress</option>
-                      <option>Resolved</option>
-                      <option>Closed</option>
-                      <option>Escalated</option>
-                    </select>
-                  </div>
-                  <div class="col-md-3">
-                    <label class="form-label">Priority</label>
-                    <select class="form-select">
-                      <option value="">All</option>
-                      <option>Low</option>
-                      <option>Medium</option>
-                      <option>High</option>
-                      <option>Critical</option>
-                    </select>
-                  </div>
-                  <div class="col-md-3">
-                    <label class="form-label">Date Range</label>
-                    <input type="date" class="form-control">
-                  </div>
-                  <div class="col-md-3 text-end">
-                    <button class="btn btn-primary"><i class="bi bi-search"></i> Apply</button>
-                    <button class="btn btn-light"><i class="bi bi-arrow-repeat"></i> Reset</button>
-                  </div>
-                </div>
-              </div>
-              </div> -->
-          <!-- Stats Cards -->
+        <div class="tab-pane fade" id="operator-tab-pane" role="tabpanel" aria-labelledby="operator-tab" tabindex="0">
+
           <div class="row g-4 mb-4">
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Total Tickets</h5>
-                <h3 class="text-primary">120</h3>
+                <h3 id="OperatortotalTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Pending</h5>
-                <h3 class="text-warning">45</h3>
+                <h3 id="OperatorpendingTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Resolved</h5>
-                <h3 class="text-success">60</h3>
+                <h3 id="OperatorresolvedTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Re-open</h5>
-                <h3 class="text-danger">15</h3>
+                <h3 id="OperatorreopenTickets">0</h3>
               </div>
             </div>
           </div>
@@ -771,9 +685,7 @@
             </div>
             <!-- Bulk Actions -->
             <div class="card-footer d-flex justify-content-between">
-              <div>
-                <button class="btn btn-sm btn-success"><i class="bi bi-check2-all"></i> Resolve Selected</button>
-              </div>
+
               <nav>
                 <ul class="pagination pagination-sm mb-0">
                   <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
@@ -786,67 +698,31 @@
             </div>
           </div>
         </div>
-        <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-          <!-- Filters -->
-          <!-- <div class="card mb-4">
-              <div class="card-body filter-bar">
-                <div class="row g-3 align-items-end">
-                  <div class="col-md-3">
-                    <label class="form-label">Status</label>
-                    <select class="form-select">
-                      <option value="">All</option>
-                      <option>Pending</option>
-                      <option>In-Progress</option>
-                      <option>Resolved</option>
-                      <option>Closed</option>
-                      <option>Escalated</option>
-                    </select>
-                  </div>
-                  <div class="col-md-3">
-                    <label class="form-label">Priority</label>
-                    <select class="form-select">
-                      <option value="">All</option>
-                      <option>Low</option>
-                      <option>Medium</option>
-                      <option>High</option>
-                      <option>Critical</option>
-                    </select>
-                  </div>
-                  <div class="col-md-3">
-                    <label class="form-label">Date Range</label>
-                    <input type="date" class="form-control">
-                  </div>
-                  <div class="col-md-3 text-end">
-                    <button class="btn btn-primary"><i class="bi bi-search"></i> Apply</button>
-                    <button class="btn btn-light"><i class="bi bi-arrow-repeat"></i> Reset</button>
-                  </div>
-                </div>
-              </div>
-              </div> -->
-          <!-- Stats Cards -->
+        <div class="tab-pane fade" id="department-tab-pane" role="tabpanel" aria-labelledby="department-tab"
+          tabindex="0">
           <div class="row g-4 mb-4">
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Total Tickets</h5>
-                <h3 class="text-primary">120</h3>
+                <h3 class="text-primary" id="DepartmenttotalTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Pending</h5>
-                <h3 class="text-warning">45</h3>
+                <h3 class="text-warning" id="DepartmentpendingTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Resolved</h5>
-                <h3 class="text-success">60</h3>
+                <h3 class="text-success" id="DepartmentresolvedTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Re-open</h5>
-                <h3 class="text-danger">15</h3>
+                <h3 class="text-danger" id="DepartmentreopenTickets">0</h3>
               </div>
             </div>
           </div>
@@ -909,9 +785,7 @@
             </div>
             <!-- Bulk Actions -->
             <div class="card-footer d-flex justify-content-between">
-              <div>
-                <button class="btn btn-sm btn-success"><i class="bi bi-check2-all"></i> Resolve Selected</button>
-              </div>
+
               <nav>
                 <ul class="pagination pagination-sm mb-0">
                   <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
@@ -924,67 +798,115 @@
             </div>
           </div>
         </div>
-        <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">
-          <!-- Filters -->
-          <!--  <div class="card mb-4">
-              <div class="card-body filter-bar">
-                <div class="row g-3 align-items-end">
-                  <div class="col-md-3">
-                    <label class="form-label">Status</label>
-                    <select class="form-select">
-                      <option value="">All</option>
-                      <option>Pending</option>
-                      <option>In-Progress</option>
-                      <option>Resolved</option>
-                      <option>Closed</option>
-                      <option>Escalated</option>
-                    </select>
-                  </div>
-                  <div class="col-md-3">
-                    <label class="form-label">Priority</label>
-                    <select class="form-select">
-                      <option value="">All</option>
-                      <option>Low</option>
-                      <option>Medium</option>
-                      <option>High</option>
-                      <option>Critical</option>
-                    </select>
-                  </div>
-                  <div class="col-md-3">
-                    <label class="form-label">Date Range</label>
-                    <input type="date" class="form-control">
-                  </div>
-                  <div class="col-md-3 text-end">
-                    <button class="btn btn-primary"><i class="bi bi-search"></i> Apply</button>
-                    <button class="btn btn-light"><i class="bi bi-arrow-repeat"></i> Reset</button>
-                  </div>
-                </div>
-              </div>
-              </div> -->
-          <!-- Stats Cards -->
+        <div class="tab-pane fade" id="edm-tab-pane" role="tabpanel" aria-labelledby="edm-tab" tabindex="0">
           <div class="row g-4 mb-4">
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Total Tickets</h5>
-                <h3 class="text-primary">120</h3>
+                <h3 class="text-primary" id="EDMtotalTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Pending</h5>
-                <h3 class="text-warning">45</h3>
+                <h3 class="text-warning" id="EDMpendingTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Resolved</h5>
-                <h3 class="text-success">60</h3>
+                <h3 class="text-success" id="EDMresolvedTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Re-open</h5>
-                <h3 class="text-danger">15</h3>
+                <h3 class="text-danger" id="EDMreopenTickets">0</h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <table class="table table-bordered table-hover ticket-table align-middle">
+                <thead>
+                  <tr>
+                    <th>Ticket ID</th>
+                    <th>Issue Type</th>
+                    <th>Category</th>
+                    <th>Sub Category</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>#TCK1234</td>
+                    <td>CIT/2025-09-18/00090</td>
+                    <td>eSevai officials related</td>
+                    <td>eDM</td>
+                    <td><span class="badge bg-danger">Critical</span></td>
+                    <td><span class="badge bg-warning text-dark">In-Progress</span></td>
+                    <td>
+                      <button data-bs-toggle="modal" data-bs-target=".ticketModal"
+                        class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>#TCK1234</td>
+                    <td>CIT/2025-09-18/00090</td>
+                    <td>eSevai officials related</td>
+                    <td>eDM</td>
+                    <td><span class="badge bg-danger">Critical</span></td>
+                    <td><span class="badge bg-warning text-dark">In-Progress</span></td>
+                    <td>
+                      <button data-bs-toggle="modal" data-bs-target=".ticketModal"
+                        class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Bulk Actions -->
+            <div class="card-footer d-flex justify-content-between">
+              <nav>
+                <ul class="pagination pagination-sm mb-0">
+                  <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
+                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="cm-helpline-tab-pane1" role="tabpanel" aria-labelledby="cm-helpline-tab"
+          tabindex="0">
+          <div class="row g-4 mb-4">
+            <div class="col-md-3">
+              <div class="card text-center p-3 shadow">
+                <h5>Total Tickets</h5>
+                <h3 class="text-primary" id="CM_HelplinetotalTickets">120</h3>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card text-center p-3 shadow">
+                <h5>Pending</h5>
+                <h3 class="text-warning" id="CM_HelplinependingTickets">45</h3>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card text-center p-3 shadow">
+                <h5>Resolved</h5>
+                <h3 class="text-success" id="CM_HelplineresolvedTickets">60</h3>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card text-center p-3 shadow">
+                <h5>Re-open</h5>
+                <h3 class="text-danger" id="CM_HelplinereopenTickets">15</h3>
               </div>
             </div>
           </div>
@@ -1047,147 +969,6 @@
             </div>
             <!-- Bulk Actions -->
             <div class="card-footer d-flex justify-content-between">
-              <div>
-                <button class="btn btn-sm btn-success"><i class="bi bi-check2-all"></i> Resolve Selected</button>
-              </div>
-              <nav>
-                <ul class="pagination pagination-sm mb-0">
-                  <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
-                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </div>
-        <div class="tab-pane fade" id="disabled-tab-pane1" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">
-          <!-- Filters -->
-          <!--  <div class="card mb-4">
-              <div class="card-body filter-bar">
-                <div class="row g-3 align-items-end">
-                  <div class="col-md-3">
-                    <label class="form-label">Status</label>
-                    <select class="form-select">
-                      <option value="">All</option>
-                      <option>Pending</option>
-                      <option>In-Progress</option>
-                      <option>Resolved</option>
-                      <option>Closed</option>
-                      <option>Escalated</option>
-                    </select>
-                  </div>
-                  <div class="col-md-3">
-                    <label class="form-label">Priority</label>
-                    <select class="form-select">
-                      <option value="">All</option>
-                      <option>Low</option>
-                      <option>Medium</option>
-                      <option>High</option>
-                      <option>Critical</option>
-                    </select>
-                  </div>
-                  <div class="col-md-3">
-                    <label class="form-label">Date Range</label>
-                    <input type="date" class="form-control">
-                  </div>
-                  <div class="col-md-3 text-end">
-                    <button class="btn btn-primary"><i class="bi bi-search"></i> Apply</button>
-                    <button class="btn btn-light"><i class="bi bi-arrow-repeat"></i> Reset</button>
-                  </div>
-                </div>
-              </div>
-              </div> -->
-          <!-- Stats Cards -->
-          <div class="row g-4 mb-4">
-            <div class="col-md-3">
-              <div class="card text-center p-3 shadow">
-                <h5>Total Tickets</h5>
-                <h3 class="text-primary">120</h3>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card text-center p-3 shadow">
-                <h5>Pending</h5>
-                <h3 class="text-warning">45</h3>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card text-center p-3 shadow">
-                <h5>Resolved</h5>
-                <h3 class="text-success">60</h3>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card text-center p-3 shadow">
-                <h5>Re-open</h5>
-                <h3 class="text-danger">15</h3>
-              </div>
-            </div>
-          </div>
-          <!-- Charts -->
-          <!-- <div class="row g-4 mb-4">
-              <div class="col-md-6">
-                <div class="card p-3 shadow">
-                  <h5>Tickets by Status</h5>
-                  <div id="statusChart"></div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="card p-3 shadow">
-                  <h5>Tickets by Priority</h5>
-                  <div id="priorityChart"></div>
-                </div>
-              </div>
-              </div> -->
-          <div class="card">
-            <div class="card-body">
-              <table class="table table-bordered table-hover ticket-table align-middle">
-                <thead>
-                  <tr>
-                    <th>Ticket ID</th>
-                    <th>Issue Type</th>
-                    <th>Category</th>
-                    <th>Sub Category</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>#TCK1234</td>
-                    <td>CIT/2025-09-18/00090</td>
-                    <td>eSevai officials related</td>
-                    <td>eDM</td>
-                    <td><span class="badge bg-danger">Critical</span></td>
-                    <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                    <td>
-                      <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                        class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>#TCK1234</td>
-                    <td>CIT/2025-09-18/00090</td>
-                    <td>eSevai officials related</td>
-                    <td>eDM</td>
-                    <td><span class="badge bg-danger">Critical</span></td>
-                    <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                    <td>
-                      <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                        class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <!-- Bulk Actions -->
-            <div class="card-footer d-flex justify-content-between">
-              <div>
-                <button class="btn btn-sm btn-success"><i class="bi bi-check2-all"></i> Resolve Selected</button>
-              </div>
               <nav>
                 <ul class="pagination pagination-sm mb-0">
                   <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
@@ -1347,12 +1128,11 @@
     chart2.render();
   </script> -->
 
-  <script>
+  <!-- <script>
     $(document).ready(function () {
-      // Function to fetch ticket data and update the count
-      const userId = localStorage.getItem("login_user_id") || 0;
+      const userId = localStorage.getItem("helpdesk_user_id") || 0;
 
-      function fetchTickets(status = "all") {
+      function fetchTickets() {
         const payload = {
           action: "function_call",
           function_name: "fn_dashboard_helpdesk_admin_counts",
@@ -1365,66 +1145,425 @@
           data: { data: encryptData(payload) },
           dataType: "json",
           success: function (response) {
-            // Determine which table to populate based on status
-            let tableBody;
-            switch (status) {
-              case "in-progress":
-                tableBody = $("#profile-tab-pane1 tbody");
-                break;
-              case "re-open":
-                tableBody = $("#contact-tab-pane1 tbody");
-                break;
-              case "resolved":
-                tableBody = $("#disabled-tab-pane3 tbody");
-                break;
-              case "closed":
-                tableBody = $("#disabled-tab-pane4 tbody");
-                break;
-              default:
-                tableBody = $("#home-tab-pane1 tbody");
+            if (!response || !response.data) return;
+
+            let counts = {};
+            try {
+              const decrypted = decryptData(response.data);
+              const parsed = (typeof decrypted === "string") ? JSON.parse(decrypted) : decrypted;
+              if (parsed && parsed[0]?.fn_dashboard_helpdesk_admin_counts) {
+                counts = JSON.parse(parsed[0].fn_dashboard_helpdesk_admin_counts);
+              }
+            } catch (err) {
+              console.error("Failed to parse counts:", err);
+              return;
             }
 
-            tableBody.empty(); // clear existing rows
+            console.log("Fetched Counts:", counts);
+            console.log("Counts Structure:", JSON.stringify(counts, null, 2));
 
-            // Loop through tickets and append rows
-            response.tickets.forEach(ticket => {
-              const row = `
-                        <tr>
-                            <td>${ticket.ticket_id}</td>
-                            <td>${ticket.issue_type}</td>
-                            <td>${ticket.category}</td>
-                            <td>${ticket.sub_category}</td>
-                            <td><span class="badge ${ticket.priority_class}">${ticket.priority}</span></td>
-                            <td><span class="badge ${ticket.status_class}">${ticket.status}</span></td>
-                            <td>
-                                <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                                    class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                            </td>
-                        </tr>
-                    `;
-              tableBody.append(row);
+            // 🔹 Helper: update ticket counts for each tab section
+            function updateStats(tabPrefix, data) {
+              $(`#${tabPrefix}totalTickets`).text(data.Total || 0);
+              $(`#${tabPrefix}pendingTickets`).text(data.Pending || 0);
+              $(`#${tabPrefix}resolvedTickets`).text(data.Resolved || 0);
+              $(`#${tabPrefix}reopenTickets`).text(data.ReOpened || 0);
+            }
+
+            // 🔹 Update counts for all dashboard sections
+            updateStats('', counts.All || {}); // "All" tab
+            updateStats('EDM', counts.EDM || {});
+            updateStats('Citizen', counts.Citizen || {});
+            updateStats('Operator', counts.Operator || {});
+            updateStats('Department', counts.Department || {});
+            updateStats('CM_Helpline', counts.CM_Helpline || {});
+
+            // 🔹 Table mapping (existing logic below remains same)
+            const tableMap = {
+              "All": $("#all-tab-pane tbody"),
+              "Pending": $("#citizen-tab-pane tbody"),
+              "ReOpened": $("#citizen-tab-pane1 tbody"),
+              "Resolved": $("#operator-tab-pane1 tbody"),
+              "Closed": $("#department-tab-pane1 tbody")
+            };
+
+            Object.keys(tableMap).forEach(statusKey => {
+              const tableBody = tableMap[statusKey];
+              if (!tableBody.length) return;
+              tableBody.empty();
+
+              const dataList = counts[statusKey]?.Tickets || counts[statusKey] || [];
+
+              if (!dataList.length) {
+                tableBody.append(`<tr><td colspan="7" class="text-center text-muted">No tickets found</td></tr>`);
+                return;
+              }
+
+              dataList.forEach(ticket => {
+                const row = `
+        <tr>
+          <td>${ticket.ticket_id || '-'}</td>
+          <td>${ticket.subject || '-'}</td>
+          <td>${ticket.category || '-'}</td>
+          <td>${ticket.assigned_to || '-'}</td>
+          <td><span class="badge bg-warning">${ticket.status || statusKey}</span></td>
+          <td>${ticket.priority || '-'}</td>
+          <td>
+            <button data-bs-toggle="modal" data-bs-target=".ticketModal"
+              class="btn btn-sm btn-outline-primary">
+              <i class="bi bi-eye"></i>
+            </button>
+          </td>
+        </tr>`;
+                tableBody.append(row);
+              });
             });
           },
+
           error: function (err) {
             console.error("Error fetching tickets:", err);
           }
         });
       }
 
-      // Fetch all tickets on page load
-      fetchTickets();
 
-      // Optionally, fetch tickets when tabs change
-      $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
-        const target = $(e.target).data('bs-target');
-        if (target === "#profile-tab-pane1") fetchTickets("in-progress");
-        else if (target === "#contact-tab-pane1") fetchTickets("re-open");
-        else if (target === "#disabled-tab-pane3") fetchTickets("resolved");
-        else if (target === "#disabled-tab-pane4") fetchTickets("closed");
-        else fetchTickets();
+      // 🔹 Optional: Refresh on tab click if needed
+      $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function () {
+        fetchTickets();
       });
+
+
+      function fetchCitizenTickets(status = "All") {
+        const payload = {
+          action: "function_call",
+          function_name: "fn_helpdesk_admin_view_requests",
+          params: {
+            p_user_id: userId,
+            p_table: "1",   // Citizen table mapping (as you confirmed)
+            p_status: status === "All" ? null : status // pass null for all
+          }
+        };
+
+        // Use your global loadDataToTable
+        loadDataToTable({
+          tableId: "citizenTable", // ensure your <table id="citizenTable"> exists
+          apiUrl: `${BASE_API_URL}/commonfunction`,
+          httpMethod: 'POST',
+          payload: encryptData(payload), // your existing encryption
+          rowBuilder: function (item) {
+            // Each item is expected to contain fn_helpdesk_admin_view_requests JSON string
+            let parsed = [];
+            try {
+              if (item.fn_helpdesk_admin_view_requests) {
+                parsed = JSON.parse(item.fn_helpdesk_admin_view_requests);
+              }
+            } catch (e) {
+              console.error("Error parsing fn_helpdesk_admin_view_requests:", e);
+              parsed = [];
+            }
+
+            if (!Array.isArray(parsed) || parsed.length === 0) {
+              // Return empty string so loadDataToTable will show "No Data Found"
+              return "";
+            }
+
+            // Build rows
+            return parsed.map((ticket, idx) => {
+              // safe access with fallbacks
+              const ticketId = ticket.ticket_id || ticket.TicketId || "-";
+              const issueType = ticket.subject || ticket.issue_type || "-";
+              const category = ticket.category || "-";
+              const subcat = ticket.subcategory || ticket.sub_category || "-";
+              const priority = ticket.priority || "-";
+              const statusText = ticket.status || ticket.Status || "-";
+              const createdOn = ticket.created_on || ticket.CreatedDate || ticket.created_at || "-";
+
+              // create view button (use data-ticketid only; fetch details via API when clicked)
+              const viewBtn = `<button class="btn btn-sm btn-outline-primary viewTicketBtn" type="button" data-ticketid="${escapeHtml(ticketId)}"><i class="bi bi-eye"></i></button>`;
+
+              return `
+          <tr data-ticketid="${escapeHtml(ticketId)}" data-status="${escapeHtml(statusText)}">
+            <td>${escapeHtml(ticketId)}</td>
+            <td>${escapeHtml(issueType)}</td>
+            <td>${escapeHtml(category)}</td>
+            <td>${escapeHtml(subcat)}</td>
+            <td><span class="badge ${getStatusBadgeClass(statusText)}">${escapeHtml(priority)}</span></td>
+            <td><span class="badge ${getStatusBadgeClass(statusText)} status-badge">${escapeHtml(statusText)}</span></td>
+            <td>${viewBtn}</td>
+          </tr>
+        `;
+            }).join("");
+          },
+          onTableInit: function (dtRef) {
+            // store the datatable reference if you need it
+            window.citizenTableRef = dtRef;
+          }
+        });
+
+        // small helpers used in the builder (ensure these exist in your scope)
+        function escapeHtml(str) {
+          if (str === null || str === undefined) return '';
+          return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+        }
+
+        // Reuse getStatusBadgeClass if already declared in your script; if not, include it:
+        function getStatusBadgeClass(status) {
+          switch ((status || '').toString()) {
+            case "In-Progress": return "bg-warning text-dark";
+            case "Returned": return "bg-danger";
+            case "Resolved": return "bg-success";
+            case "Re-Opened": return "bg-primary";
+            case "Closed": return "bg-secondary";
+            default: return "bg-info text-dark";
+          }
+        }
+      }
+
+      // =====================
+      // 🔹 Initial Page Load
+      // =====================
+      fetchTickets(); // Counts
+      fetchCitizenTickets(); // Citizen tab table
+
+      // 🔹 Optional: Refresh on tab switch
+      $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+        const targetTab = $(e.target).attr('data-bs-target');
+
+        if (targetTab === '#citizen-tab-pane') {
+          fetchCitizenTickets();
+        }
+      });
+
+
+
+    });
+  </script> -->
+
+  <script>
+    $(document).ready(function () {
+      const userId = localStorage.getItem("helpdesk_user_id") || 0;
+
+      // ============================
+      // 🔹 Keep your existing counts function as-is
+      // ============================
+      function fetchTickets() {
+        const payload = {
+          action: "function_call",
+          function_name: "fn_dashboard_helpdesk_admin_counts",
+          params: { p_user_id: userId },
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: "json",
+          success: function (response) {
+            if (!response || !response.data) return;
+            let counts = {};
+            try {
+              const decrypted = decryptData(response.data);
+              const parsed =
+                typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
+              if (parsed && parsed[0]?.fn_dashboard_helpdesk_admin_counts) {
+                counts = JSON.parse(parsed[0].fn_dashboard_helpdesk_admin_counts);
+              }
+            } catch (err) {
+              console.error("Failed to parse counts:", err);
+              return;
+            }
+
+            function updateStats(tabPrefix, data) {
+              $(`#${tabPrefix}totalTickets`).text(data.Total || 0);
+              $(`#${tabPrefix}pendingTickets`).text(data.Pending || 0);
+              $(`#${tabPrefix}resolvedTickets`).text(data.Resolved || 0);
+              $(`#${tabPrefix}reopenTickets`).text(data.ReOpened || 0);
+            }
+
+            updateStats("", counts.All || {});
+            updateStats("EDM", counts.EDM || {});
+            updateStats("Citizen", counts.Citizen || {});
+            updateStats("Operator", counts.Operator || {});
+            updateStats("Department", counts.Department || {});
+            updateStats("CM_Helpline", counts.CM_Helpline || {});
+          },
+          error: function (err) {
+            console.error("Error fetching tickets:", err);
+          },
+        });
+      }
+
+      // ======================================
+      // 🔹 Universal loader for each tab table
+      // ======================================
+      function loadRequestsData(p_table, tableId, status = "All") {
+        debugger;
+        const payload = {
+          action: "function_call",
+          function_name: "fn_helpdesk_admin_view_requests",
+          params: {
+            p_user_id: userId,
+            p_table: p_table,
+            p_status: status === "All" ? null : status,
+          },
+        };
+
+        const $table = $(`#${tableId}`);
+        const $tbody = $table.find("tbody");
+        $tbody.html(`<tr><td colspan="7" class="text-center text-muted">Loading...</td></tr>`);
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: "json",
+          success: function (response) {
+            $tbody.empty();
+            if (!response || !response.data) {
+              $tbody.html(`<tr><td colspan="7" class="text-center text-muted">No data found</td></tr>`);
+              return;
+            }
+
+            let decrypted, parsed, rows;
+            try {
+              decrypted = decryptData(response.data);
+              parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
+              rows = JSON.parse(parsed[0].fn_helpdesk_admin_view_requests);
+            } catch (err) {
+              console.error("Parse error:", err);
+              $tbody.html(`<tr><td colspan="7" class="text-center text-danger">Data parsing failed</td></tr>`);
+              return;
+            }
+
+            if (!rows || rows.length === 0) {
+              $tbody.html(`<tr><td colspan="7" class="text-center text-muted">No tickets found</td></tr>`);
+              return;
+            }
+
+            rows.forEach((ticket) => {
+              const row = `
+              <tr>
+                <td>${ticket.TicketId || "-"}</td>
+                <td>${ticket.CreatedDate || "-"}</td>
+                <td>${ticket.Category || "-"}</td>
+                <td>${ticket.Subcategory || "-"}</td>
+                <td><span class="badge bg-info">${ticket.Status || "-"}</span></td>
+                <td>
+                  <button class="btn btn-sm btn-outline-primary viewTicketBtn" data-ticketid="${ticket.ticket_id}">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </td>
+              </tr>`;
+              $tbody.append(row);
+            });
+
+            // ✅ Initialize DataTable (destroy first if already exists)
+            if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
+              $(`#${tableId}`).DataTable().destroy();
+            }
+            $(`#${tableId}`).DataTable({
+              responsive: true,
+              order: [[0, "desc"]],
+              pageLength: 10,
+            });
+          },
+          error: function (err) {
+            console.error("Error fetching request data:", err);
+            $tbody.html(`<tr><td colspan="7" class="text-center text-danger">Error loading data</td></tr>`);
+          },
+        });
+      }
+
+      // ======================================
+      // 🔹 View Ticket Button Click Handler
+      // ======================================
+      $(document).on("click", ".viewTicketBtn", function () {
+        const ticketId = $(this).data("ticketid");
+        if (!ticketId) return;
+
+        const payload = {
+          action: "function_call",
+          function_name: "fn_get_ticket_details",
+          params: { p_ticket_id: ticketId },
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: "json",
+          beforeSend: function () {
+            $("#ticketModalBody").html("<p class='text-center'>Loading details...</p>");
+          },
+          success: function (response) {
+            if (!response || !response.data) {
+              $("#ticketModalBody").html("<p class='text-center text-danger'>No details found.</p>");
+              return;
+            }
+
+            let decrypted, parsed, details;
+            try {
+              decrypted = decryptData(response.data);
+              parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
+              details = JSON.parse(parsed[0].fn_helpdesk_admin_view_requests);
+            } catch (err) {
+              console.error("Error parsing ticket details:", err);
+              $("#ticketModalBody").html("<p class='text-center text-danger'>Error loading details.</p>");
+              return;
+            }
+
+            // Populate modal
+            const t = details[0] || {};
+            $("#ticketModalBody").html(`
+            <p><strong>Ticket ID:</strong> ${t.TicketId || "-"}</p>
+            <p><strong>Subject:</strong> ${t.subject || "-"}</p>
+            <p><strong>Category:</strong> ${t.category || "-"}</p>
+            <p><strong>Status:</strong> ${t.status || "-"}</p>
+            <p><strong>Description:</strong> ${t.description || "-"}</p>
+          `);
+
+            $("#ticketModal").modal("show");
+          },
+          error: function () {
+            $("#ticketModalBody").html("<p class='text-center text-danger'>Failed to load ticket details.</p>");
+          },
+        });
+      });
+
+      // ======================================
+      // 🔹 Tab switch logic: call both APIs
+      // ======================================
+      const tabMap = {
+        "#citizen-tab-pane": { table: "1", tableId: "citizenTable" },
+        "#operator-tab-pane": { table: "2", tableId: "operatorTable" },
+        "#department-tab-pane": { table: "3", tableId: "departmentTable" },
+        "#edm-tab-pane": { table: "4", tableId: "edmTable" },
+        "#cmhelpline-tab-pane": { table: "5", tableId: "cmHelplineTable" },
+      };
+
+      $("button[data-bs-toggle='tab']").on("shown.bs.tab", function (e) {
+        const targetTab = $(e.target).attr("data-bs-target");
+        const tabConfig = tabMap[targetTab];
+        if (tabConfig) {
+          fetchTickets(); // counts
+          loadRequestsData(tabConfig.table, tabConfig.tableId); // data
+        }
+      });
+
+      // ======================================
+      // 🔹 Initial load
+      // ======================================
+      fetchTickets();
+      loadRequestsData("1", "citizenTable");
     });
   </script>
+
+
 </body>
 
 </html>

@@ -600,6 +600,18 @@
               if (apiResponse.status === "success") {
                 showSuccessToast("Login successful!");
                 // window.location.href = '/dashboard';
+                localStorage.setItem("helpdesk_email", apiResponse.email);
+                localStorage.setItem("helpdesk_mobile", apiResponse.mobile);
+                localStorage.setItem("helpdesk_role_id", apiResponse.role_id);
+                localStorage.setItem("helpdesk_user_id", apiResponse.user_id);
+                localStorage.setItem("helpdesk_district", apiResponse.district);
+                localStorage.setItem("helpdesk_user_name", apiResponse.user_name);
+
+                // ✅ Optionally store the whole object as JSON
+                localStorage.setItem("helpdesk_user_data", JSON.stringify(apiResponse));
+                console.log("User Data:", apiResponse);
+                console.log(localStorage.getItem("helpdesk_user_data"));
+
                 setTimeout(() => {
                   window.location.href = "dashboard.html";
                 }, 1500);
