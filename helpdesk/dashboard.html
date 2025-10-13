@@ -505,6 +505,7 @@
               </div>
             </div>
           </div>
+
         </div>
 
         <div class="tab-pane fade" id="operator-tab-pane" role="tabpanel" aria-labelledby="operator-tab" tabindex="0">
@@ -550,62 +551,153 @@
                 </div>
               </div>
               </div> -->
-          <div class="card">
+          
+              <div class="card">
             <div class="card-body">
-              <table class="table table-bordered table-hover ticket-table align-middle">
-                <thead>
-                  <tr>
-                    <th>Ticket ID</th>
-                    <th>Issue Type</th>
-                    <th>Category</th>
-                    <th>Sub Category</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>#TCK1234</td>
-                    <td>CIT/2025-09-18/00090</td>
-                    <td>eSevai officials related</td>
-                    <td>eDM</td>
-                    <td><span class="badge bg-danger">Critical</span></td>
-                    <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                    <td>
-                      <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                        class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>#TCK1234</td>
-                    <td>CIT/2025-09-18/00090</td>
-                    <td>eSevai officials related</td>
-                    <td>eDM</td>
-                    <td><span class="badge bg-danger">Critical</span></td>
-                    <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                    <td>
-                      <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                        class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <!-- Bulk Actions -->
-            <div class="card-footer d-flex justify-content-between">
+              <!-- Inner Tabs -->
+              <ul class="nav nav-tabs mb-2" id="esevaiInnerTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="esevai-all-tab" data-bs-toggle="tab"
+                    data-bs-target="#esevai-all-pane" type="button" role="tab" aria-controls="esevai-all-pane"
+                    aria-selected="true">All</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="esevai-progress-tab" data-bs-toggle="tab"
+                    data-bs-target="#esevai-progress-pane" type="button" role="tab"
+                    aria-controls="esevai-progress-pane" aria-selected="false">In Progress</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="esevai-reopen-tab" data-bs-toggle="tab"
+                    data-bs-target="#esevai-reopen-pane" type="button" role="tab" aria-controls="esevai-reopen-pane"
+                    aria-selected="false">Re-open</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="esevai-resolved-tab" data-bs-toggle="tab"
+                    data-bs-target="#esevai-resolved-pane" type="button" role="tab"
+                    aria-controls="esevai-resolved-pane" aria-selected="false">Resolved</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="esevai-closed-tab" data-bs-toggle="tab"
+                    data-bs-target="#esevai-closed-pane" type="button" role="tab" aria-controls="esevai-closed-pane"
+                    aria-selected="false">Closed</button>
+                </li>
+              </ul>
 
-              <nav>
-                <ul class="pagination pagination-sm mb-0">
-                  <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
-                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
-              </nav>
+              <div class="tab-content" id="esevaiInnerTabContent">
+                <!-- All -->
+                <div class="tab-pane fade show active" id="esevai-all-pane" role="tabpanel"
+                  aria-labelledby="esevai-all-tab">
+                  <table id="esevaiAllTable" class="table table-bordered table-striped align-middle">
+                    <thead>
+                      <tr>
+                        <th>Ticket ID</th>
+                        <th>Created On</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="6" class="text-center text-muted">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- In Progress -->
+                <div class="tab-pane fade" id="esevai-progress-pane" role="tabpanel"
+                  aria-labelledby="esevai-progress-tab">
+                  <table id="esevaiProgressTable" class="table table-bordered table-striped align-middle">
+                    <thead>
+                      <tr>
+                        <th>Ticket ID</th>
+                        <th>Created On</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="6" class="text-center text-muted">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Re-open -->
+                <div class="tab-pane fade" id="esevai-reopen-pane" role="tabpanel"
+                  aria-labelledby="esevai-reopen-tab">
+                  <table id="esevaiReopenTable" class="table table-bordered table-striped align-middle">
+                    <thead>
+                      <tr>
+                        <th>Ticket ID</th>
+                        <th>Created On</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="6" class="text-center text-muted">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Resolved -->
+                <div class="tab-pane fade" id="esevai-resolved-pane" role="tabpanel"
+                  aria-labelledby="esevai-resolved-tab">
+                  <table id="esevaiResolvedTable" class="table table-bordered table-striped align-middle">
+                    <thead>
+                      <tr>
+                        <th>Ticket ID</th>
+                        <th>Created On</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="6" class="text-center text-muted">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Closed -->
+                <div class="tab-pane fade" id="esevai-closed-pane" role="tabpanel"
+                  aria-labelledby="esevai-closed-tab">
+                  <table id="esevaiClosedTable" class="table table-bordered table-striped align-middle">
+                    <thead>
+                      <tr>  
+                        <th>Ticket ID</th>
+                        <th>Created On</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="6" class="text-center text-muted">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
+
+
         </div>
         <div class="tab-pane fade" id="department-tab-pane" role="tabpanel" aria-labelledby="department-tab"
           tabindex="0">
@@ -635,77 +727,153 @@
               </div>
             </div>
           </div>
-          <!-- Charts -->
-          <!--   <div class="row g-4 mb-4">
-              <div class="col-md-6">
-                <div class="card p-3 shadow">
-                  <h5>Tickets by Status</h5>
-                  <div id="statusChart"></div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="card p-3 shadow">
-                  <h5>Tickets by Priority</h5>
-                  <div id="priorityChart"></div>
-                </div>
-              </div>
-              </div> -->
+          
           <div class="card">
             <div class="card-body">
-              <table class="table table-bordered table-hover ticket-table align-middle">
-                <thead>
-                  <tr>
-                    <th>Ticket ID</th>
-                    <th>Issue Type</th>
-                    <th>Category</th>
-                    <th>Sub Category</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>#TCK1234</td>
-                    <td>CIT/2025-09-18/00090</td>
-                    <td>eSevai officials related</td>
-                    <td>eDM</td>
-                    <td><span class="badge bg-danger">Critical</span></td>
-                    <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                    <td>
-                      <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                        class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>#TCK1234</td>
-                    <td>CIT/2025-09-18/00090</td>
-                    <td>eSevai officials related</td>
-                    <td>eDM</td>
-                    <td><span class="badge bg-danger">Critical</span></td>
-                    <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                    <td>
-                      <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                        class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <!-- Bulk Actions -->
-            <div class="card-footer d-flex justify-content-between">
+              <!-- Inner Tabs -->
+              <ul class="nav nav-tabs mb-2" id="departmentInnerTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="department-all-tab" data-bs-toggle="tab"
+                    data-bs-target="#department-all-pane" type="button" role="tab" aria-controls="department-all-pane"
+                    aria-selected="true">All</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="department-progress-tab" data-bs-toggle="tab"
+                    data-bs-target="#department-progress-pane" type="button" role="tab"
+                    aria-controls="department-progress-pane" aria-selected="false">In Progress</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="department-reopen-tab" data-bs-toggle="tab"
+                    data-bs-target="#department-reopen-pane" type="button" role="tab" aria-controls="department-reopen-pane"
+                    aria-selected="false">Re-open</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="department-resolved-tab" data-bs-toggle="tab"
+                    data-bs-target="#department-resolved-pane" type="button" role="tab"
+                    aria-controls="department-resolved-pane" aria-selected="false">Resolved</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="department-closed-tab" data-bs-toggle="tab"
+                    data-bs-target="#department-closed-pane" type="button" role="tab" aria-controls="department-closed-pane"
+                    aria-selected="false">Closed</button>
+                </li>
+              </ul>
 
-              <nav>
-                <ul class="pagination pagination-sm mb-0">
-                  <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
-                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
-              </nav>
+              <div class="tab-content" id="departmentInnerTabContent">
+                <!-- All -->
+                <div class="tab-pane fade show active" id="department-all-pane" role="tabpanel"
+                  aria-labelledby="department-all-tab">
+                  <table id="departmentAllTable" class="table table-bordered table-striped align-middle">
+                    <thead>
+                      <tr>
+                        <th>Ticket ID</th>
+                        <th>Created On</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="6" class="text-center text-muted">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- In Progress -->
+                <div class="tab-pane fade" id="department-progress-pane" role="tabpanel"
+                  aria-labelledby="department-progress-tab">
+                  <table id="departmentProgressTable" class="table table-bordered table-striped align-middle">
+                    <thead>
+                      <tr>
+                        <th>Ticket ID</th>
+                        <th>Created On</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="6" class="text-center text-muted">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Re-open -->
+                <div class="tab-pane fade" id="department-reopen-pane" role="tabpanel"
+                  aria-labelledby="department-reopen-tab">
+                  <table id="departmentReopenTable" class="table table-bordered table-striped align-middle">
+                    <thead>
+                      <tr>
+                        <th>Ticket ID</th>
+                        <th>Created On</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="6" class="text-center text-muted">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Resolved -->
+                <div class="tab-pane fade" id="department-resolved-pane" role="tabpanel"
+                  aria-labelledby="department-resolved-tab">
+                  <table id="departmentResolvedTable" class="table table-bordered table-striped align-middle">
+                    <thead>
+                      <tr>
+                        <th>Ticket ID</th>
+                        <th>Created On</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="6" class="text-center text-muted">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Closed -->
+                <div class="tab-pane fade" id="department-closed-pane" role="tabpanel"
+                  aria-labelledby="department-closed-tab">
+                  <table id="departmentClosedTable" class="table table-bordered table-striped align-middle">
+                    <thead>
+                      <tr>  
+                        <th>Ticket ID</th>
+                        <th>Created On</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="6" class="text-center text-muted">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
+
+
         </div>
         <div class="tab-pane fade" id="edm-tab-pane" role="tabpanel" aria-labelledby="edm-tab" tabindex="0">
           <div class="row g-4 mb-4">
@@ -1897,6 +2065,22 @@
           "#citizen-reopen-pane": { table: "1", tableId: "citizenReopenTable", status: "Re-Open" },
           "#citizen-resolved-pane": { table: "1", tableId: "citizenResolvedTable", status: "Resolved" },
           "#citizen-closed-pane": { table: "1", tableId: "citizenClosedTable", status: "Closed" },
+
+          // esevai operator starts
+          "#esevai-all-pane": { table: "2", tableId: "esevaiAllTable" },
+          "#esevai-progress-pane": { table: "2", tableId: "esevaiProgressTable", status: "In-Progress" },
+          "#esevai-reopen-pane": { table: "2", tableId: "esevaiReopenTable", status: "Re-Open" },
+          "#esevai-resolved-pane": { table: "2", tableId: "esevaiResolvedTable", status: "Resolved" },
+          "#esevai-closed-pane": { table: "2", tableId: "esevaiClosedTable", status: "Closed" },
+          // esevai operator end
+
+          // department starts
+          "#department-all-pane": { table: "3", tableId: "departmentAllTable" },
+          "#department-progress-pane": { table: "3", tableId: "departmentProgressTable", status: "In-Progress" },
+          "#department-reopen-pane": { table: "3", tableId: "departmentReopenTable", status: "Re-Open" },
+          "#department-resolved-pane": { table: "3", tableId: "departmentResolvedTable", status: "Resolved" },
+          "#department-closed-pane": { table: "3", tableId: "departmentClosedTable", status: "Closed" },    
+          // department end 
 
           "#edm-all-pane": { table: "4", tableId: "edmAllTable" },
           "#edm-progress-pane": { table: "4", tableId: "edmProgressTable", status: "In-Progress" },
