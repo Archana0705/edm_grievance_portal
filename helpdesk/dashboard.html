@@ -223,7 +223,8 @@
       <span class="fw-bold ms-3 fs-5">Helpdesk Dashboard</span>
       <div class="ms-auto d-flex align-items-center gap-3">
         <span id="currentDateTime" class="me-3"></span>
-        <div class="dropdown">
+        <div id="globalProfileDropdown"></div>
+        <!-- <div class="dropdown">
           <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
             <i class="bi bi-person-circle fs-4"></i> <span class="d-none d-lg-inline fw-semibold">John</span>
           </button>
@@ -231,7 +232,7 @@
             <li><a class="dropdown-item" href="profile.html">Profile</a></li>
             <li><a class="dropdown-item" href="index.html">Logout</a></li>
           </ul>
-        </div>
+        </div> -->
       </div>
     </div>
   </nav>
@@ -551,8 +552,8 @@
                 </div>
               </div>
               </div> -->
-          
-              <div class="card">
+
+          <div class="card">
             <div class="card-body">
               <!-- Inner Tabs -->
               <ul class="nav nav-tabs mb-2" id="esevaiInnerTab" role="tablist">
@@ -563,8 +564,8 @@
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="esevai-progress-tab" data-bs-toggle="tab"
-                    data-bs-target="#esevai-progress-pane" type="button" role="tab"
-                    aria-controls="esevai-progress-pane" aria-selected="false">In Progress</button>
+                    data-bs-target="#esevai-progress-pane" type="button" role="tab" aria-controls="esevai-progress-pane"
+                    aria-selected="false">In Progress</button>
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="esevai-reopen-tab" data-bs-toggle="tab"
@@ -573,8 +574,8 @@
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="esevai-resolved-tab" data-bs-toggle="tab"
-                    data-bs-target="#esevai-resolved-pane" type="button" role="tab"
-                    aria-controls="esevai-resolved-pane" aria-selected="false">Resolved</button>
+                    data-bs-target="#esevai-resolved-pane" type="button" role="tab" aria-controls="esevai-resolved-pane"
+                    aria-selected="false">Resolved</button>
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="esevai-closed-tab" data-bs-toggle="tab"
@@ -629,8 +630,7 @@
                 </div>
 
                 <!-- Re-open -->
-                <div class="tab-pane fade" id="esevai-reopen-pane" role="tabpanel"
-                  aria-labelledby="esevai-reopen-tab">
+                <div class="tab-pane fade" id="esevai-reopen-pane" role="tabpanel" aria-labelledby="esevai-reopen-tab">
                   <table id="esevaiReopenTable" class="table table-bordered table-striped align-middle">
                     <thead>
                       <tr>
@@ -673,11 +673,10 @@
                 </div>
 
                 <!-- Closed -->
-                <div class="tab-pane fade" id="esevai-closed-pane" role="tabpanel"
-                  aria-labelledby="esevai-closed-tab">
+                <div class="tab-pane fade" id="esevai-closed-pane" role="tabpanel" aria-labelledby="esevai-closed-tab">
                   <table id="esevaiClosedTable" class="table table-bordered table-striped align-middle">
                     <thead>
-                      <tr>  
+                      <tr>
                         <th>Ticket ID</th>
                         <th>Created On</th>
                         <th>Category</th>
@@ -727,7 +726,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="card">
             <div class="card-body">
               <!-- Inner Tabs -->
@@ -744,8 +743,8 @@
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="department-reopen-tab" data-bs-toggle="tab"
-                    data-bs-target="#department-reopen-pane" type="button" role="tab" aria-controls="department-reopen-pane"
-                    aria-selected="false">Re-open</button>
+                    data-bs-target="#department-reopen-pane" type="button" role="tab"
+                    aria-controls="department-reopen-pane" aria-selected="false">Re-open</button>
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="department-resolved-tab" data-bs-toggle="tab"
@@ -754,8 +753,8 @@
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="department-closed-tab" data-bs-toggle="tab"
-                    data-bs-target="#department-closed-pane" type="button" role="tab" aria-controls="department-closed-pane"
-                    aria-selected="false">Closed</button>
+                    data-bs-target="#department-closed-pane" type="button" role="tab"
+                    aria-controls="department-closed-pane" aria-selected="false">Closed</button>
                 </li>
               </ul>
 
@@ -853,7 +852,7 @@
                   aria-labelledby="department-closed-tab">
                   <table id="departmentClosedTable" class="table table-bordered table-striped align-middle">
                     <thead>
-                      <tr>  
+                      <tr>
                         <th>Ticket ID</th>
                         <th>Created On</th>
                         <th>Category</th>
@@ -2079,7 +2078,7 @@
           "#department-progress-pane": { table: "3", tableId: "departmentProgressTable", status: "In-Progress" },
           "#department-reopen-pane": { table: "3", tableId: "departmentReopenTable", status: "Re-Open" },
           "#department-resolved-pane": { table: "3", tableId: "departmentResolvedTable", status: "Resolved" },
-          "#department-closed-pane": { table: "3", tableId: "departmentClosedTable", status: "Closed" },    
+          "#department-closed-pane": { table: "3", tableId: "departmentClosedTable", status: "Closed" },
           // department end 
 
           "#edm-all-pane": { table: "4", tableId: "edmAllTable" },
