@@ -331,6 +331,7 @@
             </div>
           </div>
         </div>
+        <!-- Citizen Tab -->
         <div class="tab-pane fade" id="citizen-tab-pane" role="tabpanel" aria-labelledby="citizen-tab" tabindex="0">
           <!-- Stats Cards -->
           <div class="row g-4 mb-4">
@@ -359,39 +360,43 @@
               </div>
             </div>
           </div>
+
           <div class="card">
             <div class="card-body">
-              <ul class="nav nav-tabs mb-2" id="myTab1" role="tablist">
+              <!-- Inner Tabs -->
+              <ul class="nav nav-tabs mb-2" id="citizenInnerTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="citizen-tab" data-bs-toggle="tab"
-                    data-bs-target="#citizen-tab-pane1" type="button" role="tab" aria-controls="citizen-tab-pane1"
+                  <button class="nav-link active" id="citizen-all-tab" data-bs-toggle="tab"
+                    data-bs-target="#citizen-all-pane" type="button" role="tab" aria-controls="citizen-all-pane"
                     aria-selected="true">All</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="operator-tab" data-bs-toggle="tab" data-bs-target="#operator-tab-pane1"
-                    type="button" role="tab" aria-controls="operator-tab-pane1" aria-selected="false">In
-                    Progress</button>
+                  <button class="nav-link" id="citizen-progress-tab" data-bs-toggle="tab"
+                    data-bs-target="#citizen-progress-pane" type="button" role="tab"
+                    aria-controls="citizen-progress-pane" aria-selected="false">In Progress</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="department-tab" data-bs-toggle="tab"
-                    data-bs-target="#department-tab-pane1" type="button" role="tab" aria-controls="department-tab-pane1"
+                  <button class="nav-link" id="citizen-reopen-tab" data-bs-toggle="tab"
+                    data-bs-target="#citizen-reopen-pane" type="button" role="tab" aria-controls="citizen-reopen-pane"
                     aria-selected="false">Re-open</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="edm-tab" data-bs-toggle="tab" data-bs-target="#edm-tab-pane3"
-                    type="button" role="tab" aria-controls="edm-tab-pane" aria-selected="false">Resolved</button>
+                  <button class="nav-link" id="citizen-resolved-tab" data-bs-toggle="tab"
+                    data-bs-target="#citizen-resolved-pane" type="button" role="tab"
+                    aria-controls="citizen-resolved-pane" aria-selected="false">Resolved</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="cm-helpline-tab" data-bs-toggle="tab"
-                    data-bs-target="#cm-helpline-tab-pane4" type="button" role="tab"
-                    aria-controls="cm-helpline-tab-pane" aria-selected="false">Closed</button>
+                  <button class="nav-link" id="citizen-closed-tab" data-bs-toggle="tab"
+                    data-bs-target="#citizen-closed-pane" type="button" role="tab" aria-controls="citizen-closed-pane"
+                    aria-selected="false">Closed</button>
                 </li>
               </ul>
-              <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="citizen-tab-pane1" role="tabpanel"
-                  aria-labelledby="citizen-tab" tabindex="0">
 
-                  <table id="citizenTable" class="table table-bordered table-striped align-middle">
+              <div class="tab-content" id="citizenInnerTabContent">
+                <!-- All -->
+                <div class="tab-pane fade show active" id="citizen-all-pane" role="tabpanel"
+                  aria-labelledby="citizen-all-tab">
+                  <table id="citizenAllTable" class="table table-bordered table-striped align-middle">
                     <thead>
                       <tr>
                         <th>Ticket ID</th>
@@ -404,200 +409,104 @@
                     </thead>
                     <tbody>
                       <tr>
-                        <td colspan="7" class="text-center text-muted">Loading...</td>
+                        <td colspan="6" class="text-center text-muted">Loading...</td>
                       </tr>
                     </tbody>
                   </table>
-                  <div class="card-footer d-flex justify-content-end">
+                </div>
 
-                    <nav>
-                      <ul class="pagination pagination-sm mb-0">
-                        <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                      </ul>
-                    </nav>
-                  </div>
+                <!-- In Progress -->
+                <div class="tab-pane fade" id="citizen-progress-pane" role="tabpanel"
+                  aria-labelledby="citizen-progress-tab">
+                  <table id="citizenProgressTable" class="table table-bordered table-striped align-middle">
+                    <thead>
+                      <tr>
+                        <th>Ticket ID</th>
+                        <th>Created On</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="6" class="text-center text-muted">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
-                <div class="tab-pane fade" id="operator-tab-pane1" role="tabpanel" aria-labelledby="operator-tab"
-                  tabindex="0">
 
-                  <table class="table table-bordered table-hover ticket-table align-middle">
+                <!-- Re-open -->
+                <div class="tab-pane fade" id="citizen-reopen-pane" role="tabpanel"
+                  aria-labelledby="citizen-reopen-tab">
+                  <table id="citizenReopenTable" class="table table-bordered table-striped align-middle">
                     <thead>
                       <tr>
                         <th>Ticket ID</th>
-                        <th>Issue Type</th>
+                        <th>Created On</th>
                         <th>Category</th>
                         <th>Sub Category</th>
-                        <th>Priority</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td>#TCK1234</td>
-                        <td>CIT/2025-09-18/00090</td>
-                        <td>eSevai officials related</td>
-                        <td>eDM</td>
-                        <td><span class="badge bg-danger">Critical</span></td>
-                        <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                        <td>
-                          <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                            class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>#TCK1234</td>
-                        <td>CIT/2025-09-18/00090</td>
-                        <td>eSevai officials related</td>
-                        <td>eDM</td>
-                        <td><span class="badge bg-danger">Critical</span></td>
-                        <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                        <td>
-                          <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                            class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                        </td>
+                        <td colspan="6" class="text-center text-muted">Loading...</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-                <div class="tab-pane fade" id="department-tab-pane1" role="tabpanel" aria-labelledby="department-tab"
-                  tabindex="0">
 
-                  <table class="table table-bordered table-hover ticket-table align-middle">
+                <!-- Resolved -->
+                <div class="tab-pane fade" id="citizen-resolved-pane" role="tabpanel"
+                  aria-labelledby="citizen-resolved-tab">
+                  <table id="citizenResolvedTable" class="table table-bordered table-striped align-middle">
                     <thead>
                       <tr>
                         <th>Ticket ID</th>
-                        <th>Issue Type</th>
+                        <th>Created On</th>
                         <th>Category</th>
                         <th>Sub Category</th>
-                        <th>Priority</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td>#TCK1234</td>
-                        <td>CIT/2025-09-18/00090</td>
-                        <td>eSevai officials related</td>
-                        <td>eDM</td>
-                        <td><span class="badge bg-danger">Critical</span></td>
-                        <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                        <td>
-                          <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                            class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>#TCK1234</td>
-                        <td>CIT/2025-09-18/00090</td>
-                        <td>eSevai officials related</td>
-                        <td>eDM</td>
-                        <td><span class="badge bg-danger">Critical</span></td>
-                        <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                        <td>
-                          <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                            class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                        </td>
+                        <td colspan="6" class="text-center text-muted">Loading...</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-                <!-- <div class="tab-pane fade" id="cm-helpline-tab-pane1" role="tabpanel" aria-labelledby="cm-helpline-tab" tabindex="0">...4</div>
-                    <div class="tab-pane fade" id="cm-helpline-tab-pane2" role="tabpanel" aria-labelledby="cm-helpline-tab" tabindex="0">...5</div> -->
-                <div class="tab-pane fade" id="edm-tab-pane3" role="tabpanel" aria-labelledby="edm-tab" tabindex="0">
-                  <table class="table table-bordered table-hover ticket-table align-middle">
+
+                <!-- Closed -->
+                <div class="tab-pane fade" id="citizen-closed-pane" role="tabpanel"
+                  aria-labelledby="citizen-closed-tab">
+                  <table id="citizenClosedTable" class="table table-bordered table-striped align-middle">
                     <thead>
                       <tr>
                         <th>Ticket ID</th>
-                        <th>Issue Type</th>
+                        <th>Created On</th>
                         <th>Category</th>
                         <th>Sub Category</th>
-                        <th>Priority</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td>#TCK1234</td>
-                        <td>CIT/2025-09-18/00090</td>
-                        <td>eSevai officials related</td>
-                        <td>eDM</td>
-                        <td><span class="badge bg-danger">Critical</span></td>
-                        <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                        <td>
-                          <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                            class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>#TCK1234</td>
-                        <td>CIT/2025-09-18/00090</td>
-                        <td>eSevai officials related</td>
-                        <td>eDM</td>
-                        <td><span class="badge bg-danger">Critical</span></td>
-                        <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                        <td>
-                          <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                            class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div class="tab-pane fade" id="cm-helpline-tab-pane4" role="tabpanel" aria-labelledby="cm-helpline-tab"
-                  tabindex="0">
-                  <table class="table table-bordered table-hover ticket-table align-middle">
-                    <thead>
-                      <tr>
-                        <th>Ticket ID</th>
-                        <th>Issue Type</th>
-                        <th>Category</th>
-                        <th>Sub Category</th>
-                        <th>Priority</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>#TCK1234</td>
-                        <td>CIT/2025-09-18/00090</td>
-                        <td>eSevai officials related</td>
-                        <td>eDM</td>
-                        <td><span class="badge bg-danger">Critical</span></td>
-                        <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                        <td>
-                          <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                            class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>#TCK1234</td>
-                        <td>CIT/2025-09-18/00090</td>
-                        <td>eSevai officials related</td>
-                        <td>eDM</td>
-                        <td><span class="badge bg-danger">Critical</span></td>
-                        <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                        <td>
-                          <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-                            class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                        </td>
+                        <td colspan="6" class="text-center text-muted">Loading...</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
-            <!-- Bulk Actions -->
-
           </div>
         </div>
+
         <div class="tab-pane fade" id="operator-tab-pane" role="tabpanel" aria-labelledby="operator-tab" tabindex="0">
 
           <div class="row g-4 mb-4">
@@ -1106,251 +1015,12 @@
     setInterval(updateDateTime, 1000);
     updateDateTime();
   </script>
-  <!-- <script>
-    // Status Chart
-    var options1 = {
-      chart: { type: 'pie', height: 250 },
-      series: [45, 30, 60, 15],
-      labels: ['Pending', 'In-Progress', 'Resolved', 'Escalated'],
-      colors: ['#ffc107', '#0dcaf0', '#198754', '#dc3545']
-    };
-    var chart1 = new ApexCharts(document.querySelector("#statusChart"), options1);
-    chart1.render();
-
-    // Priority Chart
-    var options2 = {
-      chart: { type: 'donut', height: 250 },
-      series: [20, 40, 30, 10],
-      labels: ['Low', 'Medium', 'High', 'Critical'],
-      colors: ['#0dcaf0', '#6f42c1', '#ffc107', '#dc3545']
-    };
-    var chart2 = new ApexCharts(document.querySelector("#priorityChart"), options2);
-    chart2.render();
-  </script> -->
 
   <!-- <script>
     $(document).ready(function () {
       const userId = localStorage.getItem("helpdesk_user_id") || 0;
 
-      function fetchTickets() {
-        const payload = {
-          action: "function_call",
-          function_name: "fn_dashboard_helpdesk_admin_counts",
-          params: { p_user_id: userId }
-        };
-
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: "POST",
-          data: { data: encryptData(payload) },
-          dataType: "json",
-          success: function (response) {
-            if (!response || !response.data) return;
-
-            let counts = {};
-            try {
-              const decrypted = decryptData(response.data);
-              const parsed = (typeof decrypted === "string") ? JSON.parse(decrypted) : decrypted;
-              if (parsed && parsed[0]?.fn_dashboard_helpdesk_admin_counts) {
-                counts = JSON.parse(parsed[0].fn_dashboard_helpdesk_admin_counts);
-              }
-            } catch (err) {
-              console.error("Failed to parse counts:", err);
-              return;
-            }
-
-            console.log("Fetched Counts:", counts);
-            console.log("Counts Structure:", JSON.stringify(counts, null, 2));
-
-            // 🔹 Helper: update ticket counts for each tab section
-            function updateStats(tabPrefix, data) {
-              $(`#${tabPrefix}totalTickets`).text(data.Total || 0);
-              $(`#${tabPrefix}pendingTickets`).text(data.Pending || 0);
-              $(`#${tabPrefix}resolvedTickets`).text(data.Resolved || 0);
-              $(`#${tabPrefix}reopenTickets`).text(data.ReOpened || 0);
-            }
-
-            // 🔹 Update counts for all dashboard sections
-            updateStats('', counts.All || {}); // "All" tab
-            updateStats('EDM', counts.EDM || {});
-            updateStats('Citizen', counts.Citizen || {});
-            updateStats('Operator', counts.Operator || {});
-            updateStats('Department', counts.Department || {});
-            updateStats('CM_Helpline', counts.CM_Helpline || {});
-
-            // 🔹 Table mapping (existing logic below remains same)
-            const tableMap = {
-              "All": $("#all-tab-pane tbody"),
-              "Pending": $("#citizen-tab-pane tbody"),
-              "ReOpened": $("#citizen-tab-pane1 tbody"),
-              "Resolved": $("#operator-tab-pane1 tbody"),
-              "Closed": $("#department-tab-pane1 tbody")
-            };
-
-            Object.keys(tableMap).forEach(statusKey => {
-              const tableBody = tableMap[statusKey];
-              if (!tableBody.length) return;
-              tableBody.empty();
-
-              const dataList = counts[statusKey]?.Tickets || counts[statusKey] || [];
-
-              if (!dataList.length) {
-                tableBody.append(`<tr><td colspan="7" class="text-center text-muted">No tickets found</td></tr>`);
-                return;
-              }
-
-              dataList.forEach(ticket => {
-                const row = `
-        <tr>
-          <td>${ticket.ticket_id || '-'}</td>
-          <td>${ticket.subject || '-'}</td>
-          <td>${ticket.category || '-'}</td>
-          <td>${ticket.assigned_to || '-'}</td>
-          <td><span class="badge bg-warning">${ticket.status || statusKey}</span></td>
-          <td>${ticket.priority || '-'}</td>
-          <td>
-            <button data-bs-toggle="modal" data-bs-target=".ticketModal"
-              class="btn btn-sm btn-outline-primary">
-              <i class="bi bi-eye"></i>
-            </button>
-          </td>
-        </tr>`;
-                tableBody.append(row);
-              });
-            });
-          },
-
-          error: function (err) {
-            console.error("Error fetching tickets:", err);
-          }
-        });
-      }
-
-
-      // 🔹 Optional: Refresh on tab click if needed
-      $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function () {
-        fetchTickets();
-      });
-
-
-      function fetchCitizenTickets(status = "All") {
-        const payload = {
-          action: "function_call",
-          function_name: "fn_helpdesk_admin_view_requests",
-          params: {
-            p_user_id: userId,
-            p_table: "1",   // Citizen table mapping (as you confirmed)
-            p_status: status === "All" ? null : status // pass null for all
-          }
-        };
-
-        // Use your global loadDataToTable
-        loadDataToTable({
-          tableId: "citizenTable", // ensure your <table id="citizenTable"> exists
-          apiUrl: `${BASE_API_URL}/commonfunction`,
-          httpMethod: 'POST',
-          payload: encryptData(payload), // your existing encryption
-          rowBuilder: function (item) {
-            // Each item is expected to contain fn_helpdesk_admin_view_requests JSON string
-            let parsed = [];
-            try {
-              if (item.fn_helpdesk_admin_view_requests) {
-                parsed = JSON.parse(item.fn_helpdesk_admin_view_requests);
-              }
-            } catch (e) {
-              console.error("Error parsing fn_helpdesk_admin_view_requests:", e);
-              parsed = [];
-            }
-
-            if (!Array.isArray(parsed) || parsed.length === 0) {
-              // Return empty string so loadDataToTable will show "No Data Found"
-              return "";
-            }
-
-            // Build rows
-            return parsed.map((ticket, idx) => {
-              // safe access with fallbacks
-              const ticketId = ticket.ticket_id || ticket.TicketId || "-";
-              const issueType = ticket.subject || ticket.issue_type || "-";
-              const category = ticket.category || "-";
-              const subcat = ticket.subcategory || ticket.sub_category || "-";
-              const priority = ticket.priority || "-";
-              const statusText = ticket.status || ticket.Status || "-";
-              const createdOn = ticket.created_on || ticket.CreatedDate || ticket.created_at || "-";
-
-              // create view button (use data-ticketid only; fetch details via API when clicked)
-              const viewBtn = `<button class="btn btn-sm btn-outline-primary viewTicketBtn" type="button" data-ticketid="${escapeHtml(ticketId)}"><i class="bi bi-eye"></i></button>`;
-
-              return `
-          <tr data-ticketid="${escapeHtml(ticketId)}" data-status="${escapeHtml(statusText)}">
-            <td>${escapeHtml(ticketId)}</td>
-            <td>${escapeHtml(issueType)}</td>
-            <td>${escapeHtml(category)}</td>
-            <td>${escapeHtml(subcat)}</td>
-            <td><span class="badge ${getStatusBadgeClass(statusText)}">${escapeHtml(priority)}</span></td>
-            <td><span class="badge ${getStatusBadgeClass(statusText)} status-badge">${escapeHtml(statusText)}</span></td>
-            <td>${viewBtn}</td>
-          </tr>
-        `;
-            }).join("");
-          },
-          onTableInit: function (dtRef) {
-            // store the datatable reference if you need it
-            window.citizenTableRef = dtRef;
-          }
-        });
-
-        // small helpers used in the builder (ensure these exist in your scope)
-        function escapeHtml(str) {
-          if (str === null || str === undefined) return '';
-          return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-        }
-
-        // Reuse getStatusBadgeClass if already declared in your script; if not, include it:
-        function getStatusBadgeClass(status) {
-          switch ((status || '').toString()) {
-            case "In-Progress": return "bg-warning text-dark";
-            case "Returned": return "bg-danger";
-            case "Resolved": return "bg-success";
-            case "Re-Opened": return "bg-primary";
-            case "Closed": return "bg-secondary";
-            default: return "bg-info text-dark";
-          }
-        }
-      }
-
-      // =====================
-      // 🔹 Initial Page Load
-      // =====================
-      fetchTickets(); // Counts
-      fetchCitizenTickets(); // Citizen tab table
-
-      // 🔹 Optional: Refresh on tab switch
-      $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
-        const targetTab = $(e.target).attr('data-bs-target');
-
-        if (targetTab === '#citizen-tab-pane') {
-          fetchCitizenTickets();
-        }
-      });
-
-
-
-    });
-  </script> -->
-
-  <script>
-    $(document).ready(function () {
-      const userId = localStorage.getItem("helpdesk_user_id") || 0;
-
-      // ============================
-      // 🔹 Keep your existing counts function as-is
-      // ============================
+      // ============================ counts function ============================
       function fetchTickets() {
         const payload = {
           action: "function_call",
@@ -1368,8 +1038,7 @@
             let counts = {};
             try {
               const decrypted = decryptData(response.data);
-              const parsed =
-                typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
+              const parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
               if (parsed && parsed[0]?.fn_dashboard_helpdesk_admin_counts) {
                 counts = JSON.parse(parsed[0].fn_dashboard_helpdesk_admin_counts);
               }
@@ -1398,11 +1067,8 @@
         });
       }
 
-      // ======================================
-      // 🔹 Universal loader for each tab table
-      // ======================================
+      // ============================ table loader ============================
       function loadRequestsData(p_table, tableId, status = "All") {
-        debugger;
         const payload = {
           action: "function_call",
           function_name: "fn_helpdesk_admin_view_requests",
@@ -1454,7 +1120,7 @@
                 <td>${ticket.Subcategory || "-"}</td>
                 <td><span class="badge bg-info">${ticket.Status || "-"}</span></td>
                 <td>
-                  <button class="btn btn-sm btn-outline-primary viewTicketBtn" data-ticketid="${ticket.ticket_id}">
+                  <button class="btn btn-sm btn-outline-primary viewTicketBtn" data-ticketid="${ticket.TicketId}">
                     <i class="bi bi-eye"></i>
                   </button>
                 </td>
@@ -1462,7 +1128,6 @@
               $tbody.append(row);
             });
 
-            // ✅ Initialize DataTable (destroy first if already exists)
             if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
               $(`#${tableId}`).DataTable().destroy();
             }
@@ -1479,9 +1144,7 @@
         });
       }
 
-      // ======================================
-      // 🔹 View Ticket Button Click Handler
-      // ======================================
+      // ============================ view ticket modal ============================
       $(document).on("click", ".viewTicketBtn", function () {
         const ticketId = $(this).data("ticketid");
         if (!ticketId) return;
@@ -1517,7 +1180,6 @@
               return;
             }
 
-            // Populate modal
             const t = details[0] || {};
             $("#ticketModalBody").html(`
             <p><strong>Ticket ID:</strong> ${t.TicketId || "-"}</p>
@@ -1535,31 +1197,241 @@
         });
       });
 
-      // ======================================
-      // 🔹 Tab switch logic: call both APIs
-      // ======================================
+      // ============================ tab config (updated IDs) ============================
       const tabMap = {
-        "#citizen-tab-pane": { table: "1", tableId: "citizenTable" },
-        "#operator-tab-pane": { table: "2", tableId: "operatorTable" },
+        // Citizen main tab and its inner sub-tabs
+        "#citizen-all-pane": { table: "1", tableId: "citizenAllTable" },
+        "#citizen-progress-pane": { table: "1", tableId: "citizenProgressTable", status: "In-Progress" },
+        "#citizen-reopen-pane": { table: "1", tableId: "citizenReopenTable", status: "Re-Open" },
+        "#citizen-resolved-pane": { table: "1", tableId: "citizenResolvedTable", status: "Resolved" },
+        "#citizen-closed-pane": { table: "1", tableId: "citizenClosedTable", status: "Closed" },
+
+        // Other outer tabs
+        "#operator-tab-pane1": { table: "2", tableId: "operatorTable" },
         "#department-tab-pane": { table: "3", tableId: "departmentTable" },
         "#edm-tab-pane": { table: "4", tableId: "edmTable" },
         "#cmhelpline-tab-pane": { table: "5", tableId: "cmHelplineTable" },
       };
 
-      $("button[data-bs-toggle='tab']").on("shown.bs.tab", function (e) {
-        const targetTab = $(e.target).attr("data-bs-target");
+      // ============================ tab shown handler ============================
+      $("button[data-bs-toggle='tab'], a[data-bs-toggle='tab']").on("shown.bs.tab", function (e) {
+        let targetTab = $(e.target).attr("data-bs-target") || $(e.target).attr("href");
+        if (!targetTab.startsWith("#")) targetTab = "#" + targetTab.replace(/^#?/, "");
+
         const tabConfig = tabMap[targetTab];
         if (tabConfig) {
-          fetchTickets(); // counts
-          loadRequestsData(tabConfig.table, tabConfig.tableId); // data
+          fetchTickets();
+          loadRequestsData(tabConfig.table, tabConfig.tableId, tabConfig.status || "All");
         }
       });
 
-      // ======================================
-      // 🔹 Initial load
-      // ======================================
+      // ============================ initial load ============================
       fetchTickets();
-      loadRequestsData("1", "citizenTable");
+      loadRequestsData("1", "citizenAllTable");
+    });
+  </script> -->
+
+  <script>
+    $(document).ready(function () {
+      const userId = localStorage.getItem("helpdesk_user_id") || 0;
+      const loadedTabs = {}; // Cache: prevent redundant API calls
+
+      // ============================ counts function ============================
+      function fetchTickets() {
+        const payload = {
+          action: "function_call",
+          function_name: "fn_dashboard_helpdesk_admin_counts",
+          params: { p_user_id: userId },
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: "json",
+          success: function (response) {
+            if (!response?.data) return;
+
+            try {
+              const decrypted = decryptData(response.data);
+              const parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
+              const counts = JSON.parse(parsed[0]?.fn_dashboard_helpdesk_admin_counts || "{}");
+
+              const updateStats = (prefix, data) => {
+                $(`#${prefix}totalTickets`).text(data.Total || 0);
+                $(`#${prefix}pendingTickets`).text(data.Pending || 0);
+                $(`#${prefix}resolvedTickets`).text(data.Resolved || 0);
+                $(`#${prefix}reopenTickets`).text(data.ReOpened || 0);
+              };
+
+              updateStats("", counts.All || {});
+              updateStats("EDM", counts.EDM || {});
+              updateStats("Citizen", counts.Citizen || {});
+              updateStats("Operator", counts.Operator || {});
+              updateStats("Department", counts.Department || {});
+              updateStats("CM_Helpline", counts.CM_Helpline || {});
+            } catch (err) {
+              console.error("Error parsing counts:", err);
+            }
+          },
+          error: (err) => console.error("Error fetching tickets:", err),
+        });
+      }
+
+      // ============================ table loader ============================
+      function loadRequestsData(p_table, tableId, status = "All", forceReload = false) {
+        // Skip API if data is already loaded and not forced
+        if (loadedTabs[tableId] && !forceReload) return;
+
+        const payload = {
+          action: "function_call",
+          function_name: "fn_helpdesk_admin_view_requests",
+          params: {
+            p_user_id: userId,
+            p_table,
+            p_status: status === "All" ? null : status,
+          },
+        };
+
+        const $table = $(`#${tableId}`);
+        const $tbody = $table.find("tbody");
+        $tbody.html(`<tr><td colspan="7" class="text-center text-muted">Loading...</td></tr>`);
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: "json",
+          success: function (response) {
+            $tbody.empty();
+
+            if (!response?.data) {
+              $tbody.html(`<tr><td colspan="7" class="text-center text-muted">No data found</td></tr>`);
+              return;
+            }
+
+            try {
+              const decrypted = decryptData(response.data);
+              const parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
+              const rows = JSON.parse(parsed[0]?.fn_helpdesk_admin_view_requests || "[]");
+
+              if (!rows.length) {
+                $tbody.html(`<tr><td colspan="7" class="text-center text-muted">No tickets found</td></tr>`);
+                return;
+              }
+
+              rows.forEach((ticket) => {
+                $tbody.append(`
+                <tr>
+                  <td>${ticket.TicketId || "-"}</td>
+                  <td>${ticket.CreatedDate || "-"}</td>
+                  <td>${ticket.Category || "-"}</td>
+                  <td>${ticket.Subcategory || "-"}</td>
+                  <td><span class="badge bg-info">${ticket.Status || "-"}</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary viewTicketBtn" data-ticketid="${ticket.TicketId}">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </td>
+                </tr>
+              `);
+              });
+
+              if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
+                $(`#${tableId}`).DataTable().destroy();
+              }
+              $(`#${tableId}`).DataTable({
+                responsive: true,
+                order: [[0, "desc"]],
+                pageLength: 10,
+              });
+
+              loadedTabs[tableId] = true; // Cache it
+            } catch (err) {
+              console.error("Parse error:", err);
+              $tbody.html(`<tr><td colspan="7" class="text-center text-danger">Data parsing failed</td></tr>`);
+            }
+          },
+          error: (err) => {
+            console.error("Error fetching request data:", err);
+            $tbody.html(`<tr><td colspan="7" class="text-center text-danger">Error loading data</td></tr>`);
+          },
+        });
+      }
+
+      // ============================ view ticket modal ============================
+      $(document).on("click", ".viewTicketBtn", function () {
+        const ticketId = $(this).data("ticketid");
+        if (!ticketId) return;
+
+        const payload = {
+          action: "function_call",
+          function_name: "fn_get_ticket_details",
+          params: { p_ticket_id: ticketId },
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: "json",
+          beforeSend: () => $("#ticketModalBody").html("<p class='text-center'>Loading details...</p>"),
+          success: function (response) {
+            if (!response?.data) {
+              $("#ticketModalBody").html("<p class='text-center text-danger'>No details found.</p>");
+              return;
+            }
+
+            try {
+              const decrypted = decryptData(response.data);
+              const parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
+              const details = JSON.parse(parsed[0]?.fn_get_ticket_details || "[]");
+              const t = details[0] || {};
+
+              $("#ticketModalBody").html(`
+              <p><strong>Ticket ID:</strong> ${t.TicketId || "-"}</p>
+              <p><strong>Subject:</strong> ${t.subject || "-"}</p>
+              <p><strong>Category:</strong> ${t.category || "-"}</p>
+              <p><strong>Status:</strong> ${t.status || "-"}</p>
+              <p><strong>Description:</strong> ${t.description || "-"}</p>
+            `);
+              $("#ticketModal").modal("show");
+            } catch (err) {
+              console.error("Error parsing ticket details:", err);
+              $("#ticketModalBody").html("<p class='text-center text-danger'>Error loading details.</p>");
+            }
+          },
+          error: () => $("#ticketModalBody").html("<p class='text-center text-danger'>Failed to load ticket details.</p>"),
+        });
+      });
+
+      // ============================ tab configuration ============================
+      const tabMap = {
+        "#citizen-all-pane": { table: "1", tableId: "citizenAllTable" },
+        "#citizen-progress-pane": { table: "1", tableId: "citizenProgressTable", status: "In-Progress" },
+        "#citizen-reopen-pane": { table: "1", tableId: "citizenReopenTable", status: "Re-Open" },
+        "#citizen-resolved-pane": { table: "1", tableId: "citizenResolvedTable", status: "Resolved" },
+        "#citizen-closed-pane": { table: "1", tableId: "citizenClosedTable", status: "Closed" },
+        "#operator-tab-pane1": { table: "2", tableId: "operatorTable" },
+        "#department-tab-pane": { table: "3", tableId: "departmentTable" },
+        "#edm-tab-pane": { table: "4", tableId: "edmTable" },
+        "#cmhelpline-tab-pane": { table: "5", tableId: "cmHelplineTable" },
+      };
+
+      // ============================ tab handler ============================
+      $("button[data-bs-toggle='tab'], a[data-bs-toggle='tab']").on("shown.bs.tab", function (e) {
+        let targetTab = $(e.target).attr("data-bs-target") || $(e.target).attr("href");
+        if (!targetTab.startsWith("#")) targetTab = "#" + targetTab.replace(/^#?/, "");
+
+        const config = tabMap[targetTab];
+        if (config) {
+          loadRequestsData(config.table, config.tableId, config.status || "All");
+        }
+      });
+
+      // ============================ initial load ============================
+      fetchTickets(); // Only once
+      loadRequestsData("1", "citizenAllTable"); // Default tab
     });
   </script>
 
