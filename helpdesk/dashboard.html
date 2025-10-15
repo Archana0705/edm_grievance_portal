@@ -223,7 +223,8 @@
       <span class="fw-bold ms-3 fs-5">Helpdesk Dashboard</span>
       <div class="ms-auto d-flex align-items-center gap-3">
         <span id="currentDateTime" class="me-3"></span>
-        <div class="dropdown">
+        <div id="globalProfileDropdown"></div>
+        <!-- <div class="dropdown">
           <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
             <i class="bi bi-person-circle fs-4"></i> <span class="d-none d-lg-inline fw-semibold">John</span>
           </button>
@@ -231,7 +232,7 @@
             <li><a class="dropdown-item" href="profile.html">Profile</a></li>
             <li><a class="dropdown-item" href="index.html">Logout</a></li>
           </ul>
-        </div>
+        </div> -->
       </div>
     </div>
   </nav>
@@ -338,25 +339,25 @@
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Total Tickets</h5>
-                <h3 id="CitizentotalTickets">0</h3>
+                <h3 class="text-primary" id="CitizentotalTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Pending</h5>
-                <h3 id="CitizenpendingTickets">0</h3>
+                <h3 class="text-warning" id="CitizenpendingTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Resolved</h5>
-                <h3 id="CitizenresolvedTickets">0</h3>
+                <h3 class="text-success" id="CitizenresolvedTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Re-open</h5>
-                <h3 id="CitizenreopenTickets">0</h3>
+                <h3 class="text-danger" id="CitizenreopenTickets">0</h3>
               </div>
             </div>
           </div>
@@ -514,45 +515,30 @@
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Total Tickets</h5>
-                <h3 id="OperatortotalTickets">0</h3>
+                <h3 class="text-primary" id="OperatortotalTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Pending</h5>
-                <h3 id="OperatorpendingTickets">0</h3>
+                <h3 class="text-warning" id="OperatorpendingTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Resolved</h5>
-                <h3 id="OperatorresolvedTickets">0</h3>
+                <h3 class="text-success" id="OperatorresolvedTickets">0</h3>
               </div>
             </div>
             <div class="col-md-3">
               <div class="card text-center p-3 shadow">
                 <h5>Re-open</h5>
-                <h3 id="OperatorreopenTickets">0</h3>
+                <h3 class="text-danger" id="OperatorreopenTickets">0</h3>
               </div>
             </div>
           </div>
-          <!-- Charts -->
-          <!-- <div class="row g-4 mb-4">
-              <div class="col-md-6">
-                <div class="card p-3 shadow">
-                  <h5>Tickets by Status</h5>
-                  <div id="statusChart"></div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="card p-3 shadow">
-                  <h5>Tickets by Priority</h5>
-                  <div id="priorityChart"></div>
-                </div>
-              </div>
-              </div> -->
-          
-              <div class="card">
+
+          <div class="card">
             <div class="card-body">
               <!-- Inner Tabs -->
               <ul class="nav nav-tabs mb-2" id="esevaiInnerTab" role="tablist">
@@ -563,8 +549,8 @@
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="esevai-progress-tab" data-bs-toggle="tab"
-                    data-bs-target="#esevai-progress-pane" type="button" role="tab"
-                    aria-controls="esevai-progress-pane" aria-selected="false">In Progress</button>
+                    data-bs-target="#esevai-progress-pane" type="button" role="tab" aria-controls="esevai-progress-pane"
+                    aria-selected="false">In Progress</button>
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="esevai-reopen-tab" data-bs-toggle="tab"
@@ -573,8 +559,8 @@
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="esevai-resolved-tab" data-bs-toggle="tab"
-                    data-bs-target="#esevai-resolved-pane" type="button" role="tab"
-                    aria-controls="esevai-resolved-pane" aria-selected="false">Resolved</button>
+                    data-bs-target="#esevai-resolved-pane" type="button" role="tab" aria-controls="esevai-resolved-pane"
+                    aria-selected="false">Resolved</button>
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="esevai-closed-tab" data-bs-toggle="tab"
@@ -629,8 +615,7 @@
                 </div>
 
                 <!-- Re-open -->
-                <div class="tab-pane fade" id="esevai-reopen-pane" role="tabpanel"
-                  aria-labelledby="esevai-reopen-tab">
+                <div class="tab-pane fade" id="esevai-reopen-pane" role="tabpanel" aria-labelledby="esevai-reopen-tab">
                   <table id="esevaiReopenTable" class="table table-bordered table-striped align-middle">
                     <thead>
                       <tr>
@@ -673,11 +658,10 @@
                 </div>
 
                 <!-- Closed -->
-                <div class="tab-pane fade" id="esevai-closed-pane" role="tabpanel"
-                  aria-labelledby="esevai-closed-tab">
+                <div class="tab-pane fade" id="esevai-closed-pane" role="tabpanel" aria-labelledby="esevai-closed-tab">
                   <table id="esevaiClosedTable" class="table table-bordered table-striped align-middle">
                     <thead>
-                      <tr>  
+                      <tr>
                         <th>Ticket ID</th>
                         <th>Created On</th>
                         <th>Category</th>
@@ -727,7 +711,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="card">
             <div class="card-body">
               <!-- Inner Tabs -->
@@ -744,8 +728,8 @@
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="department-reopen-tab" data-bs-toggle="tab"
-                    data-bs-target="#department-reopen-pane" type="button" role="tab" aria-controls="department-reopen-pane"
-                    aria-selected="false">Re-open</button>
+                    data-bs-target="#department-reopen-pane" type="button" role="tab"
+                    aria-controls="department-reopen-pane" aria-selected="false">Re-open</button>
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="department-resolved-tab" data-bs-toggle="tab"
@@ -754,8 +738,8 @@
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="department-closed-tab" data-bs-toggle="tab"
-                    data-bs-target="#department-closed-pane" type="button" role="tab" aria-controls="department-closed-pane"
-                    aria-selected="false">Closed</button>
+                    data-bs-target="#department-closed-pane" type="button" role="tab"
+                    aria-controls="department-closed-pane" aria-selected="false">Closed</button>
                 </li>
               </ul>
 
@@ -853,7 +837,7 @@
                   aria-labelledby="department-closed-tab">
                   <table id="departmentClosedTable" class="table table-bordered table-striped align-middle">
                     <thead>
-                      <tr>  
+                      <tr>
                         <th>Ticket ID</th>
                         <th>Created On</th>
                         <th>Category</th>
@@ -1241,6 +1225,10 @@
             <p><strong>Assigned Agent:</strong> John Doe</p>
             <p><strong>SLA Due:</strong> 24 hrs</p>
           </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 394bfb9fe068ecfa600a0595ec074db881994940
         </div>
         <div class="modal-footer">
           <a href="ticket-view.html" class="btn btn-primary">
@@ -1324,438 +1312,6 @@
     updateDateTime();
   </script>
 
-  <!-- <script>
-    $(document).ready(function () {
-      const userId = localStorage.getItem("helpdesk_user_id") || 0;
-
-      // ============================ counts function ============================
-      function fetchTickets() {
-        const payload = {
-          action: "function_call",
-          function_name: "fn_dashboard_helpdesk_admin_counts",
-          params: { p_user_id: userId },
-        };
-
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: "POST",
-          data: { data: encryptData(payload) },
-          dataType: "json",
-          success: function (response) {
-            if (!response || !response.data) return;
-            let counts = {};
-            try {
-              const decrypted = decryptData(response.data);
-              const parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
-              if (parsed && parsed[0]?.fn_dashboard_helpdesk_admin_counts) {
-                counts = JSON.parse(parsed[0].fn_dashboard_helpdesk_admin_counts);
-              }
-            } catch (err) {
-              console.error("Failed to parse counts:", err);
-              return;
-            }
-
-            function updateStats(tabPrefix, data) {
-              $(`#${tabPrefix}totalTickets`).text(data.Total || 0);
-              $(`#${tabPrefix}pendingTickets`).text(data.Pending || 0);
-              $(`#${tabPrefix}resolvedTickets`).text(data.Resolved || 0);
-              $(`#${tabPrefix}reopenTickets`).text(data.ReOpened || 0);
-            }
-
-            updateStats("", counts.All || {});
-            updateStats("EDM", counts.EDM || {});
-            updateStats("Citizen", counts.Citizen || {});
-            updateStats("Operator", counts.Operator || {});
-            updateStats("Department", counts.Department || {});
-            updateStats("CM_Helpline", counts.CM_Helpline || {});
-          },
-          error: function (err) {
-            console.error("Error fetching tickets:", err);
-          },
-        });
-      }
-
-      // ============================ table loader ============================
-      function loadRequestsData(p_table, tableId, status = "All") {
-        const payload = {
-          action: "function_call",
-          function_name: "fn_helpdesk_admin_view_requests",
-          params: {
-            p_user_id: userId,
-            p_table: p_table,
-            p_status: status === "All" ? null : status,
-          },
-        };
-
-        const $table = $(`#${tableId}`);
-        const $tbody = $table.find("tbody");
-        $tbody.html(`<tr><td colspan="7" class="text-center text-muted">Loading...</td></tr>`);
-
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: "POST",
-          data: { data: encryptData(payload) },
-          dataType: "json",
-          success: function (response) {
-            $tbody.empty();
-            if (!response || !response.data) {
-              $tbody.html(`<tr><td colspan="7" class="text-center text-muted">No data found</td></tr>`);
-              return;
-            }
-
-            let decrypted, parsed, rows;
-            try {
-              decrypted = decryptData(response.data);
-              parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
-              rows = JSON.parse(parsed[0].fn_helpdesk_admin_view_requests);
-            } catch (err) {
-              console.error("Parse error:", err);
-              $tbody.html(`<tr><td colspan="7" class="text-center text-danger">Data parsing failed</td></tr>`);
-              return;
-            }
-
-            if (!rows || rows.length === 0) {
-              $tbody.html(`<tr><td colspan="7" class="text-center text-muted">No tickets found</td></tr>`);
-              return;
-            }
-
-            rows.forEach((ticket) => {
-              const row = `
-              <tr>
-                <td>${ticket.TicketId || "-"}</td>
-                <td>${ticket.CreatedDate || "-"}</td>
-                <td>${ticket.Category || "-"}</td>
-                <td>${ticket.Subcategory || "-"}</td>
-                <td><span class="badge bg-info">${ticket.Status || "-"}</span></td>
-                <td>
-                  <button class="btn btn-sm btn-outline-primary viewTicketBtn" data-ticketid="${ticket.TicketId}">
-                    <i class="bi bi-eye"></i>
-                  </button>
-                </td>
-              </tr>`;
-              $tbody.append(row);
-            });
-
-            if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
-              $(`#${tableId}`).DataTable().destroy();
-            }
-            $(`#${tableId}`).DataTable({
-              responsive: true,
-              order: [[0, "desc"]],
-              pageLength: 10,
-            });
-          },
-          error: function (err) {
-            console.error("Error fetching request data:", err);
-            $tbody.html(`<tr><td colspan="7" class="text-center text-danger">Error loading data</td></tr>`);
-          },
-        });
-      }
-
-      // ============================ view ticket modal ============================
-      $(document).on("click", ".viewTicketBtn", function () {
-        const ticketId = $(this).data("ticketid");
-        if (!ticketId) return;
-
-        const payload = {
-          action: "function_call",
-          function_name: "fn_get_ticket_details",
-          params: { p_ticket_id: ticketId },
-        };
-
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: "POST",
-          data: { data: encryptData(payload) },
-          dataType: "json",
-          beforeSend: function () {
-            $("#ticketModalBody").html("<p class='text-center'>Loading details...</p>");
-          },
-          success: function (response) {
-            if (!response || !response.data) {
-              $("#ticketModalBody").html("<p class='text-center text-danger'>No details found.</p>");
-              return;
-            }
-
-            let decrypted, parsed, details;
-            try {
-              decrypted = decryptData(response.data);
-              parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
-              details = JSON.parse(parsed[0].fn_helpdesk_admin_view_requests);
-            } catch (err) {
-              console.error("Error parsing ticket details:", err);
-              $("#ticketModalBody").html("<p class='text-center text-danger'>Error loading details.</p>");
-              return;
-            }
-
-            const t = details[0] || {};
-            $("#ticketModalBody").html(`
-            <p><strong>Ticket ID:</strong> ${t.TicketId || "-"}</p>
-            <p><strong>Subject:</strong> ${t.subject || "-"}</p>
-            <p><strong>Category:</strong> ${t.category || "-"}</p>
-            <p><strong>Status:</strong> ${t.status || "-"}</p>
-            <p><strong>Description:</strong> ${t.description || "-"}</p>
-          `);
-
-            $("#ticketModal").modal("show");
-          },
-          error: function () {
-            $("#ticketModalBody").html("<p class='text-center text-danger'>Failed to load ticket details.</p>");
-          },
-        });
-      });
-
-      // ============================ tab config (updated IDs) ============================
-      const tabMap = {
-        // Citizen main tab and its inner sub-tabs
-        "#citizen-all-pane": { table: "1", tableId: "citizenAllTable" },
-        "#citizen-progress-pane": { table: "1", tableId: "citizenProgressTable", status: "In-Progress" },
-        "#citizen-reopen-pane": { table: "1", tableId: "citizenReopenTable", status: "Re-Open" },
-        "#citizen-resolved-pane": { table: "1", tableId: "citizenResolvedTable", status: "Resolved" },
-        "#citizen-closed-pane": { table: "1", tableId: "citizenClosedTable", status: "Closed" },
-
-        // Other outer tabs
-        "#operator-tab-pane1": { table: "2", tableId: "operatorTable" },
-        "#department-tab-pane": { table: "3", tableId: "departmentTable" },
-        "#edm-tab-pane": { table: "4", tableId: "edmTable" },
-        "#cmhelpline-tab-pane": { table: "5", tableId: "cmHelplineTable" },
-      };
-
-      // ============================ tab shown handler ============================
-      $("button[data-bs-toggle='tab'], a[data-bs-toggle='tab']").on("shown.bs.tab", function (e) {
-        let targetTab = $(e.target).attr("data-bs-target") || $(e.target).attr("href");
-        if (!targetTab.startsWith("#")) targetTab = "#" + targetTab.replace(/^#?/, "");
-
-        const tabConfig = tabMap[targetTab];
-        if (tabConfig) {
-          fetchTickets();
-          loadRequestsData(tabConfig.table, tabConfig.tableId, tabConfig.status || "All");
-        }
-      });
-
-      // ============================ initial load ============================
-      fetchTickets();
-      loadRequestsData("1", "citizenAllTable");
-    });
-  </script> -->
-
-  <!-- <script>
-    $(document).ready(function () {
-      const userId = localStorage.getItem("helpdesk_user_id") || 0;
-      const loadedTabs = {}; // Cache: prevent redundant API calls
-
-      // ============================ counts function ============================
-      function fetchTickets() {
-        const payload = {
-          action: "function_call",
-          function_name: "fn_dashboard_helpdesk_admin_counts",
-          params: { p_user_id: userId },
-        };
-
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: "POST",
-          data: { data: encryptData(payload) },
-          dataType: "json",
-          success: function (response) {
-            if (!response?.data) return;
-
-            try {
-              const decrypted = decryptData(response.data);
-              const parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
-              const counts = JSON.parse(parsed[0]?.fn_dashboard_helpdesk_admin_counts || "{}");
-
-              const updateStats = (prefix, data) => {
-                $(`#${prefix}totalTickets`).text(data.Total || 0);
-                $(`#${prefix}pendingTickets`).text(data.Pending || 0);
-                $(`#${prefix}resolvedTickets`).text(data.Resolved || 0);
-                $(`#${prefix}reopenTickets`).text(data.ReOpened || 0);
-              };
-
-              updateStats("", counts.All || {});
-              updateStats("EDM", counts.EDM || {});
-              updateStats("Citizen", counts.Citizen || {});
-              updateStats("Operator", counts.Operator || {});
-              updateStats("Department", counts.Department || {});
-              updateStats("CM_Helpline", counts.CM_Helpline || {});
-            } catch (err) {
-              console.error("Error parsing counts:", err);
-            }
-          },
-          error: (err) => console.error("Error fetching tickets:", err),
-        });
-      }
-
-      // ============================ table loader ============================
-      function loadRequestsData(p_table, tableId, status = "All", forceReload = false) {
-        // Skip API if data is already loaded and not forced
-        if (loadedTabs[tableId] && !forceReload) return;
-
-        const payload = {
-          action: "function_call",
-          function_name: "fn_helpdesk_admin_view_requests",
-          params: {
-            p_user_id: userId,
-            p_table,
-            p_status: status === "All" ? null : status,
-          },
-        };
-
-        const $table = $(`#${tableId}`);
-        const $tbody = $table.find("tbody");
-        $tbody.html(`<tr><td colspan="7" class="text-center text-muted">Loading...</td></tr>`);
-
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: "POST",
-          data: { data: encryptData(payload) },
-          dataType: "json",
-          success: function (response) {
-            $tbody.empty();
-
-            if (!response?.data) {
-              $tbody.html(`<tr><td colspan="7" class="text-center text-muted">No data found</td></tr>`);
-              return;
-            }
-
-            try {
-              const decrypted = decryptData(response.data);
-              const parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
-              const rows = JSON.parse(parsed[0]?.fn_helpdesk_admin_view_requests || "[]");
-
-              if (!rows.length) {
-                $tbody.html(`<tr><td colspan="7" class="text-center text-muted">No tickets found</td></tr>`);
-                return;
-              }
-
-              rows.forEach((ticket) => {
-                $tbody.append(`
-                <tr>
-                  <td>${ticket.TicketId || "-"}</td>
-                  <td>${ticket.CreatedDate || "-"}</td>
-                  <td>${ticket.Category || "-"}</td>
-                  <td>${ticket.Subcategory || "-"}</td>
-                  <td><span class="badge bg-info">${ticket.Status || "-"}</span></td>
-                  <td>
-                    <button class="btn btn-sm btn-outline-primary viewTicketBtn" data-ticketid="${ticket.TicketId}">
-                      <i class="bi bi-eye"></i>
-                    </button>
-                  </td>
-                </tr>
-              `);
-              });
-
-              if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
-                $(`#${tableId}`).DataTable().destroy();
-              }
-              $(`#${tableId}`).DataTable({
-                responsive: true,
-                order: [[0, "desc"]],
-                pageLength: 10,
-              });
-
-              loadedTabs[tableId] = true; // Cache it
-            } catch (err) {
-              console.error("Parse error:", err);
-              $tbody.html(`<tr><td colspan="7" class="text-center text-danger">Data parsing failed</td></tr>`);
-            }
-          },
-          error: (err) => {
-            console.error("Error fetching request data:", err);
-            $tbody.html(`<tr><td colspan="7" class="text-center text-danger">Error loading data</td></tr>`);
-          },
-        });
-      }
-
-      // ============================ view ticket modal ============================
-      $(document).on("click", ".viewTicketBtn", function () {
-        const ticketId = $(this).data("ticketid");
-        if (!ticketId) return;
-
-        const payload = {
-          action: "function_call",
-          function_name: "fn_get_ticket_details",
-          params: { p_ticket_id: ticketId },
-        };
-
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: "POST",
-          data: { data: encryptData(payload) },
-          dataType: "json",
-          beforeSend: () => $("#ticketModalBody").html("<p class='text-center'>Loading details...</p>"),
-          success: function (response) {
-            if (!response?.data) {
-              $("#ticketModalBody").html("<p class='text-center text-danger'>No details found.</p>");
-              return;
-            }
-
-            try {
-              const decrypted = decryptData(response.data);
-              const parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
-              const details = JSON.parse(parsed[0]?.fn_get_ticket_details || "[]");
-              const t = details[0] || {};
-
-              $("#ticketModalBody").html(`
-              <p><strong>Ticket ID:</strong> ${t.TicketId || "-"}</p>
-              <p><strong>Subject:</strong> ${t.subject || "-"}</p>
-              <p><strong>Category:</strong> ${t.category || "-"}</p>
-              <p><strong>Status:</strong> ${t.status || "-"}</p>
-              <p><strong>Description:</strong> ${t.description || "-"}</p>
-            `);
-              $("#ticketModal").modal("show");
-            } catch (err) {
-              console.error("Error parsing ticket details:", err);
-              $("#ticketModalBody").html("<p class='text-center text-danger'>Error loading details.</p>");
-            }
-          },
-          error: () => $("#ticketModalBody").html("<p class='text-center text-danger'>Failed to load ticket details.</p>"),
-        });
-      });
-
-      // ============================ tab configuration ============================
-      const tabMap = {
-        // Outer tabs
-        "#citizen-tab": { defaultInner: "#citizen-all-pane" },
-        "#edm-tab": { defaultInner: "#edm-all-pane" },
-        "#operator-tab": { defaultInner: "#operator-all-pane" },
-        "#department-tab": { defaultInner: "#department-all-pane" },
-        "#cmhelpline-tab": { defaultInner: "#cmhelpline-all-pane" },
-
-        // Inner tabs
-        "#citizen-all-pane": { table: "1", tableId: "citizenAllTable" },
-        "#citizen-progress-pane": { table: "1", tableId: "citizenProgressTable", status: "In-Progress" },
-        "#citizen-reopen-pane": { table: "1", tableId: "citizenReopenTable", status: "Re-Open" },
-        "#citizen-resolved-pane": { table: "1", tableId: "citizenResolvedTable", status: "Resolved" },
-        "#citizen-closed-pane": { table: "1", tableId: "citizenClosedTable", status: "Closed" },
-
-        "#edm-all-pane": { table: "4", tableId: "edmAllTable" },
-        "#edm-progress-pane": { table: "4", tableId: "edmProgressTable", status: "In-Progress" },
-        "#edm-reopen-pane": { table: "4", tableId: "edmReopenTable", status: "Re-Open" },
-        "#edm-resolved-pane": { table: "4", tableId: "edmResolvedTable", status: "Resolved" },
-        "#edm-closed-pane": { table: "4", tableId: "edmClosedTable", status: "Closed" },
-
-        "#department-all-pane": { table: "3", tableId: "departmentTable" },
-        "#cmhelpline-all-pane": { table: "5", tableId: "cmHelplineTable" },
-      };
-
-      // ============================ tab handler ============================
-      $("button[data-bs-toggle='tab'], a[data-bs-toggle='tab']").on("shown.bs.tab", function (e) {
-        debugger;
-        let targetTab = $(e.target).attr("data-bs-target") || $(e.target).attr("href");
-        if (!targetTab.startsWith("#")) targetTab = "#" + targetTab.replace(/^#?/, "");
-
-        const config = tabMap[targetTab];
-        if (config) {
-          loadRequestsData(config.table, config.tableId, config.status || "All");
-        }
-      });
-
-      // ============================ initial load ============================
-      fetchTickets(); // Only once
-      loadRequestsData("1", "citizenAllTable"); // Default tab
-    });
-  </script> -->
 
   <script>
     $(document).ready(function () {
@@ -1803,86 +1359,6 @@
           error: (err) => console.error("Error fetching tickets:", err),
         });
       }
-
-      // ============================ table loader ============================
-      // function loadRequestsData(p_table, tableId, status = "All", forceReload = false) {
-      //   if (loadedTabs[tableId] && !forceReload) return;
-
-      //   const payload = {
-      //     action: "function_call",
-      //     function_name: "fn_helpdesk_admin_view_requests",
-      //     params: {
-      //       p_user_id: userId,
-      //       p_table,
-      //       p_status: status === "All" ? null : status,
-      //     },
-      //   };
-
-      //   const $table = $(`#${tableId}`);
-      //   const $tbody = $table.find("tbody");
-      //   $tbody.html(`<tr><td colspan="7" class="text-center text-muted">Loading...</td></tr>`);
-
-      //   $.ajax({
-      //     url: `${BASE_API_URL}/commonfunction`,
-      //     method: "POST",
-      //     data: { data: encryptData(payload) },
-      //     dataType: "json",
-      //     success: function (response) {
-      //       $tbody.empty();
-
-      //       if (!response?.data) {
-      //         $tbody.html(`<tr><td colspan="7" class="text-center text-muted">No data found</td></tr>`);
-      //         return;
-      //       }
-
-      //       try {
-      //         const decrypted = decryptData(response.data);
-      //         const parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
-      //         const rows = JSON.parse(parsed[0]?.fn_helpdesk_admin_view_requests || "[]");
-
-      //         if (!rows.length) {
-      //           $tbody.html(`<tr><td colspan="7" class="text-center text-muted">No tickets found</td></tr>`);
-      //           return;
-      //         }
-
-      //         rows.forEach((ticket) => {
-      //           $tbody.append(`
-      //         <tr>
-      //           <td>${ticket.TicketId || "-"}</td>
-      //           <td>${ticket.CreatedDate || "-"}</td>
-      //           <td>${ticket.Category || "-"}</td>
-      //           <td>${ticket.Subcategory || "-"}</td>
-      //           <td><span class="badge bg-info">${ticket.Status || "-"}</span></td>
-      //           <td>
-      //             <button class="btn btn-sm btn-outline-primary viewTicketBtn" data-ticketid="${ticket.TicketId}">
-      //               <i class="bi bi-eye"></i>
-      //             </button>
-      //           </td>
-      //         </tr>
-      //       `);
-      //         });
-
-      //         if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
-      //           $(`#${tableId}`).DataTable().destroy();
-      //         }
-      //         $(`#${tableId}`).DataTable({
-      //           responsive: true,
-      //           order: [[0, "desc"]],
-      //           pageLength: 10,
-      //         });
-
-      //         loadedTabs[tableId] = true;
-      //       } catch (err) {
-      //         console.error("Parse error:", err);
-      //         $tbody.html(`<tr><td colspan="7" class="text-center text-danger">Data parsing failed</td></tr>`);
-      //       }
-      //     },
-      //     error: (err) => {
-      //       console.error("Error fetching request data:", err);
-      //       $tbody.html(`<tr><td colspan="7" class="text-center text-danger">Error loading data</td></tr>`);
-      //     },
-      //   });
-      // }
 
       // ============================ view ticket modal ============================
       // $(document).on("click", ".viewTicketBtn", function () {
@@ -2026,61 +1502,6 @@
 });
 
 
-      // ============================ tab configuration ============================
-      // const tabMap = {
-      //   // Outer tabs with default inner
-      //   "#citizen-tab": { defaultInner: "#citizen-all-pane" },
-      //   "#edm-tab": { defaultInner: "#edm-all-pane" },
-      //   "#operator-tab": { defaultInner: "#operator-all-pane" },
-      //   "#department-tab": { defaultInner: "#department-all-pane" },
-      //   "#cmhelpline-tab": { defaultInner: "#cmhelpline-all-pane" },
-
-      //   // Inner tabs
-      //   "#citizen-all-pane": { table: "1", tableId: "citizenAllTable" },
-      //   "#citizen-progress-pane": { table: "1", tableId: "citizenProgressTable", status: "In-Progress" },
-      //   "#citizen-reopen-pane": { table: "1", tableId: "citizenReopenTable", status: "Re-Open" },
-      //   "#citizen-resolved-pane": { table: "1", tableId: "citizenResolvedTable", status: "Resolved" },
-      //   "#citizen-closed-pane": { table: "1", tableId: "citizenClosedTable", status: "Closed" },
-
-      //   "#edm-all-pane": { table: "4", tableId: "edmAllTable" },
-      //   "#edm-progress-pane": { table: "4", tableId: "edmProgressTable", status: "In-Progress" },
-      //   "#edm-reopen-pane": { table: "4", tableId: "edmReopenTable", status: "Re-Open" },
-      //   "#edm-resolved-pane": { table: "4", tableId: "edmResolvedTable", status: "Resolved" },
-      //   "#edm-closed-pane": { table: "4", tableId: "edmClosedTable", status: "Closed" },
-
-      //   "#department-all-pane": { table: "3", tableId: "departmentTable" },
-      //   "#cmhelpline-all-pane": { table: "5", tableId: "cmHelplineTable" },
-      // };
-
-      // // ============================ tab handler ============================
-      // $("button[data-bs-toggle='tab'], a[data-bs-toggle='tab']").on("shown.bs.tab", function (e) {
-      //   debugger;
-      //   let targetTab = $(e.target).attr("data-bs-target") || $(e.target).attr("href");
-      //   if (!targetTab.startsWith("#")) targetTab = "#" + targetTab.replace(/^#?/, "");
-
-      //   const config = tabMap[targetTab];
-      //   if (!config) return;
-
-      //   // If outer tab, load default inner tab
-      //   if (config.defaultInner) {
-      //     const inner = tabMap[config.defaultInner];
-      //     if (inner) loadRequestsData(inner.table, inner.tableId, inner.status || "All");
-      //   }
-      //   // Inner tab clicked
-      //   else if (config.table && config.tableId) {
-      //     loadRequestsData(config.table, config.tableId, config.status || "All");
-      //   }
-      // });
-
-      // ============================ initial load ============================
-      // fetchTickets();
-      // // Load default outer tab's inner tab (Citizen)
-      // const defaultOuter = "#citizen-tab";
-      // const defaultInner = tabMap[defaultOuter].defaultInner;
-      // const defaultConfig = tabMap[defaultInner];
-      // loadRequestsData(defaultConfig.table, defaultConfig.tableId, defaultConfig.status || "All");
-
-
       $(document).ready(function () {
         const userId = localStorage.getItem("helpdesk_user_id") || 0;
         const loadedTabs = {};
@@ -2163,7 +1584,7 @@
           "#department-progress-pane": { table: "3", tableId: "departmentProgressTable", status: "In-Progress" },
           "#department-reopen-pane": { table: "3", tableId: "departmentReopenTable", status: "Re-Open" },
           "#department-resolved-pane": { table: "3", tableId: "departmentResolvedTable", status: "Resolved" },
-          "#department-closed-pane": { table: "3", tableId: "departmentClosedTable", status: "Closed" },    
+          "#department-closed-pane": { table: "3", tableId: "departmentClosedTable", status: "Closed" },
           // department end 
 
           "#edm-all-pane": { table: "4", tableId: "edmAllTable" },
