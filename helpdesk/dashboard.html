@@ -1201,7 +1201,7 @@
   <footer>
     &copy; 2025 My Dashboard. All rights reserved.
   </footer>
-  <div class="modal fade ticketModal" id="" tabindex="-1">
+  <!-- <div class="modal fade ticketModal" id="" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
@@ -1210,7 +1210,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <!-- User Info -->
           <h6>User Information</h6>
           <div class="ticket-info mb-3">
             <p><strong>Name:</strong> Rajesh Kumar</p>
@@ -1218,7 +1217,6 @@
             <p><strong>Contact:</strong> +91 9876543210</p>
             <p><strong>District:</strong> Chennai</p>
           </div>
-          <!-- Ticket Info -->
           <h6>Ticket Information</h6>
           <div class="ticket-info mb-3">
             <p><strong>Description:</strong> Unable to login to eSevai portal since yesterday. Getting error “Invalid
@@ -1227,10 +1225,8 @@
             <p><strong>Assigned Agent:</strong> John Doe</p>
             <p><strong>SLA Due:</strong> 24 hrs</p>
           </div>
-
         </div>
         <div class="modal-footer">
-          <!-- <button class="btn btn-success">Save Changes</button> -->
           <a href="ticket-view.html" class="btn btn-primary">
             <i class="bi bi-box-arrow-up-right"></i> View Full Ticket
           </a>
@@ -1238,7 +1234,32 @@
         </div>
       </div>
     </div>
+  </div> -->
+
+  <div class="modal fade" id="ticketModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ticketModalTitle">Ticket Details</h5>
+          <span class="badge ms-2" id="ticketStatus"></span>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body" id="ticketModalBody">
+          <p class="text-center">Loading...</p>
+        </div>
+
+        <div class="modal-footer">
+          <a href="ticket-view.html" id="viewFullTicket" class="btn btn-primary" target="_blank">
+            <i class="bi bi-box-arrow-up-right"></i> View Full Ticket
+          </a>
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
   </div>
+
+
   <!-- Bootstrap JS -->
   <script src="../assets/js/jquery-3.7.1.min.js"></script>
   <script src="../assets/js/global.js"></script>
@@ -1336,6 +1357,51 @@
       }
 
       // ============================ view ticket modal ============================
+      // $(document).on("click", ".viewTicketBtn", function () {
+      //   const ticketId = $(this).data("ticketid");
+      //   if (!ticketId) return;
+
+      //   const payload = {
+      //     action: "function_call",
+      //     function_name: "fn_get_ticket_details",
+      //     params: { p_ticket_id: ticketId },
+      //   };
+
+      //   $.ajax({
+      //     url: `${BASE_API_URL}/commonfunction`,
+      //     method: "POST",
+      //     data: { data: encryptData(payload) },
+      //     dataType: "json",
+      //     beforeSend: () => $("#ticketModalBody").html("<p class='text-center'>Loading details...</p>"),
+      //     success: function (response) {
+      //       if (!response?.data) {
+      //         $("#ticketModalBody").html("<p class='text-center text-danger'>No details found.</p>");
+      //         return;
+      //       }
+
+      //       try {
+      //         const decrypted = decryptData(response.data);
+      //         const parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
+      //         const details = JSON.parse(parsed[0]?.fn_get_ticket_details || "[]");
+      //         const t = details[0] || {};
+
+      //         $("#ticketModalBody").html(`
+      //       <p><strong>Ticket ID:</strong> ${t.TicketId || "-"}</p>
+      //       <p><strong>Subject:</strong> ${t.subject || "-"}</p>
+      //       <p><strong>Category:</strong> ${t.category || "-"}</p>
+      //       <p><strong>Status:</strong> ${t.status || "-"}</p>
+      //       <p><strong>Description:</strong> ${t.description || "-"}</p>
+      //     `);
+      //         $("#ticketModal").modal("show");
+      //       } catch (err) {
+      //         console.error("Error parsing ticket details:", err);
+      //         $("#ticketModalBody").html("<p class='text-center text-danger'>Error loading details.</p>");
+      //       }
+      //     },
+      //     error: () => $("#ticketModalBody").html("<p class='text-center text-danger'>Failed to load ticket details.</p>"),
+      //   });
+      // });
+
       $(document).on("click", ".viewTicketBtn", function () {
         const ticketId = $(this).data("ticketid");
         if (!ticketId) return;
@@ -1346,32 +1412,81 @@
           params: { p_ticket_id: ticketId },
         };
 
+        $("#ticketModalBody").html("<p class='text-center'>Loading details...</p>");
+        $("#ticketModal").modal("show");
+
         $.ajax({
           url: `${BASE_API_URL}/commonfunction`,
           method: "POST",
           data: { data: encryptData(payload) },
           dataType: "json",
-          beforeSend: () => $("#ticketModalBody").html("<p class='text-center'>Loading details...</p>"),
           success: function (response) {
-            if (!response?.data) {
-              $("#ticketModalBody").html("<p class='text-center text-danger'>No details found.</p>");
-              return;
-            }
-
             try {
+              if (!response?.data) {
+                $("#ticketModalBody").html("<p class='text-center text-danger'>No details found.</p>");
+                return;
+              }
+
               const decrypted = decryptData(response.data);
               const parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
-              const details = JSON.parse(parsed[0]?.fn_get_ticket_details || "[]");
-              const t = details[0] || {};
+              const jsonString = parsed[0]?.fn_get_ticket_details;
+              const detailsObj = JSON.parse(jsonString);
+
+              const t = detailsObj.ticket_details || {};
+              const g = detailsObj.grievance_details || {};
+              const timeline = detailsObj.progress_timeline || [];
+
+              // Header
+              $("#ticketModalTitle").text(`Ticket #${t.ticket_id || "-"}`);
+              $("#ticketStatus")
+                .text(t.status || "Unknown")
+                .removeClass()
+                .addClass(`badge ${t.status === "In-Progress"
+                    ? "bg-warning text-dark"
+                    : t.status === "Closed"
+                      ? "bg-success"
+                      : "bg-secondary"
+                  }`);
+
+              // Body content
+              let timelineHtml = timeline
+                .map(
+                  (item) => `
+          <div class="border rounded p-2 mb-2">
+            <p class="mb-1"><strong>${item.role_name || "User"}:</strong> ${item.notes || "-"}</p>
+            <small class="text-muted">From: ${item.from_status || "-"} → To: ${item.to_status || "-"}</small><br>
+            <small class="text-muted">Time: ${item.start_time || "-"}</small>
+          </div>
+        `
+                )
+                .join("");
 
               $("#ticketModalBody").html(`
-            <p><strong>Ticket ID:</strong> ${t.TicketId || "-"}</p>
-            <p><strong>Subject:</strong> ${t.subject || "-"}</p>
-            <p><strong>Category:</strong> ${t.category || "-"}</p>
-            <p><strong>Status:</strong> ${t.status || "-"}</p>
-            <p><strong>Description:</strong> ${t.description || "-"}</p>
-          `);
-              $("#ticketModal").modal("show");
+          <h6>User Information</h6>
+          <p><strong>Name:</strong> ${t.complainant_name || "-"}</p>
+          <p><strong>Email:</strong> ${t.complainant_email || "-"}</p>
+          <p><strong>Contact:</strong> ${t.complainant_mobile || "-"}</p>
+          <p><strong>District:</strong> ${t.district || "-"}</p>
+
+          <h6>Ticket Information</h6>
+          <p><strong>Category:</strong> ${t.category || "-"}</p>
+          <p><strong>Subcategory:</strong> ${t.subcategory || "-"}</p>
+          <p><strong>Issue Type:</strong> ${t.issue_type || "-"}</p>
+          <p><strong>Priority:</strong> ${t.priority || "-"}</p>
+          <p><strong>Description:</strong> ${g.Description || t.remarks || "-"}</p>
+          <p><strong>Created On:</strong> ${new Date(t.created_at).toLocaleString()}</p>
+
+          <h6>Grievance Details</h6>
+          <p><strong>CAN Number:</strong> ${g.CAN_Number || "-"}</p>
+          <p><strong>Application Number:</strong> ${g.Application_Number || "-"}</p>
+          <p><strong>Supporting Doc:</strong> ${g.Supporting_Doc_Desc || "-"}</p>
+
+          <h6>Progress Timeline</h6>
+          ${timelineHtml || "<p>No updates available.</p>"}
+        `);
+
+              // Full ticket link
+              $("#viewFullTicket").attr("href", `ticket-view.html?id=${t.ticket_id}`);
             } catch (err) {
               console.error("Error parsing ticket details:", err);
               $("#ticketModalBody").html("<p class='text-center text-danger'>Error loading details.</p>");
@@ -1380,6 +1495,7 @@
           error: () => $("#ticketModalBody").html("<p class='text-center text-danger'>Failed to load ticket details.</p>"),
         });
       });
+
 
       $(document).ready(function () {
         const userId = localStorage.getItem("helpdesk_user_id") || 0;
