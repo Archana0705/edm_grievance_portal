@@ -173,7 +173,7 @@
       <!-- eSevai ID -->
       <div class="mb-3 icon-input">
         <i class="fas fa-id-badge"></i>
-        <input type="text" class="form-control" id="esevaiId" placeholder="Enter eSevai ID" required>
+        <input type="text" class="form-control" id="esevaiId" placeholder="Enter Operator ID" required>
       </div>
 
       <!-- OTP Delivery Option -->
@@ -279,7 +279,7 @@
       selectedOtpMethod = (document.getElementById('otpMethod').value);
 
       if (!esevaId || !selectedOtpMethod) {
-        showErrorToast("Please enter eSevai ID and select OTP delivery method.");
+        showErrorToast("Please enter Operator ID and select OTP delivery method.");
         return;
       }
 

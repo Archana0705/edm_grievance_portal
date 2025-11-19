@@ -553,891 +553,629 @@
     <script src="assets/js/html2canvas.min.js"></script>
     <script src="assets/js/jspdf.umd.min.js"></script>
 
-
     <script>
       $(document).ready(function () {
         const roleId = localStorage.getItem("role_id") || null;
         const MAX_FILE_DESC = 25;
-        // common field map (unchanged)
-        const fieldMap = {
-          "1man": { label: "CAN Number", type: "text", required: true },
-          "1opt": { label: "CAN Number", type: "text", required: false },
-          "2man": { label: "Application number", type: "text", required: true },
-          "2opt": { label: "Application number", type: "text", required: false },
-          "3man": { label: "Description of Complaint", type: "textarea", required: true },
-          "3opt": { label: "Description of the issue", type: "textarea", required: false },
-          "4man": { label: "Attachments(Maximum 3 attachments allowed)", type: "file", required: true, multiple: true },
-          "4opt": { label: "Attachments(Maximum 3 attachments allowed)", type: "file", required: false, multiple: true },
-          // "5man": { label: "Supporting document description (short text)", type: "textarea", required: true },
-          // "5opt": { label: "Multiple Supporting document description (short text)", type: "textarea", required: false },
-          "6man": { label: "Enter eSevai centre ID", type: "text", required: true },
-          "7man": { label: "Enter eSevai centre ID against whom the grievance is lodged", type: "text", required: true },
-          "8man": { label: "Transaction number", type: "text", required: true },
-          "9man": {
-            label: "Enter reason for ID block",
-            type: "dropdown",
-            required: true,
-            options: [
-              "ID blocked due to Zero transactions",
-              "ID blocked due to overcharging issues",
-              "Don’t know"
-            ]
+        const MAX_FILE_ROWS = 3;
+
+        const Utils = {
+          safeVal: (val) => {
+            if (val === undefined || val === null) return null;
+            if (typeof val === "string" && val.trim() === "") return null;
+            return val;
           },
-          "10opt": { label: "Enter name of official", type: "text", required: false }
+          forbiddenChars: /[<>"'&/\\;`]/g,
+          showErrorToast: (msg) => { alert(msg); },
+          showSuccessToast: (msg) => { console.log(msg); },
+          formatDate: (str) => {
+            if (!str) return "";
+            const dateObj = new Date(str);
+            if (isNaN(dateObj)) return str;
+            return dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+          }
         };
 
-        // Helper: safeVal as you had it
-        function safeVal(val) {
-          if (val === undefined || val === null) return null;
-          if (typeof val === "string" && val.trim() === "") return null;
-          return val;
-        }
-        $(document).on("input", ".file-desc", function () {
-          if (this.value.length > MAX_FILE_DESC) {
-            this.value = this.value.slice(0, MAX_FILE_DESC);
-          }
-        });
-
-        $(document).on("input", "#selfPane input[type='text'],input[type='email'], #selfPane textarea", function () {
-          const forbidden = /[<>"'&/\\;`]/g;
-          if (forbidden.test(this.value)) {
-            this.value = this.value.replace(forbidden, ""); // remove forbidden chars immediately
-            showErrorToast("Special characters < > \" ' & / \\ ; ` are not allowed.");
-          }
-        });
-
-        // Helper: generate dynamic fields (prefix ensures unique IDs)
-        function generateDynamicFields(columnsString, prefix, $container, fileInputClass) {
-          debugger
-          $container.empty();
-
-          if (!columnsString) {
-            $container.append('<p>No additional fields required for this subcategory.</p>');
-            return;
-          }
-
-          const columnsArray = columnsString.split(',');
-
-          columnsArray.forEach((colRaw, index) => {
-            const col = colRaw.trim();
-            const field = fieldMap[col];
-            if (!field) return;
-
-            const inputId = `field_${prefix}_${col}_${index}`;
-            const isMandatory = col.endsWith('man');
-            const mandatoryAttr = isMandatory ? 'data-mandatory="true"' : '';
-            const dataParamAttr = `data-param="p${col}"`; // maps 1man → p1man
-            const dataColAttr = `data-col="${col}"`;
-
-            // file wrapper (we store data-col on wrapper to detect mandatory)
-            if (col === "4opt" || col === "4man") {
-              const wrapperId = `wrapper_${inputId}`;
-              const html = `
-          <div id="${wrapperId}" class="mb-3 file-wrapper" ${dataColAttr}>
-            <label class="form-label">${field.label}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
-
-            <div class="row fw-bold border-bottom pb-2 mb-2">
-              <div class="col-md-1">S No</div>
-              <div class="col-md-4">Attachment Description</div>
-              <div class="col-md-4">Attachment <small class="text-muted text-danger">(max 2MB each)</small></div>
-              <div class="col-md-3">Actions</div>
-            </div>
-
-            <div class="file-rows">
-              <div class="file-row row align-items-center1 mb-2">
-                <div class="col-md-1">
-                  <span class="fw-bold file-label">1</span>
-                </div>
-                <div class="col-md-4">
-                <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">                </div>
-                <div class="col-md-4">
-                  <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf">
-                   <small class="text-danger">jpg, jpeg, png, pdf only allowed</small>
-                </div>
-                <div class="col-md-3">
-                  <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-2">
-              <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button>
-            </div>
-          </div>
-        `;
-              $container.append(html);
+        // ============================
+        // INPUT VALIDATION
+        // ============================
+        function initInputValidation($container) {
+          $container.on("input", "input[type='text'], input[type='email'], textarea", function () {
+            if (Utils.forbiddenChars.test(this.value)) {
+              this.value = this.value.replace(Utils.forbiddenChars, "");
+              Utils.showErrorToast("Special characters < > \" ' & / \\ ; ` are not allowed.");
             }
-            else {
-              // normal fields
-              let fieldHtml = '';
+          });
 
-              // special case: 9man should be a dropdown
-              if (col === "9man") {
-                fieldHtml = `
-      <div class="mb-3">
-        <label for="${inputId}">
-          ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
-        </label>
-        <select id="${inputId}" class="form-select" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}>
-          <option value="">-- Select --</option>
-          <option value="ID blocked due to Zero transactions">ID blocked due to Zero transactions</option>
-          <option value="ID blocked due to overcharging issues">ID blocked due to overcharging issues</option>
-          <option value="Don’t know">Don’t know</option>
-        </select>
-      </div>`;
-              }
-              else if (field.type === "textarea") {
-                fieldHtml = `
-      <div class="mb-3">
-        <label for="${inputId}">
-          ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
-        </label>
-        <textarea id="${inputId}" class="form-control" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}></textarea>
-      </div>`;
-              }
-              else {
-                fieldHtml = `
-      <div class="mb-3">
-        <label for="${inputId}">
-          ${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}
-        </label>
-        <input id="${inputId}" type="${field.type}" class="form-control" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}>
-      </div>`;
-              }
-
-              $container.append(fieldHtml);
+          $container.on('input change', 'input, textarea, select', function () {
+            const $el = $(this);
+            if ($el.data('mandatory') && $el.val().trim() === '') {
+              $el.addClass('is-invalid');
+              $el.next('.error-msg').remove();
+              $el.after('<span class="error-msg text-danger">This field is required</span>');
+            } else {
+              $el.removeClass('is-invalid');
+              $el.next('.error-msg').remove();
             }
-
           });
         }
 
-        async function processFilesInContainer($container, fileInputClass) {
-          const filesArray = [];
-          const manDescArray = []; // will go to p5man
-          const optDescArray = []; // will go to p5opt
-
-          $container.find('.file-row').each(function () {
-            const $row = $(this);
-            const inputEl = $row.find(`input[type="file"].${fileInputClass}`)[0];
-            if (!inputEl || !inputEl.files || inputEl.files.length === 0) return;
-
-            const desc = $row.find('.file-desc').val() || '';
-            const $wrapper = $row.closest('.file-wrapper');
-            const dataCol = $wrapper ? ($wrapper.attr('data-col') || '') : '';
-            const mandatory = String(dataCol).endsWith('man');
-
-            for (let i = 0; i < inputEl.files.length; i++) {
-              const f = inputEl.files[i];
-              filesArray.push({
-                file_name: f.name,
-                file_path: `/uploads/${f.name}`,
-                mime_type: f.type,
-                attachment_desc: desc,
-                mandatory: mandatory
-              });
-            }
-
-            // push description into respective arrays
-            if (mandatory) manDescArray.push(desc);
-            else optDescArray.push(desc);
-          });
-
-          return { filesArray, manDescArray, optDescArray };
-        }
-
-        // Unified pane initializer
-        function initPane(opts) {
-          const prefix = opts.prefix;
-          const $type = $(opts.typeSelector);
-          const $category = $(opts.categorySelector);
-          const $subCat = $(opts.subCatSelector);
-          const $dyn = $(opts.dynamicContainerSelector);
-          const fileInputClass = opts.fileInputClass;
-          const $submitBtn = $(opts.submitBtnSelector);
-
-          // Load issue types into the pane's type select
-          function loadIssueType() {
-            const payload = {
-              action: "function_call",
-              function_name: "fn_issue_type",
-              params: {}
-            };
-            $.ajax({
-              url: `${BASE_API_URL}/commonfunction`,
-              method: "POST",
-              data: { data: encryptData(payload) },
-              dataType: "json",
-              success(response) {
-                const decrypted = decryptData(response.data);
-                $type.empty().append('<option value="" class="placeholder">--Select Type--</option>');
-                decrypted.forEach(item => {
-                  $type.append(`<option value="${item.id}">${item.issue_name}</option>`);
-                });
-              },
-              error() {
-                console.warn("Failed to load issue types for", prefix);
-              }
-            });
-          }
-
-          loadIssueType();
-
-          // category depends on type
-          $type.on('change', function () {
-            const selectedType = $(this).val();
-            const operatorPayload = {
-              action: "function_call",
-              function_name: "fn_issue_category",
-              params: { type: selectedType || '', roleid: roleId }
-            };
-            $.ajax({
-              url: `${BASE_API_URL}/commonfunction`,
-              method: 'POST',
-              data: { data: encryptData(operatorPayload) },
-              dataType: 'json',
-              success(response) {
-                const decrypted = decryptData(response.data);
-                $category.empty().append('<option value="" class="placeholder">--Select Category--</option>');
-                decrypted.forEach(item => {
-                  $category.append(`<option value="${item.id}">${item.issue_name}</option>`);
-                });
-              },
-              error() {
-                console.warn("Failed to load categories for", prefix);
-              }
-            });
-          });
-
-          // subcategory depends on category
-          $category.on('change', function () {
-            const selectedCategory = $(this).val();
-            const operatorPayload = {
-              action: "function_call",
-              function_name: "fn_issue_subcategory",
-              params: { type: selectedCategory || '', roleid: roleId }
-            };
-            $.ajax({
-              url: `${BASE_API_URL}/commonfunction`,
-              method: 'POST',
-              data: { data: encryptData(operatorPayload) },
-              dataType: 'json',
-              success(response) {
-                const decrypted = decryptData(response.data);
-                $subCat.empty().append('<option value="" class="placeholder">--Select Sub Category--</option>');
-                decrypted.forEach(item => {
-                  // store columns in attribute
-                  $subCat.append(`<option value="${item.id}" data-columns="${item.relavant_columns || ''}">${item.issue_name}</option>`);
-                });
-                // clear previous dynamic fields
-                $dyn.empty();
-              },
-              error() {
-                console.warn("Failed to load subcategories for", prefix);
-              }
-            });
-          });
-
-          $subCat.on('change', function () {
-            const selectedOption = $(this).find('option:selected');
-            const columnsData = selectedOption.attr('data-columns') || '';
-            const subCatText = selectedOption.text().trim(); // subcategory label
-
-            // clear dynamic fields every time
-            $dyn.empty();
-
-            // rebuild normal dynamic fields (if needed)
-            generateDynamicFields(columnsData, prefix, $dyn, fileInputClass);
-
-            // 🔹 custom requirement
-            if (subCatText === "eService") {
-              // open in new tab
-              window.open("https://tnedistrict.tn.gov.in/tneda/", "_blank");
-              $dyn.hide(); // optional
-              $submitBtn.prop('disabled', true);
-            }
-            else if (subCatText === "Grievance") {
-              $dyn.show();
-              $submitBtn.prop('disabled', true);
-              // build grievance UI fresh
-              const trackingHtml = `
-              <div id="ticketTracking" class="mt-3">
-                <label for="ticketId">Enter Ticket ID:</label>
-                <input type="text" id="ticketId" class="form-control mb-2" placeholder="Enter Ticket ID">
-                <button id="trackBtn" type="button" class="btn btn-primary btn-sm">Track Status</button>
-              </div>
-            `;
-              $dyn.append(trackingHtml);
-
-              $(document).off("click", "#trackBtn").on("click", "#trackBtn", function (e) {
-                e.preventDefault(); // ⛔ stop form refresh
-
-                const ticketId = $("#ticketId").val().trim();
-                if (!ticketId) {
-                  alert("Please enter Ticket ID.");
-                  return;
-                }
-
-                const payload = {
-                  action: "function_call",
-                  function_name: "fn_get_ticket_details",
-                  params: { p_ticket_id: ticketId }
-                };
-
-                $.ajax({
-                  url: `${BASE_API_URL}/commonfunction`,
-                  method: "POST",
-                  data: { data: encryptData(payload) },
-                  dataType: "json",
-                  success: function (res) {
-                    const decrypted = decryptData(res.data);
-                    const raw = decrypted[0]?.fn_get_ticket_details;
-
-                    if (!raw) {
-                      alert("No ticket details found.");
-                      return;
-                    }
-
-                    const details = JSON.parse(raw);
-
-                    // 1️⃣ Ticket Details
-                    // 1️⃣ Ticket Details
-                    const td = details.ticket_details;
-                    let detailsHtml = "";
-                    for (const [key, value] of Object.entries(td)) {
-                      let displayValue = value;
-
-                      // Format created_at or any other date field to date-only
-                      if (key.toLowerCase() === "created_at" && value) {
-                        const dateObj = new Date(value);
-                        if (!isNaN(dateObj)) {
-                          displayValue = dateObj.toLocaleDateString('en-GB', {
-                            day: '2-digit',
-                            month: 'short',
-                            year: 'numeric'
-                          });
-                        }
-                      }
-
-                      detailsHtml += `
-                  <tr>
-                    <th class="bg-light text-capitalize">${key.replace(/_/g, " ")}</th>
-                    <td>${displayValue || "N/A"}</td>
-                  </tr>`;
-                    }
-                    $("#ticketDetailsTable").html(detailsHtml);
-
-
-                    // 2️⃣ Attachments
-                    const at = details.attachments || [];
-                    let attHtml = "";
-                    at.forEach(f => {
-                      const isImage = f.mime_type.startsWith("image/");
-                      const fileUrl = f.file_path;
-
-                      attHtml += `
-      <li class="list-group-item">
-        ${isImage
-                          ? `<img src="${fileUrl}" alt="${f.file_name}" class="img-thumbnail me-2" style="max-height:80px">`
-                          : `<i class="bi bi-file-earmark-pdf text-danger me-2"></i>`
-                        }
-        <a href="${fileUrl}" target="_blank">${f.file_name}</a>
-      </li>`;
-                    });
-                    $("#ticketAttachments").html(attHtml);
-
-                    // 3️⃣ Timeline
-                    // 3️⃣ Timeline
-                    const tl = details.progress_timeline || [];
-                    let tlHtml = "";
-                    tl.forEach(t => {
-                      let formattedDate = "";
-                      if (t.start_time) {
-                        const dateObj = new Date(t.start_time);
-                        if (!isNaN(dateObj)) {
-                          formattedDate = dateObj.toLocaleDateString('en-GB', {
-                            day: '2-digit',
-                            month: 'short',
-                            year: 'numeric'
-                          });
-                        }
-                      }
-
-                      tlHtml += `
-    <li>
-      <div><strong>${t.role_name}</strong> → <em>${t.to_status}</em></div>
-      <div class="small text-muted">${formattedDate}</div>
-      <div>${t.notes || ""}</div>
-    </li>`;
-                    });
-                    $("#ticketTimeline").html(tlHtml);
-
-
-
-                    // 4️⃣ Show modal
-                    $("#ticketDetailsModal").modal("show");
-                  },
-
-                  error: function () {
-                    alert("Failed to fetch ticket status.");
-                  }
-                });
-              });
-            }
-            else {
-              // enable submit button for all other subcategories
-              $submitBtn.prop('disabled', false);
-            }
-
-          });
-
-          //     // Container-scoped: add more file row
-          //     $dyn.on('click', '.btn-add-file', function () {
-          //       const $wrapper = $(this).closest(".file-wrapper");
-          //       const $rowsContainer = $wrapper.find(".file-rows");
-          //       const rowCount = $rowsContainer.find(".file-row").length + 1;
-          //       if (rowCount >= 4) {
-          //         showErrorToast("Maximum 3 attachments allowed.");
-          //         return;
-          //       }
-          //       const newRow = `
-          //   <div class="file-row row align-items-center1 mb-2">
-          //     <div class="col-md-1">
-          //       <span class="fw-bold file-label">${rowCount}</span>
-          //     </div>
-          //     <div class="col-md-4">
-          //     <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">          </div>
-          //     <div class="col-md-4">
-          //      <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf">
-          //     <small>jpg, jpeg, png, pdf only allowed</small>
-          //     </div>
-          //     <div class="col-md-3">
-          //       <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
-          //     </div>
-          //   </div>
-          // `;
-          //       $rowsContainer.append(newRow);
-          //       const newRowCount = $rowsContainer.find(".file-row").length;
-          //       $wrapper.find(".btn-add-file").prop("disabled", newRowCount >= 3);
-          //     });
-
-          //     // Container-scoped: delete file row and renumber
-          //     $dyn.on('click', '.btn-delete-file', function () {
-          //       const $wrapper = $(this).closest(".file-wrapper");
-          //       $(this).closest(".file-row").remove();
-
-          //       // Renumber remaining rows
-          //       $wrapper.find(".file-row").each(function (i) {
-          //         $(this).find(".file-label").text(i + 1);
-          //       });
-
-          //       // Enable/disable Add More button based on current row count
-          //       const rowCount = $wrapper.find('.file-row').length;
-          //       if (rowCount === 0) {
-          //         $wrapper.find('.btn-add-file').prop("disabled", true);
-          //       } else if (rowCount < 3) {
-          //         $wrapper.find('.btn-add-file').prop("disabled", false);
-          //       } else {
-          //         $wrapper.find('.btn-add-file').prop("disabled", true);
-          //       }
-          //     });
-
-          // Add file row
-          $dyn.on('click', '.btn-add-file', function () {
-            const $wrapper = $(this).closest(".file-wrapper");
-            const $rowsContainer = $wrapper.find(".file-rows");
-            const rowCount = $rowsContainer.find(".file-row").length + 1;
-
-            if (rowCount > 3) {
-              showErrorToast("Maximum 3 attachments allowed.");
-              return;
-            }
-
-            const newRow = `
-    <div class="file-row row align-items-center1 mb-2">
-      <div class="col-md-1">
-        <span class="fw-bold file-label">${rowCount}</span>
-      </div>
+        function getNewFileRow(fileInputClass, sno) {
+          return `
+    <div class="file-row row align-items-center mb-2">
+      <div class="col-md-1"><span class="fw-bold file-label">${sno}</span></div>
       <div class="col-md-4">
-        <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">
+        <input type="text" maxlength="25" class="form-control file-desc" placeholder="Enter document description">
       </div>
-      <div class="col-md-4">
-        <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf">
-        <small>jpg, jpeg, png, pdf only allowed</small>
+      <div class="col-md-4 position-relative">
+        <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf" />
+        <span class="upload-status-icon ms-2"></span>
+        <small class="text-muted d-block allowed-note">Allowed: PDF, JPG, PNG — Max 2MB</small>
       </div>
       <div class="col-md-3">
         <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
       </div>
-    </div>
-  `;
-            $rowsContainer.append(newRow);
+    </div>`;
+        }
 
-            // Enable/disable Add button dynamically
-            $(this).prop("disabled", true);
-          });
+        function generateDynamicFields(columnsString, prefix, $container, fileInputClass) {
+          $container.empty();
 
-          // Delete file row
-          $dyn.on('click', '.btn-delete-file', function () {
-            const $wrapper = $(this).closest(".file-wrapper");
-            $(this).closest(".file-row").remove();
+          let fieldsArray = [];
 
-            // Renumber remaining rows
-            $wrapper.find(".file-row").each(function (i) {
-              $(this).find(".file-label").text(i + 1);
-            });
+          if (!columnsString || (Array.isArray(columnsString) && columnsString.length === 0)) {
+            $container.append('<p>No additional fields required for this subcategory.</p>');
+            return;
+          }
 
-            if ($wrapper.find(".file-row").length < 3) {
-              $wrapper.find(".btn-add-file").prop("disabled", false);
+          try {
+            if (typeof columnsString === "string") {
+              const trimmed = columnsString.trim();
+              fieldsArray = (trimmed.startsWith('[') || trimmed.startsWith('{')) ? JSON.parse(trimmed) :
+                trimmed.split(',').map(c => ({ legacy_code: c.trim() }));
+            } else if (Array.isArray(columnsString)) {
+              fieldsArray = columnsString;
+            }
+          } catch (e) {
+            console.error(e);
+            $container.append('<p class="text-danger">Error loading dynamic fields.</p>');
+            return;
+          }
+
+          fieldsArray.forEach((f, index) => {
+            const rawCol = f.column_name || f.column_id || f.legacy_code || `field_${index}`;
+            const colId = rawCol
+              .toString()
+              .trim()
+              .toLowerCase()
+              .replace(/\s+/g, '_')         // spaces → underscore
+              .replace(/[^a-z0-9_]/g, '');  // remove (), -, :, / etc.
+            const inputId = `field_${prefix}_${colId}`;
+            const isMandatory = (f.required || f.manopt || '').toString().toLowerCase() === 'mandatory';
+            const mandatoryAttr = isMandatory ? 'data-mandatory="true"' : '';
+            const dataParam = `p_${colId}`;
+            let fieldHtml = '';
+
+            if (f.field_type === 'attachment') {
+              // create wrapper with an empty .file-rows (we'll add the first row via initFileModule)
+              fieldHtml = `
+        <div id="wrapper_${inputId}" class="mb-3 file-wrapper" data-col="${colId}" ${mandatoryAttr} data-param="${dataParam}">
+          <label class="form-label">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+
+          <div class="row fw-bold border-bottom pb-2 mb-2">
+            <div class="col-md-1">S No</div>
+            <div class="col-md-4">Attachment Description</div>
+            <div class="col-md-4">Attachment</div>
+            <div class="col-md-3">Actions</div>
+          </div>
+
+          <div class="file-rows"></div>
+
+          <div class="mt-2">
+            <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button>
+          </div>
+        </div>`;
+            } else if (f.field_type === 'dropdown') {
+              fieldHtml = `
+        <div class="mb-3">
+          <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+          <select id="${inputId}" class="form-select" ${mandatoryAttr} data-param="${dataParam}">
+              <option value="">-- Select --</option>
+          </select>
+        </div>`;
+            } else if (f.field_type === 'textarea' || f.field_type === 'long text') {
+              fieldHtml = `
+        <div class="mb-3">
+          <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+          <textarea id="${inputId}" class="form-control" rows="4" ${mandatoryAttr} data-param="${dataParam}"></textarea>
+        </div>`;
+            } else {
+              fieldHtml = `
+        <div class="mb-3">
+          <label for="${inputId}">${f.column_name || colId}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+          <input id="${inputId}" type="text" class="form-control" ${mandatoryAttr} data-param="${dataParam}">
+        </div>`;
+            }
+
+            $container.append(fieldHtml);
+
+            // populate dropdowns where needed (district)
+            if (f.field_type === 'dropdown') {
+              const isDistrict = (f.options_source || '').toLowerCase() === 'district' || (f.column_name || '').toLowerCase().includes('district');
+              if (isDistrict) {
+                $.ajax({
+                  url: `${BASE_API_URL}/commonfunction`,
+                  method: "POST",
+                  data: { data: encryptData({ action: "function_call", function_name: "fn_district_list", params: {} }) },
+                  dataType: 'json',
+                  success(res) {
+                    try {
+                      const districts = decryptData(res.data) || [];
+                      const $select = $(`#${inputId}`);
+                      $select.empty().append(`<option value="">-- Select District --</option>`);
+                      (Array.isArray(districts) ? districts : []).forEach(d => $select.append(`<option value="${d.id}">${d.district}</option>`));
+                    } catch (err) {
+                      console.warn("District parse error", err);
+                    }
+                  },
+                  error() { $(`#${inputId}`).empty().append(`<option value="">District load failed</option>`); }
+                });
+              } else if (f.values && f.values.length) {
+                f.values.forEach(v => $(`#${inputId}`).append(`<option value="${v}">${v}</option>`));
+              }
             }
           });
 
-          $dyn.on('change', `input[type="file"].${fileInputClass}`, function () {
-            const fileInputEl = this;
-            const file = fileInputEl.files[0];
+          // initialize file module for newly created wrappers
+          initFileModule($container, fileInputClass);
+        }
+
+        function initFileModule($container, fileInputClass) {
+          const MAX_FILE_ROWS = 3;
+          $container.find('.file-wrapper').each(function () {
+            const $wrapper = $(this);
+            const $rows = $wrapper.find('.file-rows');
+            if ($rows.children().length === 0) {
+              $rows.append(getNewFileRow(fileInputClass, 1));
+              // Add More should be disabled initially (per requirement)
+              $wrapper.find('.btn-add-file').prop('disabled', true);
+            } else {
+              // if rows exist, determine Add More initial state:
+              const anyUploaded = $wrapper.find(`input[type="file"].${fileInputClass}`).toArray().some(inp => $(inp).data('uploaded') === true);
+              $wrapper.find('.btn-add-file').prop('disabled', !anyUploaded);
+            }
+          });
+
+          // remove previous handlers to avoid duplicates, then attach namespaced handlers
+          $container.off('.fileModule');
+
+          // ADD ONE ROW (disabled until upload success)
+          $container.on('click.fileModule', '.btn-add-file', function (e) {
+            e.preventDefault();
+            const $addBtn = $(this);
+            const $wrapper = $addBtn.closest('.file-wrapper');
+            const $rows = $wrapper.find('.file-row');
+
+            if ($rows.length >= MAX_FILE_ROWS) {
+              alert(`Maximum ${MAX_FILE_ROWS} attachments allowed.`);
+              return;
+            }
+
+            // Append a single row only
+            $wrapper.find('.file-rows').append(getNewFileRow(fileInputClass, $rows.length + 1));
+
+            // disable add until that row uploads successfully
+            $addBtn.prop('disabled', true);
+          });
+
+          $container.on('click.fileModule', '.btn-delete-file', function (e) {
+            e.preventDefault();
+            const $btn = $(this);
+            const $wrapper = $btn.closest('.file-wrapper');
+            const $addBtn = $wrapper.find('.btn-add-file');
+
+            // remove row fully
+            $btn.closest('.file-row').remove();
+
+            let $rows = $wrapper.find('.file-row');
+
+            // ❗ if all rows removed — do NOT recreate new row automatically
+            if ($rows.length === 0) {
+              // enable add button → user will add new file manually
+              $addBtn.prop('disabled', false);
+              return;
+            }
+
+            // renumber the serial numbers
+            $rows.each((i, el) => $(el).find('.file-label').text(i + 1));
+
+            // enable Add button after delete (your requirement)
+            $addBtn.prop('disabled', false);
+          });
+
+          // FILE INPUT CHANGE -> validate & upload
+          $container.on('change.fileModule', `input[type="file"].${fileInputClass}`, function (e) {
+            const input = this;
+            const file = input.files && input.files[0];
+            const $input = $(input);
+            const $row = $input.closest('.file-row');
+            const $wrapper = $input.closest('.file-wrapper');
+            const $addBtn = $wrapper.find('.btn-add-file');
+            const $status = $row.find('.upload-status-icon');
+            const $small = $row.find('.allowed-note');
+
+            // reset status
+            $status.removeClass('text-success text-danger').text('');
+            $small.show();
+
             if (!file) return;
 
             const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"];
             const maxSize = 2 * 1024 * 1024;
 
-            // references
-            const $wrapper = $(fileInputEl).closest(".col-md-4");
-            const $statusIcon = $wrapper.find(".upload-status-icon");
-            const $smallNote = $wrapper.find("small");
-
-            // reset state
-            $statusIcon.removeClass("text-success text-danger").text("");
-            $smallNote.show();
-
             if (!allowedTypes.includes(file.type)) {
-              showErrorToast("Invalid file type! Only PDF, JPEG, and PNG files are allowed.");
-              $(fileInputEl).val("");
-              $statusIcon.text("✖").addClass("text-danger");
-              $smallNote.show();
+              showErrorToast("Invalid file type! Only PDF, JPEG, and PNG are allowed.");
+              input.value = "";
+              $status.text('✖ Invalid').addClass('text-danger');
+              $input.data('uploaded', false);
+              $addBtn.prop('disabled', true);
               return;
             }
             if (file.size > maxSize) {
               showErrorToast("File size exceeds 2MB limit!");
-              $(fileInputEl).val("");
-              $statusIcon.text("✖").addClass("text-danger");
-              $smallNote.show();
+              input.value = "";
+              $status.text('✖ Too large').addClass('text-danger');
+              $input.data('uploaded', false);
+              $addBtn.prop('disabled', true);
               return;
             }
 
-            const sessionId = localStorage.getItem("session_id") || "session_id_00000";
-            const userId = localStorage.getItem("user_id");
-
+            // prepare payload & upload
             const tempPayload = {
               action: "function_call",
               function_name: "fn_temp_ticket_attachments",
               params: {
-                p_session_id: userId,
+                p_session_id: localStorage.getItem("user_id") || "0",
                 p_file_name: file.name,
                 p_file_path: `/uploads/${file.name}`,
                 p_mime_type: file.type,
-                p_uploaded_by: userId
+                p_uploaded_by: localStorage.getItem("user_id") || "0"
               }
             };
 
-            const formData = new FormData();
-            formData.append("data", encryptData(tempPayload));
-            formData.append("file", file);
+            const fd = new FormData();
+            fd.append("data", encryptData(tempPayload));
+            fd.append("file", file);
+
+            // show uploading
+            $status.text('Uploading...');
 
             $.ajax({
               url: `${BASE_API_URL}/commonfunction`,
               method: "POST",
-              data: formData,
-              contentType: false,
+              data: fd,
               processData: false,
+              contentType: false,
               dataType: 'json',
-              success: function (response) {
-                const serverMsg = (response && response.message) ? response.message : "File uploaded successfully!";
-                showSuccessToast(serverMsg);
+              success(res) {
+                // mark uploaded, store returned path if available
+                $status.text('✔ Uploaded').removeClass('text-danger').addClass('text-success');
+                $small.hide();
+                $input.data('uploaded', true);
 
-                // ✅ remove old icon, then add tick ✔
-                $(fileInputEl).next(".upload-status-icon").remove();
-                $(fileInputEl).after(`<span class="upload-status-icon text-success ms-2">✔ ${serverMsg}</span>`);
-
-                // ✅ hide the <small> note
-                $(fileInputEl).siblings("small").hide();
-                const $wrapper = $(fileInputEl).closest(".file-wrapper");
-                $wrapper.find(".btn-add-file").prop("disabled", false);
-              },
-              error: function () {
-                showErrorToast("File upload failed!");
-
-                $(fileInputEl).next(".upload-status-icon").remove();
-                $(fileInputEl).after(`<span class="upload-status-icon text-danger ms-2">✖</span>`);
-
-                $(fileInputEl).siblings("small").show();
-              }
-            });
-          });
-
-          // Container-scoped input validation helpers
-          $dyn.on('input change', 'input, textarea, select', function () {
-            const $this = $(this);
-            if ($this.data('mandatory') && $this.val().trim() === '') {
-              $this.addClass('is-invalid');
-              $this.next('.error-msg').remove();
-              $this.after('<span class="error-msg text-danger">This field is required</span>');
-            } else {
-              $this.removeClass('is-invalid');
-              $this.next('.error-msg').remove();
-            }
-          });
-
-          // Non-dynamic mandatory selects (type/category/subcategory) - container independent
-          $type.add($category).add($subCat).on('change', function () {
-            const $el = $(this);
-            if ($el.val() && $el.val().trim() !== '') {
-              $el.removeClass('is-invalid');
-              $el.next('.error-msg').remove();
-            }
-          });
-
-
-          // Submit handler for this pane
-          $submitBtn.on('click', async function (event) {
-            debugger
-            event.preventDefault();
-            let isValid = true;
-
-            // declaration checkbox (same id across panes in your HTML — if different, adjust)
-            if (!$('#declarationCheck').is(':checked')) {
-              $('#declarationError').text('You must agree to the declaration.').show();
-              isValid = false;
-            } else {
-              $('#declarationError').hide();
-            }
-
-            // Validate main selects
-            [$type, $category, $subCat].forEach($el => {
-              if (!$el.val() || $el.val().trim() === '') {
-                $el.addClass('is-invalid');
-                $el.next('.error-msg').remove();
-                $el.after('<span class="error-msg text-danger">This field is required</span>');
-                isValid = false;
-              } else {
-                $el.removeClass('is-invalid');
-                $el.next('.error-msg').remove();
-              }
-            });
-
-            // Validate mandatory dynamic fields inside this pane
-            $dyn.find('[data-mandatory="true"]').each(function () {
-              if ($(this).val().trim() === '') {
-                $(this).addClass('is-invalid');
-                $(this).next('.error-msg').remove();
-                $(this).after('<span class="error-msg text-danger">This field is required</span>');
-                isValid = false;
-              } else {
-                $(this).removeClass('is-invalid');
-                $(this).next('.error-msg').remove();
-              }
-            });
-
-            if (!isValid) {
-              showErrorToast('Please fill in all mandatory fields.');
-              return;
-            }
-
-            try {
-              // collect uploaded files info (not the file binary — server already stored them on each file change)
-              const { filesArray: uploadedFiles, manDescArray, optDescArray } = await processFilesInContainer($dyn, fileInputClass);
-
-              // get selected option columns
-              const selectedOption = $subCat.find('option:selected');
-              const columnsData = selectedOption.attr('data-columns') || '';
-              const columnsArray = columnsData ? columnsData.split(',').map(c => c.trim()) : [];
-
-              // prepare params with defaults
-              const allParams = {
-                p_session_id: 1,
-                p_complainant_name: null,
-                p_mobile: null,
-                p_email: null,
-                p_district_id: null,
-                p_issue_id: null,
-                p_created_by: null,
-                p_category_id: null,
-                p_subcategory_id: null,
-                p_priority: null,
-                p_relationship: null,
-                p_onbehalf_name: null,
-                p_onbehalf_mobile: null,
-                p_onbehalf_email: null,
-                p_onbehalf_district_id: null,
-                p1man: null, p1opt: null,
-                p2man: null, p2opt: null,
-                p3man: null, p3opt: null,
-                p5man: null, p5opt: null,
-                p6man: null,
-                p7man: null,
-                p8man: null,
-                p9man: null,
-                p10opt: null,
-                // p4man/p4opt handled below
-              };
-
-              // static fields (shared)
-              allParams.p_complainant_name = safeVal(localStorage.getItem('user_name'));
-              allParams.p_mobile = safeVal(localStorage.getItem('mobile'));
-              allParams.p_email = safeVal(localStorage.getItem('email'));
-              allParams.p_district_id = safeVal(localStorage.getItem('district_id'));
-              allParams.p_created_by = safeVal(localStorage.getItem('user_id'));
-              allParams.p_issue_id = safeVal($type.val());
-              allParams.p_category_id = safeVal($category.val());
-              allParams.p_subcategory_id = safeVal($subCat.val());
-              allParams.p_priority = safeVal($('#priority').val());
-              // allParams.p_description = safeVal($('#description').val());
-
-              $dyn.find('[data-param]').each(function () {
-                const key = $(this).data('param'); // expects data-param="p1man"
-                const val = $(this).is('select') ? $(this).find('option:selected').text().trim() : $(this).val()?.trim() || null;
-                allParams[key] = val;
-              });
-
-              allParams.p5man = manDescArray.length ? JSON.stringify(manDescArray) : null;
-              allParams.p5opt = optDescArray.length ? JSON.stringify(optDescArray) : null;
-
-              const payload = {
-                action: "function_call",
-                function_name: "fn_citizen_create_ticket",
-                params: allParams
-              };
-
-              // final submit
-              $.ajax({
-                url: `${BASE_API_URL}/commonfunction`,
-                method: 'POST',
-                data: { data: encryptData(payload) },
-                dataType: 'json',
-                beforeSend: function () {
-                  $("#formLoader").removeClass('d-none');    // show loader
-                  $submitBtn.prop("disabled", true);        // disable button
-                },
-                success: function (response) {
-                  $("#formLoader").addClass('d-none')        // hide loader
-                  $submitBtn.prop("disabled", false);
-
-                  const decrypted = decryptData(response.data);
-                  const ticketId = decrypted[0]?.fn_citizen_create_ticket || null;
-                  const msg = ticketId ? `Ticket raised successfully: ${ticketId}` : "Submitted successfully.";
-                  //  showSuccessToast(msg);
-
-                  if (ticketId) {
-                    setTimeout(() => {
-                      showAcknowledgementModal(ticketId);
-                    }, 3000);
+                // if server returned file path/token, store it for final submit
+                try {
+                  if (res && res.data) {
+                    const dec = decryptData(res.data);
+                    // backend shape may vary; try common fields
+                    const uploadedPath = dec && dec[0] && (dec[0].uploaded_path || dec[0].file_path || dec[0].temp_path);
+                    if (uploadedPath) $input.data('uploaded_path', uploadedPath);
+                    // store server response token/row id if available
+                    const tempId = dec && dec[0] && dec[0].temp_attachment_id;
+                    if (tempId) $input.data('temp_id', tempId);
                   }
-
-                  function showAcknowledgementModal(ticketId) {
-                    const payload = {
-                      action: "function_call",
-                      function_name: "fn_acknowledge_download",
-                      params: { ticketId: ticketId }
-                    };
-
-                    $.ajax({
-                      url: `${BASE_API_URL}/commonfunction`,
-                      method: "POST",
-                      data: { data: encryptData(payload) },
-                      beforeSend: function () {
-                        $("#formLoader").removeClass('d-none');
-                      },
-                      success: function (res) {
-                        $("#formLoader").addClass('d-none');
-                        try {
-                          const decrypted = decryptData(res.data);
-                          const ackDataRaw = decrypted[0].fn_acknowledge_download;
-
-                          let ackData = [];
-                          if (ackDataRaw) {
-                            ackData = JSON.parse(ackDataRaw).map(item => item.jsonb_build_object);
-                          }
-
-                          if (ackData.length > 0) {
-                            const d = ackData[0];
-                            $("#ackRequestedBy").text(d.Requested_By);
-                            $("#ackUserType").text(d.type_user);
-                            $("#ackComplainant").text(d.name);
-                            $("#ackMobile").text(d.mobile);
-                            $("#ackDistrict").text(d.district);
-                            $("#ackDate").text(new Date(d.date).toLocaleString());
-                            $("#ackIssueType").text(d.issue);
-                            $("#ackCategory").text(d.category);
-                            $("#ackSubCategory").text(d.subcategory);
-                            $("#ackNumber").text(d.acknowledge_numbr);
-                          } else {
-                            $("#ackCard").html("<p class='text-center text-muted'>No acknowledgement data available.</p>");
-                          }
-
-                          const successModalEl = document.getElementById('successModal');
-                          const successModal = new bootstrap.Modal(successModalEl);
-                          successModal.show();
-
-                          successModalEl.addEventListener('hidden.bs.modal', () => {
-                            location.reload();
-                          });
-
-                        } catch (e) {
-                          $("#ackCard").html(`<p class="text-danger text-center">Error parsing acknowledgement.</p>`);
-                        }
-                      },
-                      error: function () {
-                        $("#formLoader").addClass('d-none')
-                        $submitBtn.prop("disabled", false);
-
-                        $("#ackCard").html(`<p class="text-danger text-center">Failed to load acknowledgement.</p>`);
-                      }
-                    });
-                  }
-
-                },
-                error: function (xhr, status, error) {
-                  $("#formLoader").addClass('d-none')
-                  console.error("API Error:", error);
-                  showErrorToast("Failed to submit form.");
+                } catch (err) {
+                  // ignore decrypt errors
                 }
-              });
 
-            } catch (err) {
-              console.error("Error in submission:", err);
-              showErrorToast("Something went wrong while preparing the form data.");
+                // enable Add More for this wrapper (only if not maxed)
+                const current = $wrapper.find('.file-row').length;
+                if (current < MAX_FILE_ROWS) $addBtn.prop('disabled', false);
+              },
+              error() {
+                showErrorToast("File upload failed!");
+                input.value = "";
+                $status.text('✖ Failed').removeClass('text-success').addClass('text-danger');
+                $input.data('uploaded', false);
+                // keep add disabled on failure
+                $addBtn.prop('disabled', true);
+              }
+            });
+          });
+        }
+
+        $(document).off("click.submitBtn").on("click.submitBtn", "#submitBtn", function (e) {
+          e.preventDefault();
+
+          let isValid = true;
+
+          // ✅ Validate mandatory fields
+          $("#dynamicFieldsContainer [data-mandatory='true']").each(function () {
+            if (!$(this).val()?.trim()) {
+              isValid = false;
+              $(this).addClass("is-invalid");
+            } else {
+              $(this).removeClass("is-invalid");
             }
           });
 
-        } // end initPane
+          if (!isValid) {
+            return alert("Please fill all mandatory fields");
+          }
 
-        $(document).on('click', '#successModal .download-pdf', function () {
-          const { jsPDF } = window.jspdf;
-          const card = document.getElementById('ackCard');
-          if (!card) return;
+          // ✅ Base params (static fields)
+          // const params = {
+          //   p_session_id: 1,
+          //   p_created_by: "1",
+          //   p_issue_id: $("#typeSelect").val() || null,
+          //   p_category_id: $("#categorySelect").val() || null,
+          //   p_subcategory_id: $("#subCategorySelect").val() || null,
+          //   p_priority: null,
+          //   p_attach_supporting_document: null, // cloud URLs added after upload
+          // };
 
-          html2canvas(card).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const imgWidth = pdfWidth - 20;
-            const imgHeight = canvas.height * imgWidth / canvas.width;
-            pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-            pdf.save("acknowledgement.pdf");
+          const params = {
+            p_session_id: 1,
+            p_complainant_name: $("#complainantName").val()?.trim() || null,
+            p_mobile: $("#mobile").val()?.trim() || null,
+            p_email: $("#email").val()?.trim() || null,
+            p_district_id: $("#districtSelect").val() || null,
+            p_issue_id: $("#typeSelect").val() || null,
+            p_created_by: "1",
+            p_category_id: $("#categorySelect").val() || null,
+            p_subcategory_id: $("#subCategorySelect").val() || null,
+            p_relationship: $("#relationship").val() || null,
+            p_onbehalf_name: $("#onbehalfName").val()?.trim() || null,
+            p_onbehalf_mobile: $("#onbehalfMobile").val()?.trim() || null,
+            p_onbehalf_email: $("#onbehalfEmail").val()?.trim() || null,
+            p_onbehalf_district_id: $("#onbehalfDistrict").val() || null
+          };
+          // ✅ Collect dynamic fields into single JSON
+          let dynamicFields = {};
+          $("#dynamicFieldsContainer [data-param]").each(function () {
+            const key = $(this).data("param"); // e.g., p_district, p_description
+            const value = $(this).val()?.trim() || null;
+            if (key) dynamicFields[key] = value;
+          });
+          params["p_dynamic_fields"] = dynamicFields; // send as JSON
+
+
+          // ✅ Handle file uploads
+          let attachmentArray = [];
+          $("#dynamicFieldsContainer .file-wrapper").each(function () {
+            const colId = $(this).data("col");
+            $(this).find(".file-row").each(function () {
+              const fileInput = $(this).find("input[type='file']")[0];
+              const file = fileInput?.files[0] || null;
+              const desc = $(this).find(".file-desc").val()?.trim() || "";
+
+              if (file) {
+                attachmentArray.push({ col: colId, file, desc });
+              }
+            });
+          });
+
+          const formData = new FormData();
+
+          // ✅ Step 1: Append main encrypted payload
+          formData.append(
+            "data",
+            encryptData({
+              action: "function_call",
+              function_name: "fn_citizen_create_ticket_1",
+              params,
+            })
+          );
+
+          // ✅ Step 2: Append files for cloud upload
+          attachmentArray.forEach((f, index) => {
+            formData.append(`file_${index}`, f.file);
+            formData.append(`file_${index}_desc`, f.desc);
+            formData.append(`file_${index}_col`, f.col);
+          });
+          for (let pair of formData.entries()) {
+            console.log(pair[0], ":", pair[1]);
+          }
+          // ✅ AJAX call
+          $.ajax({
+            url: `${BASE_API_URL}/commonfunction`,
+            method: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: (res) => {
+              try {
+                const result = decryptData(res.data);
+                const ticketRef = result[0]?.fn_citizen_create_ticket || "N/A";
+                alert("Ticket Created Successfully — Ref: " + ticketRef);
+              } catch (err) {
+                console.error("Response parse error:", err);
+                alert("Ticket created, but could not parse response");
+              }
+            },
+            error: (xhr, status, err) => {
+              console.error("Submission error:", err, xhr.responseText);
+              alert("Submission Failed");
+            },
           });
         });
 
+        function initPane(opts) {
+          debugger
+          const { prefix, typeSelector, categorySelector, subCatSelector, dynamicContainerSelector, fileInputClass, submitBtnSelector } = opts;
+          const $type = $(typeSelector), $category = $(categorySelector), $subCat = $(subCatSelector), $dyn = $(dynamicContainerSelector), $submitBtn = $(submitBtnSelector);
 
-        // Initialize both panes
+          // ----------------------
+          // Load Type, Category, Subcategory
+          // ----------------------
+          const payload = {
+            action: "function_call",
+            function_name: "fn_issue_type",
+            params: {}
+          };
+          $.ajax({
+            url: `${BASE_API_URL}/commonfunction`,
+            method: "POST",
+            data: { data: encryptData(payload) },
+            dataType: "json",
+            success(response) {
+              const decrypted = decryptData(response.data);
+              $type.empty().append('<option value="" class="placeholder">--Select Type--</option>');
+              decrypted.forEach(item => {
+                $type.append(`<option value="${item.id}">${item.issue_name}</option>`);
+              });
+            },
+            error() {
+              console.warn("Failed to load issue types for", prefix);
+            }
+
+          });
+          $type.on('change', function () {
+            const val = $(this).val();
+            $.ajax({ url: `${BASE_API_URL}/commonfunction`, method: "POST", data: { data: encryptData({ action: "function_call", function_name: "fn_issue_category", params: { type: val, roleid: roleId } }) }, success(res) { const dec = decryptData(res.data); $category.empty().append('<option value="">--Select Category--</option>'); dec.forEach(i => $category.append(`<option value="${i.id}">${i.issue_name}</option>`)); } });
+          });
+
+
+          $category.on('change', function () {
+            const val = $(this).val();
+
+            $.ajax({
+              url: `${BASE_API_URL}/commonfunction`,
+              method: "POST",
+              data: {
+                data: encryptData({
+                  action: "function_call",
+                  function_name: "fn_issue_subcategory",
+                  params: { type: val, roleid: roleId }
+                })
+              },
+              success(res) {
+                const dec = decryptData(res.data);
+                $subCat.empty().append('<option value="">--Select Sub Category--</option>');
+
+                dec.forEach(item => {
+                  // store the relevant_columns_data JSON string in a data attribute
+                  $subCat.append(
+                    `<option value="${item.id}" data-columns='${item.relevant_columns_data || "[]"}'>${item.issue_name}</option>`
+                  );
+                });
+
+                $dyn.empty();
+              }
+            });
+          });
+
+          $('#subCategorySelect').on('change', function () {
+            const $container = $('#dynamicFieldsContainer');
+            const selected = $(this).find('option:selected');
+            const columnsString = selected.attr('data-columns') || "[]";
+            const fileInputClass = 'dynamic-file-input';
+
+            // Use the reusable function
+            generateDynamicFields(columnsString, 'sub', $container, fileInputClass);
+
+            // Initialize file handling for attachments
+            initFileModule($container, fileInputClass);
+
+            // Initialize validation for new fields
+            initInputValidation($container);
+          });
+
+          initInputValidation($dyn);
+
+          // ----------------------
+          // SUBMIT HANDLER
+          // ----------------------
+          // $submitBtn.on('click', async function (event) {
+          //   debugger
+          //   event.preventDefault();
+          //   let isValid = true;
+
+          //   if (!$('#declarationCheck').is(':checked')) { $('#declarationError').text('You must agree to the declaration.').show(); isValid = false; }
+          //   else { $('#declarationError').hide(); }
+
+          //   [$type, $category, $subCat].forEach($el => {
+          //     if (!$el.val() || $el.val().trim() === '') { $el.addClass('is-invalid'); $el.next('.error-msg').remove(); $el.after('<span class="error-msg text-danger">This field is required</span>'); isValid = false; }
+          //     else { $el.removeClass('is-invalid'); $el.next('.error-msg').remove(); }
+          //   });
+
+          //   $dyn.find('[data-mandatory="true"]').each(function () {
+          //     if ($(this).val()?.trim() === '') { $(this).addClass('is-invalid'); $(this).next('.error-msg').remove(); $(this).after('<span class="error-msg text-danger">This field is required</span>'); isValid = false; }
+          //     else { $(this).removeClass('is-invalid'); $(this).next('.error-msg').remove(); }
+          //   });
+
+          //   if (!isValid) { Utils.showErrorToast('Please fill in all mandatory fields.'); return; }
+
+          //   try {
+          //     // Collect dynamic field values
+          //     const allParams = {
+          //       p_session_id: 1,
+          //       p_complainant_name: Utils.safeVal(localStorage.getItem('user_name')),
+          //       p_mobile: Utils.safeVal(localStorage.getItem('mobile')),
+          //       p_email: Utils.safeVal(localStorage.getItem('email')),
+          //       p_district_id: Utils.safeVal(localStorage.getItem('district_id')),
+          //       p_created_by: Utils.safeVal(localStorage.getItem('user_id')),
+          //       p_issue_id: Utils.safeVal($type.val()),
+          //       p_category_id: Utils.safeVal($category.val()),
+          //       p_subcategory_id: Utils.safeVal($subCat.val()),
+          //       p_priority: Utils.safeVal($('#priority').val())
+          //     };
+
+          //     $dyn.find('[data-param]').each(function () {
+          //       const key = $(this).data('param');
+          //       const val = $(this).is('select') ? $(this).find('option:selected').text().trim() : $(this).val()?.trim() || null;
+          //       allParams[key] = val;
+          //     });
+
+          //     const payload = { action: "function_call", function_name: "fn_citizen_create_ticket", params: allParams };
+
+          //     $.ajax({
+          //       url: `${BASE_API_URL}/commonfunction`,
+          //       method: 'POST',
+          //       data: { data: encryptData(payload) },
+          //       dataType: 'json',
+          //       beforeSend: function () { $("#formLoader").removeClass('d-none'); $submitBtn.prop("disabled", true); },
+          //       success: function (response) {
+          //         $("#formLoader").addClass('d-none'); $submitBtn.prop("disabled", false);
+          //         const decrypted = decryptData(response.data);
+          //         const ticketId = decrypted[0]?.fn_citizen_create_ticket || null;
+          //         if (ticketId) {
+          //           Utils.showSuccessToast(`Ticket raised successfully: ${ticketId}`);
+          //           setTimeout(() => { window.open(`/acknowledgement/${ticketId}`, "_blank"); }, 500);
+          //         } else { Utils.showSuccessToast("Submitted successfully."); }
+          //       },
+          //       error: function () { $("#formLoader").addClass('d-none'); $submitBtn.prop("disabled", false); Utils.showErrorToast("Failed to submit form."); }
+          //     });
+
+          //   } catch (err) { console.error(err); Utils.showErrorToast("Error during submission."); }
+          // });
+
+
+        }
+
         initPane({
           prefix: 'self',
           typeSelector: '#typeSelect',
           categorySelector: '#categorySelect',
           subCatSelector: '#subCategorySelect',
           dynamicContainerSelector: '#dynamicFieldsContainer',
-          fileInputClass: 'file-input-self',
+          fileInputClass: 'fileInput',
           submitBtnSelector: '#submitBtn'
         });
 
-      }); // doc ready
+      });
     </script>
+
 
 
 </body>
