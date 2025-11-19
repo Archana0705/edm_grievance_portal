@@ -1,0 +1,1476 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Enhanced Dashboard</title>
+    <!-- Bootstrap CSS -->
+
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/css/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/global.css">
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f1f3f6;
+            color: #333;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            padding-top: 70px;
+            transition: all 0.3s;
+        }
+
+        /* Header */
+        nav.navbar {
+            background: linear-gradient(90deg, #4b6cb7, #182848);
+            color: #fff;
+            z-index: 1000;
+            padding: 0.4rem 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        nav.navbar .navbar-brand,
+        nav.navbar .btn,
+        nav.navbar span {
+            color: #fff;
+        }
+
+        nav.navbar .btn-light {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: #fff;
+        }
+
+        nav.navbar .btn-light:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Sidebar */
+        #sidebar {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 220px;
+            height: calc(100% - 70px);
+            background: #fff;
+            padding-top: 1rem;
+            transition: all 0.3s;
+            overflow-y: auto;
+            border-right: 1px solid #e0e0e0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+            z-index: 999;
+        }
+
+        #sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #495057;
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 8px;
+            margin: 4px 10px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        #sidebar a:hover {
+            background: #4b6cb7;
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        #sidebar a.active {
+            background: #182848;
+            color: white;
+        }
+
+        #sidebar i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+
+        .sidebar-collapsed #sidebar a {
+            padding: 12px 0px;
+        }
+
+        /* Collapsed sidebar */
+        body.sidebar-collapsed #sidebar {
+            width: 60px;
+        }
+
+        body.sidebar-collapsed #sidebar a span {
+            display: none;
+        }
+
+        body.sidebar-collapsed #sidebar a i {
+            margin-right: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Main content */
+        #mainContent {
+            margin-left: 220px;
+            padding: 30px;
+            flex: 1;
+            transition: all 0.3s;
+        }
+
+        body.sidebar-collapsed #mainContent {
+            margin-left: 60px;
+        }
+
+        /* Cards for main content */
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Footer */
+        footer {
+            background: #fff;
+            text-align: center;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            width: 100%;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 992px) {
+            #sidebar {
+                left: -100%;
+                top: 0;
+                width: 220px;
+                height: 100%;
+                border-right: none;
+                box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+                z-index: 9999;
+            }
+
+            #sidebar.show {
+                left: 0;
+            }
+
+            #mainContent {
+                margin-left: 0;
+                padding: 20px 10px;
+            }
+
+            body.sidebar-collapsed #mainContent {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #currentDateTime {
+                display: none;
+            }
+
+            .navbar .fw-bold {
+                font-size: 1.1rem;
+            }
+
+            #sidebarToggle {
+                padding: 0.35rem 0.6rem;
+            }
+
+            .dropdown-toggle span {
+                display: none;
+            }
+        }
+    </style>
+    <!-- main content -->
+    <style>
+        .hover-shadow:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s;
+        }
+
+        .card h3 {
+            font-weight: 600;
+        }
+
+        .card i {
+            transition: transform 0.3s;
+        }
+
+        .card:hover i {
+            transform: scale(1.2);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f1f3f5;
+        }
+    </style>
+    <!-- main content -->
+    <!-- page css -->
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .form-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-label {
+            font-weight: 500;
+        }
+
+        .btn-submit {
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+    <style>
+        /* Toast positioning */
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 2000;
+        }
+    </style>
+    <!-- page css -->
+
+    <style>
+        /* body {
+      background: #f8f9fa;
+      font-family: "Segoe UI", Arial, sans-serif;
+    } */
+
+        .ack-card {
+            background: #fff;
+            border: 1px solid #000;
+            border-radius: 8px;
+            padding: 25px 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            max-width: 850px;
+        }
+
+        .ack-card h5 {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 6px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .ack-label {
+            font-weight: 500;
+            width: 250px;
+        }
+
+        .ack-row {
+            margin-bottom: 10px;
+        }
+
+        /* #formLoader .loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    } */
+
+        div#formLoader {
+            background: #00000091 !important;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Main Content -->
+    <div class="form-section">
+        <!-- Main Form -->
+        <form id="issueForm" class="needs-validation" novalidate enctype="multipart/form-data">
+            <div class="row g-3">
+                <!-- Dropdowns -->
+                <div class="mb-3 col-lg-4">
+                    <label for="typeSelect">Type <span class="text-danger">*</span></label>
+                    <select id="typeSelect" class="form-control" required>
+                        <option value="">Select Type</option>
+                    </select>
+                </div>
+
+                <div class="mb-3 col-lg-4">
+                    <label for="categorySelect">Category <span class="text-danger">*</span></label>
+                    <select id="categorySelect" class="form-control" required>
+                        <option value="">Select Category</option>
+                    </select>
+                </div>
+
+                <div class="mb-3 col-lg-4">
+                    <label for="subCategorySelect">Sub-Category <span class="text-danger">*</span></label>
+                    <select id="subCategorySelect" class="form-control" required>
+                        <option value="">Select Sub-Category</option>
+                    </select>
+                </div>
+
+            </div>
+            <!-- Dynamic Form -->
+
+            <div id="dynamicFieldsContainer" class="mt-4"></div>
+
+            <!-- Declaration Component -->
+            <div class="alert alert-light border rounded-3 shadow-sm p-3 mb-4" role="alert">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-info-circle-fill text-primary fs-4 me-3"></i>
+                    <div>
+                        <h6 class="fw-bold mb-2">Declaration</h6>
+                        <p class="mb-2 small text-muted">
+                            I hereby declare that the information given above and in the enclosed documents is true to
+                            the best of
+                            my knowledge and belief and nothing has been concealed therein. I understand that if the
+                            information
+                            given by me is proved false/not true, I will have to face the punishment as per the law.
+                            Also, all the
+                            benefits availed by me shall be summarily withdrawn.
+                        </p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="declarationCheck">
+                            <label class="form-check-label small" for="declarationCheck">
+                                I agree to the terms of this declaration
+                            </label>
+                        </div>
+                        <span class="text-danger small" id="declarationError" style="display:none;"></span>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 d-flex align-items-center mt-2">
+                <button type="submit" id="submitBtn" class="btn btn-primary px-4 py-2">
+                    <i class="bi bi-send-fill me-2"></i> Submit Issue
+                </button>
+            </div>
+
+            <div id="formLoader" class="d-none text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Submitting...</span>
+                </div>
+                <p class="mt-2 small">Submitting your request, please wait...</p>
+            </div>
+        </form>
+
+    </div>
+
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <!-- <div class="modal-header text-white">
+          <h5 class="modal-title" id="successModalLabel">
+            <button class="btn btn-primary">Download as
+              PDF</button>
+          </h5>
+
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div> -->
+                <div class="modal-header py-1">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-1 mt-1">
+                    <!-- Acknowledgement Content -->
+                    <!-- <div id="ackCard" class="ack-card">
+            <h5>Acknowledgement</h5>
+            <p class="mb-4">We acknowledge the receipt of your grievance with the following details:</p>
+
+            <div class="ack-row d-flex">
+              <div class="ack-label">Requested By:</div>
+              <div id="ackRequestedBy"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">Type of user:</div>
+              <div id="ackUserType"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">Name of the complainant:</div>
+              <div id="ackComplainant"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">Mobile number:</div>
+              <div id="ackMobile"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">District:</div>
+              <div id="ackDistrict"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">Date:</div>
+              <div id="ackDate"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">Issue type:</div>
+              <div id="ackIssueType"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">Issue category:</div>
+              <div id="ackCategory"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">Issue subcategory:</div>
+              <div id="ackSubCategory"></div>
+            </div>
+            <div class="ack-row d-flex">
+              <div class="ack-label">Acknowledgement number:</div>
+              <div id="ackNumber"></div>
+            </div>
+
+            <p class="mt-4"><strong>Please note the acknowledgment number for tracking your application status.</strong>
+            </p>
+          </div> -->
+                    <div id="ackCard" class="ack-card">
+                        <h5>Acknowledgement</h5>
+                        <p class="mb-4">We acknowledge the receipt of your grievance with the following details:</p>
+
+                        <div class="ack-row d-flex">
+                            <div class="ack-label">Requested By:</div>
+                            <div id="ackRequestedBy"></div>
+                        </div>
+
+                        <div class="ack-row d-flex">
+                            <div class="ack-label">Type of user:</div>
+                            <div id="ackUserType"></div>
+                        </div>
+
+                        <div class="ack-row d-flex">
+                            <div class="ack-label">Name of the complainant:</div>
+                            <div id="ackComplainant">__________________________</div>
+                        </div>
+
+                        <div class="ack-row d-flex">
+                            <div class="ack-label">Mobile number of the complainant:</div>
+                            <div id="ackMobile">__________________________</div>
+                        </div>
+
+                        <div class="ack-row d-flex">
+                            <div class="ack-label">District:</div>
+                            <div id="ackDistrict"></div>
+                        </div>
+
+                        <div class="ack-row d-flex">
+                            <div class="ack-label">Date:</div>
+                            <div id="ackDate"></div>
+                        </div>
+
+                        <div class="ack-row d-flex">
+                            <div class="ack-label">Issue type:</div>
+                            <div id="ackIssueType"></div>
+                        </div>
+
+                        <div class="ack-row d-flex">
+                            <div class="ack-label">Issue category:</div>
+                            <div id="ackCategory"></div>
+                        </div>
+
+                        <div class="ack-row d-flex">
+                            <div class="ack-label">Issue subcategory:</div>
+                            <div id="ackSubCategory"></div>
+                        </div>
+
+                        <div class="ack-row d-flex">
+                            <div class="ack-label">Acknowledgement number:</div>
+                            <div id="ackNumber">__________________________</div>
+                        </div>
+
+                        <p class="mt-4"><strong>Please note the acknowledgment number for tracking your application
+                                status.</strong>
+                        </p>
+                    </div>
+                    <button class="btn download-pdf btn btn-outline-secondary float-end mt-2"><i
+                            class="bi bi-download"></i>
+                        Download as
+                        PDF</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ticketDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title">Issue Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-sm table-bordered" id="ticketDetailsTable"></table>
+                    <h6 class="fw-bold mt-4 mb-3">Attachments</h6>
+                    <ul class="list-group list-group-flush" id="ticketAttachments"></ul>
+                    <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
+                    <ul class="timeline" id="ticketTimeline"></ul>
+                </div>
+            </div>
+        </div>
+
+        <script src="assets/js/html2canvas.min.js"></script>
+        <script src="assets/js/jspdf.umd.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+
+                // ============================
+                // CONFIG & CONSTANTS
+                // ============================
+                const roleId = localStorage.getItem("role_id") || null;
+                const MAX_FILE_DESC = 25;
+                const MAX_FILE_ROWS = 3;
+
+                const Utils = {
+                    safeVal: (val) => {
+                        if (val === undefined || val === null) return null;
+                        if (typeof val === "string" && val.trim() === "") return null;
+                        return val;
+                    },
+                    forbiddenChars: /[<>"'&/\\;`]/g,
+                    showErrorToast: (msg) => { alert(msg); },
+                    showSuccessToast: (msg) => { console.log(msg); },
+                    formatDate: (str) => {
+                        if (!str) return "";
+                        const dateObj = new Date(str);
+                        if (isNaN(dateObj)) return str;
+                        return dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                    }
+                };
+
+                // ============================
+                // INPUT VALIDATION
+                // ============================
+                function initInputValidation($container) {
+                    $container.on("input", "input[type='text'], input[type='email'], textarea", function () {
+                        if (Utils.forbiddenChars.test(this.value)) {
+                            this.value = this.value.replace(Utils.forbiddenChars, "");
+                            Utils.showErrorToast("Special characters < > \" ' & / \\ ; ` are not allowed.");
+                        }
+                    });
+
+                    $container.on('input change', 'input, textarea, select', function () {
+                        const $el = $(this);
+                        if ($el.data('mandatory') && $el.val().trim() === '') {
+                            $el.addClass('is-invalid');
+                            $el.next('.error-msg').remove();
+                            $el.after('<span class="error-msg text-danger">This field is required</span>');
+                        } else {
+                            $el.removeClass('is-invalid');
+                            $el.next('.error-msg').remove();
+                        }
+                    });
+                }
+
+                // ============================
+                // DYNAMIC FIELD GENERATION
+                // ============================
+                function populateDropdown($select, fieldObj) {
+                    debugger
+                    const values = fieldObj.values || [];
+                    const source = (fieldObj.options_source || '').toLowerCase();
+                    if (source === 'district' || (fieldObj.column_name || '').toLowerCase().includes('district')) {
+                        $.ajax({
+                            url: `${BASE_API_URL}/commonfunction`,
+                            method: 'POST',
+                            data: { data: encryptData({ action: 'function_call', function_name: 'fn_district_list', params: {} }) },
+                            dataType: 'json',
+                            success(res) {
+                                const decrypted = decryptData(res.data);
+                                let districtList = Array.isArray(decrypted) ? decrypted : decrypted[0]?.district || [];
+                                $select.empty().append(`<option value="" class="placeholder">-- Select District --</option>`);
+                                districtList.forEach(d => $select.append(`<option value="${d.id}">${d.district}</option>`));
+                            },
+                            error() { $select.empty().append(`<option value="">District load failed</option>`); }
+                        });
+                    } else {
+                        values.forEach(v => $select.append(`<option value="${v}">${v}</option>`));
+                    }
+                }
+
+
+
+                // function generateDynamicFields(columnsString, prefix, $container, fileInputClass) {
+                //   $container.empty();
+
+                //   let fieldsArray = [];
+
+                //   if (!columnsString || (Array.isArray(columnsString) && columnsString.length === 0)) {
+                //     $container.append('<p>No additional fields required for this subcategory.</p>');
+                //     return;
+                //   }
+
+                //   try {
+                //     if (typeof columnsString === "string") {
+                //       const trimmed = columnsString.trim();
+                //       if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+                //         fieldsArray = JSON.parse(trimmed);
+                //       } else {
+                //         fieldsArray = columnsString.split(',').map(c => ({ legacy_code: c.trim() }));
+                //       }
+                //     } else if (Array.isArray(columnsString)) {
+                //       fieldsArray = columnsString;
+                //     } else {
+                //       console.error("Unknown columns format", columnsString);
+                //       $container.append('<p class="text-danger">Error loading dynamic fields.</p>');
+                //       return;
+                //     }
+                //   } catch (err) {
+                //     console.error("Failed to parse columnsString:", err, columnsString);
+                //     $container.append('<p class="text-danger">Error loading dynamic fields.</p>');
+                //     return;
+                //   }
+
+                //   fieldsArray.forEach((f, index) => {
+                //     const colId = f.column_id || f.legacy_code || `field_${index}`;
+                //     const inputId = `field_${prefix}_${colId}`;
+                //     const isMandatory = (f.required || f.manopt || '').toString().toLowerCase() === 'mandatory';
+                //     const mandatoryAttr = isMandatory ? 'data-mandatory="true"' : '';
+                //     const dataParam = `p_${colId}`;
+
+                //     let fieldHtml = '';
+
+                //     if (f.field_type === 'attachment') {
+                //       // File attachment HTML
+                //       const wrapperId = `wrapper_${inputId}`;
+                //       fieldHtml = `
+                //     <div id="${wrapperId}" class="mb-3 file-wrapper" data-col="${colId}" ${mandatoryAttr}>
+                //         <label class="form-label">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+                //         <div class="row fw-bold border-bottom pb-2 mb-2">
+                //             <div class="col-md-1">S No</div>
+                //             <div class="col-md-4">Attachment Description</div>
+                //             <div class="col-md-4">Attachment <small class="text-muted text-danger">(max 2MB each)</small></div>
+                //             <div class="col-md-3">Actions</div>
+                //         </div>
+                //         <div class="file-rows">
+                //             <div class="file-row row align-items-center mb-2">
+                //                 <div class="col-md-1"><span class="fw-bold file-label">1</span></div>
+                //                 <div class="col-md-4"><input type="text" maxlength="25" class="form-control file-desc" placeholder="Enter document description"></div>
+                //                 <div class="col-md-4"><input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf"><small class="text-danger">jpg, jpeg, png, pdf only allowed</small></div>
+                //                 <div class="col-md-3"><button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button></div>
+                //             </div>
+                //         </div>
+                //         <div class="mt-2"><button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button></div>
+                //     </div>`;
+                //       $container.append(fieldHtml);
+                //     }
+                //     else if (f.field_type === 'dropdown') {
+                //       fieldHtml = `
+                //     <div class="mb-3">
+                //         <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+                //         <select id="${inputId}" class="form-select" ${mandatoryAttr} data-param="${dataParam}">
+                //             <option value="">-- Select --</option>
+                //         </select>
+                //     </div>`;
+                //       $container.append(fieldHtml);
+
+                //       const isDistrict = (f.options_source || '').toLowerCase() === 'district' || (f.column_name || '').toLowerCase().includes('district');
+                //       if (isDistrict) {
+                //         $.ajax({
+                //           url: `${BASE_API_URL}/commonfunction`,
+                //           method: 'POST',
+                //           data: { data: encryptData({ action: 'function_call', function_name: 'fn_district_list', params: {} }) },
+                //           dataType: 'json',
+                //           success: function (res) {
+                //             const districts = decryptData(res.data);
+                //             const $select = $(`#${inputId}`);
+                //             $select.empty().append(`<option value="">-- Select District --</option>`);
+                //             (Array.isArray(districts) ? districts : districts[0]?.district || []).forEach(d => {
+                //               $select.append(`<option value="${d.id}">${d.district}</option>`);
+                //             });
+                //           },
+                //           error: function () { $(`#${inputId}`).empty().append(`<option value="">District load failed</option>`); }
+                //         });
+                //       } else if (f.values && f.values.length) {
+                //         f.values.forEach(v => $(`#${inputId}`).append(`<option value="${v}">${v}</option>`));
+                //       }
+                //     }
+                //     else if (f.field_type === 'long text' || f.field_type === 'textarea') {
+                //       fieldHtml = `
+                //     <div class="mb-3">
+                //         <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+                //         <textarea id="${inputId}" class="form-control" rows="4" ${mandatoryAttr} data-param="${dataParam}"></textarea>
+                //     </div>`;
+                //       $container.append(fieldHtml);
+                //     }
+                //     else {
+                //       fieldHtml = `
+                //     <div class="mb-3">
+                //         <label for="${inputId}">${f.column_name || colId}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+                //         <input id="${inputId}" type="text" class="form-control" ${mandatoryAttr} data-param="${dataParam}">
+                //     </div>`;
+                //       $container.append(fieldHtml);
+                //     }
+                //   });
+
+                //   initFileModule($container, fileInputClass);
+                // }
+
+                // ============================
+                // File module with upload
+                // ============================
+                // function initFileModule($container, fileInputClass) {
+                //   const MAX_FILE_ROWS = 3;
+                //   const MAX_FILE_DESC = 25;
+
+                //   $container.on('click', '.btn-add-file', function () {
+                //     const $wrapper = $(this).closest('.file-wrapper');
+                //     const $rowsContainer = $wrapper.find('.file-rows');
+                //     const currentCount = $rowsContainer.find('.file-row').length;
+
+                //     if (currentCount >= MAX_FILE_ROWS) { alert(`Maximum ${MAX_FILE_ROWS} attachments allowed.`); return; }
+
+                //     const newIndex = currentCount + 1;
+                //     const colId = $wrapper.attr('data-col');
+
+                //     const newRow = `
+                //     <div class="file-row row align-items-center mb-2">
+                //         <div class="col-md-1"><span class="fw-bold file-label">${newIndex}</span></div>
+                //         <div class="col-md-4">
+                //             <input type="text" maxlength="${MAX_FILE_DESC}" class="form-control file-desc" placeholder="Enter document description">
+                //         </div>
+                //         <div class="col-md-4">
+                //             <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf">
+                //             <small class="text-danger">jpg, jpeg, png, pdf only allowed</small>
+                //         </div>
+                //         <div class="col-md-3">
+                //             <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
+                //         </div>
+                //     </div>`;
+                //     $rowsContainer.append(newRow);
+                //   });
+
+                //   // File selection triggers upload
+                //   $container.on('change', `input[type="file"].${fileInputClass}`, function () {
+                //     const file = this.files[0];
+                //     if (!file) return;
+
+                //     const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"];
+                //     const maxSize = 2 * 1024 * 1024;
+                //     if (!allowedTypes.includes(file.type)) { alert("Invalid file type"); this.value = ""; return; }
+                //     if (file.size > maxSize) { alert("File exceeds 2MB"); this.value = ""; return; }
+
+                //     const userId = localStorage.getItem("user_id") || "0";
+                //     const tempPayload = {
+                //       action: "function_call",
+                //       function_name: "fn_temp_ticket_attachments",
+                //       params: { p_session_id: userId, p_file_name: file.name, p_file_path: `/uploads/${file.name}`, p_mime_type: file.type, p_uploaded_by: userId }
+                //     };
+                //     const fd = new FormData();
+                //     fd.append("data", encryptData(tempPayload));
+                //     fd.append("file", file);
+
+                //     const $wrapper = $(this).closest('.file-wrapper');
+                //     const $addBtn = $wrapper.find('.btn-add-file');
+
+                //     $.ajax({
+                //       url: `${BASE_API_URL}/commonfunction`,
+                //       method: "POST",
+                //       data: fd,
+                //       contentType: false,
+                //       processData: false,
+                //       dataType: 'json',
+                //       success: function (response) {
+                //         const serverMsg = (response && response.message) ? response.message : "File uploaded successfully!";
+                //         $(file).next(".upload-status-icon").remove();
+                //         $(file).after(`<span class="upload-status-icon text-success ms-2">✔</span>`);
+                //         $addBtn.prop('disabled', false);
+                //       },
+                //       error: function () {
+                //         alert("Upload failed");
+                //         $addBtn.prop('disabled', false);
+                //       }
+                //     });
+                //   });
+
+                //   $container.on('click', '.btn-delete-file', function () {
+                //     const $wrapper = $(this).closest('.file-wrapper');
+                //     $(this).closest('.file-row').remove();
+                //     $wrapper.find('.file-row').each((i, el) => $(el).find('.file-label').text(i + 1));
+                //     if ($wrapper.find('.file-row').length < MAX_FILE_ROWS) $wrapper.find('.btn-add-file').prop('disabled', false);
+                //   });
+                // }
+
+                // ============================
+                // Submit Button Handler
+                // ============================
+
+                // ============================
+                // Generate Dynamic Fields
+                // ============================
+                function generateDynamicFields(columnsString, prefix, $container, fileInputClass) {
+                    $container.empty();
+
+                    let fieldsArray = [];
+
+                    if (!columnsString || (Array.isArray(columnsString) && columnsString.length === 0)) {
+                        $container.append('<p>No additional fields required for this subcategory.</p>');
+                        return;
+                    }
+
+                    try {
+                        if (typeof columnsString === "string") {
+                            const trimmed = columnsString.trim();
+                            fieldsArray = (trimmed.startsWith('[') || trimmed.startsWith('{')) ? JSON.parse(trimmed) :
+                                trimmed.split(',').map(c => ({ legacy_code: c.trim() }));
+                        } else if (Array.isArray(columnsString)) {
+                            fieldsArray = columnsString;
+                        }
+                    } catch (e) {
+                        console.error(e);
+                        $container.append('<p class="text-danger">Error loading dynamic fields.</p>');
+                        return;
+                    }
+
+                    fieldsArray.forEach((f, index) => {
+                        const colId = f.column_id || f.legacy_code || `field_${index}`;
+                        const inputId = `field_${prefix}_${colId}`;
+                        const isMandatory = (f.required || f.manopt || '').toString().toLowerCase() === 'mandatory';
+                        const mandatoryAttr = isMandatory ? 'data-mandatory="true"' : '';
+                        const dataParam = `p_${colId}`;
+                        let fieldHtml = '';
+
+                        if (f.field_type === 'attachment') {
+                            const wrapperId = `wrapper_${inputId}`;
+                            fieldHtml = `
+      <div id="${wrapperId}" class="mb-3 file-wrapper" data-col="${colId}" ${mandatoryAttr}>
+          <label class="form-label">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+          <div class="row fw-bold border-bottom pb-2 mb-2">
+              <div class="col-md-1">S No</div>
+              <div class="col-md-4">Attachment Description</div>
+              <div class="col-md-4">Attachment</div>
+              <div class="col-md-3">Actions</div>
+          </div>
+          <div class="file-rows">
+              <div class="file-row row align-items-center1 mb-2">
+                  <div class="col-md-1"><span class="fw-bold file-label">1</span></div>
+                  <div class="col-md-4"><input type="text" maxlength="25" class="form-control file-desc" placeholder="Enter document description"></div>
+                  <div class="col-md-4"><input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf">
+                    <span class="upload-status-icon ms-2"></span>
+                    <small class="text-muted allowed-note d-block">Allowed: PDF, JPG, PNG — Max 2MB</small>
+                    </div>
+                  
+                  <div class="col-md-3"><button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button></div>
+              </div>
+          </div>
+          <div class="mt-2"><button type="button" class="btn btn-primary btn-sm btn-add-file">Add More</button></div>
+      </div>`;
+                        }
+                        else if (f.field_type === 'dropdown') {
+                            fieldHtml = `
+    <div class="mb-3">
+        <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+        <select id="${inputId}" class="form-select" ${mandatoryAttr} data-param="${dataParam}">
+            <option value="">-- Select --</option>
+        </select>
+    </div>`;
+
+                            // ❌ DO NOT append here
+                            // $container.append(fieldHtml);
+
+                            const isDistrict =
+                                (f.options_source || '').toLowerCase() === 'district' ||
+                                (f.column_name || '').toLowerCase().includes('district');
+
+                            if (isDistrict) {
+                                $.ajax({
+                                    url: `${BASE_API_URL}/commonfunction`,
+                                    method: "POST",
+                                    data: { data: encryptData({ action: "function_call", function_name: "fn_district_list", params: {} }) },
+                                    success: res => {
+                                        const districts = decryptData(res.data);
+                                        const $select = $(`#${inputId}`);
+                                        $select.empty().append(`<option value="">-- Select District --</option>`);
+                                        districts.forEach(d => $select.append(`<option value="${d.id}">${d.district}</option>`));
+                                    }
+                                });
+                            }
+                        }
+
+                        else if (f.field_type === 'textarea' || f.field_type === 'long text') {
+                            fieldHtml = `
+      <div class="mb-3">
+          <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+          <textarea id="${inputId}" class="form-control" rows="4" ${mandatoryAttr} data-param="${dataParam}"></textarea>
+      </div>`;
+                        }
+                        else {
+                            fieldHtml = `
+      <div class="mb-3">
+          <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+          <input id="${inputId}" type="text" class="form-control" ${mandatoryAttr} data-param="${dataParam}">
+      </div>`;
+                        }
+
+                        $container.append(fieldHtml);
+
+                        // District API
+                        if (f.field_type === 'dropdown' && ((f.options_source || '').toLowerCase() === 'district')) {
+                            $.ajax({
+                                url: `${BASE_API_URL}/commonfunction`,
+                                method: "POST",
+                                data: { data: encryptData({ action: "function_call", function_name: "fn_district_list", params: {} }) },
+                                success: (res) => {
+                                    const dist = decryptData(res.data);
+                                    const $sel = $(`#${inputId}`);
+                                    $sel.empty().append(`<option value="">-- Select District --</option>`);
+                                    dist.forEach(d => $sel.append(`<option value="${d.id}">${d.district}</option>`));
+                                }
+                            });
+                        }
+                    });
+
+                    initFileModule($container, fileInputClass);
+                }
+
+                function initFileModule($container, fileInputClass) {
+
+                    // 1️⃣ Add File Row
+                    $container.off("click.addFile").on("click.addFile", ".btn-add-file", function (e) {
+                        e.stopPropagation();
+
+                        const $wrapper = $(this).closest(".file-wrapper");
+                        const $rows = $wrapper.find(".file-row");
+
+                        if ($rows.length >= 3) return alert("Max 3 files allowed.");
+
+                        const html = `
+      <div class="file-row row align-items-center1 mb-2">
+        <div class="col-md-1"><span class="fw-bold file-label">${$rows.length + 1}</span></div>
+        <div class="col-md-4"><input type="text" class="form-control file-desc" maxlength="25"></div>
+        <div class="col-md-4 position-relative">
+          <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf">
+          <span class="upload-status-icon ms-2"></span>
+          <small class="text-muted d-block">Allowed: JPG, JPEG, PNG, PDF – Max 2MB</small>
+        </div>
+        <div class="col-md-3"><button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button></div>
+      </div>
+    `;
+
+                        $wrapper.find(".file-rows").append(html);
+
+                        // ❗ Disable Add More as soon as new row is added (until upload happens)
+                        $(this).prop("disabled", true);
+                    });
+
+                    // 2️⃣ Delete File Row
+                    $container.off("click.deleteFile").on("click.deleteFile", ".btn-delete-file", function () {
+                        const $wrapper = $(this).closest(".file-wrapper");
+                        $(this).closest(".file-row").remove();
+
+                        // Renumber rows
+                        $wrapper.find(".file-row").each((i, el) => $(el).find(".file-label").text(i + 1));
+
+                        // 🔥 If ZERO rows remain → enable Add More button
+                        if ($wrapper.find(".file-row").length === 0) {
+                            $wrapper.find(".btn-add-file").prop("disabled", false);
+                        }
+                    });
+
+                    // 3️⃣ Upload API on Change
+                    $container.off("change.fileUpload").on("change.fileUpload", `input[type="file"].${fileInputClass}`, function () {
+                        const fileInputEl = this;
+                        const file = fileInputEl.files[0];
+                        if (!file) return;
+
+                        const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"];
+                        const maxSize = 2 * 1024 * 1024;
+
+                        const $wrapper = $(fileInputEl).closest(".file-wrapper");
+                        const $statusIcon = $(fileInputEl).siblings(".upload-status-icon");
+                        const $smallNote = $(fileInputEl).siblings("small");
+                        const $addBtn = $wrapper.find(".btn-add-file");
+
+                        // Reset
+                        $statusIcon.removeClass("text-success text-danger").text("");
+                        $smallNote.show();
+
+                        if (!allowedTypes.includes(file.type)) {
+                            showErrorToast("Invalid file type! Only PDF, JPEG, and PNG files are allowed.");
+                            fileInputEl.value = "";
+                            $statusIcon.text("✖").addClass("text-danger");
+                            return;
+                        }
+                        if (file.size > maxSize) {
+                            showErrorToast("File size exceeds 2MB limit!");
+                            fileInputEl.value = "";
+                            $statusIcon.text("✖").addClass("text-danger");
+                            return;
+                        }
+
+                        // 🔥 DO NOT enable Add More until success
+
+                        // Upload API payload
+                        const userId = localStorage.getItem("user_id");
+                        const tempPayload = {
+                            action: "function_call",
+                            function_name: "fn_temp_ticket_attachments",
+                            params: {
+                                p_session_id: userId,
+                                p_file_name: file.name,
+                                p_file_path: `/uploads/${file.name}`,
+                                p_mime_type: file.type,
+                                p_uploaded_by: userId
+                            }
+                        };
+
+                        const fd = new FormData();
+                        fd.append("data", encryptData(tempPayload));
+                        fd.append("file", file);
+
+                        $.ajax({
+                            url: `${BASE_API_URL}/commonfunction`,
+                            method: "POST",
+                            data: fd,
+                            contentType: false,
+                            processData: false,
+                            dataType: 'json',
+                            success: function (res) {
+                                const msg = res?.message || "Uploaded successfully";
+                                showSuccessToast(msg);
+
+                                $statusIcon.text("✔ " + msg).addClass("text-success");
+                                $smallNote.hide();
+
+                                // 🟢 SUCCESS means unlock Add More
+                                $addBtn.prop("disabled", false);
+                            },
+                            error: function () {
+                                showErrorToast("File upload failed!");
+                                $statusIcon.text("✖").addClass("text-danger");
+                                $smallNote.show();
+
+                                // Upload failed → DO NOT enable Add More
+                                fileInputEl.value = "";
+                            }
+                        });
+                    });
+                }
+
+                // $('#submitBtn').on('click', async function (e) {
+                //   e.preventDefault();
+
+                //   const $dyn = $('#dynamicFieldsContainer');
+                //   let isValid = true;
+
+                //   $dyn.find('[data-mandatory="true"]').each(function () {
+                //     if (!$(this).val() || $(this).val().trim() === '') { $(this).addClass('is-invalid'); isValid = false; }
+                //     else { $(this).removeClass('is-invalid'); }
+                //   });
+
+                //   if (!isValid) { alert("Please fill all mandatory fields."); return; }
+
+                //   // Collect dynamic fields
+                //   const allParams = {
+                //     p_session_id: 1,
+                //     p_complainant_name: 'Ramesh Kumar',
+                //     p_mobile: '9876543210',
+                //     p_email: 'ramesh.kumar@example.com',
+                //     p_district_id: $('#districtField').val() || null,
+                //     p_created_by: '1',
+                //     p_issue_id: $('#typeSelect').val(),
+                //     p_category_id: $('#categorySelect').val(),
+                //     p_subcategory_id: $('#subCategorySelect').val(),
+                //     p_priority: null
+                //   };
+
+                //   // Add dynamic fields
+                //   $dyn.find('[data-param]').each(function () {
+                //     const key = $(this).data('param');
+                //     allParams[key] = $(this).val()?.trim() || null;
+                //   });
+
+                //   // Add uploaded file paths
+                //   const attachments = [];
+                //   $dyn.find('.file-wrapper').each(function () {
+                //     const colId = $(this).data('col');
+                //     $(this).find('.file-row').each(function () {
+                //       const desc = $(this).find('.file-desc').val()?.trim() || '';
+                //       const fileInput = $(this).find('input[type="file"]')[0];
+                //       if (fileInput && fileInput.files.length > 0) {
+                //         attachments.push({ column_id: colId, file_name: fileInput.files[0].name, description: desc });
+                //       }
+                //     });
+                //   });
+                //   allParams['attachments'] = attachments;
+
+                //   $.ajax({
+                //     url: `${BASE_API_URL}/commonfunction`,
+                //     method: 'POST',
+                //     data: { data: encryptData({ action: "function_call", function_name: "fn_citizen_create_ticket", params: allParams }) },
+                //     dataType: 'json',
+                //     success: function (res) {
+                //       const decrypted = decryptData(res.data);
+                //       const ticketId = decrypted[0]?.fn_citizen_create_ticket;
+                //       if (ticketId) alert(`Ticket created successfully: ${ticketId}`);
+                //     },
+                //     error: function () { alert("Submission failed"); }
+                //   });
+                // });
+
+
+                $("#submitBtn").on("click", function () {
+                    let isValid = true;
+
+                    $("#dynamicFieldsContainer [data-mandatory='true']").each(function () {
+                        if (!$(this).val().trim()) {
+                            isValid = false;
+                            $(this).addClass("is-invalid");
+                        } else $(this).removeClass("is-invalid");
+                    });
+
+                    if (!isValid) return alert("Please fill mandatory fields");
+
+                    const params = {
+                        p_session_id: 1,
+                        p_created_by: "1",
+                        p_issue_id: $("#typeSelect").val(),
+                        p_category_id: $("#categorySelect").val(),
+                        p_subcategory_id: $("#subCategorySelect").val()
+                    };
+
+                    $("#dynamicFieldsContainer [data-param]").each(function () {
+                        params[$(this).data("param")] = $(this).val().trim() || null;
+                    });
+
+                    const formData = new FormData();
+                    formData.append("data", encryptData({
+                        action: "function_call",
+                        function_name: "fn_citizen_create_ticket",
+                        params
+                    }));
+
+                    $("#dynamicFieldsContainer .file-wrapper").each(function () {
+                        const colId = $(this).data("col");
+                        $(this).find(".file-row").each(function (i) {
+                            const desc = $(this).find(".file-desc").val();
+                            const file = $(this).find("input[type='file']")[0]?.files[0];
+                            if (file) {
+                                formData.append(`file_${colId}_${i}`, file);
+                                formData.append(`file_${colId}_${i}_desc`, desc);
+                            }
+                        });
+                    });
+
+                    $.ajax({
+                        url: `${BASE_API_URL}/commonfunction`,
+                        method: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: (res) => {
+                            const result = decryptData(res.data);
+                            alert("Ticket Created: " + result[0].fn_citizen_create_ticket);
+                        },
+                        error: () => alert("Submission Failed")
+                    });
+                });
+
+
+                function initPane(opts) {
+                    debugger
+                    const { prefix, typeSelector, categorySelector, subCatSelector, dynamicContainerSelector, fileInputClass, submitBtnSelector } = opts;
+                    const $type = $(typeSelector), $category = $(categorySelector), $subCat = $(subCatSelector), $dyn = $(dynamicContainerSelector), $submitBtn = $(submitBtnSelector);
+
+                    // ----------------------
+                    // Load Type, Category, Subcategory
+                    // ----------------------
+                    const payload = {
+                        action: "function_call",
+                        function_name: "fn_issue_type",
+                        params: {}
+                    };
+                    $.ajax({
+                        url: `${BASE_API_URL}/commonfunction`,
+                        method: "POST",
+                        data: { data: encryptData(payload) },
+                        dataType: "json",
+                        success(response) {
+                            const decrypted = decryptData(response.data);
+                            $type.empty().append('<option value="" class="placeholder">--Select Type--</option>');
+                            decrypted.forEach(item => {
+                                $type.append(`<option value="${item.id}">${item.issue_name}</option>`);
+                            });
+                        },
+                        error() {
+                            console.warn("Failed to load issue types for", prefix);
+                        }
+
+                    });
+                    $type.on('change', function () {
+                        const val = $(this).val();
+                        $.ajax({ url: `${BASE_API_URL}/commonfunction`, method: "POST", data: { data: encryptData({ action: "function_call", function_name: "fn_issue_category", params: { type: val, roleid: roleId } }) }, success(res) { const dec = decryptData(res.data); $category.empty().append('<option value="">--Select Category--</option>'); dec.forEach(i => $category.append(`<option value="${i.id}">${i.issue_name}</option>`)); } });
+                    });
+
+
+                    $category.on('change', function () {
+                        const val = $(this).val();
+
+                        $.ajax({
+                            url: `${BASE_API_URL}/commonfunction`,
+                            method: "POST",
+                            data: {
+                                data: encryptData({
+                                    action: "function_call",
+                                    function_name: "fn_issue_subcategory",
+                                    params: { type: val, roleid: roleId }
+                                })
+                            },
+                            success(res) {
+                                const dec = decryptData(res.data);
+                                $subCat.empty().append('<option value="">--Select Sub Category--</option>');
+
+                                dec.forEach(item => {
+                                    // store the relevant_columns_data JSON string in a data attribute
+                                    $subCat.append(
+                                        `<option value="${item.id}" data-columns='${item.relevant_columns_data || "[]"}'>${item.issue_name}</option>`
+                                    );
+                                });
+
+                                $dyn.empty();
+                            }
+                        });
+                    });
+
+                    // When subcategory changes
+                    // $('#subCategorySelect').on('change', function () {
+                    //   const $container = $('#dynamicFieldsContainer'); // your container
+                    //   const selected = $(this).find('option:selected');
+                    //   const columnsString = selected.attr('data-columns'); // this comes from your API
+                    //   const fileInputClass = 'dynamic-file-input'; // can be any class
+
+                    //   $container.empty();
+
+                    //   if (!columnsString) {
+                    //     $container.append('<p>No additional fields required for this subcategory.</p>');
+                    //     return;
+                    //   }
+
+                    //   let fieldsArray = [];
+                    //   try {
+                    //     fieldsArray = JSON.parse(columnsString); // parse JSON from data-columns
+                    //   } catch (err) {
+                    //     console.error("Failed to parse columnsString:", err);
+                    //     $container.append('<p class="text-danger">Error loading dynamic fields.</p>');
+                    //     return;
+                    //   }
+
+                    //   fieldsArray.forEach((f, index) => {
+                    //     const colId = f.column_name.replace(/\s+/g, '_') + '_' + index; // unique ID
+                    //     const inputId = `field_sub_${colId}`;
+                    //     const isMandatory = (f.manopt || '').toLowerCase() === 'mandatory';
+                    //     const mandatoryAttr = isMandatory ? 'data-mandatory="true"' : '';
+
+                    //     if (f.field_type === 'attachment') {
+                    //       // file attachment (your previous file HTML logic)
+                    //       const wrapperId = `wrapper_${inputId}`;
+                    //       const html = `
+                    //   <div id="${wrapperId}" class="mb-3 file-wrapper" data-col="${colId}" ${mandatoryAttr}>
+                    //       <label class="form-label">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+                    //       <div class="row fw-bold border-bottom pb-2 mb-2">
+                    //           <div class="col-md-1">S No</div>
+                    //           <div class="col-md-4">Attachment Description</div>
+                    //           <div class="col-md-4">Attachment <small class="text-muted text-danger">(max 2MB each)</small></div>
+                    //           <div class="col-md-3">Actions</div>
+                    //       </div>
+                    //       <div class="file-rows">
+                    //           <div class="file-row row align-items-center1 mb-2">
+                    //               <div class="col-md-1"><span class="fw-bold file-label">1</span></div>
+                    //               <div class="col-md-4"><input type="text" maxlength="25" class="form-control file-desc" placeholder="Enter document description"></div>
+                    //               <div class="col-md-4"><input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf"><small class="text-danger">jpg, jpeg, png, pdf only allowed</small></div>
+                    //               <div class="col-md-3"><button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button></div>
+                    //           </div>
+                    //       </div>
+                    //       <div class="mt-2"><button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button></div>
+                    //   </div>`;
+                    //       $container.append(html);
+                    //     }
+                    //     else if (f.field_type === 'dropdown') {
+                    //       // dropdown
+                    //       const html = `
+                    //   <div class="mb-3">
+                    //       <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+                    //       <select id="${inputId}" class="form-select" ${mandatoryAttr}>
+                    //           <option value="">-- Select --</option>
+                    //       </select>
+                    //   </div>`;
+                    //       $container.append(html);
+                    //       // you can populate dropdown options here if needed
+                    //     }
+                    //     else if (f.field_type === 'long text' || f.field_type === 'textarea') {
+                    //       const html = `
+                    //   <div class="mb-3">
+                    //       <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+                    //       <textarea id="${inputId}" class="form-control" rows="4" ${mandatoryAttr}></textarea>
+                    //   </div>`;
+                    //       $container.append(html);
+                    //     }
+                    //     else {
+                    //       // text field
+                    //       const html = `
+                    //   <div class="mb-3">
+                    //       <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+                    //       <input id="${inputId}" type="text" class="form-control" ${mandatoryAttr}>
+                    //   </div>`;
+                    //       $container.append(html);
+                    //     }
+                    //   });
+
+                    //   // initialize file handling logic for the new fields
+                    //   initFileModule($container, fileInputClass);
+                    // });
+
+                    $('#subCategorySelect').on('change', function () {
+                        const $container = $('#dynamicFieldsContainer');
+                        const selected = $(this).find('option:selected');
+                        const columnsString = selected.attr('data-columns') || "[]";
+                        const fileInputClass = 'dynamic-file-input';
+
+                        // Use the reusable function
+                        generateDynamicFields(columnsString, 'sub', $container, fileInputClass);
+
+                        // Initialize file handling for attachments
+                        initFileModule($container, fileInputClass);
+
+                        // Initialize validation for new fields
+                        initInputValidation($container);
+                    });
+
+                    initInputValidation($dyn);
+
+                    // ----------------------
+                    // SUBMIT HANDLER
+                    // ----------------------
+                    $submitBtn.on('click', async function (event) {
+                        debugger
+                        event.preventDefault();
+                        let isValid = true;
+
+                        if (!$('#declarationCheck').is(':checked')) { $('#declarationError').text('You must agree to the declaration.').show(); isValid = false; }
+                        else { $('#declarationError').hide(); }
+
+                        [$type, $category, $subCat].forEach($el => {
+                            if (!$el.val() || $el.val().trim() === '') { $el.addClass('is-invalid'); $el.next('.error-msg').remove(); $el.after('<span class="error-msg text-danger">This field is required</span>'); isValid = false; }
+                            else { $el.removeClass('is-invalid'); $el.next('.error-msg').remove(); }
+                        });
+
+                        $dyn.find('[data-mandatory="true"]').each(function () {
+                            if ($(this).val()?.trim() === '') { $(this).addClass('is-invalid'); $(this).next('.error-msg').remove(); $(this).after('<span class="error-msg text-danger">This field is required</span>'); isValid = false; }
+                            else { $(this).removeClass('is-invalid'); $(this).next('.error-msg').remove(); }
+                        });
+
+                        if (!isValid) { Utils.showErrorToast('Please fill in all mandatory fields.'); return; }
+
+                        try {
+                            // Collect dynamic field values
+                            const allParams = {
+                                p_session_id: 1,
+                                p_complainant_name: Utils.safeVal(localStorage.getItem('user_name')),
+                                p_mobile: Utils.safeVal(localStorage.getItem('mobile')),
+                                p_email: Utils.safeVal(localStorage.getItem('email')),
+                                p_district_id: Utils.safeVal(localStorage.getItem('district_id')),
+                                p_created_by: Utils.safeVal(localStorage.getItem('user_id')),
+                                p_issue_id: Utils.safeVal($type.val()),
+                                p_category_id: Utils.safeVal($category.val()),
+                                p_subcategory_id: Utils.safeVal($subCat.val()),
+                                p_priority: Utils.safeVal($('#priority').val())
+                            };
+
+                            $dyn.find('[data-param]').each(function () {
+                                const key = $(this).data('param');
+                                const val = $(this).is('select') ? $(this).find('option:selected').text().trim() : $(this).val()?.trim() || null;
+                                allParams[key] = val;
+                            });
+
+                            const payload = { action: "function_call", function_name: "fn_citizen_create_ticket", params: allParams };
+
+                            $.ajax({
+                                url: `${BASE_API_URL}/commonfunction`,
+                                method: 'POST',
+                                data: { data: encryptData(payload) },
+                                dataType: 'json',
+                                beforeSend: function () { $("#formLoader").removeClass('d-none'); $submitBtn.prop("disabled", true); },
+                                success: function (response) {
+                                    $("#formLoader").addClass('d-none'); $submitBtn.prop("disabled", false);
+                                    const decrypted = decryptData(response.data);
+                                    const ticketId = decrypted[0]?.fn_citizen_create_ticket || null;
+                                    if (ticketId) {
+                                        Utils.showSuccessToast(`Ticket raised successfully: ${ticketId}`);
+                                        setTimeout(() => { window.open(`/acknowledgement/${ticketId}`, "_blank"); }, 500);
+                                    } else { Utils.showSuccessToast("Submitted successfully."); }
+                                },
+                                error: function () { $("#formLoader").addClass('d-none'); $submitBtn.prop("disabled", false); Utils.showErrorToast("Failed to submit form."); }
+                            });
+
+                        } catch (err) { console.error(err); Utils.showErrorToast("Error during submission."); }
+                    });
+                }
+
+                // ============================
+                // INIT
+                // ============================
+                initPane({
+                    prefix: 'self',
+                    typeSelector: '#typeSelect',
+                    categorySelector: '#categorySelect',
+                    subCatSelector: '#subCategorySelect',
+                    dynamicContainerSelector: '#dynamicFieldsContainer',
+                    fileInputClass: 'fileInput',
+                    submitBtnSelector: '#submitBtn'
+                });
+
+            });
+        </script>
+
+
+
+</body>
+
+</html>
