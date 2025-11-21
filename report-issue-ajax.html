@@ -913,17 +913,6 @@
             return alert("Please fill all mandatory fields");
           }
 
-          // ✅ Base params (static fields)
-          // const params = {
-          //   p_session_id: 1,
-          //   p_created_by: "1",
-          //   p_issue_id: $("#typeSelect").val() || null,
-          //   p_category_id: $("#categorySelect").val() || null,
-          //   p_subcategory_id: $("#subCategorySelect").val() || null,
-          //   p_priority: null,
-          //   p_attach_supporting_document: null, // cloud URLs added after upload
-          // };
-
           const params = {
             p_session_id: 1,
             p_complainant_name: $("#complainantName").val()?.trim() || null,
@@ -940,15 +929,15 @@
             p_onbehalf_email: $("#onbehalfEmail").val()?.trim() || null,
             p_onbehalf_district_id: $("#onbehalfDistrict").val() || null
           };
+
           // ✅ Collect dynamic fields into single JSON
           let dynamicFields = {};
           $("#dynamicFieldsContainer [data-param]").each(function () {
-            const key = $(this).data("param"); // e.g., p_district, p_description
+            const key = $(this).data("param");
             const value = $(this).val()?.trim() || null;
             if (key) dynamicFields[key] = value;
           });
-          params["p_dynamic_fields"] = dynamicFields; // send as JSON
-
+          params["p_dynamic_fields"] = dynamicFields;
 
           // ✅ Handle file uploads
           let attachmentArray = [];
@@ -983,12 +972,10 @@
             formData.append(`file_${index}_desc`, f.desc);
             formData.append(`file_${index}_col`, f.col);
           });
-          for (let pair of formData.entries()) {
-            console.log(pair[0], ":", pair[1]);
-          }
-          // ✅ AJAX call
+
+          // ✅ AJAX call for ticket creation
           $.ajax({
-            url: `${BASE_API_URL}/commonfunction`,
+            url: `${BASE_API_URL}/dynamicparams`,
             method: "POST",
             data: formData,
             contentType: false,
@@ -996,8 +983,68 @@
             success: (res) => {
               try {
                 const result = decryptData(res.data);
-                const ticketRef = result[0]?.fn_citizen_create_ticket || "N/A";
+                const ticketRef = result[0]?.fn_citizen_create_ticket_1 || "N/A";
                 alert("Ticket Created Successfully — Ref: " + ticketRef);
+
+                // ✅ Call fn_acknowledge_download after successful ticket creation
+                if (ticketRef !== "N/A") {
+                  const ackPayload = {
+                    action: "function_call",
+                    function_name: "fn_acknowledge_download",
+                    params: { ticketId: ticketRef }
+                  };
+
+                  $.ajax({
+                    url: `${BASE_API_URL}/commonfunction`,
+                    method: "POST",
+                    data: { data: encryptData(ackPayload) },
+                    beforeSend: () => $("#formLoader").removeClass("d-none"),
+                    success: function (ackRes) {
+                      $("#formLoader").addClass("d-none");
+                      try {
+                        const ackDecrypted = decryptData(ackRes.data);
+                        const ackDataRaw = ackDecrypted[0]?.fn_acknowledge_download;
+                        let ackData = [];
+
+                        if (ackDataRaw) {
+                          ackData = JSON.parse(ackDataRaw).map(item => item.jsonb_build_object);
+                        }
+
+                        if (ackData.length > 0) {
+                          const d = ackData[0];
+                          $("#ackRequestedBy").text(d.Requested_By);
+                          $("#ackUserType").text(d.type_user);
+                          $("#ackComplainant").text(d.name);
+                          $("#ackMobile").text(d.mobile);
+                          $("#ackDistrict").text(d.district);
+                          $("#ackDate").text(new Date(d.date).toLocaleString());
+                          $("#ackIssueType").text(d.issue);
+                          $("#ackCategory").text(d.category);
+                          $("#ackSubCategory").text(d.subcategory);
+                          $("#ackNumber").text(d.acknowledge_numbr);
+                        } else {
+                          $("#ackCard").html("<p class='text-center text-muted'>No acknowledgement data available.</p>");
+                        }
+
+                        const successModalEl = document.getElementById('successModal');
+                        const successModal = new bootstrap.Modal(successModalEl);
+                        successModal.show();
+
+                        successModalEl.addEventListener('hidden.bs.modal', () => {
+                          location.reload();
+                        });
+
+                      } catch (err) {
+                        $("#ackCard").html(`<p class="text-danger text-center">Error parsing acknowledgement.</p>`);
+                      }
+                    },
+                    error: function () {
+                      $("#formLoader").addClass("d-none");
+                      $("#ackCard").html(`<p class="text-danger text-center">Failed to load acknowledgement.</p>`);
+                    }
+                  });
+                }
+
               } catch (err) {
                 console.error("Response parse error:", err);
                 alert("Ticket created, but could not parse response");
@@ -1009,6 +1056,24 @@
             },
           });
         });
+
+        $(document).on('click', '#successModal .download-pdf', function () {
+          const { jsPDF } = window.jspdf;
+          const card = document.getElementById('ackCard');
+          if (!card) return;
+
+          html2canvas(card).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const imgWidth = pdfWidth - 20;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+            pdf.save("acknowledgement.pdf");
+          });
+        });
+
+
 
         function initPane(opts) {
           debugger
