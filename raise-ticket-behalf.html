@@ -377,7 +377,7 @@
 
           </div>
           <!-- Dynamic Form -->
-          <div id="dynamicFieldsContainerBehalf" class="mt-4 row g-3"></div>
+          <div id="dynamicFieldsContainerBehalf" class="mt-4"></div>
 
           <!-- Declaration Component -->
           <div class="alert alert-light border rounded-3 shadow-sm p-3 mb-4" role="alert">
@@ -1824,9 +1824,6 @@
       function generateDynamicFields(columnsString, prefix, $container, fileInputClass, categoryId = null, subcategoryId = null) {
         $container.empty();
 
-        let $rowWrapper = $('<div class="row g-3 dynamic-row-wrapper"></div>');
-        $container.append($rowWrapper);
-
         let fieldsArray = [];
 
         if (!columnsString || (Array.isArray(columnsString) && columnsString.length === 0)) {
@@ -1994,29 +1991,14 @@
             } else {
               // Regular text field
               fieldHtml = `
-         <div class="mb-3 col-lg-4 col-md-6 col-12">
+          <div class="mb-3">
             <label for="${inputId}">${f.column_name || colId}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
             <input id="${inputId}" type="text" class="form-control" ${mandatoryAttr} data-param="${dataParam}">
           </div>`;
             }
           }
 
-          // $container.append(fieldHtml);
-          if (f.field_type === 'attachment') {
-            $container.append(fieldHtml);
-
-            // Add first attachment row automatically
-            setTimeout(() => {
-              const wrapper = $container.find(`#wrapper_${inputId}`);
-              // if (wrapper.find('.file-rows .file-row').length === 0) {
-              //   addNewFileRow(wrapper, fileInputClass); // auto-generate 1st row
-              // }
-              wrapper.attr("data-auto-row", "pending");
-            }, 50);
-          }
-          else {
-            $rowWrapper.append(fieldHtml);  // others go into grid
-          }
+          $container.append(fieldHtml);
 
           // populate dropdowns where needed
           if (f.field_type === 'dropdown' && !isChangesRequiredField) {
@@ -2025,15 +2007,10 @@
         });
 
         // Add Aadhaar consent section ONLY if Aadhaar fields are present
-        // if (hasAadhaarField) {
-        //   addAadhaarConsentSection(prefix, $container);
-        // }
-
         if (hasAadhaarField) {
-          const consentSection = addAadhaarConsentSection(prefix);
-          $container.append('<div class="col-12"></div>'); // spacing
-          $container.append(consentSection);
+          addAadhaarConsentSection(prefix, $container);
         }
+
         // Initialize validations
         initAadhaarValidation($container);
         if (isCANEdit && hasChangesRequiredField) {
@@ -2046,7 +2023,16 @@
 
       // Check if category is CAN Related and subcategory is CAN Edit
       function checkIfCANEdit(categoryId, subcategoryId) {
+        // Method 1: Check by category and subcategory IDs (if you have predefined IDs)
+        // const CAN_CATEGORY_IDS = [5, 6, 7]; // Example CAN-related category IDs
+        // const CAN_EDIT_SUBCATEGORY_IDS = [12, 13, 14]; // Example CAN edit subcategory IDs
 
+        // if (CAN_CATEGORY_IDS.includes(parseInt(categoryId)) && 
+        //     CAN_EDIT_SUBCATEGORY_IDS.includes(parseInt(subcategoryId))) {
+        //   return true;
+        // }
+
+        // Method 2: Check by category and subcategory names (more flexible)
         const categoryName = $("#categorySelectBehalf option:selected").text() ||
           $("#categorySelect option:selected").text() ||
           "";
@@ -2076,23 +2062,23 @@
         $container.next('.aadhaar-consent-section').remove();
 
         const aadhaarConsentHtml = `
-        <div class="mb-3 aadhaar-consent-section">
-          <div class="card border-warning">
-            <div class="card-header bg-warning bg-opacity-10">
-              <h6 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Aadhaar Consent Declaration</h6>
-            </div>
-            <div class="card-body">
-              <div class="form-check">
-                <input class="form-check-input aadhaar-consent-checkbox" type="checkbox" id="aadhaarConsent_${prefix}">
-                <label class="form-check-label" for="aadhaarConsent_${prefix}">
-                  I hereby voluntarily give my consent to use Aadhaar details furnished herewith for the purposes of addressing eSevai related service requests submitted on this portal. <span class="text-danger">*</span>
-                </label>
-              </div>
-              <small class="text-muted">You must check this box to proceed with submission when Aadhaar details are required.</small>
-              <div class="error-msg aadhaar-consent-error text-danger mt-1" style="display: none;"></div>
-            </div>
-          </div>
-        </div>`;
+<div class="mb-3 aadhaar-consent-section">
+  <div class="card border-warning">
+    <div class="card-header bg-warning bg-opacity-10">
+      <h6 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Aadhaar Consent Declaration</h6>
+    </div>
+    <div class="card-body">
+      <div class="form-check">
+        <input class="form-check-input aadhaar-consent-checkbox" type="checkbox" id="aadhaarConsent_${prefix}">
+        <label class="form-check-label" for="aadhaarConsent_${prefix}">
+          I hereby voluntarily give my consent to use Aadhaar details furnished herewith for the purposes of addressing eSevai related service requests submitted on this portal. <span class="text-danger">*</span>
+        </label>
+      </div>
+      <small class="text-muted">You must check this box to proceed with submission when Aadhaar details are required.</small>
+      <div class="error-msg aadhaar-consent-error text-danger mt-1" style="display: none;"></div>
+    </div>
+  </div>
+</div>`;
 
         $container.after(aadhaarConsentHtml);
       }
@@ -2408,18 +2394,22 @@
             'religion': 'Religion',
             'community': 'Community',
             'marital_status': 'Marital Status',
+            'district': 'District',
+            'taluk': 'Taluk',
+            'village': 'Village',
             'address': 'Address',
             'mobile_number': 'Mobile Number',
             'other_details': 'Other Details'
           };
 
           const listItem = `
-        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
-          <span>${index + 1}. ${changeTypes[changeType]}</span>
-          <button type="button" class="btn btn-sm btn-outline-danger btn-remove-from-list" data-card-id="${$(this).attr('id')}">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>`;
+<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+  <span>${index + 1}. ${changeTypes[changeType]}</span>
+  <button type="button" class="btn btn-sm btn-outline-danger btn-remove-from-list" data-card-id="${$(this).attr('id')}">
+    <i class="fas fa-times"></i>
+  </button>
+</div>`;
+
           $changesListItems.append(listItem);
         });
       }
@@ -2474,6 +2464,18 @@
             field: 'select',
             options: ['Not married', 'Married', 'Divorced', 'Separated', 'Widow/widower']
           },
+          'district': {
+            label: 'District',
+            field: 'district_select'
+          },
+          'taluk': {
+            label: 'Taluk',
+            field: 'taluk_select'
+          },
+          'village': {
+            label: 'Village',
+            field: 'village_select'
+          },
           'address': {
             label: 'Address',
             field: 'textarea',
@@ -2517,6 +2519,33 @@
         <select class="form-select change-request-input" data-change-type="${changeType}" required>
           <option value="">-- Select New ${changeConfig.label} --</option>
           ${changeConfig.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+        </select>
+        <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
+            break;
+
+          case 'district_select':
+            fieldHtml = `
+        <select class="form-select change-request-input district-select" 
+                data-change-type="${changeType}" data-request-id="${requestId}" required>
+          <option value="">-- Select New District --</option>
+        </select>
+        <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
+            break;
+
+          case 'taluk_select':
+            fieldHtml = `
+        <select class="form-select change-request-input taluk-select" 
+                data-change-type="${changeType}" data-request-id="${requestId}" disabled required>
+          <option value="">-- Select New Taluk --</option>
+        </select>
+        <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
+            break;
+
+          case 'village_select':
+            fieldHtml = `
+        <select class="form-select change-request-input village-select" 
+                data-change-type="${changeType}" data-request-id="${requestId}" disabled required>
+          <option value="">-- Select New Village --</option>
         </select>
         <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
             break;
@@ -2583,12 +2612,98 @@
       function initChangeRequestCascadingDropdowns(containerSelector) {
         const $container = $(containerSelector);
 
+        // District change
+        $container.on('change', '.district-select', function () {
+          const districtId = $(this).val();
+          const $talukSelect = $container.find('.taluk-select');
+          const $villageSelect = $container.find('.village-select');
+
+          if (districtId) {
+            loadTaluksByDistrict(districtId, $talukSelect);
+            $talukSelect.prop('disabled', false);
+          } else {
+            $talukSelect.empty().append('<option value="">-- Select Taluk --</option>').prop('disabled', true);
+            $villageSelect.empty().append('<option value="">-- Select Village --</option>').prop('disabled', true);
+          }
+        });
+
+        // Taluk change
+        $container.on('change', '.taluk-select', function () {
+          const talukId = $(this).val();
+          const $villageSelect = $container.find('.village-select');
+
+          if (talukId) {
+            loadVillagesByTaluk(talukId, $villageSelect);
+            $villageSelect.prop('disabled', false);
+          } else {
+            $villageSelect.empty().append('<option value="">-- Select Village --</option>').prop('disabled', true);
+          }
+        });
+
         // Remove change request
         $container.on('click', '.btn-remove-change-request', function () {
           $(this).closest('.change-request-section').remove();
         });
       }
+      // Helper function to load taluks into a specific select element
+      function loadTaluksByDistrict(districtId, $talukSelect) {
+        const payload = {
+          action: "function_call",
+          function_name: "fn_taluk_list",
+          params: { district_id: districtId }
+        };
 
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: 'json',
+          success(res) {
+            try {
+              const taluks = decryptData(res.data) || [];
+              $talukSelect.empty().append('<option value="">-- Select Taluk --</option>');
+              (Array.isArray(taluks) ? taluks : []).forEach(t => {
+                $talukSelect.append(`<option value="${t.id}">${t.taluk}</option>`);
+              });
+            } catch (err) {
+              console.warn("Taluk parse error", err);
+            }
+          },
+          error() {
+            $talukSelect.empty().append('<option value="">Taluk load failed</option>');
+          }
+        });
+      }
+
+      // Helper function to load villages into a specific select element
+      function loadVillagesByTaluk(talukId, $villageSelect) {
+        const payload = {
+          action: "function_call",
+          function_name: "fn_village_list",
+          params: { taluk_id: talukId }
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: 'json',
+          success(res) {
+            try {
+              const villages = decryptData(res.data) || [];
+              $villageSelect.empty().append('<option value="">-- Select Village --</option>');
+              (Array.isArray(villages) ? villages : []).forEach(v => {
+                $villageSelect.append(`<option value="${v.id}">${v.village}</option>`);
+              });
+            } catch (err) {
+              console.warn("Village parse error", err);
+            }
+          },
+          error() {
+            $villageSelect.empty().append('<option value="">Village load failed</option>');
+          }
+        });
+      }
       // Aadhaar Validation Function
       function initAadhaarValidation($container) {
         $container.on('input', '.aadhaar-input', function () {
@@ -2619,287 +2734,150 @@
         });
       }
 
-      // function initFileModule($container, fileInputClass) {
-      //   const MAX_FILE_ROWS = 3;
-      //   $container.find('.file-wrapper').each(function () {
-      //     const $wrapper = $(this);
-      //     const $rows = $wrapper.find('.file-rows');
-      //     if ($rows.children().length === 0) {
-      //       $rows.append(getNewFileRow(fileInputClass, 1));
-      //       $wrapper.find('.btn-add-file').prop('disabled', true);
-      //     } else {
-      //       const anyUploaded = $wrapper.find(`input[type="file"].${fileInputClass}`).toArray().some(inp => $(inp).data('uploaded') === true);
-      //       $wrapper.find('.btn-add-file').prop('disabled', !anyUploaded);
-      //     }
-      //   });
-
-      //   $container.off('.fileModule');
-
-      //   // ADD ONE ROW (disabled until upload success)
-      //   $container.on('click.fileModule', '.btn-add-file', function (e) {
-      //     e.preventDefault();
-      //     const $addBtn = $(this);
-      //     const $wrapper = $addBtn.closest('.file-wrapper');
-      //     const $rows = $wrapper.find('.file-row');
-
-      //     if ($rows.length >= MAX_FILE_ROWS) {
-      //       alert(`Maximum ${MAX_FILE_ROWS} attachments allowed.`);
-      //       return;
-      //     }
-
-      //     $wrapper.find('.file-rows').append(getNewFileRow(fileInputClass, $rows.length + 1));
-      //     $addBtn.prop('disabled', true);
-      //   });
-
-      //   $container.on('click.fileModule', '.btn-delete-file', function (e) {
-      //     e.preventDefault();
-      //     const $btn = $(this);
-      //     const $wrapper = $btn.closest('.file-wrapper');
-      //     const $addBtn = $wrapper.find('.btn-add-file');
-
-      //     $btn.closest('.file-row').remove();
-
-      //     let $rows = $wrapper.find('.file-row');
-
-      //     if ($rows.length === 0) {
-      //       $addBtn.prop('disabled', false);
-      //       return;
-      //     }
-
-      //     $rows.each((i, el) => $(el).find('.file-label').text(i + 1));
-      //     $addBtn.prop('disabled', false);
-      //   });
-
-      //   // FILE INPUT CHANGE -> validate & upload
-      //   $container.on('change.fileModule', `input[type="file"].${fileInputClass}`, function (e) {
-      //     const input = this;
-      //     const file = input.files && input.files[0];
-      //     const $input = $(input);
-      //     const $row = $input.closest('.file-row');
-      //     const $wrapper = $input.closest('.file-wrapper');
-      //     const $addBtn = $wrapper.find('.btn-add-file');
-      //     const $status = $row.find('.upload-status-icon');
-      //     const $small = $row.find('.allowed-note');
-
-      //     $status.removeClass('text-success text-danger').text('');
-      //     $small.show();
-
-      //     if (!file) return;
-
-      //     const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"];
-      //     const maxSize = 2 * 1024 * 1024;
-
-      //     if (!allowedTypes.includes(file.type)) {
-      //       Utils.showErrorToast("Invalid file type! Only PDF, JPEG, and PNG are allowed.");
-      //       input.value = "";
-      //       $status.text('✖ Invalid').addClass('text-danger');
-      //       $input.data('uploaded', false);
-      //       $addBtn.prop('disabled', true);
-      //       return;
-      //     }
-      //     if (file.size > maxSize) {
-      //       Utils.showErrorToast("File size exceeds 2MB limit!");
-      //       input.value = "";
-      //       $status.text('✖ Too large').addClass('text-danger');
-      //       $input.data('uploaded', false);
-      //       $addBtn.prop('disabled', true);
-      //       return;
-      //     }
-
-      //     const tempPayload = {
-      //       action: "function_call",
-      //       function_name: "fn_temp_ticket_attachments",
-      //       params: {
-      //         p_session_id: localStorage.getItem("user_id") || "0",
-      //         p_file_name: file.name,
-      //         p_file_path: `/uploads/${file.name}`,
-      //         p_mime_type: file.type,
-      //         p_uploaded_by: localStorage.getItem("user_id") || "0"
-      //       }
-      //     };
-
-      //     const fd = new FormData();
-      //     fd.append("data", encryptData(tempPayload));
-      //     fd.append("file", file);
-
-      //     $status.text('Uploading...');
-
-      //     $.ajax({
-      //       url: `${BASE_API_URL}/commonfunction`,
-      //       method: "POST",
-      //       data: fd,
-      //       processData: false,
-      //       contentType: false,
-      //       dataType: 'json',
-      //       success(res) {
-      //         $status.text('✔ Uploaded').removeClass('text-danger').addClass('text-success');
-      //         $small.hide();
-      //         $input.data('uploaded', true);
-
-      //         try {
-      //           if (res && res.data) {
-      //             const dec = decryptData(res.data);
-      //             const uploadedPath = dec && dec[0] && (dec[0].uploaded_path || dec[0].file_path || dec[0].temp_path);
-      //             if (uploadedPath) $input.data('uploaded_path', uploadedPath);
-      //             const tempId = dec && dec[0] && dec[0].temp_attachment_id;
-      //             if (tempId) $input.data('temp_id', tempId);
-      //           }
-      //         } catch (err) {
-      //           // ignore decrypt errors
-      //         }
-
-      //         const current = $wrapper.find('.file-row').length;
-      //         if (current < MAX_FILE_ROWS) $addBtn.prop('disabled', false);
-      //       },
-      //       error() {
-      //         Utils.showErrorToast("File upload failed!");
-      //         input.value = "";
-      //         $status.text('✖ Failed').removeClass('text-success').addClass('text-danger');
-      //         $input.data('uploaded', false);
-      //         $addBtn.prop('disabled', true);
-      //       }
-      //     });
-      //   });
-      // }
-
-      // ------------------ Load Relationship ------------------
-
       function initFileModule($container, fileInputClass) {
         const MAX_FILE_ROWS = 3;
-        const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"];
-        const maxSize = 2 * 1024 * 1024;
-
-        const getFileRows = ($wrapper) => $wrapper.find('.file-row');
-        const enableAddBtn = ($wrapper, val = true) => $wrapper.find('.btn-add-file').prop('disabled', !val);
-
-        // Initialize file wrapper state
         $container.find('.file-wrapper').each(function () {
           const $wrapper = $(this);
-          const $rows = getFileRows($wrapper);
-          if (!$rows.length) {
-            $wrapper.find('.file-rows').append(getNewFileRow(fileInputClass, 1));
-            enableAddBtn($wrapper, false);
+          const $rows = $wrapper.find('.file-rows');
+          if ($rows.children().length === 0) {
+            $rows.append(getNewFileRow(fileInputClass, 1));
+            $wrapper.find('.btn-add-file').prop('disabled', true);
           } else {
-            const anyUploaded = $wrapper.find(`.${fileInputClass}[type="file"]`)
-              .toArray()
-              .some(inp => $(inp).data('uploaded'));
-            enableAddBtn($wrapper, anyUploaded);
+            const anyUploaded = $wrapper.find(`input[type="file"].${fileInputClass}`).toArray().some(inp => $(inp).data('uploaded') === true);
+            $wrapper.find('.btn-add-file').prop('disabled', !anyUploaded);
           }
         });
 
         $container.off('.fileModule');
 
-        /** 📌 Add File Row (Disabled until upload success) */
+        // ADD ONE ROW (disabled until upload success)
         $container.on('click.fileModule', '.btn-add-file', function (e) {
           e.preventDefault();
-          const $wrapper = $(this).closest('.file-wrapper');
-          const rowCount = getFileRows($wrapper).length;
+          const $addBtn = $(this);
+          const $wrapper = $addBtn.closest('.file-wrapper');
+          const $rows = $wrapper.find('.file-row');
 
-          if (rowCount >= MAX_FILE_ROWS)
-            return alert(`Maximum ${MAX_FILE_ROWS} attachments allowed.`);
+          if ($rows.length >= MAX_FILE_ROWS) {
+            alert(`Maximum ${MAX_FILE_ROWS} attachments allowed.`);
+            return;
+          }
 
-          $wrapper.find('.file-rows').append(getNewFileRow(fileInputClass, rowCount + 1));
-          enableAddBtn($wrapper, false);
+          $wrapper.find('.file-rows').append(getNewFileRow(fileInputClass, $rows.length + 1));
+          $addBtn.prop('disabled', true);
         });
 
-        /** 📌 Delete file row */
         $container.on('click.fileModule', '.btn-delete-file', function (e) {
           e.preventDefault();
-          const $wrapper = $(this).closest('.file-wrapper');
+          const $btn = $(this);
+          const $wrapper = $btn.closest('.file-wrapper');
+          const $addBtn = $wrapper.find('.btn-add-file');
 
-          $(this).closest('.file-row').remove();
-          const $rows = getFileRows($wrapper);
+          $btn.closest('.file-row').remove();
 
-          $rows.each((i, r) => $(r).find('.file-label').text(i + 1));
-          enableAddBtn($wrapper, true);
+          let $rows = $wrapper.find('.file-row');
+
+          if ($rows.length === 0) {
+            $addBtn.prop('disabled', false);
+            return;
+          }
+
+          $rows.each((i, el) => $(el).find('.file-label').text(i + 1));
+          $addBtn.prop('disabled', false);
         });
 
-        /** 📌 File Input Change (Validate & Upload) */
-        $container.on('change.fileModule', `input.${fileInputClass}[type="file"]`, function () {
+        // FILE INPUT CHANGE -> validate & upload
+        $container.on('change.fileModule', `input[type="file"].${fileInputClass}`, function (e) {
           const input = this;
-          const file = input.files?.[0];
+          const file = input.files && input.files[0];
           const $input = $(input);
           const $row = $input.closest('.file-row');
           const $wrapper = $input.closest('.file-wrapper');
+          const $addBtn = $wrapper.find('.btn-add-file');
           const $status = $row.find('.upload-status-icon');
-          const $note = $row.find('.allowed-note');
+          const $small = $row.find('.allowed-note');
 
-          $status.removeClass('text-success text-danger').empty();
-          $note.show();
+          $status.removeClass('text-success text-danger').text('');
+          $small.show();
 
           if (!file) return;
 
-          // Centralized validations
+          const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"];
+          const maxSize = 2 * 1024 * 1024;
+
           if (!allowedTypes.includes(file.type)) {
-            return showUploadError("Invalid file type! Only PDF, JPEG & PNG allowed.");
+            Utils.showErrorToast("Invalid file type! Only PDF, JPEG, and PNG are allowed.");
+            input.value = "";
+            $status.text('✖ Invalid').addClass('text-danger');
+            $input.data('uploaded', false);
+            $addBtn.prop('disabled', true);
+            return;
           }
           if (file.size > maxSize) {
-            return showUploadError("File size exceeds 2MB!");
-          }
-
-          uploadFile();
-
-          /** 🔹 Error Handler */
-          function showUploadError(msg) {
-            Utils.showErrorToast(msg);
+            Utils.showErrorToast("File size exceeds 2MB limit!");
             input.value = "";
-            $status.text("✖").addClass("text-danger");
-            $input.data({ uploaded: false });
-            enableAddBtn($wrapper, false);
+            $status.text('✖ Too large').addClass('text-danger');
+            $input.data('uploaded', false);
+            $addBtn.prop('disabled', true);
+            return;
           }
 
-          /** 🔹 Upload File to Backend */
-          function uploadFile() {
-            const payload = {
-              action: "function_call",
-              function_name: "fn_temp_ticket_attachments",
-              params: {
-                p_session_id: localStorage.getItem("user_id") || "0",
-                p_file_name: file.name,
-                p_file_path: `/uploads/${file.name}`,
-                p_mime_type: file.type,
-                p_uploaded_by: localStorage.getItem("user_id") || "0"
-              }
-            };
+          const tempPayload = {
+            action: "function_call",
+            function_name: "fn_temp_ticket_attachments",
+            params: {
+              p_session_id: localStorage.getItem("user_id") || "0",
+              p_file_name: file.name,
+              p_file_path: `/uploads/${file.name}`,
+              p_mime_type: file.type,
+              p_uploaded_by: localStorage.getItem("user_id") || "0"
+            }
+          };
 
-            const fd = new FormData();
-            fd.append("data", encryptData(payload));
-            fd.append("file", file);
+          const fd = new FormData();
+          fd.append("data", encryptData(tempPayload));
+          fd.append("file", file);
 
-            $status.text('Uploading...');
+          $status.text('Uploading...');
 
-            $.ajax({
-              url: `${BASE_API_URL}/commonfunction`,
-              method: "POST",
-              data: fd,
-              processData: false,
-              contentType: false,
-              success(res) {
-                $status.text('✔ Uploaded').addClass('text-success');
-                $note.hide();
-                $input.data('uploaded', true);
+          $.ajax({
+            url: `${BASE_API_URL}/commonfunction`,
+            method: "POST",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success(res) {
+              $status.text('✔ Uploaded').removeClass('text-danger').addClass('text-success');
+              $small.hide();
+              $input.data('uploaded', true);
 
-                try {
+              try {
+                if (res && res.data) {
                   const dec = decryptData(res.data);
-                  const info = dec?.[0] ?? {};
-                  if (info.uploaded_path) $input.data('uploaded_path', info.uploaded_path);
-                  if (info.temp_attachment_id) $input.data('temp_id', info.temp_attachment_id);
-                } catch { }
-
-                if (getFileRows($wrapper).length < MAX_FILE_ROWS) enableAddBtn($wrapper, true);
-              },
-              error() {
-                $status.text('✖ Failed').addClass('text-danger');
-                input.value = "";
-                $input.data('uploaded', false);
-                enableAddBtn($wrapper, false);
-                Utils.showErrorToast("File upload failed!");
+                  const uploadedPath = dec && dec[0] && (dec[0].uploaded_path || dec[0].file_path || dec[0].temp_path);
+                  if (uploadedPath) $input.data('uploaded_path', uploadedPath);
+                  const tempId = dec && dec[0] && dec[0].temp_attachment_id;
+                  if (tempId) $input.data('temp_id', tempId);
+                }
+              } catch (err) {
+                // ignore decrypt errors
               }
-            });
-          }
+
+              const current = $wrapper.find('.file-row').length;
+              if (current < MAX_FILE_ROWS) $addBtn.prop('disabled', false);
+            },
+            error() {
+              Utils.showErrorToast("File upload failed!");
+              input.value = "";
+              $status.text('✖ Failed').removeClass('text-success').addClass('text-danger');
+              $input.data('uploaded', false);
+              $addBtn.prop('disabled', true);
+            }
+          });
         });
       }
 
+      // ------------------ Load Relationship ------------------
       function loadRelationship() {
         const payload = { action: "function_call", function_name: "fn_relationship", params: {} };
         $.ajax({

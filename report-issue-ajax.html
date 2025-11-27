@@ -555,6 +555,27 @@
 
     <script>
       $(document).ready(function () {
+
+        // Generate unique session ID
+        function generateSessionId() {
+          return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Get or create session ID
+        function getSessionId() {
+          let sessionId = localStorage.getItem('current_session_id');
+          if (!sessionId) {
+            sessionId = generateSessionId();
+            localStorage.setItem('current_session_id', sessionId);
+          }
+          return sessionId;
+        }
+
+        // Clear session ID when needed (after successful submission)
+        function clearSessionId() {
+          localStorage.removeItem('current_session_id');
+        }
+
         const roleId = localStorage.getItem("role_id") || null;
         const MAX_FILE_DESC = 25;
         const MAX_FILE_ROWS = 3;
@@ -730,23 +751,184 @@
           initFileModule($container, fileInputClass);
         }
 
+        // function initFileModule($container, fileInputClass) {
+        //   const MAX_FILE_ROWS = 3;
+        //   $container.find('.file-wrapper').each(function () {
+        //     const $wrapper = $(this);
+        //     const $rows = $wrapper.find('.file-rows');
+        //     if ($rows.children().length === 0) {
+        //       $rows.append(getNewFileRow(fileInputClass, 1));
+        //       // Add More should be disabled initially (per requirement)
+        //       $wrapper.find('.btn-add-file').prop('disabled', true);
+        //     } else {
+        //       // if rows exist, determine Add More initial state:
+        //       const anyUploaded = $wrapper.find(`input[type="file"].${fileInputClass}`).toArray().some(inp => $(inp).data('uploaded') === true);
+        //       $wrapper.find('.btn-add-file').prop('disabled', !anyUploaded);
+        //     }
+        //   });
+
+        //   // remove previous handlers to avoid duplicates, then attach namespaced handlers
+        //   $container.off('.fileModule');
+
+        //   // ADD ONE ROW (disabled until upload success)
+        //   $container.on('click.fileModule', '.btn-add-file', function (e) {
+        //     e.preventDefault();
+        //     const $addBtn = $(this);
+        //     const $wrapper = $addBtn.closest('.file-wrapper');
+        //     const $rows = $wrapper.find('.file-row');
+
+        //     if ($rows.length >= MAX_FILE_ROWS) {
+        //       alert(`Maximum ${MAX_FILE_ROWS} attachments allowed.`);
+        //       return;
+        //     }
+
+        //     // Append a single row only
+        //     $wrapper.find('.file-rows').append(getNewFileRow(fileInputClass, $rows.length + 1));
+
+        //     // disable add until that row uploads successfully
+        //     $addBtn.prop('disabled', true);
+        //   });
+
+        //   $container.on('click.fileModule', '.btn-delete-file', function (e) {
+        //     e.preventDefault();
+        //     const $btn = $(this);
+        //     const $wrapper = $btn.closest('.file-wrapper');
+        //     const $addBtn = $wrapper.find('.btn-add-file');
+
+        //     // remove row fully
+        //     $btn.closest('.file-row').remove();
+
+        //     let $rows = $wrapper.find('.file-row');
+
+        //     // ❗ if all rows removed — do NOT recreate new row automatically
+        //     if ($rows.length === 0) {
+        //       // enable add button → user will add new file manually
+        //       $addBtn.prop('disabled', false);
+        //       return;
+        //     }
+
+        //     // renumber the serial numbers
+        //     $rows.each((i, el) => $(el).find('.file-label').text(i + 1));
+
+        //     // enable Add button after delete (your requirement)
+        //     $addBtn.prop('disabled', false);
+        //   });
+
+        //   // FILE INPUT CHANGE -> validate & upload
+        //   $container.on('change.fileModule', `input[type="file"].${fileInputClass}`, function (e) {
+        //     const input = this;
+        //     const file = input.files && input.files[0];
+        //     const $input = $(input);
+        //     const $row = $input.closest('.file-row');
+        //     const $wrapper = $input.closest('.file-wrapper');
+        //     const $addBtn = $wrapper.find('.btn-add-file');
+        //     const $status = $row.find('.upload-status-icon');
+        //     const $small = $row.find('.allowed-note');
+
+        //     // reset status
+        //     $status.removeClass('text-success text-danger').text('');
+        //     $small.show();
+
+        //     if (!file) return;
+
+        //     const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"];
+        //     const maxSize = 2 * 1024 * 1024;
+
+        //     if (!allowedTypes.includes(file.type)) {
+        //       showErrorToast("Invalid file type! Only PDF, JPEG, and PNG are allowed.");
+        //       input.value = "";
+        //       $status.text('✖ Invalid').addClass('text-danger');
+        //       $input.data('uploaded', false);
+        //       $addBtn.prop('disabled', true);
+        //       return;
+        //     }
+        //     if (file.size > maxSize) {
+        //       showErrorToast("File size exceeds 2MB limit!");
+        //       input.value = "";
+        //       $status.text('✖ Too large').addClass('text-danger');
+        //       $input.data('uploaded', false);
+        //       $addBtn.prop('disabled', true);
+        //       return;
+        //     }
+
+        //     // prepare payload & upload
+        //     const tempPayload = {
+        //       action: "function_call",
+        //       function_name: "fn_temp_ticket_attachments",
+        //       params: {
+        //         p_session_id: localStorage.getItem("user_id") || "0",
+        //         p_file_name: file.name,
+        //         p_file_path: `/uploads/${file.name}`,
+        //         p_mime_type: file.type,
+        //         p_uploaded_by: localStorage.getItem("user_id") || "0"
+        //       }
+        //     };
+
+        //     const fd = new FormData();
+        //     fd.append("data", encryptData(tempPayload));
+        //     fd.append("file", file);
+
+        //     // show uploading
+        //     $status.text('Uploading...');
+
+        //     $.ajax({
+        //       url: `${BASE_API_URL}/commonfunction`,
+        //       method: "POST",
+        //       data: fd,
+        //       processData: false,
+        //       contentType: false,
+        //       dataType: 'json',
+        //       success(res) {
+        //         // mark uploaded, store returned path if available
+        //         $status.text('✔ Uploaded').removeClass('text-danger').addClass('text-success');
+        //         $small.hide();
+        //         $input.data('uploaded', true);
+
+        //         // if server returned file path/token, store it for final submit
+        //         try {
+        //           if (res && res.data) {
+        //             const dec = decryptData(res.data);
+        //             // backend shape may vary; try common fields
+        //             const uploadedPath = dec && dec[0] && (dec[0].uploaded_path || dec[0].file_path || dec[0].temp_path);
+        //             if (uploadedPath) $input.data('uploaded_path', uploadedPath);
+        //             // store server response token/row id if available
+        //             const tempId = dec && dec[0] && dec[0].temp_attachment_id;
+        //             if (tempId) $input.data('temp_id', tempId);
+        //           }
+        //         } catch (err) {
+        //           // ignore decrypt errors
+        //         }
+
+        //         // enable Add More for this wrapper (only if not maxed)
+        //         const current = $wrapper.find('.file-row').length;
+        //         if (current < MAX_FILE_ROWS) $addBtn.prop('disabled', false);
+        //       },
+        //       error() {
+        //         showErrorToast("File upload failed!");
+        //         input.value = "";
+        //         $status.text('✖ Failed').removeClass('text-success').addClass('text-danger');
+        //         $input.data('uploaded', false);
+        //         // keep add disabled on failure
+        //         $addBtn.prop('disabled', true);
+        //       }
+        //     });
+        //   });
+        // }
         function initFileModule($container, fileInputClass) {
           const MAX_FILE_ROWS = 3;
+
           $container.find('.file-wrapper').each(function () {
             const $wrapper = $(this);
             const $rows = $wrapper.find('.file-rows');
             if ($rows.children().length === 0) {
               $rows.append(getNewFileRow(fileInputClass, 1));
-              // Add More should be disabled initially (per requirement)
               $wrapper.find('.btn-add-file').prop('disabled', true);
             } else {
-              // if rows exist, determine Add More initial state:
               const anyUploaded = $wrapper.find(`input[type="file"].${fileInputClass}`).toArray().some(inp => $(inp).data('uploaded') === true);
               $wrapper.find('.btn-add-file').prop('disabled', !anyUploaded);
             }
           });
 
-          // remove previous handlers to avoid duplicates, then attach namespaced handlers
           $container.off('.fileModule');
 
           // ADD ONE ROW (disabled until upload success)
@@ -761,10 +943,7 @@
               return;
             }
 
-            // Append a single row only
             $wrapper.find('.file-rows').append(getNewFileRow(fileInputClass, $rows.length + 1));
-
-            // disable add until that row uploads successfully
             $addBtn.prop('disabled', true);
           });
 
@@ -774,22 +953,16 @@
             const $wrapper = $btn.closest('.file-wrapper');
             const $addBtn = $wrapper.find('.btn-add-file');
 
-            // remove row fully
             $btn.closest('.file-row').remove();
 
             let $rows = $wrapper.find('.file-row');
 
-            // ❗ if all rows removed — do NOT recreate new row automatically
             if ($rows.length === 0) {
-              // enable add button → user will add new file manually
               $addBtn.prop('disabled', false);
               return;
             }
 
-            // renumber the serial numbers
             $rows.each((i, el) => $(el).find('.file-label').text(i + 1));
-
-            // enable Add button after delete (your requirement)
             $addBtn.prop('disabled', false);
           });
 
@@ -830,12 +1003,15 @@
               return;
             }
 
-            // prepare payload & upload
+            // Get consistent session ID for all file uploads
+            const sessionId = getSessionId();
+
+            // prepare payload & upload with consistent session ID
             const tempPayload = {
               action: "function_call",
               function_name: "fn_temp_ticket_attachments",
               params: {
-                p_session_id: localStorage.getItem("user_id") || "0",
+                p_session_id: sessionId, // Use consistent session ID
                 p_file_name: file.name,
                 p_file_path: `/uploads/${file.name}`,
                 p_mime_type: file.type,
@@ -858,27 +1034,25 @@
               contentType: false,
               dataType: 'json',
               success(res) {
-                // mark uploaded, store returned path if available
                 $status.text('✔ Uploaded').removeClass('text-danger').addClass('text-success');
                 $small.hide();
                 $input.data('uploaded', true);
 
-                // if server returned file path/token, store it for final submit
                 try {
                   if (res && res.data) {
                     const dec = decryptData(res.data);
-                    // backend shape may vary; try common fields
                     const uploadedPath = dec && dec[0] && (dec[0].uploaded_path || dec[0].file_path || dec[0].temp_path);
                     if (uploadedPath) $input.data('uploaded_path', uploadedPath);
-                    // store server response token/row id if available
                     const tempId = dec && dec[0] && dec[0].temp_attachment_id;
                     if (tempId) $input.data('temp_id', tempId);
+
+                    // Also store the session ID used for this upload
+                    $input.data('session_id', sessionId);
                   }
                 } catch (err) {
                   // ignore decrypt errors
                 }
 
-                // enable Add More for this wrapper (only if not maxed)
                 const current = $wrapper.find('.file-row').length;
                 if (current < MAX_FILE_ROWS) $addBtn.prop('disabled', false);
               },
@@ -887,7 +1061,6 @@
                 input.value = "";
                 $status.text('✖ Failed').removeClass('text-success').addClass('text-danger');
                 $input.data('uploaded', false);
-                // keep add disabled on failure
                 $addBtn.prop('disabled', true);
               }
             });
@@ -910,14 +1083,50 @@
           });
 
           if (!isValid) {
-            return alert("Please fill all mandatory fields");
+            return showErrorToast("Please fill all mandatory fields");
           }
 
+          var type = $("#typeSelect").val();
+          var category = $("#categorySelect").val();
+          var subCat = $("#subCategorySelect").val();
+
+          // Store both values and jQuery objects
+          var fields = [
+            { value: type, $el: $("#typeSelect") },
+            { value: category, $el: $("#categorySelect") },
+            { value: subCat, $el: $("#subCategorySelect") }
+          ];
+
+          fields.forEach(field => {
+            if (!field.value || field.value.trim() === '') {
+              field.$el.addClass('is-invalid');
+              field.$el.next('.error-msg').remove();
+              field.$el.after('<span class="error-msg text-danger">This field is required</span>');
+              isValid = false;
+            } else {
+              field.$el.removeClass('is-invalid');
+              field.$el.next('.error-msg').remove();
+            }
+          });
+
+          if (!isValid) {
+            showErrorToast("Please fill all mandatory fields.");
+          }
+
+          if (!$('#declarationCheck').is(':checked')) {
+            $('#declarationError').text('You must agree to the declaration.').show();
+            isValid = false;
+            return showErrorToast("You must agree to the declaration.");
+          }
+          else { $('#declarationError').hide(); }
+
+          const sessionId = getSessionId();
+
           const params = {
-            p_session_id: 1,
-            p_complainant_name: $("#complainantName").val()?.trim() || null,
-            p_mobile: $("#mobile").val()?.trim() || null,
-            p_email: $("#email").val()?.trim() || null,
+            p_session_id: sessionId,
+            p_complainant_name: localStorage.getItem("user_name") || "Guest User",
+            p_mobile: localStorage.getItem("mobile") || null,
+            p_email: localStorage.getItem("email") || null,
             p_district_id: $("#districtSelect").val() || null,
             p_issue_id: $("#typeSelect").val() || null,
             p_created_by: "1",
