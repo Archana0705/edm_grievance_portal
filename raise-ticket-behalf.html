@@ -1484,343 +1484,6 @@
 </div>`;
       }
 
-
-      //       function generateDynamicFields(columnsString, prefix, $container, fileInputClass) {
-      //         $container.empty();
-
-      //         let fieldsArray = [];
-
-      //         if (!columnsString || (Array.isArray(columnsString) && columnsString.length === 0)) {
-      //           $container.append('<p>No additional fields required for this subcategory.</p>');
-      //           return;
-      //         }
-
-      //         try {
-      //           if (typeof columnsString === "string") {
-      //             const trimmed = columnsString.trim();
-      //             fieldsArray = (trimmed.startsWith('[') || trimmed.startsWith('{')) ? JSON.parse(trimmed) :
-      //               trimmed.split(',').map(c => ({ legacy_code: c.trim() }));
-      //           } else if (Array.isArray(columnsString)) {
-      //             fieldsArray = columnsString;
-      //           }
-      //         } catch (e) {
-      //           console.error(e);
-      //           $container.append('<p class="text-danger">Error loading dynamic fields.</p>');
-      //           return;
-      //         }
-
-      //         // Check if any field requires Aadhaar validation
-      //         const hasAadhaarField = fieldsArray.some(f =>
-      //           (f.column_name || '').toLowerCase().includes('aadhaar') ||
-      //           (f.column_name || '').toLowerCase().includes('aadhar') ||
-      //           (f.legacy_code || '').toLowerCase().includes('aadhaar') ||
-      //           (f.legacy_code || '').toLowerCase().includes('aadhar')
-      //         );
-
-      //         // Generate only the actual dynamic fields
-      //         fieldsArray.forEach((f, index) => {
-      //           const rawCol = f.column_name || f.column_id || f.legacy_code || `field_${index}`;
-      //           const colId = rawCol
-      //             .toString()
-      //             .trim()
-      //             .toLowerCase()
-      //             .replace(/\s+/g, '_')
-      //             .replace(/[^a-z0-9_]/g, '');
-      //           const inputId = `field_${prefix}_${colId}`;
-      //           const isMandatory = (f.required || f.manopt || '').toString().toLowerCase() === 'mandatory';
-      //           const mandatoryAttr = isMandatory ? 'data-mandatory="true"' : '';
-      //           const dataParam = `p_${colId}`;
-      //           let fieldHtml = '';
-
-      //           // Skip if this is an Aadhaar field (we'll handle it separately)
-      //           const isAadhaarField = (f.column_name || '').toLowerCase().includes('aadhaar') ||
-      //             (f.column_name || '').toLowerCase().includes('aadhar') ||
-      //             (f.legacy_code || '').toLowerCase().includes('aadhaar') ||
-      //             (f.legacy_code || '').toLowerCase().includes('aadhar');
-
-      //           if (isAadhaarField) {
-      //             // This is an Aadhaar field - we'll handle it in the Aadhaar section
-      //             return; // Skip this iteration
-      //           }
-
-      //           if (f.field_type === 'attachment') {
-      //             fieldHtml = `
-      // <div id="wrapper_${inputId}" class="mb-3 file-wrapper" data-col="${colId}" ${mandatoryAttr} data-param="${dataParam}">
-      //   <label class="form-label">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
-      //   <div class="row fw-bold border-bottom pb-2 mb-2">
-      //     <div class="col-md-1">S No</div>
-      //     <div class="col-md-4">Attachment Description</div>
-      //     <div class="col-md-4">Attachment</div>
-      //     <div class="col-md-3">Actions</div>
-      //   </div>
-      //   <div class="file-rows"></div>
-      //   <div class="mt-2">
-      //     <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button>
-      //   </div>
-      // </div>`;
-      //           } else if (f.field_type === 'dropdown') {
-      //             fieldHtml = `
-      // <div class="mb-3">
-      //   <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
-      //   <select id="${inputId}" class="form-select" ${mandatoryAttr} data-param="${dataParam}">
-      //       <option value="">-- Select --</option>
-      //   </select>
-      // </div>`;
-      //           } else if (f.field_type === 'textarea' || f.field_type === 'long text') {
-      //             fieldHtml = `
-      // <div class="mb-3">
-      //   <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
-      //   <textarea id="${inputId}" class="form-control" rows="4" ${mandatoryAttr} data-param="${dataParam}"></textarea>
-      // </div>`;
-      //           } else {
-      //             fieldHtml = `
-      // <div class="mb-3">
-      //   <label for="${inputId}">${f.column_name || colId}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
-      //   <input id="${inputId}" type="text" class="form-control" ${mandatoryAttr} data-param="${dataParam}">
-      // </div>`;
-      //           }
-
-      //           $container.append(fieldHtml);
-
-      //           // populate dropdowns where needed (district)
-      //           if (f.field_type === 'dropdown') {
-      //             const isDistrict = (f.options_source || '').toLowerCase() === 'district' || (f.column_name || '').toLowerCase().includes('district');
-      //             if (isDistrict) {
-      //               $.ajax({
-      //                 url: `${BASE_API_URL}/commonfunction`,
-      //                 method: "POST",
-      //                 data: { data: encryptData({ action: "function_call", function_name: "fn_district_list", params: {} }) },
-      //                 dataType: 'json',
-      //                 success(res) {
-      //                   try {
-      //                     const districts = decryptData(res.data) || [];
-      //                     const $select = $(`#${inputId}`);
-      //                     $select.empty().append(`<option value="">-- Select District --</option>`);
-      //                     (Array.isArray(districts) ? districts : []).forEach(d => $select.append(`<option value="${d.id}">${d.district}</option>`));
-      //                   } catch (err) {
-      //                     console.warn("District parse error", err);
-      //                   }
-      //                 },
-      //                 error() { $(`#${inputId}`).empty().append(`<option value="">District load failed</option>`); }
-      //               });
-      //             } else if (f.values && f.values.length) {
-      //               f.values.forEach(v => $(`#${inputId}`).append(`<option value="${v}">${v}</option>`));
-      //             }
-      //           }
-      //         });
-
-      //         // Add Aadhaar consent section ONLY if Aadhaar fields are present AND it's not already there
-      //         if (hasAadhaarField) {
-      //           // Check if Aadhaar consent section already exists to avoid duplication
-      //           const existingAadhaarSection = $container.closest('form').find('.aadhaar-consent-section');
-
-      //           if (existingAadhaarSection.length === 0) {
-      //             const aadhaarConsentHtml = `
-      // <div class="mb-3 aadhaar-consent-section">
-      //   <div class="card border-warning">
-      //     <div class="card-header bg-warning bg-opacity-10">
-      //       <h6 class="mb-0">Aadhaar Consent Declaration</h6>
-      //     </div>
-      //     <div class="card-body">
-      //       <div class="form-check">
-      //         <input class="form-check-input aadhaar-consent-checkbox" type="checkbox" id="aadhaarConsent_${prefix}">
-      //         <label class="form-check-label" for="aadhaarConsent_${prefix}">
-      //           I hereby voluntarily give my consent to use Aadhaar details furnished herewith for the purposes of addressing eSevai related service requests submitted on this portal. <span class="text-danger">*</span>
-      //         </label>
-      //       </div>
-      //       <small class="text-muted">You must check this box to proceed with submission if Aadhaar details are required.</small>
-      //       <div class="error-msg aadhaar-consent-error text-danger mt-1" style="display: none;"></div>
-      //     </div>
-      //   </div>
-      // </div>`;
-
-      //             // Append the Aadhaar consent section AFTER the dynamic fields container
-      //             $container.after(aadhaarConsentHtml);
-      //           }
-      //         } else {
-      //           // Remove Aadhaar consent section if no Aadhaar fields are present
-      //           $container.closest('form').find('.aadhaar-consent-section').remove();
-      //         }
-
-      //         // initialize file module for newly created wrappers
-      //         initFileModule($container, fileInputClass);
-      //       }
-
-      // function generateDynamicFields(columnsString, prefix, $container, fileInputClass) {
-      //   $container.empty();
-
-      //   let fieldsArray = [];
-
-      //   if (!columnsString || (Array.isArray(columnsString) && columnsString.length === 0)) {
-      //     $container.append('<p>No additional fields required for this subcategory.</p>');
-      //     return;
-      //   }
-
-      //   try {
-      //     if (typeof columnsString === "string") {
-      //       const trimmed = columnsString.trim();
-      //       fieldsArray = (trimmed.startsWith('[') || trimmed.startsWith('{')) ? JSON.parse(trimmed) :
-      //         trimmed.split(',').map(c => ({ legacy_code: c.trim() }));
-      //     } else if (Array.isArray(columnsString)) {
-      //       fieldsArray = columnsString;
-      //     }
-      //   } catch (e) {
-      //     console.error(e);
-      //     $container.append('<p class="text-danger">Error loading dynamic fields.</p>');
-      //     return;
-      //   }
-
-      //   // Check if any field requires Aadhaar validation
-      //   const hasAadhaarField = fieldsArray.some(f =>
-      //     (f.column_name || '').toLowerCase().includes('aadhaar') ||
-      //     (f.column_name || '').toLowerCase().includes('aadhar') ||
-      //     (f.legacy_code || '').toLowerCase().includes('aadhaar') ||
-      //     (f.legacy_code || '').toLowerCase().includes('aadhar')
-      //   );
-
-      //   // Generate ALL dynamic fields including Aadhaar fields
-      //   fieldsArray.forEach((f, index) => {
-      //     const rawCol = f.column_name || f.column_id || f.legacy_code || `field_${index}`;
-      //     const colId = rawCol
-      //       .toString()
-      //       .trim()
-      //       .toLowerCase()
-      //       .replace(/\s+/g, '_')
-      //       .replace(/[^a-z0-9_]/g, '');
-      //     const inputId = `field_${prefix}_${colId}`;
-      //     const isMandatory = (f.required || f.manopt || '').toString().toLowerCase() === 'mandatory';
-      //     const mandatoryAttr = isMandatory ? 'data-mandatory="true"' : '';
-      //     const dataParam = `p_${colId}`;
-      //     let fieldHtml = '';
-
-      //     // Check if this is an Aadhaar field for special handling
-      //     const isAadhaarField = (f.column_name || '').toLowerCase().includes('aadhaar') ||
-      //       (f.column_name || '').toLowerCase().includes('aadhar') ||
-      //       (f.legacy_code || '').toLowerCase().includes('aadhaar') ||
-      //       (f.legacy_code || '').toLowerCase().includes('aadhar');
-
-      //     if (f.field_type === 'attachment') {
-      //       fieldHtml = `
-      //           <div id="wrapper_${inputId}" class="mb-3 file-wrapper" data-col="${colId}" ${mandatoryAttr} data-param="${dataParam}">
-      //             <label class="form-label">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
-      //             <div class="row fw-bold border-bottom pb-2 mb-2">
-      //               <div class="col-md-1">S No</div>
-      //               <div class="col-md-4">Attachment Description</div>
-      //               <div class="col-md-4">Attachment</div>
-      //               <div class="col-md-3">Actions</div>
-      //             </div>
-      //             <div class="file-rows"></div>
-      //             <div class="mt-2">
-      //               <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button>
-      //             </div>
-      //           </div>`;
-      //     } else if (f.field_type === 'dropdown') {
-      //       fieldHtml = `
-      //           <div class="mb-3">
-      //             <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
-      //             <select id="${inputId}" class="form-select" ${mandatoryAttr} data-param="${dataParam}">
-      //                 <option value="">-- Select --</option>
-      //             </select>
-      //           </div>`;
-      //     } else if (f.field_type === 'textarea' || f.field_type === 'long text') {
-      //       fieldHtml = `
-      //           <div class="mb-3">
-      //             <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
-      //             <textarea id="${inputId}" class="form-control" rows="4" ${mandatoryAttr} data-param="${dataParam}"></textarea>
-      //           </div>`;
-      //     } else {
-      //       // For text input fields - including Aadhaar fields
-      //       if (isAadhaarField) {
-      //         // Special styling for Aadhaar fields
-      //         fieldHtml = `
-      //         <div class="mb-3 aadhaar-input-field">
-      //           <label for="${inputId}" class="form-label">
-      //             <i class="fas fa-id-card text-warning me-2"></i>
-      //             ${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}
-      //           </label>
-      //           <input id="${inputId}" type="text" class="form-control aadhaar-input" 
-      //                 placeholder="Enter 12-digit Aadhaar number" 
-      //                 maxlength="12" pattern="[0-9]{12}" 
-      //                 ${mandatoryAttr} data-param="${dataParam}">
-      //           <small class="text-muted">Enter your 12-digit Aadhaar number without spaces</small>
-      //         </div>`;
-      //       } else {
-      //         // Regular text field
-      //         fieldHtml = `
-      //         <div class="mb-3">
-      //           <label for="${inputId}">${f.column_name || colId}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
-      //           <input id="${inputId}" type="text" class="form-control" ${mandatoryAttr} data-param="${dataParam}">
-      //         </div>`;
-      //       }
-      //     }
-
-      //     $container.append(fieldHtml);
-
-      //     // populate dropdowns where needed (district)
-      //     if (f.field_type === 'dropdown') {
-      //       const isDistrict = (f.options_source || '').toLowerCase() === 'district' || (f.column_name || '').toLowerCase().includes('district');
-      //       if (isDistrict) {
-      //         $.ajax({
-      //           url: `${BASE_API_URL}/commonfunction`,
-      //           method: "POST",
-      //           data: { data: encryptData({ action: "function_call", function_name: "fn_district_list", params: {} }) },
-      //           dataType: 'json',
-      //           success(res) {
-      //             try {
-      //               const districts = decryptData(res.data) || [];
-      //               const $select = $(`#${inputId}`);
-      //               $select.empty().append(`<option value="">-- Select District --</option>`);
-      //               (Array.isArray(districts) ? districts : []).forEach(d => $select.append(`<option value="${d.id}">${d.district}</option>`));
-      //             } catch (err) {
-      //               console.warn("District parse error", err);
-      //             }
-      //           },
-      //           error() { $(`#${inputId}`).empty().append(`<option value="">District load failed</option>`); }
-      //         });
-      //       } else if (f.values && f.values.length) {
-      //         f.values.forEach(v => $(`#${inputId}`).append(`<option value="${v}">${v}</option>`));
-      //       }
-      //     }
-      //   });
-
-      //   // Add Aadhaar consent section ONLY if Aadhaar fields are present
-      //   if (hasAadhaarField) {
-      //     // Remove any existing Aadhaar consent section first to avoid duplication
-      //     $container.next('.aadhaar-consent-section').remove();
-
-      //     const aadhaarConsentHtml = `
-      //     <div class="mb-3 aadhaar-consent-section">
-      //       <div class="card border-warning">
-      //         <div class="card-header bg-warning bg-opacity-10">
-      //           <h6 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Aadhaar Consent Declaration</h6>
-      //         </div>
-      //         <div class="card-body">
-      //           <div class="form-check">
-      //             <input class="form-check-input aadhaar-consent-checkbox" type="checkbox" id="aadhaarConsent_${prefix}">
-      //             <label class="form-check-label" for="aadhaarConsent_${prefix}">
-      //               I hereby voluntarily give my consent to use Aadhaar details furnished herewith for the purposes of addressing eSevai related service requests submitted on this portal. <span class="text-danger">*</span>
-      //             </label>
-      //           </div>
-      //           <small class="text-muted">You must check this box to proceed with submission when Aadhaar details are required.</small>
-      //           <div class="error-msg aadhaar-consent-error text-danger mt-1" style="display: none;"></div>
-      //         </div>
-      //       </div>
-      //     </div>`;
-
-      //     // Append the Aadhaar consent section AFTER the dynamic fields container
-      //     $container.after(aadhaarConsentHtml);
-      //   } else {
-      //     // Remove Aadhaar consent section if no Aadhaar fields are present
-      //     $container.next('.aadhaar-consent-section').remove();
-      //   }
-
-      //   // Initialize Aadhaar input validation
-      //   initAadhaarValidation($container);
-
-      //   // initialize file module for newly created wrappers
-      //   initFileModule($container, fileInputClass);
-      // }
-
       function generateDynamicFields(columnsString, prefix, $container, fileInputClass, categoryId = null, subcategoryId = null) {
         $container.empty();
 
@@ -1891,110 +1554,108 @@
           if (f.field_type === 'attachment') {
             fieldHtml = `
             <div id="wrapper_${inputId}" class="mb-3 file-wrapper" data-col="${colId}" ${mandatoryAttr} data-param="${dataParam}">
-              <label class="form-label">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
-              <div class="row fw-bold border-bottom pb-2 mb-2">
-                <div class="col-md-1">S No</div>
-                <div class="col-md-4">Attachment Description</div>
-                <div class="col-md-4">Attachment</div>
-                <div class="col-md-3">Actions</div>
-              </div>
-              <div class="file-rows"></div>
-              <div class="mt-2">
-                <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button>
-              </div>
+                <label class="form-label">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+                <div class="row fw-bold border-bottom pb-2 mb-2">
+                    <div class="col-md-1">S No</div>
+                    <div class="col-md-4">Attachment Description</div>
+                    <div class="col-md-4">Attachment</div>
+                    <div class="col-md-3">Actions</div>
+                </div>
+                <div class="file-rows"></div>
+                <div class="mt-2">
+                    <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button>
+                </div>
             </div>`;
           } else if (f.field_type === 'dropdown' || (isChangesRequiredField && isCANEdit)) {
-            // In the generateDynamicFields function, update the changes required section:
             if (isChangesRequiredField && isCANEdit) {
               fieldHtml = `
-            <div class="mb-3 col-lg-4 changes-required-field">
-              <label for="${inputId}" class="form-label">
-                <i class="fas fa-edit text-primary me-2"></i>
-                ${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}
-              </label>
-              
-              <select id="${inputId}" class="form-select changes-required-dropdown" data-param="${dataParam}">
-                <option value="">-- Select Change Type --</option>
-                <option value="name_tamil">Name in Tamil</option>
-                <option value="name_english">Name in English</option>
-                <option value="date_of_birth">Date of Birth</option>
-                <option value="gender">Gender</option>
-                <option value="religion">Religion</option>
-                <option value="community">Community</option>
-                <option value="marital_status">Marital Status</option>
-                <option value="address">Address</option>
-                <option value="mobile_number">Mobile Number</option>
-                <option value="other_details">Any Other Details</option>
-              </select>
-              <small class="text-muted">Select what you want to change</small>
-              <div class="error-msg changes-required-error text-danger mt-1" style="display: none;"></div>
-            </div>
+                <div class="mb-3 col-lg-4 changes-required-field">
+                    <label for="${inputId}" class="form-label">
+                        <i class="fas fa-edit text-primary me-2"></i>
+                        ${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}
+                    </label>
+                    
+                    <select id="${inputId}" class="form-select changes-required-dropdown" data-param="${dataParam}">
+                        <option value="">-- Select Change Type --</option>
+                        <option value="name_tamil">Name in Tamil</option>
+                        <option value="name_english">Name in English</option>
+                        <option value="date_of_birth">Date of Birth</option>
+                        <option value="gender">Gender</option>
+                        <option value="religion">Religion</option>
+                        <option value="community">Community</option>
+                        <option value="marital_status">Marital Status</option>
+                        <option value="address">Address</option>
+                        <option value="mobile_number">Mobile Number</option>
+                        <option value="other_details">Any Other Details</option>
+                    </select>
+                    <small class="text-muted">Select what you want to change</small>
+                    <div class="error-msg changes-required-error text-danger mt-1" style="display: none;"></div>
+                </div>
 
-            <!-- Single card container - will show only one card at a time -->
-            <div id="currentChangeCard_${prefix}" class="current-change-card mt-3">
-              <!-- Only one card will be shown here at a time -->
-            </div>
+                <!-- Single card container - will show only one card at a time -->
+                <div id="currentChangeCard_${prefix}" class="current-change-card mt-3">
+                    <!-- Only one card will be shown here at a time -->
+                </div>
 
-            <!-- Container for multiple change requests (when user wants to add more) -->
-            <div id="changeRequestsContainer_${prefix}" class="change-requests-container mt-3" style="display: none;">
-              <!-- Previously added change requests will be stored here -->
-            </div>
+                <!-- Container for multiple change requests (when user wants to add more) -->
+                <div id="changeRequestsContainer_${prefix}" class="change-requests-container mt-3" style="display: none;">
+                    <!-- Previously added change requests will be stored here -->
+                </div>
 
-            <!-- Add to List Button - appears when a card is shown -->
-            <div class="mb-3 add-to-list-section" style="display: none;">
-              <button type="button" class="btn btn-success btn-sm btn-add-to-list" data-prefix="${prefix}">
-                <i class="fas fa-plus me-1"></i> Add This Change to List
-              </button>
-              <small class="text-muted ms-2">Click to save this change and add another</small>
-            </div>
+                <!-- Add to List Button - appears when a card is shown -->
+                <div class="mb-3 add-to-list-section" style="display: none;">
+                    <button type="button" class="btn btn-success btn-sm btn-add-to-list" data-prefix="${prefix}">
+                        <i class="fas fa-plus me-1"></i> Add This Change to List
+                    </button>
+                    <small class="text-muted ms-2">Click to save this change and add another</small>
+                </div>
 
-            <!-- Show current changes list -->
-            <div id="changesList_${prefix}" class="changes-list-section mt-3" style="display: none;">
-              <h6 class="border-bottom pb-2">Current Changes:</h6>
-              <div id="changesListItems_${prefix}" class="changes-list-items">
-                <!-- List of added changes will appear here -->
-              </div>
-            </div>`;
-            }
-            else {
+                <!-- Show current changes list -->
+                <div id="changesList_${prefix}" class="changes-list-section mt-3" style="display: none;">
+                    <h6 class="border-bottom pb-2">Current Changes:</h6>
+                    <div id="changesListItems_${prefix}" class="changes-list-items">
+                        <!-- List of added changes will appear here -->
+                    </div>
+                </div>`;
+            } else {
               // Regular dropdown field
               fieldHtml = `
-          <div class="mb-3 col-lg-4">
-            <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
-            <select id="${inputId}" class="form-select" ${mandatoryAttr} data-param="${dataParam}">
-                <option value="">-- Select --</option>
-            </select>
-          </div>`;
+                <div class="mb-3 col-lg-4">
+                    <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+                    <select id="${inputId}" class="form-select" ${mandatoryAttr} data-param="${dataParam}">
+                        <option value="">-- Select --</option>
+                    </select>
+                </div>`;
             }
           } else if (f.field_type === 'textarea' || f.field_type === 'long text') {
             fieldHtml = `
                 <div class="mb-3 col-lg-4">
-                  <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
-                  <textarea id="${inputId}" class="form-control" rows="4" ${mandatoryAttr} data-param="${dataParam}"></textarea>
+                    <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+                    <textarea id="${inputId}" class="form-control" rows="4" ${mandatoryAttr} data-param="${dataParam}"></textarea>
                 </div>`;
           } else {
             // For text input fields
             if (isAadhaarField) {
               // Special styling for Aadhaar fields
               fieldHtml = `
-            <div class="mb-3 col-lg-4 aadhaar-input-field">
-              <label for="${inputId}" class="form-label">
-                <i class="fas fa-id-card text-warning me-2"></i>
-                ${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}
-              </label>
-              <input id="${inputId}" type="text" class="form-control aadhaar-input" 
-                    placeholder="Enter 12-digit Aadhaar number" 
-                    maxlength="12" pattern="[0-9]{12}" 
-                    ${mandatoryAttr} data-param="${dataParam}">
-              <small class="text-muted">Enter your 12-digit Aadhaar number without spaces</small>
-            </div>`;
+                <div class="mb-3 col-lg-4 aadhaar-input-field">
+                    <label for="${inputId}" class="form-label">
+                        <i class="fas fa-id-card text-warning me-2"></i>
+                        ${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}
+                    </label>
+                    <input id="${inputId}" type="text" class="form-control aadhaar-input" 
+                            placeholder="Enter 12-digit Aadhaar number" 
+                            maxlength="12" pattern="[0-9]{12}" 
+                            ${mandatoryAttr} data-param="${dataParam}">
+                    <small class="text-muted">Enter your 12-digit Aadhaar number without spaces</small>
+                </div>`;
             } else {
               // Regular text field
               fieldHtml = `
-          <div class="mb-3">
-            <label for="${inputId}">${f.column_name || colId}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
-            <input id="${inputId}" type="text" class="form-control" ${mandatoryAttr} data-param="${dataParam}">
-          </div>`;
+                <div class="mb-3">
+                    <label for="${inputId}">${f.column_name || colId}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+                    <input id="${inputId}" type="text" class="form-control" ${mandatoryAttr} data-param="${dataParam}">
+                </div>`;
             }
           }
 
@@ -2021,18 +1682,7 @@
         initFileModule($container, fileInputClass);
       }
 
-      // Check if category is CAN Related and subcategory is CAN Edit
       function checkIfCANEdit(categoryId, subcategoryId) {
-        // Method 1: Check by category and subcategory IDs (if you have predefined IDs)
-        // const CAN_CATEGORY_IDS = [5, 6, 7]; // Example CAN-related category IDs
-        // const CAN_EDIT_SUBCATEGORY_IDS = [12, 13, 14]; // Example CAN edit subcategory IDs
-
-        // if (CAN_CATEGORY_IDS.includes(parseInt(categoryId)) && 
-        //     CAN_EDIT_SUBCATEGORY_IDS.includes(parseInt(subcategoryId))) {
-        //   return true;
-        // }
-
-        // Method 2: Check by category and subcategory names (more flexible)
         const categoryName = $("#categorySelectBehalf option:selected").text() ||
           $("#categorySelect option:selected").text() ||
           "";
@@ -2056,62 +1706,37 @@
         return isCANCategory && isEditSubcategory;
       }
 
-      // Add Aadhaar Consent Section
       function addAadhaarConsentSection(prefix, $container) {
         // Remove any existing Aadhaar consent section first
         $container.next('.aadhaar-consent-section').remove();
 
         const aadhaarConsentHtml = `
-<div class="mb-3 aadhaar-consent-section">
-  <div class="card border-warning">
-    <div class="card-header bg-warning bg-opacity-10">
-      <h6 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Aadhaar Consent Declaration</h6>
-    </div>
-    <div class="card-body">
-      <div class="form-check">
-        <input class="form-check-input aadhaar-consent-checkbox" type="checkbox" id="aadhaarConsent_${prefix}">
-        <label class="form-check-label" for="aadhaarConsent_${prefix}">
-          I hereby voluntarily give my consent to use Aadhaar details furnished herewith for the purposes of addressing eSevai related service requests submitted on this portal. <span class="text-danger">*</span>
-        </label>
-      </div>
-      <small class="text-muted">You must check this box to proceed with submission when Aadhaar details are required.</small>
-      <div class="error-msg aadhaar-consent-error text-danger mt-1" style="display: none;"></div>
-    </div>
-  </div>
-</div>`;
+    <div class="mb-3 aadhaar-consent-section">
+        <div class="card border-warning">
+            <div class="card-header bg-warning bg-opacity-10">
+                <h6 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Aadhaar Consent Declaration</h6>
+            </div>
+            <div class="card-body">
+                <div class="form-check">
+                    <input class="form-check-input aadhaar-consent-checkbox" type="checkbox" id="aadhaarConsent_${prefix}">
+                    <label class="form-check-label" for="aadhaarConsent_${prefix}">
+                        I hereby voluntarily give my consent to use Aadhaar details furnished herewith for the purposes of addressing eSevai related service requests submitted on this portal. <span class="text-danger">*</span>
+                    </label>
+                </div>
+                <small class="text-muted">You must check this box to proceed with submission when Aadhaar details are required.</small>
+                <div class="error-msg aadhaar-consent-error text-danger mt-1" style="display: none;"></div>
+            </div>
+        </div>
+    </div>`;
 
         $container.after(aadhaarConsentHtml);
       }
 
-      // Populate Dropdown with Options
       function populateDropdown(inputId, fieldConfig) {
         const $select = $(`#${inputId}`);
 
-        const isDistrict = (fieldConfig.options_source || '').toLowerCase() === 'district' ||
-          (fieldConfig.column_name || '').toLowerCase().includes('district');
-
-        if (isDistrict) {
-          $.ajax({
-            url: `${BASE_API_URL}/commonfunction`,
-            method: "POST",
-            data: { data: encryptData({ action: "function_call", function_name: "fn_district_list", params: {} }) },
-            dataType: 'json',
-            success(res) {
-              try {
-                const districts = decryptData(res.data) || [];
-                $select.empty().append(`<option value="">-- Select District --</option>`);
-                (Array.isArray(districts) ? districts : []).forEach(d => {
-                  $select.append(`<option value="${d.id}">${d.district}</option>`);
-                });
-              } catch (err) {
-                console.warn("District parse error", err);
-              }
-            },
-            error() {
-              $select.empty().append(`<option value="">District load failed</option>`);
-            }
-          });
-        } else if (fieldConfig.values && fieldConfig.values.length) {
+        // Only handle static values now since district cascading is removed
+        if (fieldConfig.values && fieldConfig.values.length) {
           // Populate with static values
           fieldConfig.values.forEach(v => {
             $select.append(`<option value="${v}">${v}</option>`);
@@ -2119,7 +1744,6 @@
         }
       }
 
-      // Initialize CAN Edit Change Requests - SINGLE CARD VERSION
       function initCANEditChangeRequests(prefix, $container) {
         const $dropdown = $container.find('.changes-required-dropdown');
         const $currentCardContainer = $(`#currentChangeCard_${prefix}`);
@@ -2189,7 +1813,6 @@
         initChangesListRemoval(prefix);
       }
 
-      // Add Change Request Card (single card)
       function addChangeRequestCard(prefix, changeType, $container) {
         const requestId = `current_change_${prefix}_${changeType}`;
         const changeTypes = {
@@ -2252,80 +1875,76 @@
         switch (changeConfig.field) {
           case 'text':
             fieldHtml = `
-        <input type="text" class="form-control change-request-input" 
-               placeholder="${changeConfig.placeholder || ''}" 
-               data-change-type="${changeType}" required>
-        <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
+            <input type="text" class="form-control change-request-input" 
+                   placeholder="${changeConfig.placeholder || ''}" 
+                   data-change-type="${changeType}" required>
+            <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
             break;
 
           case 'date':
             fieldHtml = `
-        <input type="date" class="form-control change-request-input" 
-               data-change-type="${changeType}" required>
-        <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
+            <input type="date" class="form-control change-request-input" 
+                   data-change-type="${changeType}" required>
+            <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
             break;
 
           case 'select':
             fieldHtml = `
-        <select class="form-select change-request-input" data-change-type="${changeType}" required>
-          <option value="">-- Select New ${changeConfig.label} --</option>
-          ${changeConfig.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
-        </select>
-        <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
+            <select class="form-select change-request-input" data-change-type="${changeType}" required>
+                <option value="">-- Select New ${changeConfig.label} --</option>
+                ${changeConfig.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+            </select>
+            <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
             break;
           case 'textarea':
             fieldHtml = `
-        <textarea class="form-control change-request-input" rows="3" 
-                  placeholder="${changeConfig.placeholder || ''}" 
-                  data-change-type="${changeType}" required></textarea>
-        <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
+            <textarea class="form-control change-request-input" rows="3" 
+                      placeholder="${changeConfig.placeholder || ''}" 
+                      data-change-type="${changeType}" required></textarea>
+            <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
             break;
 
           case 'tel':
             fieldHtml = `
-        <input type="tel" class="form-control change-request-input" 
-               placeholder="${changeConfig.placeholder || ''}" 
-               maxlength="10" pattern="[0-9]{10}"
-               data-change-type="${changeType}" required>
-        <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
+            <input type="tel" class="form-control change-request-input" 
+                   placeholder="${changeConfig.placeholder || ''}" 
+                   maxlength="10" pattern="[0-9]{10}"
+                   data-change-type="${changeType}" required>
+            <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
             break;
         }
 
         const changeRequestHtml = `
-<div class="change-request-card card mb-3" id="${requestId}" data-change-type="${changeType}">
-  <div class="card-header bg-primary text-white">
-    <h6 class="mb-0"><i class="fas fa-edit me-2"></i>Change: ${changeConfig.label}</h6>
-  </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <label class="form-label">New Value <span class="text-danger">*</span></label>
-        ${fieldHtml}
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">Current Value (if known)</label>
-        <input type="text" class="form-control current-value-input" 
-               placeholder="Enter current value (optional)">
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <label class="form-label">Reason for Change <span class="text-danger">*</span></label>
-        <textarea class="form-control reason-input" rows="2" 
-                  placeholder="Explain why this change is required" required></textarea>
-        <div class="error-msg text-danger mt-1" style="display: none;"></div>
-      </div>
-    </div>
-  </div>
-</div>`;
+    <div class="change-request-card card mb-3" id="${requestId}" data-change-type="${changeType}">
+        <div class="card-header bg-primary text-white">
+            <h6 class="mb-0"><i class="fas fa-edit me-2"></i>Change: ${changeConfig.label}</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">New Value <span class="text-danger">*</span></label>
+                    ${fieldHtml}
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Current Value (if known)</label>
+                    <input type="text" class="form-control current-value-input" 
+                           placeholder="Enter current value (optional)">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <label class="form-label">Reason for Change <span class="text-danger">*</span></label>
+                    <textarea class="form-control reason-input" rows="2" 
+                              placeholder="Explain why this change is required" required></textarea>
+                    <div class="error-msg text-danger mt-1" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>`;
 
         $container.html(changeRequestHtml);
-
-        // Initialize cascading dropdowns for location fields
-        initChangeRequestCascadingDropdowns(`#${requestId}`);
       }
 
-      // Reset change selection
       function resetChangeSelection(prefix) {
         const $dropdown = $(`.changes-required-dropdown`);
         const $currentCardContainer = $(`#currentChangeCard_${prefix}`);
@@ -2336,7 +1955,6 @@
         $addToListSection.hide();
       }
 
-      // Validate current change card
       function validateCurrentChangeCard(prefix) {
         const $currentCard = $(`#currentChangeCard_${prefix} .change-request-card`);
         let isValid = true;
@@ -2377,7 +1995,6 @@
         return isValid;
       }
 
-      // Update changes list
       function updateChangesList(prefix) {
         const $changeRequestsContainer = $(`#changeRequestsContainer_${prefix}`);
         const $changesListItems = $(`#changesListItems_${prefix}`);
@@ -2394,27 +2011,23 @@
             'religion': 'Religion',
             'community': 'Community',
             'marital_status': 'Marital Status',
-            'district': 'District',
-            'taluk': 'Taluk',
-            'village': 'Village',
             'address': 'Address',
             'mobile_number': 'Mobile Number',
             'other_details': 'Other Details'
           };
 
           const listItem = `
-<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
-  <span>${index + 1}. ${changeTypes[changeType]}</span>
-  <button type="button" class="btn btn-sm btn-outline-danger btn-remove-from-list" data-card-id="${$(this).attr('id')}">
-    <i class="fas fa-times"></i>
-  </button>
-</div>`;
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+            <span>${index + 1}. ${changeTypes[changeType]}</span>
+            <button type="button" class="btn btn-sm btn-outline-danger btn-remove-from-list" data-card-id="${$(this).attr('id')}">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>`;
 
           $changesListItems.append(listItem);
         });
       }
 
-      // Initialize changes list removal
       function initChangesListRemoval(prefix) {
         $(document).on('click', `.btn-remove-from-list[data-card-id]`, function () {
           const cardId = $(this).data('card-id');
@@ -2427,284 +2040,7 @@
           }
         });
       }
-      function addChangeRequestSection(prefix, changeType, $container) {
-        const requestId = `change_${prefix}_${Date.now()}`;
-        const changeTypes = {
-          'name_tamil': {
-            label: 'Name in Tamil',
-            field: 'text',
-            placeholder: 'Enter new name in Tamil'
-          },
-          'name_english': {
-            label: 'Name in English',
-            field: 'text',
-            placeholder: 'Enter new name in English'
-          },
-          'date_of_birth': {
-            label: 'Date of Birth',
-            field: 'date'
-          },
-          'gender': {
-            label: 'Gender',
-            field: 'select',
-            options: ['Male', 'Female', 'Transgender']
-          },
-          'religion': {
-            label: 'Religion',
-            field: 'select',
-            options: ['Hindu', 'Christian', 'Sikh', 'Buddhist', 'Jain', 'Islam', 'Others', 'Not stated']
-          },
-          'community': {
-            label: 'Community',
-            field: 'select',
-            options: ['OC', 'BC', 'MBC', 'SC', 'ST', 'DNC (Christian)', 'FC', 'BC (Muslim)']
-          },
-          'marital_status': {
-            label: 'Marital Status',
-            field: 'select',
-            options: ['Not married', 'Married', 'Divorced', 'Separated', 'Widow/widower']
-          },
-          'district': {
-            label: 'District',
-            field: 'district_select'
-          },
-          'taluk': {
-            label: 'Taluk',
-            field: 'taluk_select'
-          },
-          'village': {
-            label: 'Village',
-            field: 'village_select'
-          },
-          'address': {
-            label: 'Address',
-            field: 'textarea',
-            placeholder: 'Enter new address'
-          },
-          'mobile_number': {
-            label: 'Mobile Number',
-            field: 'tel',
-            placeholder: 'Enter new 10-digit mobile number'
-          },
-          'other_details': {
-            label: 'Any Other Details',
-            field: 'textarea',
-            placeholder: 'Enter any other details to be changed'
-          }
-        };
 
-        const changeConfig = changeTypes[changeType];
-        if (!changeConfig) return;
-
-        let fieldHtml = '';
-
-        switch (changeConfig.field) {
-          case 'text':
-            fieldHtml = `
-        <input type="text" class="form-control change-request-input" 
-               placeholder="${changeConfig.placeholder || ''}" 
-               data-change-type="${changeType}" required>
-        <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
-            break;
-
-          case 'date':
-            fieldHtml = `
-        <input type="date" class="form-control change-request-input" 
-               data-change-type="${changeType}" required>
-        <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
-            break;
-
-          case 'select':
-            fieldHtml = `
-        <select class="form-select change-request-input" data-change-type="${changeType}" required>
-          <option value="">-- Select New ${changeConfig.label} --</option>
-          ${changeConfig.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
-        </select>
-        <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
-            break;
-
-          case 'district_select':
-            fieldHtml = `
-        <select class="form-select change-request-input district-select" 
-                data-change-type="${changeType}" data-request-id="${requestId}" required>
-          <option value="">-- Select New District --</option>
-        </select>
-        <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
-            break;
-
-          case 'taluk_select':
-            fieldHtml = `
-        <select class="form-select change-request-input taluk-select" 
-                data-change-type="${changeType}" data-request-id="${requestId}" disabled required>
-          <option value="">-- Select New Taluk --</option>
-        </select>
-        <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
-            break;
-
-          case 'village_select':
-            fieldHtml = `
-        <select class="form-select change-request-input village-select" 
-                data-change-type="${changeType}" data-request-id="${requestId}" disabled required>
-          <option value="">-- Select New Village --</option>
-        </select>
-        <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
-            break;
-
-          case 'textarea':
-            fieldHtml = `
-        <textarea class="form-control change-request-input" rows="3" 
-                  placeholder="${changeConfig.placeholder || ''}" 
-                  data-change-type="${changeType}" required></textarea>
-        <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
-            break;
-
-          case 'tel':
-            fieldHtml = `
-        <input type="tel" class="form-control change-request-input" 
-               placeholder="${changeConfig.placeholder || ''}" 
-               maxlength="10" pattern="[0-9]{10}"
-               data-change-type="${changeType}" required>
-        <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
-            break;
-        }
-
-        const changeRequestHtml = `
-<div class="change-request-section card mb-3" id="${requestId}" data-change-type="${changeType}">
-  <div class="card-header bg-light d-flex justify-content-between align-items-center">
-    <span class="fw-bold">Change: ${changeConfig.label}</span>
-    <button type="button" class="btn btn-sm btn-danger btn-remove-change-request">
-      <i class="fas fa-times"></i> Remove
-    </button>
-  </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <label class="form-label">New Value <span class="text-danger">*</span></label>
-        ${fieldHtml}
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">Current Value (if known)</label>
-        <input type="text" class="form-control current-value-input" 
-               placeholder="Enter current value (optional)">
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <label class="form-label">Reason for Change <span class="text-danger">*</span></label>
-        <textarea class="form-control reason-input" rows="2" 
-                  placeholder="Explain why this change is required" required></textarea>
-        <div class="error-msg text-danger mt-1" style="display: none;"></div>
-      </div>
-    </div>
-  </div>
-</div>`;
-
-        $container.append(changeRequestHtml);
-
-
-
-        // Initialize cascading dropdowns for location fields
-        initChangeRequestCascadingDropdowns(`#${requestId}`);
-      }
-
-
-      // Initialize remove functionality for change requests
-      function initChangeRequestCascadingDropdowns(containerSelector) {
-        const $container = $(containerSelector);
-
-        // District change
-        $container.on('change', '.district-select', function () {
-          const districtId = $(this).val();
-          const $talukSelect = $container.find('.taluk-select');
-          const $villageSelect = $container.find('.village-select');
-
-          if (districtId) {
-            loadTaluksByDistrict(districtId, $talukSelect);
-            $talukSelect.prop('disabled', false);
-          } else {
-            $talukSelect.empty().append('<option value="">-- Select Taluk --</option>').prop('disabled', true);
-            $villageSelect.empty().append('<option value="">-- Select Village --</option>').prop('disabled', true);
-          }
-        });
-
-        // Taluk change
-        $container.on('change', '.taluk-select', function () {
-          const talukId = $(this).val();
-          const $villageSelect = $container.find('.village-select');
-
-          if (talukId) {
-            loadVillagesByTaluk(talukId, $villageSelect);
-            $villageSelect.prop('disabled', false);
-          } else {
-            $villageSelect.empty().append('<option value="">-- Select Village --</option>').prop('disabled', true);
-          }
-        });
-
-        // Remove change request
-        $container.on('click', '.btn-remove-change-request', function () {
-          $(this).closest('.change-request-section').remove();
-        });
-      }
-      // Helper function to load taluks into a specific select element
-      function loadTaluksByDistrict(districtId, $talukSelect) {
-        const payload = {
-          action: "function_call",
-          function_name: "fn_taluk_list",
-          params: { district_id: districtId }
-        };
-
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: "POST",
-          data: { data: encryptData(payload) },
-          dataType: 'json',
-          success(res) {
-            try {
-              const taluks = decryptData(res.data) || [];
-              $talukSelect.empty().append('<option value="">-- Select Taluk --</option>');
-              (Array.isArray(taluks) ? taluks : []).forEach(t => {
-                $talukSelect.append(`<option value="${t.id}">${t.taluk}</option>`);
-              });
-            } catch (err) {
-              console.warn("Taluk parse error", err);
-            }
-          },
-          error() {
-            $talukSelect.empty().append('<option value="">Taluk load failed</option>');
-          }
-        });
-      }
-
-      // Helper function to load villages into a specific select element
-      function loadVillagesByTaluk(talukId, $villageSelect) {
-        const payload = {
-          action: "function_call",
-          function_name: "fn_village_list",
-          params: { taluk_id: talukId }
-        };
-
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: "POST",
-          data: { data: encryptData(payload) },
-          dataType: 'json',
-          success(res) {
-            try {
-              const villages = decryptData(res.data) || [];
-              $villageSelect.empty().append('<option value="">-- Select Village --</option>');
-              (Array.isArray(villages) ? villages : []).forEach(v => {
-                $villageSelect.append(`<option value="${v.id}">${v.village}</option>`);
-              });
-            } catch (err) {
-              console.warn("Village parse error", err);
-            }
-          },
-          error() {
-            $villageSelect.empty().append('<option value="">Village load failed</option>');
-          }
-        });
-      }
-      // Aadhaar Validation Function
       function initAadhaarValidation($container) {
         $container.on('input', '.aadhaar-input', function () {
           const value = $(this).val().replace(/\s/g, '');
@@ -2876,8 +2212,6 @@
           });
         });
       }
-
-      // ------------------ Load Relationship ------------------
       function loadRelationship() {
         const payload = { action: "function_call", function_name: "fn_relationship", params: {} };
         $.ajax({
@@ -2895,7 +2229,6 @@
         });
       }
       loadRelationship();
-
       // ------------------ Load Issue Type ------------------
       function loadIssueType() {
         const payload = { action: "function_call", function_name: "fn_issue_type", params: {} };
