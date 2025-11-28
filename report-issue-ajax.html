@@ -664,31 +664,69 @@
           return isCANCategory && isEditOrDeleteSubcategory;
         }
 
-        // Add Aadhaar consent section - NOW AFTER AADHAAR ATTACHMENT
-        function addAadhaarConsentSection(prefix, $afterElement) {
-          // Remove any existing Aadhaar consent section first
-          $afterElement.closest('.dynamic-fields-container').find('.aadhaar-consent-section').remove();
+        function requiresAadhaarConsent(field) {
+          const fieldName = (field.column_name || '').toLowerCase();
+          const legacyCode = (field.legacy_code || '').toLowerCase();
+
+          // Check if this is an Aadhaar field or Identity Proof field
+          const isAadhaarField = fieldName.includes('aadhaar') || fieldName.includes('aadhar') ||
+            legacyCode.includes('aadhaar') || legacyCode.includes('aadhar');
+
+          const isIdentityProof = fieldName.includes('identity proof') ||
+            fieldName.includes('identity_proof') ||
+            (fieldName.includes('identity') && (fieldName.includes('proof') || fieldName.includes('card') || fieldName.includes('document'))) ||
+            legacyCode.includes('identity_proof') ||
+            legacyCode.includes('identity');
+
+          console.log('Field consent check:', {
+            fieldName: fieldName,
+            legacyCode: legacyCode,
+            isAadhaarField: isAadhaarField,
+            isIdentityProof: isIdentityProof,
+            requiresConsent: isAadhaarField || isIdentityProof
+          });
+
+          return isAadhaarField || isIdentityProof;
+        }
+
+        function addAadhaarConsentSection(prefix, $afterElement, fieldType = 'aadhaar') {
+          // Remove any existing consent section for this specific field first
+          const existingConsent = $afterElement.next('.aadhaar-consent-section');
+          if (existingConsent.length > 0) {
+            existingConsent.remove();
+          }
+
+          let consentText = '';
+          let title = '';
+
+          if (fieldType === 'identity') {
+            consentText = `I hereby voluntarily give my consent to use Identity Proof details (Aadhaar, Voter ID etc.) furnished herewith for the purposes of addressing eSevai related service requests submitted on this portal. <span class="text-danger">*</span>`;
+            title = 'Identity Proof Consent Declaration';
+          } else {
+            consentText = `I hereby voluntarily give my consent to use Aadhaar details furnished herewith for the purposes of addressing eSevai related service requests submitted on this portal. <span class="text-danger">*</span>`;
+            title = 'Aadhaar Consent Declaration';
+          }
 
           const aadhaarConsentHtml = `
-          <div class="mb-3 aadhaar-consent-section">
-            <div class="card border-warning">
-              <div class="card-header bg-warning bg-opacity-10">
-                <h6 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Aadhaar Consent Declaration</h6>
-              </div>
-              <div class="card-body">
-                <div class="form-check">
-                  <input class="form-check-input aadhaar-consent-checkbox" type="checkbox" id="aadhaarConsent_${prefix}">
-                  <label class="form-check-label" for="aadhaarConsent_${prefix}">
-                    I hereby voluntarily give my consent to use Aadhaar details furnished herewith for the purposes of addressing eSevai related service requests submitted on this portal. <span class="text-danger">*</span>
-                  </label>
-                </div>
-                <small class="text-muted">You must check this box to proceed with submission when Aadhaar details are required.</small>
-                <div class="error-msg aadhaar-consent-error text-danger mt-1" style="display: none;"></div>
-              </div>
-            </div>
-          </div>`;
+  <div class="mb-3 aadhaar-consent-section" data-consent-type="${fieldType}">
+    <div class="card border-warning">
+      <div class="card-header bg-warning bg-opacity-10">
+        <h6 class="mb-0"><i class="fas fa-shield-alt me-2"></i>${title}</h6>
+      </div>
+      <div class="card-body">
+        <div class="form-check">
+          <input class="form-check-input aadhaar-consent-checkbox" type="checkbox" id="${fieldType}Consent_${prefix}">
+          <label class="form-check-label" for="${fieldType}Consent_${prefix}">
+            ${consentText}
+          </label>
+        </div>
+        <small class="text-muted">You must check this box to proceed with submission when ${fieldType === 'identity' ? 'Identity Proof' : 'Aadhaar'} details are required.</small>
+        <div class="error-msg aadhaar-consent-error text-danger mt-1" style="display: none;"></div>
+      </div>
+    </div>
+  </div>`;
 
-          // Insert immediately after the Aadhaar attachment field
+          // Insert immediately after the attachment field
           $afterElement.after(aadhaarConsentHtml);
         }
 
@@ -917,7 +955,7 @@
           let hasAadhaarMandatoryAttachment = false;
           let $aadhaarAttachmentWrapper = null;
 
-          // Generate mandatory attachment fields first
+          // In the mandatory attachment generation section, update the logic to add consent for EVERY field that requires it:
           mandatoryAttachments.forEach((f) => {
             const rawCol = f.column_name || f.column_id || f.legacy_code || `field_${f.index}`;
             const colId = rawCol
@@ -931,47 +969,54 @@
             const mandatoryAttr = 'data-mandatory="true"';
             const dataParam = `p_${colId}`;
 
-            // Check if this should be treated as Aadhaar card attachment
-            // For CAN Edit/Delete, ALL attachments should be Aadhaar card
-            const isAadhaarCardAttachment = (hasAadhaarField && !hasAadhaarMandatoryAttachment) || isCANEdit;
+            // Check if this requires consent (Aadhaar or Identity Proof)
+            const requiresConsent = f.isAadhaarAttachment || f.isIdentityProofAttachment;
 
             let attachmentLabel;
-            if (isAadhaarCardAttachment) {
+            let fieldType = '';
+            let isAadhaarCardAttachment = false;
+
+            if (f.isAadhaarAttachment) {
               if (isCANEdit) {
                 attachmentLabel = `<i class="fas fa-file-upload text-primary me-2"></i>Aadhaar Card of the citizen requesting CAN edit/delete <span class="text-danger">*</span>`;
               } else {
                 attachmentLabel = `<i class="fas fa-file-upload text-primary me-2"></i>Aadhaar Card of the citizen <span class="text-danger">*</span>`;
               }
-              hasAadhaarMandatoryAttachment = true;
+              fieldType = 'aadhaar';
+              isAadhaarCardAttachment = true;
+            } else if (f.isIdentityProofAttachment) {
+              attachmentLabel = `<i class="fas fa-id-card text-info me-2"></i>${f.column_name} <span class="text-danger">*</span>`;
+              fieldType = 'identity';
             } else {
               attachmentLabel = `${f.column_name} <span class="text-danger">*</span>`;
             }
 
             const fieldHtml = `
-            <div id="wrapper_${inputId}" class="mb-3 file-wrapper" data-col="${colId}" ${mandatoryAttr} data-param="${dataParam}" ${isAadhaarCardAttachment ? 'data-aadhaar-attachment="true"' : ''}>
-              <label class="form-label">${attachmentLabel}</label>
-              <div class="row fw-bold border-bottom pb-2 mb-2">
-                <div class="col-md-1">S No</div>
-                <div class="col-md-4">Attachment Description</div>
-                <div class="col-md-4">Attachment</div>
-                <div class="col-md-3">Actions</div>
-              </div>
-              <div class="file-rows"></div>
-              <div class="mt-2">
-                <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button>
-              </div>
-              <small class="text-muted">Allowed: PDF, JPG, PNG — Max 2MB</small>
-            </div>`;
+  <div id="wrapper_${inputId}" class="mb-3 file-wrapper" data-col="${colId}" ${mandatoryAttr} data-param="${dataParam}" 
+       ${isAadhaarCardAttachment ? 'data-aadhaar-attachment="true"' : ''}
+       ${f.isIdentityProofAttachment ? 'data-identity-proof="true"' : ''}>
+    <label class="form-label">${attachmentLabel}</label>
+    <div class="row fw-bold border-bottom pb-2 mb-2">
+      <div class="col-md-1">S No</div>
+      <div class="col-md-4">Attachment Description</div>
+      <div class="col-md-4">Attachment</div>
+      <div class="col-md-3">Actions</div>
+    </div>
+    <div class="file-rows"></div>
+    <div class="mt-2">
+      <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button>
+    </div>
+    <small class="text-muted">Allowed: PDF, JPG, PNG — Max 2MB</small>
+  </div>`;
 
             $container.append(fieldHtml);
 
-            // Store reference to Aadhaar attachment wrapper for adding consent after it
-            if (isAadhaarCardAttachment) {
-              $aadhaarAttachmentWrapper = $(`#wrapper_${inputId}`);
+            // Add consent section immediately after EVERY field that requires consent
+            if (requiresConsent) {
+              const $currentWrapper = $(`#wrapper_${inputId}`);
+              addAadhaarConsentSection(prefix, $currentWrapper, fieldType);
             }
           });
-
-          // Generate optional attachment fields last
           optionalAttachments.forEach((f) => {
             const rawCol = f.column_name || f.column_id || f.legacy_code || `field_${f.index}`;
             const colId = rawCol
@@ -1004,10 +1049,6 @@
             $container.append(fieldHtml);
           });
 
-          // Add Aadhaar consent AFTER the Aadhaar attachment field (if it exists)
-          if ($aadhaarAttachmentWrapper && $aadhaarAttachmentWrapper.length > 0) {
-            addAadhaarConsentSection(prefix, $aadhaarAttachmentWrapper);
-          }
 
           // Initialize Aadhaar validation
           initAadhaarValidation($container);
