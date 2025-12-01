@@ -933,9 +933,76 @@
             }
 
             $container.append(fieldHtml);
+            if (f.field_type === 'dropdown' && !f.isChangesRequiredField) {
+              const isDistrict = (f.options_source || '').toLowerCase() === 'district' ||
+                (f.column_name || '').toLowerCase().includes('district');
 
-            // DON'T add Aadhaar consent after Aadhaar input field anymore
-            // It will be added after the Aadhaar attachment field
+              console.log('Checking if district dropdown:', {
+                field: f.column_name,
+                options_source: f.options_source,
+                isDistrict: isDistrict
+              });
+
+              if (isDistrict) {
+                console.log('Loading district list for:', inputId);
+                $.ajax({
+                  url: `${BASE_API_URL}/commonfunction`,
+                  method: "POST",
+                  data: {
+                    data: encryptData({
+                      action: "function_call",
+                      function_name: "fn_district_list",
+                      params: {}
+                    })
+                  },
+                  dataType: 'json',
+                  success(res) {
+                    try {
+                      console.log('District API response:', res);
+                      const districts = decryptData(res.data) || [];
+                      console.log('Decrypted districts:', districts);
+
+                      const $select = $(`#${inputId}`);
+                      if ($select.length) {
+                        $select.empty().append(`<option value="">-- Select District --</option>`);
+
+                        if (Array.isArray(districts)) {
+                          districts.forEach(d => {
+                            console.log('Adding district option:', d);
+                            $select.append(`<option value="${d.id || d.district_id || ''}">${d.district || d.district_name || ''}</option>`);
+                          });
+                        } else {
+                          console.warn('Districts data is not an array:', districts);
+                        }
+                      } else {
+                        console.warn('Select element not found:', `#${inputId}`);
+                      }
+                    } catch (err) {
+                      console.warn("District parse error", err);
+                      const $select = $(`#${inputId}`);
+                      if ($select.length) {
+                        $select.empty().append(`<option value="">Error loading districts</option>`);
+                      }
+                    }
+                  },
+                  error(xhr, status, error) {
+                    console.warn("District API error:", error, xhr.responseText);
+                    const $select = $(`#${inputId}`);
+                    if ($select.length) {
+                      $select.empty().append(`<option value="">Failed to load districts</option>`);
+                    }
+                  }
+                });
+              } else if (f.values && f.values.length) {
+                // Load static values for non-district dropdowns
+                console.log('Loading static values for dropdown:', inputId);
+                const $select = $(`#${inputId}`);
+                if ($select.length) {
+                  f.values.forEach(v => $select.append(`<option value="${v}">${v}</option>`));
+                }
+              }
+            }
+
           });
 
           // Separate mandatory and optional attachment fields
@@ -950,6 +1017,7 @@
               optionalAttachments.push(f);
             }
           });
+
 
           // If Aadhaar field exists and there's a mandatory attachment field, mark it for Aadhaar card
           let hasAadhaarMandatoryAttachment = false;
