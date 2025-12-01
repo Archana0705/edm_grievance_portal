@@ -613,7 +613,7 @@
 
       function getNewFileRow(fileInputClass, sno) {
         return `
-<div class="file-row row align-items-center mb-2">
+<div class="file-row row align-items-center2 mb-2">
   <div class="col-md-1"><span class="fw-bold file-label">${sno}</span></div>
   <div class="col-md-4">
     <input type="text" maxlength="25" class="form-control file-desc" placeholder="Enter document description">
@@ -1725,7 +1725,7 @@
           };
 
           const listItem = `
-        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+        <div class="d-flex justify-content-between align-items-center2 border-bottom pb-2 mb-2">
             <span>${index + 1}. ${changeTypes[changeType]}</span>
             <button type="button" class="btn btn-sm btn-outline-danger btn-remove-from-list" data-card-id="${$(this).attr('id')}">
                 <i class="fas fa-times"></i>
