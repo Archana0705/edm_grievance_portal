@@ -632,19 +632,9 @@
           <li><a href="#about" class="nav-link"><i class="bi bi-info-circle-fill"></i> About</a></li>
           <li><a href="#stats" class="nav-link"><i class="bi bi-bar-chart-fill"></i> Stats</a></li>
           <li><a href="#faq" class="nav-link"><i class="bi bi-question-circle-fill"></i> FAQ</a></li>
-
-
-
-
         </ul>
       </nav>
     </div>
-    <!-- Right Logo -->
-    <li class="nav-item active-login">
-      <a href="index.html" class="nav-link text-white">
-        <i class="bi bi-box-arrow-in-right"></i> Login
-      </a>
-    </li>
     <img src="assets/img/tnega.png" alt="Logo Right" class="header-logo">
   </header>
   <!-- Hero Section -->
@@ -804,50 +794,9 @@
           <p>Verify, assign, and resolve grievances within departments.</p>
         </div>
       </div>
-      <!--  <div class="col-md-3 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="500">
-          <div class="module-card" onclick="location.href='edm.html'">
-            <i class="bi bi-person-workspace"></i>
-            <h5>e-District Manager</h5>
-            <p>Oversee eSevai services &amp; monitor grievance redressal efficiency.</p>
-          </div>
-          </div>
-          <div class="col-md-3 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="600">
-          <div class="module-card" onclick="location.href='esevai-helpdesk.html'">
-            <i class="bi bi-telephone-inbound"></i>
-            <h5>eSevai Helpdesk</h5>
-            <p>Support &amp; escalation desk for unresolved service requests.</p>
-          </div>
-          </div>
-          <div class="col-md-3 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="700">
-          <div class="module-card" onclick="location.href='esevai-helpdesk-lead.html'">
-            <i class="bi bi-person-lines-fill"></i>
-            <h5>Helpdesk Lead</h5>
-            <p>Lead escalations &amp; ensure SLA compliance in grievance handling.</p>
-          </div>
-          </div> -->
-      <!-- <div class="col-md-3 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="800">
-          <div class="module-card" onclick="location.href='tnega.html'">
-            <i class="bi bi-globe2"></i>
-            <h5>TNeGA Officials</h5>
-            <p>Monitor and manage service operations across Tamil Nadu.</p>
-          </div>
-          </div>
-          <div class="col-md-3 mx-auto aos-init aos-animate" data-aos="zoom-in" data-aos-delay="900">
-          <div class="module-card" onclick="location.href='admin.html'">
-            <i class="bi bi-shield-lock"></i>
-            <h5>Admin</h5>
-            <p>Full control for user management, reports, &amp; platform settings.</p>
-          </div>
-          </div> -->
+
     </div>
   </section>
-  <!-- About -->
-  <!-- <section class="about-section text-center" data-aos="fade-up">
-      <div class="container">
-        <h2 class="fw-bold mb-3">About Us</h2>
-        <p class="lead">The EDM Portal is a unified grievance redressal system developed to ensure timely responses, efficient monitoring, and transparent communication between citizens and government bodies.</p>
-      </div>
-      </section> -->
   <section class="about-section py-5" data-aos="fade-up">
     <div class="container">
       <div class="row align-items-center g-5">
@@ -1210,6 +1159,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script>
+    function clearModal() {
+      $("#ticketInput").val("");
+      $("#ackCard").addClass("d-none");
+      $("#ackCard div[id^='ack']").text("-");
+      $("#clearTicket, #downloadTicket").addClass("d-none");
+    }
+
     // Submit button → API call
     $("#submitTicket").on("click", function (e) {
       e.preventDefault();
@@ -1305,6 +1261,18 @@
 
         pdf.addImage(imgData, "PNG", 0, 10, pdfWidth, pdfHeight);
         pdf.save("Acknowledgement.pdf");
+      });
+    });
+
+    $(document).ready(function () {
+      // Using Bootstrap modal events
+      $('#trackStatus').on('hidden.bs.modal', function () {
+        clearModal();
+      });
+
+      // Also clear when close button is clicked (optional - already handled by hidden.bs.modal)
+      $('button[data-bs-dismiss="modal"]').on('click', function () {
+        clearModal();
       });
     });
   </script>
