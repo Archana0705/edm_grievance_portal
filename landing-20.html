@@ -237,6 +237,69 @@
       box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
     }
   </style>
+  <!-- main content -->
+  <style>
+    .hover-shadow:hover {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s;
+    }
+
+    .card h3 {
+      font-weight: 600;
+    }
+
+    .card i {
+      transition: transform 0.3s;
+    }
+
+    .card:hover i {
+      transform: scale(1.2);
+    }
+
+    .table-hover tbody tr:hover {
+      background-color: #f1f3f5;
+    }
+
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 15px;
+      border-left: 4px solid #4e73df;
+      padding-left: 10px;
+    }
+
+    .no-height {
+      height: 0px !important;
+    }
+
+    .ack-card {
+      background: #fff;
+      border: 1px solid #000;
+      border-radius: 8px;
+      padding: 25px 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      margin: 40px auto;
+      max-width: 850px;
+    }
+
+    .ack-card h5 {
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      border-bottom: 2px solid #000;
+      padding-bottom: 6px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .ack-label {
+      font-weight: 500;
+      width: 250px;
+    }
+
+    .ack-row {
+      margin-bottom: 10px;
+    }
+  </style>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -460,6 +523,7 @@
       position: relative;
       display: inline-block;
       background: linear-gradient(90deg, #004fb5, #feb47b);
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       padding: 0 4px;
@@ -593,9 +657,106 @@
     <h1>Welcome to Citizen Service Portal</h1>
     <p>Access government services, track applications, and resolve grievances — all in one place with quick and simple
       steps.</p>
-    <a href="track-status.html" class="btn btn-light text-primary"><i class="bi bi-plus-circle me-2"></i>Track
+    <a data-bs-toggle="modal" data-bs-target="#trackStatus" class="btn btn-light text-primary"><i
+        class="bi bi-plus-circle me-2"></i>Track
       Status</a>
   </section>
+
+  <div class="modal fade" id="trackStatus" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Track Status</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="input-group mb-3">
+                <span class="input-group-text"><i class="bi bi-file-earmark-text"></i></span>
+                <input type="text" id="ticketInput" class="form-control" placeholder="Enter Ticket Id">
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <a href="#" id="submitTicket" class="btn btn-success">Submit</a>
+              <a href="#" id="clearTicket" class="btn btn-warning d-none">Clear</a>
+              <a href="#" id="downloadTicket" class="btn btn-primary d-none">Download</a>
+            </div>
+          </div>
+
+          <!-- Acknowledgement Card -->
+          <div class="row g-3 mb-3">
+
+            <div id="ackCard" class="ack-card d-none">
+              <h5>Acknowledgement</h5>
+              <p class="mb-4">We acknowledge the receipt of your grievance with the following details:</p>
+
+              <div class="ack-row d-flex">
+                <div class="ack-label">Status:</div>
+                <div id="ackStatus">-</div>
+              </div>
+
+              <div class="ack-row d-flex">
+                <div class="ack-label">Requested By:</div>
+                <div id="ackRequestedBy">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Type of user:</div>
+                <div id="ackUserType">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Name of the complainant:</div>
+                <div id="ackName">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Mobile number of the complainant:</div>
+                <div id="ackMobile">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">District:</div>
+                <div id="ackDistrict">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Date:</div>
+                <div id="ackDate">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Issue type:</div>
+                <div id="ackIssueType">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Issue category:</div>
+                <div id="ackIssueCategory">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Issue subcategory:</div>
+                <div id="ackIssueSubCategory">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Acknowledgement number:</div>
+                <div id="ackNumber">-</div>
+              </div>
+
+              <p class="mt-4"><strong>Please note the acknowledgment number for tracking your application
+                  status.</strong></p>
+            </div>
+
+
+          </div>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
   <!-- Hero -->
   <!-- <section class="text-center py-5" data-aos="fade-up"> -->
   <!-- <h1 class="fw-bold">Welcome to eSevai Grievance Redressal Portal</h1> -->
@@ -923,8 +1084,17 @@
     <i class="bi bi-arrow-up-circle"></i>
   </button>
   <script src="assets/js/jquery-3.7.1.min.js"></script>
-  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/global.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <!-- <script src="assets/js/bootstrap.bundle.min.js"></script> -->
   <script src="assets/js/aos.js"></script>
+  <script src="assets/js/dataTableUtil.js"></script>
+  <script src="assets/js/crypto-js.min.js"></script>
+  <script src="assets/js/encrypt_decrypt.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/toastUtil.js"></script>
+  <script src="assets/js/apiConfig.js"></script>
+  <script src="assets/js/globalProfileDropdown.js"></script>
   <script>AOS.init({ duration: 800, once: true });</script>
   <script>
     let lastScrollTop = 0;
@@ -1008,6 +1178,137 @@
       });
     });
   </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Find the Track Status button
+      const trackBtn = document.querySelector('.hero .btn');
+
+      if (trackBtn) {
+        console.log('Track button found:', trackBtn);
+
+        // Force styling
+        trackBtn.style.position = 'relative';
+        trackBtn.style.zIndex = '9999';
+        trackBtn.style.pointerEvents = 'auto';
+        trackBtn.style.cursor = 'pointer';
+
+        // Add click event directly
+        trackBtn.addEventListener('click', function (e) {
+          console.log('Track Status clicked!');
+          // You can keep this for debugging
+        });
+
+        // Make all background elements non-interactive
+        document.querySelectorAll('.hero > .stars, .hero > .shape').forEach(el => {
+          el.style.pointerEvents = 'none';
+        });
+      }
+    });
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    // Submit button → API call
+    $("#submitTicket").on("click", function (e) {
+      e.preventDefault();
+      const ticketId = $("#ticketInput").val().trim();
+      if (!ticketId) {
+        alert("Please enter a ticket ID.");
+        return;
+      }
+
+      const payload = {
+        action: "function_call",
+        function_name: "fn_get_ticket_details",
+        params: { p_ticket_id: ticketId }
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(payload) },
+        dataType: "json",
+        success: function (res) {
+          const decrypted = decryptData(res.data);
+          const raw = decrypted[0]?.fn_get_ticket_details;
+
+          if (!raw) {
+            alert("No ticket details found.");
+            return;
+          }
+
+          const details = JSON.parse(raw);
+          const td = details.ticket_details || {};
+
+          // ✅ Bind values
+          $("#ackStatus").html(
+            td.status
+              ? `<span class="badge ${td.status === 'In-Progress' ? 'bg-warning text-dark' : td.status === 'Completed' ? 'bg-success' : 'bg-danger'}">${td.status}</span>`
+              : "N/A"
+          );
+          $("#ackRequestedBy").text(td.requested_by || "N/A");
+          $("#ackUserType").text(td.user_type || "N/A");
+          $("#ackName").text(td.complainant_name || "N/A");
+          $("#ackMobile").text(td.complainant_mobile || "N/A");
+          $("#ackDistrict").text(td.district || "N/A");
+          // $("#ackDate").text(td.created_at ? new Date(td.created_at).toLocaleString("en-GB") : "N/A");
+          $("#ackDate").text(
+            td.created_at
+              ? new Date(td.created_at).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric"
+              })
+              : "N/A"
+          );
+          $("#ackIssueType").text(td.issue_type || "N/A");
+          $("#ackIssueCategory").text(td.category || "N/A");
+          $("#ackIssueSubCategory").text(td.subcategory || "N/A");
+          $("#ackNumber").text(td.ticket_id || "N/A");
+
+          // Show acknowledgement card & buttons
+          $("#ackCard").removeClass("d-none");
+          $("#clearTicket, #downloadTicket").removeClass("d-none");
+        },
+        error: function () {
+          alert("Failed to fetch ticket status.");
+        }
+      });
+    });
+
+    // Clear button
+    $("#clearTicket").on("click", function (e) {
+      e.preventDefault();
+      $("#ticketInput").val("");
+      $("#ackCard").addClass("d-none");
+      $("#ackCard div[id^='ack']").text("-");
+      $("#clearTicket, #downloadTicket").addClass("d-none");
+    });
+
+    // Download button → exact UI as PDF
+    $("#downloadTicket").on("click", function (e) {
+      e.preventDefault();
+
+      const { jsPDF } = window.jspdf;
+
+      html2canvas(document.querySelector("#ackCard"), {
+        scale: 2 // better quality
+      }).then(canvas => {
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF("p", "mm", "a4");
+
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        pdf.addImage(imgData, "PNG", 0, 10, pdfWidth, pdfHeight);
+        pdf.save("Acknowledgement.pdf");
+      });
+    });
+  </script>
+
 </body>
 
 </html>

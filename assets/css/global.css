@@ -18,3 +18,17 @@ td {
     background-color: transparent !important;
     opacity: .5;
 }
+
+.fixed-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #f1f1f1;
+    /* change color if needed */
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    border-top: 1px solid #ccc;
+    z-index: 999;
+}

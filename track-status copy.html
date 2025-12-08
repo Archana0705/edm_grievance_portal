@@ -304,6 +304,38 @@
       border: 1px solid #182848;
     }
   </style>
+  <!-- page css -->
+  <!-- <style>
+      .kpi-card {
+        padding: 1.5rem; 
+        border-radius: 1rem;
+        color: #fff;
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+      }
+      .kpi-card:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+      
+      /* Gradient Variants */
+      .bg-gradient-info {
+        background: linear-gradient(135deg, #36d1dc, #5b86e5);
+      }
+      .bg-gradient-warning {
+        background: linear-gradient(135deg, #f7971e, #ffd200);
+      }
+      .bg-gradient-success {
+        background: linear-gradient(135deg, #56ab2f, #a8e063);
+      }
+      .bg-gradient-danger {
+        background: linear-gradient(135deg, #ff512f, #dd2476);
+      }
+      .bg-gradient-dark {
+        background: linear-gradient(135deg, #434343, #000000);
+      }
+      </style> -->
   <style>
     html,
     body {
@@ -579,9 +611,15 @@
     </div>
   </nav>
   <!-- Sidebar -->
-
+  <div id="sidebar">
+    <a href="dashboard.html"><i class="bi bi-house"></i><span>Dashboard</span></a>
+    <a href="report-issue.html"><i class="bi bi-file-earmark-text"></i><span>Report Issue</span></a>
+    <a href="profile.html"><i class="bi bi-person"></i><span>Profile</span></a>
+    <a href="track-status.html" class="active"><i class="bi bi-person-badge"></i><span>Track Status</span></a>
+    <a href="faq.html"><i class="bi bi-question-circle"></i><span>FAQ</span></a>
+  </div>
   <!-- Main Content -->
-  <div id="mainContent " class="container-fluid ">
+  <div id="mainContent">
     <div class="row">
       <div class="col-lg-3">
         <div class="input-group mb-3">
@@ -655,12 +693,19 @@
 
     </div>
 
+
+
+
+
+
+
+
   </div>
 
 
 
   <!-- Footer -->
-  <footer class="fixed-footer">
+  <footer>
     &copy; 2025 My Dashboard. All rights reserved.
   </footer>
   <!-- </div> -->
