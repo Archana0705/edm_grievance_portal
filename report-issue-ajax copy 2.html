@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Citizen behalf Raise Ticket</title>
+  <title>Enhanced Dashboard</title>
   <!-- Bootstrap CSS -->
 
   <link href="assets/css/bootstrap.min.css" rel="stylesheet">
@@ -12,55 +12,6 @@
   <link href="assets/css/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/global.css">
 
-
-  <style>
-    body {
-      background: #f9fafb;
-    }
-
-    .card {
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    .step-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #444;
-    }
-
-    .btn-primary {
-      border-radius: 30px;
-      padding: 10px 25px;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .success-check {
-      font-size: 3rem;
-      color: green;
-      display: none;
-      animation: bounceIn 1s forwards;
-    }
-
-    @keyframes bounceIn {
-      0% {
-        transform: scale(0.3);
-        opacity: 0;
-      }
-
-      50% {
-        transform: scale(1.1);
-        opacity: 1;
-      }
-
-      100% {
-        transform: scale(1);
-      }
-    }
-  </style>
   <style>
     html,
     body {
@@ -77,360 +28,86 @@
       padding-top: 70px;
       transition: all 0.3s;
     }
-
-    /* Header */
-    nav.navbar {
-      background: linear-gradient(90deg, #4b6cb7, #182848);
-      color: #fff;
-      z-index: 1000;
-      padding: 0.4rem 1rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    nav.navbar .navbar-brand,
-    nav.navbar .btn,
-    nav.navbar span {
-      color: #fff;
-    }
-
-    nav.navbar .btn-light {
-      background: rgba(255, 255, 255, 0.15);
-      border: none;
-      color: #fff;
-    }
-
-    nav.navbar .btn-light:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
-
-    /* Sidebar */
-    #sidebar {
-      position: fixed;
-      top: 70px;
-      left: 0;
-      width: 220px;
-      height: calc(100% - 70px);
-      background: #fff;
-      padding-top: 1rem;
-      transition: all 0.3s;
-      overflow-y: auto;
-      border-right: 1px solid #e0e0e0;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-      z-index: 999;
-    }
-
-    #sidebar a {
-      display: flex;
-      align-items: center;
-      padding: 12px 20px;
-      color: #495057;
-      text-decoration: none;
-      font-weight: 500;
-      border-radius: 8px;
-      margin: 4px 10px;
-      transition: all 0.2s ease-in-out;
-    }
-
-    #sidebar a:hover {
-      background: #4b6cb7;
-      color: #fff;
-      transform: translateX(5px);
-    }
-
-    #sidebar a.active {
-      background: #182848;
-      color: white;
-    }
-
-    #sidebar i {
-      margin-right: 12px;
-      font-size: 1.2rem;
-    }
-
-    .sidebar-collapsed #sidebar a {
-      padding: 12px 0px;
-    }
-
-    /* Collapsed sidebar */
-    body.sidebar-collapsed #sidebar {
-      width: 60px;
-    }
-
-    body.sidebar-collapsed #sidebar a span {
-      display: none;
-    }
-
-    body.sidebar-collapsed #sidebar a i {
-      margin-right: 0;
-      width: 100%;
-      text-align: center;
-    }
-
-    /* Main content */
-    #mainContent {
-      margin-left: 220px;
-      padding: 30px;
-      flex: 1;
-      transition: all 0.3s;
-    }
-
-    body.sidebar-collapsed #mainContent {
-      margin-left: 60px;
-    }
-
-    /* Cards for main content */
-    .card {
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Footer */
-    footer {
-      background: #fff;
-      text-align: center;
-      padding: 15px;
-      border-top: 1px solid #ddd;
-      width: 100%;
-      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    /* Mobile responsiveness */
-    @media (max-width: 992px) {
-      #sidebar {
-        left: -100%;
-        top: 0;
-        width: 220px;
-        height: 100%;
-        border-right: none;
-        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
-        z-index: 9999;
-      }
-
-      #sidebar.show {
-        left: 0;
-      }
-
-      #mainContent {
-        margin-left: 0;
-        padding: 20px 10px;
-      }
-
-      body.sidebar-collapsed #mainContent {
-        margin-left: 0;
-      }
-    }
-
-    @media (max-width: 768px) {
-      #currentDateTime {
-        display: none;
-      }
-
-      .navbar .fw-bold {
-        font-size: 1.1rem;
-      }
-
-      #sidebarToggle {
-        padding: 0.35rem 0.6rem;
-      }
-
-      .dropdown-toggle span {
-        display: none;
-      }
-    }
   </style>
-  <style>
-    .hover-shadow:hover {
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-      transition: all 0.3s;
-    }
 
-    .card h3 {
-      font-weight: 600;
-    }
 
-    .card i {
-      transition: transform 0.3s;
-    }
-
-    .card:hover i {
-      transform: scale(1.2);
-    }
-
-    .table-hover tbody tr:hover {
-      background-color: #f1f3f5;
-    }
-  </style>
-  <!-- main content -->
-  <!-- page css -->
-  <style>
-    body {
-      background: #f8f9fa;
-    }
-
-    .page-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-
-    .form-section {
-      background: #fff;
-      border-radius: 12px;
-      padding: 2rem;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .form-label {
-      font-weight: 500;
-    }
-
-    .btn-submit {
-      background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-      border: none;
-      color: #fff;
-      font-weight: 600;
-      border-radius: 8px;
-      transition: 0.3s;
-    }
-
-    .btn-submit:hover {
-      transform: scale(1.03);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-  </style>
-  <style>
-    /* Toast positioning */
-    .toast-container {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      z-index: 2000;
-    }
-  </style>
 </head>
 
 <body>
+  <div class="form-section">
+    <form id="issueForm" class="needs-validation" novalidate enctype="multipart/form-data">
+      <div class="row g-3">
+        <div class="mb-3 col-lg-4">
+          <label for="typeSelect">Type <span class="text-danger">*</span></label>
+          <select id="typeSelect" class="form-control" required>
+            <option value="">Select Type</option>
+          </select>
+        </div>
 
+        <div class="mb-3 col-lg-4">
+          <label for="categorySelect">Category <span class="text-danger">*</span></label>
+          <select id="categorySelect" class="form-control" required>
+            <option value="">Select Category</option>
+          </select>
+        </div>
 
-  <!-- Main Content -->
-  <div class="card p-4" data-aos="fade-up">
-
-    <div id="step1" class="">
-      <div class="form-section">
-        <form id="issueForm" class="needs-validation" novalidate>
-          <div class="row">
-            <div class="mb-3 col-lg-4">
-              <label for="relationshipField">Relationship Type <span class="text-danger">*</span></label>
-              <select id="relationshipField" class="form-select mb-2">
-                <option selected="">Select Relationship Type</option>
-                <option>Sister</option>
-                <option>Friend</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div class="mb-3 col-lg-4">
-              <label for="citizenName">Citizen Name <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" id="citizenName" placeholder="Enter Citizen Name">
-            </div>
-            <div class="mb-3 col-lg-4">
-              <label for="genderField">Gender <span class="text-danger">*</span></label>
-              <select id="genderField" class="form-select mb-2">
-                <option value="" selected>Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Transgender">Transgender</option>
-              </select>
-            </div>
-
-            <div class="mb-3 col-lg-4">
-              <label class="form-label">Email</label>
-              <input type="email" id="emailField" class="form-control mb-3" placeholder="Enter your Email">
-            </div>
-
-            <div class="clear-both"></div>
-
-            <div class="mb-3 col-lg-4">
-              <label for="typeSelectBehalf">Type <span class="text-danger">*</span></label>
-
-              <select id="typeSelectBehalf" class="form-control" required>
-                <option value="">Select Type</option>
-              </select>
-            </div>
-            <div class="mb-3 col-lg-4">
-              <label for="categorySelectBehalf">Category <span class="text-danger">*</span></label>
-              <select id="categorySelectBehalf" class="form-control" required>
-                <option value="">Select Category</option>
-              </select>
-            </div>
-            <div class="mb-3 col-lg-4">
-              <label for="subCategorySelectBehalf">Sub-Category <span class="text-danger">*</span></label>
-              <select id="subCategorySelectBehalf" class="form-control" required>
-                <option value="">Select Sub-Category</option>
-              </select>
-            </div>
-
-          </div>
-          <!-- Dynamic Form -->
-          <div id="dynamicFieldsContainerBehalf" class="mt-4"></div>
-
-          <!-- Declaration Component -->
-          <div class="alert alert-light border rounded-3 shadow-sm p-3 mb-4" role="alert">
-            <div class="d-flex align-items-start">
-              <i class="bi bi-info-circle-fill text-primary fs-4 me-3"></i>
-              <div>
-                <h6 class="fw-bold mb-2">Declaration</h6>
-                <p class="mb-2 small text-muted">
-                  I hereby declare that the information given above and in the enclosed documents is true to the best of
-                  my knowledge and belief and nothing has been concealed therein. I understand that if the information
-                  given by me is proved false/not true, I will have to face the punishment as per the law. Also, all the
-                  benefits availed by me shall be summarily withdrawn.
-                </p>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="declarationCheck">
-                  <label class="form-check-label small" for="declarationCheck">
-                    I agree to the terms of this declaration
-                  </label>
-                </div>
-                <span class="text-danger small" id="declarationError" style="display:none;"></span>
-
-              </div>
-            </div>
-          </div>
-
-
-          <!-- Submit -->
-          <div class="col-lg-4 d-flex align-items-center">
-            <button type="submit" id="submitBtnBehalf" class="btn btn-primary px-4 py-2">
-              <i class="bi bi-send-fill me-2"></i> Submit Issue
-            </button>
-          </div>
-        </form>
-
+        <div class="mb-3 col-lg-4">
+          <label for="subCategorySelect">Sub-Category <span class="text-danger">*</span></label>
+          <select id="subCategorySelect" class="form-control" required>
+            <option value="">Select Sub-Category</option>
+          </select>
+        </div>
 
       </div>
-    </div>
+      <div id="dynamicFieldsContainer" class="mt-4 row"></div>
+      <div class="alert alert-light border rounded-3 shadow-sm p-3 mb-4" role="alert">
+        <div class="d-flex align-items-start">
+          <i class="bi bi-info-circle-fill text-primary fs-4 me-3"></i>
+          <div>
+            <h6 class="fw-bold mb-2">Declaration</h6>
+            <p class="mb-2 small text-muted">
+              I hereby declare that the information given above and in the enclosed documents is true to the best of
+              my knowledge and belief and nothing has been concealed therein. I understand that if the information
+              given by me is proved false/not true, I will have to face the punishment as per the law. Also, all the
+              benefits availed by me shall be summarily withdrawn.
+            </p>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="declarationCheck">
+              <label class="form-check-label small" for="declarationCheck">
+                I agree to the terms of this declaration
+              </label>
+            </div>
+            <span class="text-danger small" id="declarationError" style="display:none;"></span>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 d-flex align-items-center mt-2">
+        <button type="submit" id="submitBtn" class="btn btn-primary px-4 py-2">
+          <i class="bi bi-send-fill me-2"></i> Submit Issue
+        </button>
+      </div>
+
+      <div id="formLoader" class="d-none text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Submitting...</span>
+        </div>
+        <p class="mt-2 small">Submitting your request, please wait...</p>
+      </div>
+    </form>
   </div>
-  <!-- Behalf Acknowledgement Modal -->
 
-
-  <!-- Success Modal -->
-  <div class="modal fade" id="behalfSuccessModal" tabindex="-1">
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Ticket Created Successfully</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <div class="modal-header py-1">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-          <!-- Acknowledgement Card -->
-          <div id="ackCardBehalf" class="ack-card">
-            <!-- This will be populated with acknowledgement data -->
+        <div class="modal-body pt-1 mt-1">
+          <div id="ackCard" class="ack-card">
+            <h5>Acknowledgement</h5>
+            <p class="mb-4">We acknowledge the receipt of your grievance with the following details:</p>
+
             <div class="ack-row d-flex">
               <div class="ack-label">Requested By:</div>
               <div id="ackRequestedBy"></div>
@@ -480,17 +157,20 @@
               <div class="ack-label">Acknowledgement number:</div>
               <div id="ackNumber">__________________________</div>
             </div>
+
+            <p class="mt-4"><strong>Please note the acknowledgment number for tracking your application status.</strong>
+            </p>
           </div>
+          <button class="btn download-pdf btn btn-outline-secondary float-end mt-2"><i class="bi bi-download"></i>
+            Download as
+            PDF</button>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary download-pdf">Download PDF</button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-        </div>
+
       </div>
     </div>
   </div>
 
-  <div class="modal fade" id="ticketDetailsModalBehalfPane" tabindex="-1" aria-hidden="true">
+  <div class="modal fade" id="ticketDetailsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header bg-dark text-white">
@@ -498,54 +178,22 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <table class="table table-sm table-bordered" id="ticketDetailsTableBehalf"></table>
+          <table class="table table-sm table-bordered" id="ticketDetailsTable"></table>
           <h6 class="fw-bold mt-4 mb-3">Attachments</h6>
-          <ul class="list-group list-group-flush" id="ticketAttachmentsBehalf"></ul>
+          <ul class="list-group list-group-flush" id="ticketAttachments"></ul>
           <h6 class="fw-bold mt-4 mb-3">Progress Timeline</h6>
-          <ul class="timeline" id="ticketTimelineBehalf"></ul>
+          <ul class="timeline" id="ticketTimeline"></ul>
         </div>
       </div>
     </div>
+
+    <script src="assets/js/html2canvas.min.js"></script>
+    <script src="assets/js/jspdf.umd.min.js"></script>
     <script>
-      // Sidebar toggle
-
-      const sidebarToggle = document.getElementById('sidebarToggle');
-      const sidebar = document.getElementById('sidebar');
-
-      sidebarToggle.addEventListener('click', () => {
-        if (window.innerWidth < 992) {
-          // Mobile: slide in/out
-          sidebar.classList.toggle('show');
-        } else {
-          // Desktop: collapse sidebar
-          document.body.classList.toggle('sidebar-collapsed');
-        }
-      });
-
-      // Close mobile sidebar when clicking outside
-      document.addEventListener('click', function (e) {
-        if (window.innerWidth < 992) {
-          if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
-            sidebar.classList.remove('show');
-          }
-        }
-      });
-
-      // Display current date and time
-      function updateDateTime() {
-        const now = new Date();
-        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
-        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        document.getElementById('currentDateTime').textContent = now.toLocaleDateString(undefined, options) + ' ' + timeString;
-      }
-      setInterval(updateDateTime, 1000);
-      updateDateTime();
-    </script>
-
-
-
-    <script>
+      // Initialize AOS
       AOS.init();
+
+      // Generate session ID
       function generateSessionId() {
         return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
       }
@@ -560,13 +208,13 @@
         return sessionId;
       }
 
-      // Clear session ID when needed (after successful submission)
+      // Clear session ID when needed
       function clearSessionId() {
         localStorage.removeItem('current_session_id');
       }
 
       const roleId = localStorage.getItem("role_id");
-      const fileInputClassBehalf = "file-input-behalf";
+      const fileInputClass = "file-input-self";
       const MAX_FILE_DESC = 25;
       const MAX_FILE_ROWS = 3;
 
@@ -611,22 +259,33 @@
         });
       }
 
-      function getNewFileRow(fileInputClass, sno) {
+      function getNewFileRow(fileInputClass, sno, defaultPlaceholder = '', isFirstRow = false) {
+        const placeholder = defaultPlaceholder ? `placeholder="${defaultPlaceholder}"` : 'placeholder="Enter document description"';
+        const readonlyAttr = (defaultPlaceholder && isFirstRow) ? 'readonly' : '';
+        const bgClass = (defaultPlaceholder && isFirstRow) ? 'bg-light' : '';
+
         return `
-<div class="file-row row align-items-center2 mb-2">
-  <div class="col-md-1"><span class="fw-bold file-label">${sno}</span></div>
-  <div class="col-md-4">
-    <input type="text" maxlength="25" class="form-control file-desc" placeholder="Enter document description">
-  </div>
-  <div class="col-md-4 position-relative">
-    <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf" />
-    <span class="upload-status-icon ms-2"></span>
-    <small class="text-muted d-block allowed-note">Allowed: PDF, JPG, PNG — Max 2MB</small>
-  </div>
-  <div class="col-md-3">
-    <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
-  </div>
-</div>`;
+    <div class="file-row mb-2">
+        <div class="row align-items-center">
+            <div class="col-md-1">
+                <span class="file-label">${sno}</span>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control form-control-sm file-description ${bgClass}" 
+                       ${placeholder} ${readonlyAttr}>
+            </div>
+            <div class="col-md-4">
+                <input type="file" class="form-control form-control-sm ${fileInputClass}" data-uploaded="false">
+                <div class="upload-status-icon"></div>
+                <small class="allowed-note text-muted" style="display: none;">Allowed: PDF, JPG, PNG — Max 2MB</small>
+            </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-sm btn-outline-danger btn-delete-file">
+                    <i class="fas fa-times"></i> Delete
+                </button>
+            </div>
+        </div>
+    </div>`;
       }
 
       function generateDynamicFields(columnsString, prefix, $container, fileInputClass, categoryId = null, subcategoryId = null) {
@@ -735,12 +394,12 @@
                 </div>
 
                 <!-- Single card container - will show only one card at a time -->
-                <div id="currentChangeCard_${prefix}" class="current-change-card mt-3">
+                <div id="currentChangeCard_${prefix}" class="current-change-card mt-3 col-lg-12">
                     <!-- Only one card will be shown here at a time -->
                 </div>
 
                 <!-- Container for multiple change requests (when user wants to add more) -->
-                <div id="changeRequestsContainer_${prefix}" class="change-requests-container mt-3" style="display: none;">
+                <div id="changeRequestsContainer_${prefix}" class="change-requests-container mt-3 col-lg-12" style="display: none;">
                     <!-- Previously added change requests will be stored here -->
                 </div>
 
@@ -753,7 +412,7 @@
                 </div>
 
                 <!-- Show current changes list -->
-                <div id="changesList_${prefix}" class="changes-list-section mt-3" style="display: none;">
+                <div id="changesList_${prefix}" class="changes-list-section mt-3 col-lg-12" style="display: none;">
                     <h6 class="border-bottom pb-2">Current Changes:</h6>
                     <div id="changesListItems_${prefix}" class="changes-list-items">
                         <!-- List of added changes will appear here -->
@@ -807,14 +466,7 @@
             const isDistrict = (f.options_source || '').toLowerCase() === 'district' ||
               (f.column_name || '').toLowerCase().includes('district');
 
-            console.log('Checking if district dropdown:', {
-              field: f.column_name,
-              options_source: f.options_source,
-              isDistrict: isDistrict
-            });
-
             if (isDistrict) {
-              console.log('Loading district list for:', inputId);
               $.ajax({
                 url: `${BASE_API_URL}/commonfunction`,
                 method: "POST",
@@ -828,24 +480,15 @@
                 dataType: 'json',
                 success(res) {
                   try {
-                    console.log('District API response:', res);
                     const districts = decryptData(res.data) || [];
-                    console.log('Decrypted districts:', districts);
-
                     const $select = $(`#${inputId}`);
                     if ($select.length) {
                       $select.empty().append(`<option value="">-- Select District --</option>`);
-
                       if (Array.isArray(districts)) {
                         districts.forEach(d => {
-                          console.log('Adding district option:', d);
                           $select.append(`<option value="${d.id || d.district_id || ''}">${d.district || d.district_name || ''}</option>`);
                         });
-                      } else {
-                        console.warn('Districts data is not an array:', districts);
                       }
-                    } else {
-                      console.warn('Select element not found:', `#${inputId}`);
                     }
                   } catch (err) {
                     console.warn("District parse error", err);
@@ -856,7 +499,7 @@
                   }
                 },
                 error(xhr, status, error) {
-                  console.warn("District API error:", error, xhr.responseText);
+                  console.warn("District API error:", error);
                   const $select = $(`#${inputId}`);
                   if ($select.length) {
                     $select.empty().append(`<option value="">Failed to load districts</option>`);
@@ -864,8 +507,6 @@
                 }
               });
             } else if (f.values && f.values.length) {
-              // Load static values for non-district dropdowns
-              console.log('Loading static values for dropdown:', inputId);
               const $select = $(`#${inputId}`);
               if ($select.length) {
                 f.values.forEach(v => $select.append(`<option value="${v}">${v}</option>`));
@@ -873,15 +514,9 @@
             }
           }
 
-
           // Add Aadhaar consent immediately after Aadhaar field
           if (f.isAadhaarField && !f.isAadhaarAttachment) {
             addAadhaarConsentSection(prefix, $(`#${inputId}`).closest('.aadhaar-input-field'));
-          }
-
-          // populate dropdowns where needed
-          if (f.field_type === 'dropdown' && !f.isChangesRequiredField) {
-            populateDropdown(inputId, f);
           }
         });
 
@@ -902,7 +537,6 @@
         let hasAadhaarMandatoryAttachment = false;
 
         // Generate mandatory attachment fields first
-        // In the mandatory attachment fields generation section, update the fieldHtml:
         mandatoryAttachments.forEach((f) => {
           const rawCol = f.column_name || f.column_id || f.legacy_code || `field_${f.index}`;
           const colId = rawCol
@@ -949,8 +583,6 @@
     </div>`;
 
           $container.append(fieldHtml);
-
-
         });
 
         // Special function for Aadhaar file row with guaranteed placeholder
@@ -963,7 +595,7 @@
             </div>
             <div class="col-md-4">
                 <input type="text" class="form-control form-control-sm file-description" 
-                       placeholder="Aadhaar Card">
+                       placeholder="Aadhaar Card" readonly class="bg-light">
             </div>
             <div class="col-md-4">
                 <input type="file" class="form-control form-control-sm ${fileInputClass}" data-uploaded="false">
@@ -978,6 +610,7 @@
         </div>
     </div>`;
         }
+
         // Generate optional attachment fields last
         optionalAttachments.forEach((f) => {
           const rawCol = f.column_name || f.column_id || f.legacy_code || `field_${f.index}`;
@@ -1021,7 +654,6 @@
         initFileModule($container, fileInputClass, hasAadhaarField);
       }
 
-      // Enhanced file module to handle Aadhaar card default placeholder
       function initFileModule($container, fileInputClass, hasAadhaarField = false) {
         const MAX_FILE_ROWS = 3;
 
@@ -1157,7 +789,7 @@
               $status.text('✔ Uploaded').removeClass('text-danger').addClass('text-success');
               $small.hide();
               $input.data('uploaded', true);
-              $wrapper.removeClass('border border-danger rounded p-2'); // Remove validation error styling
+              $wrapper.removeClass('border border-danger rounded p-2');
 
               try {
                 if (res && res.data) {
@@ -1194,46 +826,6 @@
         }
       }
 
-      // Updated helper function to accept default placeholder
-      function getNewFileRow(fileInputClass, serialNumber, defaultPlaceholder = '', isFirstRow = false) {
-        const placeholder = defaultPlaceholder ? `placeholder="${defaultPlaceholder}"` : 'placeholder="Enter document description"';
-        const readonlyAttr = (defaultPlaceholder && isFirstRow) ? 'readonly' : '';
-        const bgClass = (defaultPlaceholder && isFirstRow) ? 'bg-light' : '';
-
-        return `
-    <div class="file-row mb-2">
-        <div class="row align-items-center">
-            <div class="col-md-1">
-                <span class="file-label">${serialNumber}</span>
-            </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control form-control-sm file-description ${bgClass}" 
-                       ${placeholder} ${readonlyAttr}>
-            </div>
-            <div class="col-md-4">
-                <input type="file" class="form-control form-control-sm ${fileInputClass}" data-uploaded="false">
-                <div class="upload-status-icon"></div>
-                <small class="allowed-note text-muted" style="display: none;">Allowed: PDF, JPG, PNG — Max 2MB</small>
-            </div>
-            <div class="col-md-3">
-                <button type="button" class="btn btn-sm btn-outline-danger btn-delete-file">
-                    <i class="fas fa-times"></i> Delete
-                </button>
-            </div>
-        </div>
-    </div>`;
-      }
-
-      // Rest of the functions remain the same...
-      // [Previous functions: addAadhaarConsentSection, checkIfCANEdit, populateDropdown, 
-      // initCANEditChangeRequests, addChangeRequestCard, resetChangeSelection, 
-      // validateCurrentChangeCard, updateChangesList, initChangesListRemoval, 
-      // initAadhaarValidation, validateDynamicFields]
-      // Rest of the functions remain the same...
-      // [Previous functions: addAadhaarConsentSection, checkIfCANEdit, populateDropdown, 
-      // initCANEditChangeRequests, addChangeRequestCard, resetChangeSelection, 
-      // validateCurrentChangeCard, updateChangesList, initChangesListRemoval, 
-      // initAadhaarValidation, validateDynamicFields]
       function addAadhaarConsentSection(prefix, $afterElement) {
         // Remove any existing Aadhaar consent section first
         $afterElement.closest('.dynamic-fields-container').find('.aadhaar-consent-section').remove();
@@ -1261,91 +853,20 @@
         $afterElement.after(aadhaarConsentHtml);
       }
 
-      // Enhanced validation function to include Aadhaar attachment validation
-      function validateDynamicFields(prefix) {
-        let isValid = true;
-        const $container = $(`.dynamic-fields-container`);
-
-        // Validate Aadhaar fields and their attachments
-        $container.find('.aadhaar-input').each(function () {
-          const $aadhaarInput = $(this);
-          const aadhaarValue = $aadhaarInput.val().trim();
-
-          if (aadhaarValue && aadhaarValue.length !== 12) {
-            isValid = false;
-            $aadhaarInput.addClass('is-invalid');
-            Utils.showErrorToast('Please enter a valid 12-digit Aadhaar number');
-          } else if (aadhaarValue) {
-            // If Aadhaar number is provided, check if Aadhaar attachment is uploaded
-            const $aadhaarAttachmentWrapper = $container.find('[data-col="aadhaar_card"]');
-            if ($aadhaarAttachmentWrapper.length > 0) {
-              const hasAadhaarAttachment = $aadhaarAttachmentWrapper.find('input[type="file"][data-uploaded="true"]').length > 0;
-              if (!hasAadhaarAttachment) {
-                isValid = false;
-                Utils.showErrorToast('Aadhaar Card attachment is required when Aadhaar number is provided');
-                $aadhaarAttachmentWrapper.addClass('border border-danger rounded p-2');
-              } else {
-                $aadhaarAttachmentWrapper.removeClass('border border-danger rounded p-2');
-              }
-            }
-          }
-        });
-
-        // Validate Aadhaar consent
-        const $aadhaarConsent = $container.find('.aadhaar-consent-checkbox');
-        if ($aadhaarConsent.length > 0 && !$aadhaarConsent.is(':checked')) {
-          isValid = false;
-          $container.find('.aadhaar-consent-error').text('You must consent to Aadhaar usage to proceed.').show();
-          Utils.showErrorToast('Please consent to Aadhaar usage');
-        }
-
-        // Validate file attachments (general)
-        $container.find('.file-wrapper[data-mandatory="true"]').each(function () {
-          const $wrapper = $(this);
-          const hasUploadedFile = $wrapper.find('input[type="file"][data-uploaded="true"]').length > 0;
-
-          if (!hasUploadedFile) {
-            isValid = false;
-            $wrapper.addClass('border border-danger rounded p-2');
-            Utils.showErrorToast(`Please upload required attachment: ${$wrapper.find('label').text()}`);
-          } else {
-            $wrapper.removeClass('border border-danger rounded p-2');
-          }
-        });
-
-        return isValid;
-      }
-
       function checkIfCANEdit(categoryId, subcategoryId) {
-        const categoryName = $("#categorySelectBehalf option:selected").text() ||
-          $("#categorySelect option:selected").text() ||
-          "";
-
-        const subcategoryName = $("#subCategorySelectBehalf option:selected").text() ||
-          $("#subCategorySelect option:selected").text() ||
-          "";
+        const categoryName = $("#categorySelect").find('option:selected').text() || "";
+        const subcategoryName = $("#subCategorySelect").find('option:selected').text() || "";
 
         // Check if category contains "CAN" and subcategory contains "edit"
         const isCANCategory = categoryName.toLowerCase().includes('can');
         const isEditSubcategory = subcategoryName.toLowerCase().includes('edit');
-
-        console.log('CAN Edit Check:', {
-          categoryName,
-          subcategoryName,
-          isCANCategory,
-          isEditSubcategory,
-          result: isCANCategory && isEditSubcategory
-        });
 
         return isCANCategory && isEditSubcategory;
       }
 
       function populateDropdown(inputId, fieldConfig) {
         const $select = $(`#${inputId}`);
-
-        // Only handle static values now since district cascading is removed
         if (fieldConfig.values && fieldConfig.values.length) {
-          // Populate with static values
           fieldConfig.values.forEach(v => {
             $select.append(`<option value="${v}">${v}</option>`);
           });
@@ -1368,7 +889,6 @@
           const selectedValue = $(this).val();
 
           if (!selectedValue) {
-            // Hide everything if no selection
             $currentCardContainer.empty();
             $addToListSection.hide();
             $errorMsg.hide();
@@ -1377,21 +897,14 @@
             return;
           }
 
-          // Hide error if selection is valid
           $errorMsg.hide();
           $dropdown.removeClass('is-invalid');
-
-          // Store current change type
           currentChangeType = selectedValue;
 
-          // Clear current card and show new one
           $currentCardContainer.empty();
           addChangeRequestCard(prefix, selectedValue, $currentCardContainer);
-
-          // Show "Add to List" button
           $addToListSection.show();
 
-          // Show changes list if there are any existing changes
           if ($changeRequestsContainer.children().length > 0) {
             $changesListSection.show();
             updateChangesList(prefix);
@@ -1402,17 +915,12 @@
         $container.on('click', '.btn-add-to-list', function () {
           if (!currentChangeType) return;
 
-          // Validate current card before adding to list
           if (validateCurrentChangeCard(prefix)) {
-            // Move the current card to the permanent container
             const $currentCard = $currentCardContainer.children().first();
             $changeRequestsContainer.append($currentCard.clone());
 
-            // Show the changes list
             $changesListSection.show();
             updateChangesList(prefix);
-
-            // Reset for next selection
             resetChangeSelection(prefix);
           }
         });
@@ -1642,7 +1150,6 @@
           $(`#${cardId}`).remove();
           updateChangesList(prefix);
 
-          // Hide changes list if no changes left
           if ($(`#changeRequestsContainer_${prefix}`).children().length === 0) {
             $(`#changesList_${prefix}`).hide();
           }
@@ -1678,25 +1185,67 @@
         });
       }
 
-      function loadRelationship() {
-        const payload = { action: "function_call", function_name: "fn_relationship", params: {} };
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: "POST",
-          data: { data: encryptData(payload) },
-          dataType: 'json',
-          success: function (response) {
-            const decrypted = decryptData(response.data);
-            const $dropdown = $("#behalfPane #relationshipField");
-            $dropdown.empty().append('<option value="">--Select Relationship--</option>');
-            decrypted.forEach(item => $dropdown.append(`<option value="${item.relationship}">${item.relationship}</option>`));
-          },
-          error: function () { Utils.showErrorToast('Failed to load relationship list.'); }
+      // Enhanced validation function to include Aadhaar attachment validation
+      function validateDynamicFields(prefix) {
+        let isValid = true;
+        const $container = $(`.dynamic-fields-container`);
+
+        // Validate Aadhaar fields and their attachments
+        $container.find('.aadhaar-input').each(function () {
+          const $aadhaarInput = $(this);
+          const aadhaarValue = $aadhaarInput.val().trim();
+
+          if (aadhaarValue && aadhaarValue.length !== 12) {
+            isValid = false;
+            $aadhaarInput.addClass('is-invalid');
+            Utils.showErrorToast('Please enter a valid 12-digit Aadhaar number');
+          } else if (aadhaarValue) {
+            // If Aadhaar number is provided, check if Aadhaar attachment is uploaded
+            const $aadhaarAttachmentWrapper = $container.find('[data-col="aadhaar_card"]');
+            if ($aadhaarAttachmentWrapper.length > 0) {
+              const hasAadhaarAttachment = $aadhaarAttachmentWrapper.find('input[type="file"][data-uploaded="true"]').length > 0;
+              if (!hasAadhaarAttachment) {
+                isValid = false;
+                Utils.showErrorToast('Aadhaar Card attachment is required when Aadhaar number is provided');
+                $aadhaarAttachmentWrapper.addClass('border border-danger rounded p-2');
+              } else {
+                $aadhaarAttachmentWrapper.removeClass('border border-danger rounded p-2');
+              }
+            }
+          }
         });
+
+        // Validate Aadhaar consent
+        const $aadhaarConsent = $container.find('.aadhaar-consent-checkbox');
+        if ($aadhaarConsent.length > 0 && !$aadhaarConsent.is(':checked')) {
+          isValid = false;
+          $container.find('.aadhaar-consent-error').text('You must consent to Aadhaar usage to proceed.').show();
+          Utils.showErrorToast('Please consent to Aadhaar usage');
+        }
+
+        // Validate file attachments (general)
+        $container.find('.file-wrapper[data-mandatory="true"]').each(function () {
+          const $wrapper = $(this);
+          const hasUploadedFile = $wrapper.find('input[type="file"][data-uploaded="true"]').length > 0;
+
+          if (!hasUploadedFile) {
+            isValid = false;
+            $wrapper.addClass('border border-danger rounded p-2');
+            Utils.showErrorToast(`Please upload required attachment: ${$wrapper.find('label').text()}`);
+          } else {
+            $wrapper.removeClass('border border-danger rounded p-2');
+          }
+        });
+
+        return isValid;
       }
-      loadRelationship();
-      // ------------------ Load Issue Type ------------------
-      function loadIssueType() {
+
+      // ============================
+      // SELF TAB FUNCTIONALITY
+      // ============================
+
+      // ------------------ Load Issue Type for Self ------------------
+      function loadIssueTypeSelf() {
         const payload = { action: "function_call", function_name: "fn_issue_type", params: {} };
         $.ajax({
           url: `${BASE_API_URL}/commonfunction`,
@@ -1705,16 +1254,16 @@
           dataType: "json",
           success(response) {
             const decrypted = decryptData(response.data);
-            const $dropdown = $("#behalfPane #typeSelectBehalf");
+            const $dropdown = $("#typeSelect");
             $dropdown.empty().append('<option value="">--Select Type--</option>');
             decrypted.forEach(item => $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`));
           }
         });
       }
-      loadIssueType();
+      loadIssueTypeSelf();
 
-      // ------------------ Load Category based on Type ------------------
-      $("#behalfPane #typeSelectBehalf").on("change", function () {
+      // ------------------ Load Category based on Type for Self ------------------
+      $("#typeSelect").on("change", function () {
         const selectedType = $(this).val();
         const payload = {
           action: "function_call",
@@ -1728,16 +1277,15 @@
           dataType: 'json',
           success(response) {
             const decrypted = decryptData(response.data);
-            const $dropdown = $("#behalfPane #categorySelectBehalf");
+            const $dropdown = $("#categorySelect");
             $dropdown.empty().append('<option value="">--Select Category--</option>');
             decrypted.forEach(item => $dropdown.append(`<option value="${item.id}">${item.issue_name}</option>`));
           }
         });
       });
 
-      // ------------------ Load Subcategory based on Category ------------------
-      $("#behalfPane #categorySelectBehalf").on("change", function () {
-        debugger
+      // ------------------ Load Subcategory based on Category for Self ------------------
+      $("#categorySelect").on("change", function () {
         const selectedCategory = $(this).val();
         const payload = {
           action: "function_call",
@@ -1751,89 +1299,53 @@
           dataType: 'json',
           success(response) {
             const decrypted = decryptData(response.data);
-            const $dropdown = $("#behalfPane #subCategorySelectBehalf");
+            const $dropdown = $("#subCategorySelect");
             $dropdown.empty().append('<option value="">--Select Sub Category--</option>');
             decrypted.forEach(item => $dropdown.append(
               `<option value="${item.id}" data-columns='${item.relevant_columns_data || "[]"}'>${item.issue_name}</option>`
             ));
-            $("#behalfPane #dynamicFieldsContainerBehalf").empty();
+            $("#dynamicFieldsContainer").empty();
           }
         });
       });
 
-      // ------------------ Handle Subcategory Change for Dynamic Fields ------------------
-      // $("#behalfPane #subCategorySelectBehalf").on("change", function () {
-      //   const $container = $("#behalfPane #dynamicFieldsContainerBehalf");
-      //   const selected = $(this).find('option:selected');
-      //   const columnsString = selected.attr('data-columns') || "[]";
-      //   const fileInputClass = 'file-input-behalf';
-
-      //   generateDynamicFields(columnsString, 'behalf', $container, fileInputClass);
-      //   initFileModule($container, fileInputClass);
-      //   initInputValidation($container);
-      // });
-
-      // ------------------ Handle Subcategory Change for Dynamic Fields ------------------
-      $("#behalfPane #subCategorySelectBehalf").on("change", function () {
-        const $container = $("#behalfPane #dynamicFieldsContainerBehalf");
-        const selected = $(this).find('option:selected');
-        const columnsString = selected.attr('data-columns') || "[]";
-        const fileInputClass = 'file-input-behalf';
-
-        // Get category and subcategory info
-        const categoryId = $("#behalfPane #categorySelectBehalf").val();
-        const subcategoryId = $(this).val();
-        const categoryName = $("#behalfPane #categorySelectBehalf option:selected").text();
-        const subcategoryName = $(this).find('option:selected').text();
-
-        console.log('Subcategory Changed:', {
-          categoryId,
-          subcategoryId,
-          categoryName,
-          subcategoryName,
-          isCANEdit: checkIfCANEdit(categoryId, subcategoryId)
-        });
-
-        generateDynamicFields(columnsString, 'behalf', $container, fileInputClass, categoryId, subcategoryId);
-        initFileModule($container, fileInputClass);
-        initInputValidation($container);
-      });
-
-      // For Self Page (if applicable)
+      // ------------------ Handle Subcategory Change for Dynamic Fields (Self) ------------------
       $("#subCategorySelect").on("change", function () {
         const $container = $("#dynamicFieldsContainer");
         const selected = $(this).find('option:selected');
         const columnsString = selected.attr('data-columns') || "[]";
-        const fileInputClass = 'fileInput';
+        const fileInputClass = 'file-input-self';
 
         // Get category and subcategory info
         const categoryId = $("#categorySelect").val();
         const subcategoryId = $(this).val();
-        const categoryName = $("#categorySelect option:selected").text();
-        const subcategoryName = $(this).find('option:selected').text();
-
-        console.log('Self Subcategory Changed:', {
-          categoryId,
-          subcategoryId,
-          categoryName,
-          subcategoryName,
-          isCANEdit: checkIfCANEdit(categoryId, subcategoryId)
-        });
 
         generateDynamicFields(columnsString, 'self', $container, fileInputClass, categoryId, subcategoryId);
         initFileModule($container, fileInputClass);
         initInputValidation($container);
       });
-      // ------------------ Submit Handler for Behalf Pane ------------------
-      $(document).off("click.submitBtnBehalf").on("click.submitBtnBehalf", "#submitBtnBehalf", function (e) {
-        debugger
+
+      // ------------------ Submit Handler for Self Tab ------------------
+      $(document).off("click.submitBtnSelf").on("click.submitBtnSelf", "#submitBtn", function (e) {
         e.preventDefault();
 
         let isValid = true;
-        const $behalfPane = $("#behalfPane");
+        const $form = $("#issueForm");
+
+        // Validate declaration
+        const $declarationCheck = $("#declarationCheck");
+        const $declarationError = $("#declarationError");
+
+        if (!$declarationCheck.is(':checked')) {
+          isValid = false;
+          $declarationError.text('You must agree to the declaration to proceed.').show();
+        } else {
+          $declarationError.hide();
+        }
+
         // Validate Aadhaar consent if Aadhaar fields are present
-        const $aadhaarConsentCheckbox = $behalfPane.find('.aadhaar-consent-checkbox');
-        const $aadhaarConsentError = $behalfPane.find('.aadhaar-consent-error');
+        const $aadhaarConsentCheckbox = $form.find('.aadhaar-consent-checkbox');
+        const $aadhaarConsentError = $form.find('.aadhaar-consent-error');
 
         if ($aadhaarConsentCheckbox.length > 0) {
           if (!$aadhaarConsentCheckbox.is(':checked')) {
@@ -1845,7 +1357,7 @@
         }
 
         // Validate mandatory fields
-        $("#behalfPane #dynamicFieldsContainerBehalf [data-mandatory='true']").each(function () {
+        $("#dynamicFieldsContainer [data-mandatory='true']").each(function () {
           if (!$(this).val()?.trim()) {
             isValid = false;
             $(this).addClass("is-invalid");
@@ -1856,14 +1368,13 @@
 
         // Validate main form fields
         const mandatorySelectors = [
-          '#relationshipField',
-          '#typeSelectBehalf',
-          '#categorySelectBehalf',
-          '#subCategorySelectBehalf'
+          '#typeSelect',
+          '#categorySelect',
+          '#subCategorySelect'
         ];
 
         mandatorySelectors.forEach(selector => {
-          const $el = $("#behalfPane " + selector);
+          const $el = $(selector);
           if (!$el.val() || $el.val().trim() === '') {
             isValid = false;
             $el.addClass('is-invalid');
@@ -1875,32 +1386,43 @@
           }
         });
 
+        // Validate dynamic fields
+        if (!validateDynamicFields('self')) {
+          isValid = false;
+        }
+
         if (!isValid) {
           return alert("Please fill all mandatory fields");
         }
 
         const sessionId = getSessionId();
 
+        // Get user info from localStorage
+        const userName = localStorage.getItem("user_name") || "";
+        const userMobile = localStorage.getItem("mobile") || "";
+        const userEmail = localStorage.getItem("email") || "";
+        const userDistrict = localStorage.getItem("district_id") || "";
+
         const params = {
           p_session_id: sessionId,
-          p_complainant_name: $("#behalfPane #onbehalfName").val()?.trim() || null,
-          p_mobile: $("#behalfPane #onbehalfMobile").val()?.trim() || null,
-          p_email: $("#behalfPane #onbehalfEmail").val()?.trim() || null,
-          p_district_id: $("#behalfPane #onbehalfDistrict").val() || null,
-          p_issue_id: $("#behalfPane #typeSelectBehalf").val() || null,
+          p_complainant_name: userName,
+          p_mobile: userMobile,
+          p_email: userEmail,
+          p_district_id: userDistrict,
+          p_issue_id: $("#typeSelect").val() || null,
           p_created_by: localStorage.getItem("user_id") || "1",
-          p_category_id: $("#behalfPane #categorySelectBehalf").val() || null,
-          p_subcategory_id: $("#behalfPane #subCategorySelectBehalf").val() || null,
-          p_relationship: $("#behalfPane #relationshipField").val() || null,
-          p_onbehalf_name: localStorage.getItem("user_name") || null,
-          p_onbehalf_mobile: localStorage.getItem("mobile") || null,
-          p_onbehalf_email: localStorage.getItem("email") || null,
-          p_onbehalf_district_id: localStorage.getItem("district_id") || null
+          p_category_id: $("#categorySelect").val() || null,
+          p_subcategory_id: $("#subCategorySelect").val() || null,
+          p_relationship: null, // Self submission doesn't have relationship
+          p_onbehalf_name: null,
+          p_onbehalf_mobile: null,
+          p_onbehalf_email: null,
+          p_onbehalf_district_id: null
         };
 
         // Collect dynamic fields into single JSON
         let dynamicFields = {};
-        $("#behalfPane #dynamicFieldsContainerBehalf [data-param]").each(function () {
+        $("#dynamicFieldsContainer [data-param]").each(function () {
           const key = $(this).data("param");
           const value = $(this).val()?.trim() || null;
           if (key) dynamicFields[key] = value;
@@ -1909,12 +1431,12 @@
 
         // Handle file uploads
         let attachmentArray = [];
-        $("#behalfPane #dynamicFieldsContainerBehalf .file-wrapper").each(function () {
+        $("#dynamicFieldsContainer .file-wrapper").each(function () {
           const colId = $(this).data("col");
           $(this).find(".file-row").each(function () {
             const fileInput = $(this).find("input[type='file']")[0];
             const file = fileInput?.files[0] || null;
-            const desc = $(this).find(".file-desc").val()?.trim() || "";
+            const desc = $(this).find(".file-description").val()?.trim() || "";
 
             if (file) {
               attachmentArray.push({ col: colId, file, desc });
@@ -1949,12 +1471,12 @@
           contentType: false,
           processData: false,
           beforeSend: function () {
-            $("#behalfPane #formLoader").removeClass("d-none");
-            $("#behalfPane #submitBtnBehalf").prop("disabled", true);
+            $("#formLoader").removeClass("d-none");
+            $("#submitBtn").prop("disabled", true);
           },
           success: (res) => {
-            $("#behalfPane #formLoader").addClass("d-none");
-            $("#behalfPane #submitBtnBehalf").prop("disabled", false);
+            $("#formLoader").addClass("d-none");
+            $("#submitBtn").prop("disabled", false);
 
             try {
               const result = decryptData(res.data);
@@ -1970,13 +1492,12 @@
                 };
 
                 $.ajax({
-
                   url: `${BASE_API_URL}/commonfunction`,
                   method: "POST",
                   data: { data: encryptData(ackPayload) },
-                  beforeSend: () => $("#behalfPane #formLoader").removeClass("d-none"),
+                  beforeSend: () => $("#formLoader").removeClass("d-none"),
                   success: function (ackRes) {
-                    $("#behalfPane #formLoader").addClass("d-none");
+                    $("#formLoader").addClass("d-none");
                     try {
                       const ackDecrypted = decryptData(ackRes.data);
                       const ackDataRaw = ackDecrypted[0]?.fn_acknowledge_download;
@@ -1988,21 +1509,21 @@
 
                       if (ackData.length > 0) {
                         const d = ackData[0];
-                        $("#behalfPane #ackRequestedBy").text(d.Requested_By);
-                        $("#behalfPane #ackUserType").text(d.type_user);
-                        $("#behalfPane #ackComplainant").text(d.name);
-                        $("#behalfPane #ackMobile").text(d.mobile);
-                        $("#behalfPane #ackDistrict").text(d.district);
-                        $("#behalfPane #ackDate").text(new Date(d.date).toLocaleString());
-                        $("#behalfPane #ackIssueType").text(d.issue);
-                        $("#behalfPane #ackCategory").text(d.category);
-                        $("#behalfPane #ackSubCategory").text(d.subcategory);
-                        $("#behalfPane #ackNumber").text(d.acknowledge_numbr);
+                        $("#ackRequestedBy").text(d.Requested_By);
+                        $("#ackUserType").text(d.type_user);
+                        $("#ackComplainant").text(d.name);
+                        $("#ackMobile").text(d.mobile);
+                        $("#ackDistrict").text(d.district);
+                        $("#ackDate").text(new Date(d.date).toLocaleString());
+                        $("#ackIssueType").text(d.issue);
+                        $("#ackCategory").text(d.category);
+                        $("#ackSubCategory").text(d.subcategory);
+                        $("#ackNumber").text(d.acknowledge_numbr);
                       } else {
-                        $("#behalfPane #ackCard").html("<p class='text-center text-muted'>No acknowledgement data available.</p>");
+                        $("#ackCard").html("<p class='text-center text-muted'>No acknowledgement data available.</p>");
                       }
 
-                      const successModalEl = document.getElementById('behalfSuccessModal');
+                      const successModalEl = document.getElementById('successModal');
                       const successModal = new bootstrap.Modal(successModalEl);
                       successModal.show();
 
@@ -2011,12 +1532,12 @@
                       });
 
                     } catch (err) {
-                      $("#behalfPane #ackCard").html(`<p class="text-danger text-center">Error parsing acknowledgement.</p>`);
+                      $("#ackCard").html(`<p class="text-danger text-center">Error parsing acknowledgement.</p>`);
                     }
                   },
                   error: function () {
-                    $("#behalfPane #formLoader").addClass("d-none");
-                    $("#behalfPane #ackCard").html(`<p class="text-danger text-center">Failed to load acknowledgement.</p>`);
+                    $("#formLoader").addClass("d-none");
+                    $("#ackCard").html(`<p class="text-danger text-center">Failed to load acknowledgement.</p>`);
                   }
                 });
               }
@@ -2027,19 +1548,18 @@
             }
           },
           error: (xhr, status, err) => {
-            $("#behalfPane #formLoader").addClass("d-none");
-            $("#behalfPane #submitBtnBehalf").prop("disabled", false);
+            $("#formLoader").addClass("d-none");
+            $("#submitBtn").prop("disabled", false);
             console.error("Submission error:", err, xhr.responseText);
             alert("Submission Failed");
           },
         });
       });
 
-      // ------------------ PDF Download for Behalf Pane ------------------
-      $(document).on('click', '#behalfSuccessModal .download-pdf', function () {
-        debugger
+      // ------------------ PDF Download for Self Tab ------------------
+      $(document).on('click', '#successModal .download-pdf', function () {
         const { jsPDF } = window.jspdf;
-        const card = document.getElementById('ackCardBehalf');
+        const card = document.getElementById('ackCard');
         if (!card) return;
 
         html2canvas(card).then(canvas => {
@@ -2053,8 +1573,8 @@
         });
       });
 
-      // Initialize input validation for behalf pane
-      initInputValidation($("#behalfPane"));
+      // Initialize input validation for self form
+      initInputValidation($("#issueForm"));
 
     </script>
 </body>
