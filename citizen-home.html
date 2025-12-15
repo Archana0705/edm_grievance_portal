@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>e-Sevai Grievance Portal — Split Layout</title>
+
+  <!-- Bootstrap 5.3 -->
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/css/aos.css" rel="stylesheet">
+  <style>
+    /* Base button */
+    .continueBtn {
+      position: relative;
+      overflow: hidden;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(90deg, #4b6cb7, #182848);
+      color: #fff;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.4s ease;
+      z-index: 1;
+    }
+
+    /* Hover gradient shine effect */
+    .continueBtn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(120deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+      transform: skewX(-25deg);
+      transition: all 0.6s ease;
+      z-index: -1;
+    }
+
+    /* On hover: shine animation + scale */
+    .continueBtn:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .continueBtn:hover::before {
+      left: 100%;
+    }
+
+    /* On click: press effect */
+    .continueBtn:active {
+      transform: scale(0.98);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+
+
+  <style type="text/css">
+    .front-face .card,
+    .card-inner .card {
+      border: 0;
+    }
+
+    /* Flip CSS */
+    .flip-container {
+      perspective: 1000px;
+    }
+
+    .flipper {
+      transition: 0.8s;
+      transform-style: preserve-3d;
+      position: relative;
+      min-height: 420px;
+      /* prevents collapse so faces remain visible */
+    }
+
+    .front-face,
+    .back-face {
+      backface-visibility: hidden;
+      position: absolute;
+      width: 100%;
+      top: 0;
+      left: 0;
+      padding: 0;
+      /* content already padded inside */
+      box-sizing: border-box;
+    }
+
+    .front-face {
+      z-index: 2;
+      transform: rotateY(0deg);
+    }
+
+    .back-face {
+      transform: rotateY(180deg);
+    }
+
+    .flip-container.flipped .flipper {
+      transform: rotateY(180deg);
+    }
+
+    /* Basic page styling (kept from your design) */
+    :root {
+      --card-bg: #ffffff;
+      --muted: #6c757d;
+      --primary: #0d6efd;
+      --accent: #4da6ff;
+      --soft: #f7fbff;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      background-color: var(--soft);
+      background-image:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.9) 25%, rgba(0, 0, 0, 0.01) 25%, rgba(0, 0, 0, 0.01) 50%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0.9) 75%, rgba(0, 0, 0, 0.01) 75%, rgba(0, 0, 0, 0.01) 100%),
+        radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+      background-size: 12px 12px, 8px 8px;
+      padding: 40px 20px;
+    }
+
+    .portal-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .portal-title {
+      font-weight: 700;
+      font-size: 1.35rem;
+      color: #0b5ed7;
+      margin: 0;
+    }
+
+    .portal-sub {
+      color: var(--muted);
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .split-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .left-card {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      /*      align-items: center;*/
+      background: #ffffff;
+      box-shadow: 0 6px 18px rgba(10, 20, 40, 0.04);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .card-inner {
+      width: 100%;
+      max-width: 340px;
+    }
+
+    .brief-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .step-icon {
+      font-size: 38px;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .otp-input {
+      width: 50px;
+      height: 55px;
+      text-align: center;
+      font-size: 22px;
+      margin: 6px;
+      border-radius: 10px;
+    }
+
+    .form-control,
+    .form-select {
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+    }
+
+    .btn {
+      border-radius: 12px;
+      font-weight: 600;
+      padding: 10px 14px;
+    }
+
+    .brief-panel {
+      position: sticky;
+      top: 30px;
+      border-radius: 14px;
+      padding: 20px;
+      background: #ffffff;
+      box-shadow: 0 6px 18px rgba(10, 20, 40, 0.04);
+      border: 1px solid rgba(13, 110, 253, 0.04);
+    }
+
+    .brief-heading {
+      color: #07346b;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .brief-sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+
+    .activity-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .activity {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px;
+      border-radius: 10px;
+      transition: transform .18s ease, box-shadow .18s ease;
+      cursor: default;
+    }
+
+    .activity:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    .activity .icon {
+      min-width: 48px;
+      min-height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(13, 110, 253, 0.08), rgba(77, 166, 255, 0.06));
+      color: var(--primary);
+      font-size: 20px;
+    }
+
+    .activity .title {
+      font-weight: 600;
+      margin: 0;
+      color: #0b5ed7;
+      font-size: 0.99rem;
+    }
+
+    .activity .desc {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .brief-cta {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .help-block {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    @media(max-width:991px) {
+      .card-inner {
+        max-width: 100%;
+      }
+
+      .brief-panel {
+        position: relative;
+        top: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="portal-header mb-3">
+      <div>
+        <h1 class="portal-title">e-Sevai Grievance Portal</h1>
+        <p class="portal-sub mb-0">Mobile login • Raise grievances • Track requests</p>
+      </div>
+    </div>
+
+    <div class="split-row">
+
+      <!-- LEFT: flip/login -->
+      <div class="left-card" data-aos="fade-right">
+        <div class="card-inner">
+
+          <!-- Flip container -->
+          <div class="flip-container">
+            <div class="flipper">
+
+              <!-- FRONT: Sign in -->
+              <div class="front-face">
+                <div class="card p-0 text-center">
+
+                  <!-- Screen 1: Mobile -->
+                  <div class="screen screen1">
+                    <i class="bi bi-phone step-icon"></i>
+                    <h4 class="mb-3 brief-heading">Citizen Login – Mobile</h4>
+                    <div class="mb-3 text-start">
+                      <label class="form-label fw-semibold">Mobile Number</label>
+                      <input type="text" class="form-control mobileInput" placeholder="Enter mobile number"
+                        maxlength="10" pattern="^[6-9]\d{9}$"
+                        title="Enter a valid 10-digit mobile number starting with 6-9">
+                      <small class="form-text text-muted">OTP will be sent to your number.
+                      </small>
+                      <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
+                    </div>
+                    <button class="btn btn-primary w-100 continueBtn" id="loginContinueBtn">Continue</button>
+                    <div class="mt-3"><a href="#" class="newRegister"><i class="bi bi-person-plus me-1"></i> New user?
+                        Register here</a></div>
+                  </div>
+
+                  <!-- LOGIN OTP -->
+                  <div class="screen screen2 login-otp-screen" id="loginOtpScreen" style="display:none;">
+                    <i class="fa-solid fa-key step-icon"></i>
+                    <h4 class="mb-3">Verify OTP (Login)</h4>
+                    <div class="d-flex justify-content-center mb-3">
+                      <input type="text" maxlength="1" class="otp-input form-control">
+                      <input type="text" maxlength="1" class="otp-input form-control">
+                      <input type="text" maxlength="1" class="otp-input form-control">
+                      <input type="text" maxlength="1" class="otp-input form-control">
+                      <input type="text" maxlength="1" class="otp-input form-control">
+                      <input type="text" maxlength="1" class="otp-input form-control">
+                    </div>
+                    <p class="text-muted"><span class="otpTimer">Resend OTP in 02:00</span></p>
+                    <button class="btn btn-success w-100" id="loginOtpVerifyBtn">Verify OTP</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- BACK: Register -->
+              <div class="back-face">
+                <div class="card-inner">
+                  <div class="card p-0 text-center">
+
+                    <!-- Screen 1 (Register mobile) -->
+                    <div class="screen screen1">
+                      <i class="bi bi-phone step-icon"></i>
+                      <h4 class="mb-3 brief-heading">Register – Mobile</h4>
+                      <div class="mb-3 text-start">
+                        <label class="form-label fw-semibold">Mobile Number</label>
+                        <input type="text" class="form-control mobileInput" placeholder="Enter mobile number"
+                          maxlength="10" pattern="^[6-9]\d{9}$"
+                          title="Enter a valid 10-digit mobile number starting with 6-9"> <small
+                          class="form-text text-muted">OTP will be sent to your number.</small>
+                        <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
+                      </div>
+                      <button class="btn btn-primary w-100 continueBtn" id="registerContinueBtn">Continue</button>
+                    </div>
+
+                    <!-- REGISTER OTP -->
+                    <div class="screen screen2 register-otp-screen" id="registerOtpScreen" style="display:none;">
+                      <i class="fa-solid fa-key step-icon"></i>
+                      <h4 class="mb-3">Verify OTP (Register)</h4>
+                      <div class="d-flex justify-content-center mb-3">
+                        <input type="text" maxlength="1" class="otp-input form-control">
+                        <input type="text" maxlength="1" class="otp-input form-control">
+                        <input type="text" maxlength="1" class="otp-input form-control">
+                        <input type="text" maxlength="1" class="otp-input form-control">
+                        <input type="text" maxlength="1" class="otp-input form-control">
+                        <input type="text" maxlength="1" class="otp-input form-control">
+                      </div>
+                      <p class="text-muted"><span class="otpTimer">Resend OTP in 02:00</span></p>
+                      <button class="btn btn-success w-100" id="registerOtpVerifyBtn">Verify OTP</button>
+                    </div>
+
+                    <!-- Screen 3: Profile creation (register only) -->
+                    <div class="screen screen3" style="display:none;">
+                      <!-- <i class="fa-solid fa-user step-icon"></i> -->
+                      <h4 class="mb-3">Citizen Profile Creation</h4>
+
+                      <input type="text" id="nameField" class="form-control mb-2" placeholder="Enter your Name"
+                        required>
+                      <select id="genderField" class="form-select mb-2" required>
+                        <option value="">Select Gender</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+                      </select>
+                      <input type="text" id="mobileField" class="form-control mb-2" readonly>
+                      <select id="districtField" class="form-select mb-2" required>
+                        <!-- <option value="">Select District</option>
+                        <option>Coimbatore</option>
+                        <option>Madurai</option> -->
+                      </select>
+                      <input type="email" id="emailField" class="form-control mb-3"
+                        placeholder="Enter your Email (optional)">
+
+                      <!-- Declaration -->
+                      <div class="alert alert-light border rounded-3 shadow-sm p-3 mb-4" role="alert">
+                        <div class="d-flex align-items-start">
+                          <i class="fa-solid fa-circle-info text-primary fs-4 me-3"></i>
+                          <div>
+                            <h6 class="fw-bold mb-2">Declaration</h6>
+                            <p class="mb-2 small text-muted">
+                              I hereby declare that the information provided in this portal is true and correct to the
+                              best of my knowledge.
+                            </p>
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="declarationCheck">
+                              <label class="form-check-label small" for="declarationCheck">I agree to the terms</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <button class="btn btn-primary w-100 mb-3 next3">Continue</button>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="mt-2 text-center"><a href="#" class="backToLogin"><i
+                      class="bi bi-arrow-left-circle me-1"></i> Back to Login</a></div>
+              </div>
+
+            </div> <!-- .flipper -->
+          </div> <!-- .flip-container -->
+
+        </div>
+      </div>
+
+      <!-- RIGHT: brief -->
+      <aside class="brief-panel aos-init aos-animate" data-aos="fade-left">
+        <div>
+          <h3 class="brief-heading">What you can do</h3>
+          <p class="brief-sub">Quick actions &amp; services available to every citizen. Simple steps — faster
+            resolution.</p>
+          <div class="activity-list">
+
+            <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="50">
+              <div class="icon"><i class="bi bi-ticket-perforated"></i></div>
+              <div>
+                <p class="title mb-0">Raise a Grievance</p>
+                <p class="desc mb-0">Create a ticket for service issues, apply corrections or report problems.</p>
+              </div>
+            </div>
+
+            <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+              <div class="icon"><i class="bi bi-check-circle"></i></div>
+              <div>
+                <p class="title mb-0">Track Ticket Status</p>
+                <p class="desc mb-0">Monitor progress of your requests and get timely updates.</p>
+              </div>
+            </div>
+
+            <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="150">
+              <div class="icon"><i class="bi bi-telephone-fill"></i></div>
+              <div>
+                <p class="title mb-0">Helpline &amp; Support</p>
+                <p class="desc mb-0">Access dedicated helpline numbers and escalation options.</p>
+              </div>
+            </div>
+
+            <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+              <div class="icon"><i class="bi bi-file-earmark-arrow-up"></i></div>
+              <div>
+                <p class="title mb-0">Upload Documents</p>
+                <p class="desc mb-0">Attach supporting documents for faster verification.</p>
+              </div>
+            </div>
+
+            <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="250">
+              <div class="icon"><i class="bi bi-people"></i></div>
+              <div>
+                <p class="title mb-0">Community Feedback</p>
+                <p class="desc mb-0">Share suggestions and see community responses.</p>
+              </div>
+            </div>
+
+          </div>
+          <div class="brief-cta">
+            <a href="#" class="btn btn-outline-primary w-100"><i class="bi bi-plus me-2"></i>Raise Grievance</a>
+          </div>
+          <div class="mt-3 help-block">
+            <strong>Tip:</strong> Keep your mobile active to receive OTPs. For documents, ensure files are under 1MB for
+            faster upload.
+          </div>
+        </div>
+      </aside>
+
+
+
+    </div>
+  </div>
+
+  <!-- AOS JS -->
+  <script src="assets/js/jquery-3.7.1.min.js"></script>
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/aos.js"></script>
+  <script src="assets/js/dataTableUtil.js"></script>
+  <script src="assets/js/crypto-js.min.js"></script>
+  <script src="assets/js/global.js"></script>
+  <script src="assets/js/encrypt_decrypt.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/toastUtil.js"></script>
+  <script src="assets/js/apiConfig.js"></script>
+
+  <script>
+    $(function () {
+      AOS.init({ duration: 420, once: true });
+
+      // ✅ Helpers
+      function isValidMobile(num) {
+        return /^[6-9]\d{9}$/.test(num || "");
+      }
+
+      function isValidEmail(email) {
+        // Basic RFC 5322 compliant pattern (simple version for most cases)
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email || "");
+      }
+
+      function sanitizeInput(str) {
+        return String(str || "").replace(/[<>"'%;()&+]/g, "");
+      }
+
+      const payload = {
+        action: "function_call",
+        function_name: "fn_district_list",
+        params: {}
+      };
+      function loadDistricts() {
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: 'json',
+          success: function (response) {
+            const decrypted = decryptData(response.data);
+            const $dropdown = $("#districtField");
+            $dropdown.empty().append('<option value="" class="placeholder">--Select District--</option>');
+
+            decrypted.forEach(item => {
+              $dropdown.append(`<option value="${item.id}">${item.district}</option>`);
+            });
+
+          },
+          error: function () {
+            alert('Failed to load districts. Please try again.');
+          }
+        });
+      }
+
+      // Call function on page load
+      loadDistricts();
+      // 👉 Init
+      $(".front-face .screen, .back-face .screen").hide();
+      $(".front-face .screen1, .back-face .screen1").show();
+
+      // 👉 Flip handlers
+      $(document).on("click", ".newRegister", function (e) {
+        e.preventDefault();
+        $(".flip-container").addClass("flipped");
+        $(".back-face .screen").hide();
+        $(".back-face .screen1").show();
+      });
+      $(document).on("click", ".backToLogin", function (e) {
+        e.preventDefault();
+        $(".flip-container").removeClass("flipped");
+        $(".front-face .screen").hide();
+        $(".front-face .screen1").show();
+      });
+
+      $(document).on("input", ".otp-input", function () {
+        const $this = $(this);
+        const value = $this.val();
+
+        if (value.length === 1) {
+          // Move to next input if exists
+          $this.next(".otp-input").focus();
+        }
+      });
+
+      $(document).on("keydown", ".otp-input", function (e) {
+        const $this = $(this);
+
+        if (e.key === "Backspace" && !$this.val()) {
+          $this.prev(".otp-input").focus();
+        }
+
+        if (e.key === "Enter") {
+          const $face = $this.closest(".face, .front-face, .back-face");
+
+          // Check if all OTP boxes are filled
+          const enteredOTP = $face.find(".otp-input").map(function () {
+            return $(this).val();
+          }).get().join("").trim();
+
+          if (enteredOTP.length === 6) {
+            if ($face.hasClass("front-face")) {
+              $("#loginOtpVerifyBtn").trigger("click");
+            } else if ($face.hasClass("back-face")) {
+              $("#registerOtpVerifyBtn").trigger("click");
+            }
+          }
+        }
+      });
+
+      $(document).on("click", "#loginContinueBtn", function (e) {
+        e.preventDefault();
+
+        const $face = $(this).closest(".front-face");
+        const $mobile = $face.find(".mobileInput").first();
+        const mobile = sanitizeInput($mobile.val());
+
+        if (!isValidMobile(mobile)) {
+          $mobile.addClass("is-invalid");
+          showErrorToast("Please enter a valid 10-digit mobile number.");
+          return;
+        }
+        $mobile.removeClass("is-invalid");
+
+        const payload = {
+          action: "function_call",
+          function_name: "fn_citizen_login_by_mobile",
+          params: { p_mobile: mobile }
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: "json",
+          success: function (res) {
+            if (!res.success) {
+              showErrorToast("Login API failed: " + res.message);
+              return;
+            }
+
+            const decrypted = decryptData(res.data);
+            const apiResponse = JSON.parse(decrypted[0].fn_citizen_login_by_mobile);
+
+            if (apiResponse.status === "error") {
+              showErrorToast(apiResponse.message);
+              // Flip to registration if needed
+              $(".flip-container").addClass("flipped");
+              $(".back-face .screen").hide();
+              $(".back-face .screen1").show().find(".mobileInput").val(mobile);
+              return;
+            }
+
+            showSuccessToast("Mobile verified. Sending OTP...");
+            $face.find(".screen").hide();
+            $face.find(".screen2").fadeIn().find(".mobileInput").val(mobile);
+
+            sendOtp(mobile, $face);
+          },
+          error: function () {
+            showErrorToast("Login API error.");
+          }
+        });
+      });
+
+
+      $(document).on("click", "#registerContinueBtn", function (e) {
+        debugger
+        e.preventDefault();
+
+        const $face = $(this).closest(".back-face");
+        const $mobile = $face.find(".mobileInput").first();
+        const mobile = sanitizeInput($mobile.val());
+
+        if (!isValidMobile(mobile)) {
+          $mobile.addClass("is-invalid");
+          showErrorToast("Please enter a valid 10-digit mobile number.");
+          return;
+        }
+        $mobile.removeClass("is-invalid");
+
+        const payload = {
+          action: "function_call",
+          function_name: "fn_citizen_login_by_mobile",
+          params: { p_mobile: mobile }
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: "json",
+          success: function (res) {
+            if (!res.success) {
+              showErrorToast("Registration API failed: " + res.message);
+              return;
+            }
+
+            const decrypted = decryptData(res.data);
+            const apiResponse = JSON.parse(decrypted[0].fn_citizen_login_by_mobile);
+
+            // 🔹 If error is MOBILE_NOT_REGISTERED → continue to OTP
+            if (apiResponse.status === "error") {
+              showSuccessToast("Mobile not registered. Sending OTP for registration...");
+            } else {
+              showErrorToast(apiResponse.message);
+              return;
+            }
+
+            // ✅ Always show OTP UI for registration
+            $face.find(".screen").hide();
+            $face.find(".screen2").fadeIn().find(".mobileInput").val(mobile);
+
+            sendOtp(mobile, $face);
+          },
+          error: function () {
+            showErrorToast("Registration API error.");
+          }
+        });
+      });
+
+
+
+      // 👉 Verify OTP (LOGIN)
+      $(document).on("click", "#loginOtpVerifyBtn", function (e) {
+        debugger
+        e.preventDefault();
+        const $face = $(this).closest(".front-face");
+        const mobile = sanitizeInput($face.find(".mobileInput").first().val());
+        const enteredOTP = $face.find(".otp-input").map(function () {
+          return $(this).val();
+        }).get().join("").trim();
+
+        if (enteredOTP.length !== 6) {
+          return showErrorToast("Please enter 6-digit OTP.");
+        }
+
+        showSuccessToast("Verifying OTP...");
+
+        // 🔹 API payload for OTP verification
+        const payload = {
+          action: "function_call",
+          function_name: "fn_user_details_by_mobile",
+          params: {
+            p_mobile: mobile,
+            // p_otp: enteredOTP
+          } // include OTP if backend expects it
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(payload) },
+          dataType: "json",
+          success: function (res) {
+            if (!res.success) {
+              return showErrorToast("OTP verification failed: " + (res.message || "Unknown error"));
+            }
+
+            try {
+              const decrypted = decryptData(res.data);
+
+              // Check if it's already an object/array
+              let apiResponse;
+              if (typeof decrypted === "string") {
+                apiResponse = JSON.parse(decrypted);
+              } else {
+                apiResponse = decrypted;
+              }
+
+              if (Array.isArray(apiResponse) && apiResponse.length > 0) {
+                const user = apiResponse[0];
+
+                localStorage.setItem("user_id", user.user_id || "");
+                localStorage.setItem("user_name", user.user_name || "");
+                localStorage.setItem("email", user.email || "");
+                localStorage.setItem("mobile", user.mobile || "");
+                localStorage.setItem("login_id", user.login_id || "");
+                localStorage.setItem("role_id", user.role_id || "");
+                localStorage.setItem("district", user.district || "");
+                localStorage.setItem("district_id", user.district_id || "");
+
+                showSuccessToast("Login successful!");
+                setTimeout(() => window.location.href = "dashboard.html", 1000);
+              } else {
+                showErrorToast("Invalid OTP for Login. No user data found.");
+              }
+            } catch (err) {
+              console.error("Error parsing OTP verification response:", err);
+              showErrorToast("Something went wrong while verifying OTP.");
+            }
+          },
+          error: function () {
+            showErrorToast("OTP verification API error.");
+          }
+        });
+      });
+
+      // 👉 Verify OTP (REGISTER)
+      $(document).on("click", "#registerOtpVerifyBtn", function (e) {
+        e.preventDefault();
+
+        const $face = $(this).closest(".back-face");
+        const mobile = sanitizeInput($face.find(".mobileInput").first().val());
+        const enteredOTP = $face.find(".otp-input").map(function () {
+          return $(this).val();
+        }).get().join("").trim();
+
+        if (enteredOTP.length !== 6) {
+          return showErrorToast("Please enter 6-digit OTP.");
+        }
+
+        // Simulate API verification
+        showSuccessToast("Verifying OTP...");
+
+        setTimeout(function () {
+          if (enteredOTP === "123456") {
+            // ✅ Registration flow
+            showSuccessToast("OTP verified successfully! Proceeding...");
+
+            setTimeout(function () {
+              $face.find(".screen").hide();
+              $face.find(".screen3").fadeIn();
+              $face.find("#mobileField").val(mobile);
+            }, 1200); // small delay so toast is visible
+          } else {
+            showErrorToast("Invalid OTP for Registration.");
+            return;
+          }
+        }, 1500); // simulate API delay
+      });
+
+
+      $(document).on("click", ".next3", function (e) {
+        e.preventDefault();
+        const $face = $(this).closest(".back-face");
+
+        const name = sanitizeInput($face.find("#nameField").val());
+        const gender = $face.find("#genderField").val();
+        const mobile = sanitizeInput($face.find("#mobileField").val());
+        const district = $face.find("#districtField").val();
+        const email = sanitizeInput($face.find("#emailField").val());
+
+        if (!name) return showErrorToast("Please enter your name.");
+        if (!gender) return showErrorToast("Please select gender.");
+        if (!district) return showErrorToast("Please select district.");
+        if (email && !isValidEmail(email)) {
+          return showErrorToast("Please enter a valid email address.");
+        }
+        if ($face.find("#declarationCheck").length && !$face.find("#declarationCheck").is(":checked")) {
+          return showErrorToast("Please agree to the declaration.");
+        }
+
+        const registerPayload = {
+          action: "function_call",
+          function_name: "fn_create_citizen_user",
+          params: { p_user_name: name, p_mobile: mobile, p_district: district, p_email: email },
+        };
+
+        $.ajax({
+          url: `${BASE_API_URL}/commonfunction`,
+          method: "POST",
+          data: { data: encryptData(registerPayload) },
+          dataType: "json",
+          success: function (res) {
+            if (res.success) {
+              const regData = decryptData(res.data)[0];
+              localStorage.setItem("userName", regData.name);
+              localStorage.setItem("userId", regData.user_id);
+              localStorage.setItem("userRole", regData.designation || "Citizen");
+              localStorage.setItem("userMobile", mobile);
+
+              showSuccessToast("Registration successful!");
+              // window.location.href = "dashboard.html";
+              localStorage.clear();
+              $(".flip-container").removeClass("flipped");
+              $(".front-face .screen").hide();
+              $(".front-face .screen1").fadeIn();
+            } else {
+              showErrorToast("Registration failed: " + res.message);
+              // window.location.href = "dashboard.html";
+            }
+          },
+          error: function () {
+            showErrorToast("Registration API error. Please try again.");
+            // window.location.href = "dashboard.html";
+          },
+        });
+      });
+
+      // 👉 Remove invalid state
+      $(document).on("input", ".mobileInput", function () {
+        if (isValidMobile($(this).val().trim())) $(this).removeClass("is-invalid");
+      });
+    });
+
+  </script>
+
+
+</body>
+
+</html>

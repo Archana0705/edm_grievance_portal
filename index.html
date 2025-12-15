@@ -2,911 +2,1244 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>e-Sevai Grievance Portal — Split Layout</title>
-
-  <!-- Bootstrap 5.3 -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EDM Grievance Portal</title>
   <link href="assets/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/font/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/css/aos.css" rel="stylesheet">
-  <style>
-    /* Base button */
-    .continueBtn {
-      position: relative;
-      overflow: hidden;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(90deg, #4b6cb7, #182848);
-      color: #fff;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      transition: all 0.4s ease;
-      z-index: 1;
+  <link href="assets/css/global.css" rel="stylesheet">
+  <style type="text/css">
+    img.header-logo {
+      background: #fff;
+      border-radius: 100%;
+      padding: 4px;
     }
 
-    /* Hover gradient shine effect */
-    .continueBtn::before {
+    nav.nav-menu {
+      border-radius: 4px 7px;
+      background: #00367a4d;
+      max-width: 50%;
+      margin: 0px auto;
+    }
+
+    /* Back to Top Button */
+    #backToTop {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      display: none;
+      z-index: 999;
+      width: 55px;
+      /* equal width & height */
+      height: 55px;
+      border-radius: 50%;
+      /* perfect circle */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      /* bigger icon */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    #backToTop:hover {
+      transform: translateY(-5px) scale(1.1);
+    }
+
+    img.about_img {
+      width: 100%;
+      border-radius: 7px;
+    }
+
+    a.nav-link.active {
+      /*      color: #004aad;*/
+      color: #ffd700;
+      font-weight: 700;
+    }
+
+    /* Header Logo */
+    .header-logo {
+      height: 50px;
+      transition: transform 0.3s ease;
+    }
+
+    .header-logo:hover {
+      transform: scale(1.08);
+    }
+
+    /* Header Title */
+    .header-title {
+      font-size: 1.5rem;
+      color: #002b5c;
+      font-weight: 700;
+    }
+
+    /* Nav Menu */
+    .nav-menu ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .nav-menu .nav-link {
+      text-decoration: none;
+      font-weight: 400;
+      /*  color: #333; */
+      color: #f4f4f4;
+      position: relative;
+      padding: 5px 0;
+      transition: color 0.3s ease;
+    }
+
+    .nav-menu .nav-link:hover {
+      /*  color: #004aad;*/
+      color: #ffd700;
+    }
+
+    /* Underline Hover Animation */
+    .nav-menu .nav-link::after {
       content: "";
       position: absolute;
-      top: 0;
-      left: -100%;
-      width: 200%;
-      height: 100%;
-      background: linear-gradient(120deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
-      transform: skewX(-25deg);
-      transition: all 0.6s ease;
-      z-index: -1;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background: #004aad;
+      transition: width 0.3s ease;
     }
 
-    /* On hover: shine animation + scale */
-    .continueBtn:hover {
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    .nav-menu .nav-link:hover::after {
+      width: 100%;
     }
 
-    .continueBtn:hover::before {
-      left: 100%;
-    }
+    /* Responsive */
+    @media (max-width: 768px) {
+      .main-header {
+        flex-direction: column;
+        text-align: center;
+      }
 
-    /* On click: press effect */
-    .continueBtn:active {
-      transform: scale(0.98);
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+      .nav-menu ul {
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 10px;
+      }
     }
   </style>
-
-
-  <style type="text/css">
-    .front-face .card,
-    .card-inner .card {
-      border: 0;
-    }
-
-    /* Flip CSS */
-    .flip-container {
-      perspective: 1000px;
-    }
-
-    .flipper {
-      transition: 0.8s;
-      transform-style: preserve-3d;
-      position: relative;
-      min-height: 420px;
-      /* prevents collapse so faces remain visible */
-    }
-
-    .front-face,
-    .back-face {
-      backface-visibility: hidden;
-      position: absolute;
-      width: 100%;
+  <style>
+    /* Sub Header */
+    .sub-header {
+      /*      background: linear-gradient(90deg, #002b5c, #004080);*/
+      background: #00367a;
+      color: #fff;
+      font-size: 0.9rem;
+      position: fixed;
       top: 0;
       left: 0;
-      padding: 0;
-      /* content already padded inside */
-      box-sizing: border-box;
+      right: 0;
+      z-index: 1050;
+      /* above main header */
+      transition: transform 0.4s ease, opacity 0.4s ease;
     }
 
-    .front-face {
-      z-index: 2;
-      transform: rotateY(0deg);
+    .sub-header i {
+      margin-right: 5px;
+      color: #ffd700;
     }
 
-    .back-face {
-      transform: rotateY(180deg);
+    .font-btn {
+      background: transparent;
+      border: 1px solid #fff;
+      color: #fff;
+      padding: 2px 8px;
+      margin: 0 1px;
+      font-weight: bold;
+      border-radius: 4px;
+      transition: all 0.3s;
     }
 
-    .flip-container.flipped .flipper {
-      transform: rotateY(180deg);
+    .font-btn:hover {
+      background: #ffd700;
+      color: #002b5c;
     }
 
-    /* Basic page styling (kept from your design) */
-    :root {
-      --card-bg: #ffffff;
-      --muted: #6c757d;
-      --primary: #0d6efd;
-      --accent: #4da6ff;
-      --soft: #f7fbff;
+    .access-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 6px;
+      transition: all 0.3s ease;
     }
 
-    body {
-      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-      background-color: var(--soft);
-      background-image:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.9) 25%, rgba(0, 0, 0, 0.01) 25%, rgba(0, 0, 0, 0.01) 50%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0.9) 75%, rgba(0, 0, 0, 0.01) 75%, rgba(0, 0, 0, 0.01) 100%),
-        radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
-      background-size: 12px 12px, 8px 8px;
-      padding: 40px 20px;
+    .access-btn:hover {
+      background: #ffd700;
+      color: #002b5c;
+      transform: scale(1.1);
     }
 
-    .portal-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
+    /* Main Header */
+    .main-header {
+      /*      background: #fff;*/
+      background: #004aad;
+      color: #fff;
+      position: fixed;
+      /* was sticky */
+      top: 40px;
+      /* placed under sub-header */
+      left: 0;
+      right: 0;
+      z-index: 1040;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: top 0.4s ease;
+      /* so it slides up when subheader hides */
     }
 
-    .portal-title {
-      font-weight: 700;
-      font-size: 1.35rem;
-      color: #0b5ed7;
-      margin: 0;
+    .main-header.compact {
+      top: 0;
+      /* when sub-header hidden */
     }
 
-    .portal-sub {
-      color: var(--muted);
-      margin: 0;
-      font-size: 0.95rem;
+    /* Push body content below both headers */
+    body.with-subheader {
+      padding-top: 120px;
+      /* sub-header (40px) + main header (~80px) */
     }
 
-    .split-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      align-items: stretch;
-    }
-
-    .left-card {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      /*      align-items: center;*/
-      background: #ffffff;
-      box-shadow: 0 6px 18px rgba(10, 20, 40, 0.04);
-      border-radius: 12px;
-      padding: 20px;
-    }
-
-    .card-inner {
-      width: 100%;
-      max-width: 340px;
-    }
-
-    .brief-panel {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .step-icon {
-      font-size: 38px;
-      color: var(--primary);
-      margin-bottom: 12px;
-    }
-
-    .otp-input {
-      width: 50px;
-      height: 55px;
+    .main-header .header-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #fff;
       text-align: center;
-      font-size: 22px;
-      margin: 6px;
-      border-radius: 10px;
     }
 
-    .form-control,
-    .form-select {
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 0.95rem;
+    .header-logo {
+      height: 55px;
+      transition: transform 0.3s ease;
     }
 
-    .btn {
-      border-radius: 12px;
+    .header-logo:hover {
+      transform: scale(1.05);
+    }
+
+    .sub-header.hide {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+  </style>
+  <style>
+    .stat-box {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-box:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+    }
+  </style>
+  <!-- main content -->
+  <style>
+    .hover-shadow:hover {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s;
+    }
+
+    .card h3 {
       font-weight: 600;
-      padding: 10px 14px;
     }
 
-    .brief-panel {
-      position: sticky;
-      top: 30px;
-      border-radius: 14px;
-      padding: 20px;
-      background: #ffffff;
-      box-shadow: 0 6px 18px rgba(10, 20, 40, 0.04);
-      border: 1px solid rgba(13, 110, 253, 0.04);
+    .card i {
+      transition: transform 0.3s;
     }
 
-    .brief-heading {
-      color: #07346b;
-      font-weight: 700;
-      margin-bottom: 6px;
+    .card:hover i {
+      transform: scale(1.2);
     }
 
-    .brief-sub {
-      color: var(--muted);
-      font-size: 0.95rem;
-      margin-bottom: 16px;
+    .table-hover tbody tr:hover {
+      background-color: #f1f3f5;
     }
 
-    .activity-list {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 15px;
+      border-left: 4px solid #4e73df;
+      padding-left: 10px;
     }
 
-    .activity {
+    .no-height {
+      height: 0px !important;
+    }
+
+    .ack-card {
+      background: #fff;
+      border: 1px solid #000;
+      border-radius: 8px;
+      padding: 25px 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      margin: 40px auto;
+      max-width: 850px;
+    }
+
+    .ack-card h5 {
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      border-bottom: 2px solid #000;
+      padding-bottom: 6px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .ack-label {
+      font-weight: 500;
+      width: 250px;
+    }
+
+    .ack-row {
+      margin-bottom: 10px;
+    }
+  </style>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f4f9ff, #e6f0ff);
+      color: #333;
+    }
+
+    /* Header */
+    header {
+      background: #004aad;
+      color: #fff;
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
       display: flex;
-      gap: 12px;
       align-items: center;
-      padding: 10px;
-      border-radius: 10px;
-      transition: transform .18s ease, box-shadow .18s ease;
-      cursor: default;
+      justify-content: space-between;
     }
 
-    .activity:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+    .header-title {
+      flex: 1;
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 600;
     }
 
-    .activity .icon {
-      min-width: 48px;
-      min-height: 48px;
-      border-radius: 12px;
+    header img {
+      height: 50px;
+    }
+
+    .spacer {
+      height: 90px;
+    }
+
+    /* pushes body below fixed header */
+    /* Modules */
+    .module-card {
+      background: #fff;
+      border-radius: 1rem;
+      padding: 2rem 1.5rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      transition: .3s;
+      /*      cursor:pointer;*/
+    }
+
+    .module-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .module-card i {
+      font-size: 3rem;
+      color: #004aad;
+      margin-bottom: 1rem;
+    }
+
+    /* About */
+    .about-section {
+      background: #fff;
+      padding: 4rem 2rem;
+    }
+
+    /* Stats */
+    /*    .stats-section { background:#004aad; padding:4rem 2rem; text-align:center; }
+      .stat-box h2 { font-size:2.5rem; font-weight:bold; }*/
+    /* FAQ */
+    .faq-section {
+      background: #f9fbff;
+      padding: 4rem 2rem;
+    }
+
+    /* CTA */
+    .cta-section {
+      background: linear-gradient(135deg, #004aad, #0077ff);
+      color: #fff;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    /* Footer */
+    /*footer { background:#002d72; color:#eee; padding:2rem 1rem; text-align:center; }
+      footer a { color:#fff; text-decoration:none; margin:0 .5rem; }*/
+  </style>
+  <!--  <style>
+      .footer-section a:hover {
+        color: #ffd700 !important;
+      }
+      .footer-bottom {
+        font-size: 0.85rem;
+        opacity: 0.9;
+      }
+      </style> -->
+  <style>
+    .footer-section {
+      background: linear-gradient(135deg, #002b5c, #003d7a);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer-links li {
+      margin-bottom: 8px;
+    }
+
+    .footer-links a {
+      color: #ddd;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .footer-links a:hover {
+      color: #ffd700;
+      transform: translateX(4px);
+    }
+
+    .social-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, rgba(13, 110, 253, 0.08), rgba(77, 166, 255, 0.06));
-      color: var(--primary);
-      font-size: 20px;
+      color: #fff;
+      transition: all 0.3s ease;
     }
 
-    .activity .title {
+    .social-btn:hover {
+      background: #ffd700;
+      color: #002b5c;
+      transform: scale(1.1);
+    }
+
+    .footer-bottom {
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(6px);
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    /* --- Hero Section --- */
+    .hero {
+      background: linear-gradient(to right, #004aad, #007bff);
+      color: #fff;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-top: 150px;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .hero .btn {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 2rem;
+    }
+
+    .hero .shape {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.15;
+      background: #fff;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .shape1 {
+      width: 200px;
+      height: 200px;
+      top: -50px;
+      left: -50px;
+    }
+
+    .shape2 {
+      width: 150px;
+      height: 150px;
+      bottom: -40px;
+      right: -40px;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+  </style>
+  <style>
+    .vision-title-alt {
+      font-size: 24px;
       font-weight: 600;
-      margin: 0;
-      color: #0b5ed7;
-      font-size: 0.99rem;
+      line-height: 1.4;
+      color: #111;
+      position: relative;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-    .activity .desc {
-      margin: 0;
-      font-size: 0.85rem;
-      color: var(--muted);
+    .vision-title-alt span {
+      position: relative;
+      display: inline-block;
+      background: linear-gradient(90deg, #004fb5, #feb47b);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      padding: 0 4px;
     }
 
-    .brief-cta {
-      margin-top: 16px;
-      display: flex;
-      gap: 10px;
-      align-items: center;
+    .vision-title-alt span::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: rgb(255 215 0);
+      border-radius: 4px;
+      transition: all 0.3s ease;
     }
 
-    .help-block {
-      font-size: 0.85rem;
-      color: var(--muted);
+    .vision-title-alt:hover span::after {
+      height: 6px;
+      background: rgb(231 195 0 / 82%);
     }
 
-    @media(max-width:991px) {
-      .card-inner {
-        max-width: 100%;
-      }
+    .vision-sub {
+      font-size: 1.1rem;
+      color: #666;
+      max-width: 750px;
+      margin: 0 auto;
+      font-weight: 500;
+    }
 
-      .brief-panel {
-        position: relative;
-        top: auto;
-      }
+    .active-login {
+      background: #004aad;
+      border: 1px solid #fcfcfc;
+      padding: 6px 16px;
+      border-radius: 4px 7px;
+      list-style: none;
+      margin-right: 10px;
+      transition: all 0.3s ease-in-out;
+      /* smooth animation */
+    }
+
+    .active-login:hover {
+      background: linear-gradient(135deg, #004aad, #007bff);
+      /* gradient blue */
+      transform: translateY(-2px) scale(1.03);
+      /* subtle lift effect */
+      box-shadow: 0 4px 12px rgba(0, 74, 173, 0.3);
+      /* glowing shadow */
+    }
+
+    .stars {
+      background: url(assets/img/stars.svg);
+    }
+
+    .inset-0 {
+      bottom: 0;
+      left: 0;
+      right: 0;
+      top: 0;
+    }
+
+    .absolute {
+      position: absolute;
     }
   </style>
 </head>
 
 <body>
-
-  <div class="container">
-    <div class="portal-header mb-3">
-      <div>
-        <h1 class="portal-title">e-Sevai Grievance Portal</h1>
-        <p class="portal-sub mb-0">Mobile login • Raise grievances • Track requests</p>
+  <!-- Sub Header -->
+  <div class="sub-header py-2 px-3 d-flex justify-content-between align-items-center">
+    <div class="d-flex gap-4 align-items-center">
+      <span><i class="bi bi-telephone-fill"></i> +91 98765 43210</span>
+      <span><i class="bi bi-envelope-fill"></i> support@edmportal.in</span>
+    </div>
+    <div class="d-flex gap-3 align-items-center">
+      <!-- Font Size Controls -->
+      <div class="font-controls text-center">
+        <button class="font-btn btn btn-outline-secondary" id="font-decrease">A-</button>
+        <button class="font-btn btn btn-outline-secondary" id="font-reset">A</button>
+        <button class="font-btn btn btn-outline-secondary" id="font-increase">A+</button>
+      </div>
+      <!-- Accessibility -->
+      <div class="access-icons d-flex gap-2">
+        <button class="access-btn" title="High Contrast"><i class="bi bi-circle-half"></i></button>
+        <button class="access-btn" title="Screen Reader"><i class="bi bi-person-hearts"></i></button>
+        <button class="access-btn" title="Text to Speech"><i class="bi bi-volume-up-fill"></i></button>
       </div>
     </div>
+  </div>
+  <!-- Main Header -->
+  <!-- <header class="main-header d-flex justify-content-between align-items-center px-4 py-3">
+      <img src="assets/img/logo.png" alt="Logo Left" class="header-logo">
+      <div class="header-title">EDM Portal – Grievance Redressal</div>
+      <img src="assets/img/tnega.png" alt="Logo Right" class="header-logo">
+      </header> -->
+  <header class="main-header d-flex flex-column flex-md-row justify-content-between align-items-center px-4 py-3">
+    <!-- Left Logo -->
+    <img src="assets/img/logo.png" alt="Logo Left" class="header-logo">
+    <!-- Center Title + Nav -->
+    <div class="text-center flex-grow-1">
+      <div class="header-title fw-bold">EDM Portal – Grievance Redressal</div>
+      <!-- Navigation -->
+      <nav class="nav-menu mt-2">
+        <ul class="d-flex justify-content-center gap-4 mb-0">
+          <li><a href="#home" class="nav-link active"><i class="bi bi-house-door-fill"></i> Home</a></li>
+          <li><a href="#about" class="nav-link"><i class="bi bi-info-circle-fill"></i> About</a></li>
+          <li><a href="#stats" class="nav-link"><i class="bi bi-bar-chart-fill"></i> Stats</a></li>
+          <li><a href="landing-faq.html" class="nav-link"><i class="bi bi-question-circle-fill"></i> FAQ</a></li>
+        </ul>
+      </nav>
+    </div>
+    <img src="assets/img/tnega.png" alt="Logo Right" class="header-logo">
+  </header>
+  <!-- Hero Section -->
+  <section class="hero" data-aos="fade-up">
 
-    <div class="split-row">
+    <div class="stars absolute inset-0 bg-center"></div>
 
-      <!-- LEFT: flip/login -->
-      <div class="left-card" data-aos="fade-right">
-        <div class="card-inner">
+    <div class="shape shape1"></div>
+    <div class="shape shape2"></div>
+    <h1>Welcome to Citizen Service Portal</h1>
+    <p>Access government services, track applications, and resolve grievances — all in one place with quick and simple
+      steps.</p>
+    <a data-bs-toggle="modal" data-bs-target="#trackStatus" class="btn btn-light text-primary"><i
+        class="bi bi-plus-circle me-2"></i>Track
+      Status</a>
+  </section>
 
-          <!-- Flip container -->
-          <div class="flip-container">
-            <div class="flipper">
+  <div class="modal fade" id="trackStatus" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Track Status</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
 
-              <!-- FRONT: Sign in -->
-              <div class="front-face">
-                <div class="card p-0 text-center">
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="input-group mb-3">
+                <span class="input-group-text"><i class="bi bi-file-earmark-text"></i></span>
+                <input type="text" id="ticketInput" class="form-control" placeholder="Enter Ticket Id">
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <a href="#" id="submitTicket" class="btn btn-success">Submit</a>
+              <a href="#" id="clearTicket" class="btn btn-warning d-none">Clear</a>
+              <a href="#" id="downloadTicket" class="btn btn-primary d-none">Download</a>
+            </div>
+          </div>
 
-                  <!-- Screen 1: Mobile -->
-                  <div class="screen screen1">
-                    <i class="bi bi-phone step-icon"></i>
-                    <h4 class="mb-3 brief-heading">Citizen Login – Mobile</h4>
-                    <div class="mb-3 text-start">
-                      <label class="form-label fw-semibold">Mobile Number</label>
-                      <input type="text" class="form-control mobileInput" placeholder="Enter mobile number"
-                        maxlength="10" pattern="^[6-9]\d{9}$"
-                        title="Enter a valid 10-digit mobile number starting with 6-9">
-                      <small class="form-text text-muted">OTP will be sent to your number.
-                      </small>
-                      <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
-                    </div>
-                    <button class="btn btn-primary w-100 continueBtn" id="loginContinueBtn">Continue</button>
-                    <div class="mt-3"><a href="#" class="newRegister"><i class="bi bi-person-plus me-1"></i> New user?
-                        Register here</a></div>
-                  </div>
+          <!-- Acknowledgement Card -->
+          <div class="row g-3 mb-3">
 
-                  <!-- LOGIN OTP -->
-                  <div class="screen screen2 login-otp-screen" id="loginOtpScreen" style="display:none;">
-                    <i class="fa-solid fa-key step-icon"></i>
-                    <h4 class="mb-3">Verify OTP (Login)</h4>
-                    <div class="d-flex justify-content-center mb-3">
-                      <input type="text" maxlength="1" class="otp-input form-control">
-                      <input type="text" maxlength="1" class="otp-input form-control">
-                      <input type="text" maxlength="1" class="otp-input form-control">
-                      <input type="text" maxlength="1" class="otp-input form-control">
-                      <input type="text" maxlength="1" class="otp-input form-control">
-                      <input type="text" maxlength="1" class="otp-input form-control">
-                    </div>
-                    <p class="text-muted"><span class="otpTimer">Resend OTP in 02:00</span></p>
-                    <button class="btn btn-success w-100" id="loginOtpVerifyBtn">Verify OTP</button>
-                  </div>
-                </div>
+            <div id="ackCard" class="ack-card d-none">
+              <h5>Acknowledgement</h5>
+              <p class="mb-4">We acknowledge the receipt of your grievance with the following details:</p>
+
+              <div class="ack-row d-flex">
+                <div class="ack-label">Status:</div>
+                <div id="ackStatus">-</div>
               </div>
 
-              <!-- BACK: Register -->
-              <div class="back-face">
-                <div class="card-inner">
-                  <div class="card p-0 text-center">
-
-                    <!-- Screen 1 (Register mobile) -->
-                    <div class="screen screen1">
-                      <i class="bi bi-phone step-icon"></i>
-                      <h4 class="mb-3 brief-heading">Register – Mobile</h4>
-                      <div class="mb-3 text-start">
-                        <label class="form-label fw-semibold">Mobile Number</label>
-                        <input type="text" class="form-control mobileInput" placeholder="Enter mobile number"
-                          maxlength="10" pattern="^[6-9]\d{9}$"
-                          title="Enter a valid 10-digit mobile number starting with 6-9"> <small
-                          class="form-text text-muted">OTP will be sent to your number.</small>
-                        <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
-                      </div>
-                      <button class="btn btn-primary w-100 continueBtn" id="registerContinueBtn">Continue</button>
-                    </div>
-
-                    <!-- REGISTER OTP -->
-                    <div class="screen screen2 register-otp-screen" id="registerOtpScreen" style="display:none;">
-                      <i class="fa-solid fa-key step-icon"></i>
-                      <h4 class="mb-3">Verify OTP (Register)</h4>
-                      <div class="d-flex justify-content-center mb-3">
-                        <input type="text" maxlength="1" class="otp-input form-control">
-                        <input type="text" maxlength="1" class="otp-input form-control">
-                        <input type="text" maxlength="1" class="otp-input form-control">
-                        <input type="text" maxlength="1" class="otp-input form-control">
-                        <input type="text" maxlength="1" class="otp-input form-control">
-                        <input type="text" maxlength="1" class="otp-input form-control">
-                      </div>
-                      <p class="text-muted"><span class="otpTimer">Resend OTP in 02:00</span></p>
-                      <button class="btn btn-success w-100" id="registerOtpVerifyBtn">Verify OTP</button>
-                    </div>
-
-                    <!-- Screen 3: Profile creation (register only) -->
-                    <div class="screen screen3" style="display:none;">
-                      <!-- <i class="fa-solid fa-user step-icon"></i> -->
-                      <h4 class="mb-3">Citizen Profile Creation</h4>
-
-                      <input type="text" id="nameField" class="form-control mb-2" placeholder="Enter your Name"
-                        required>
-                      <select id="genderField" class="form-select mb-2" required>
-                        <option value="">Select Gender</option>
-                        <option>Male</option>
-                        <option>Female</option>
-                        <option>Other</option>
-                      </select>
-                      <input type="text" id="mobileField" class="form-control mb-2" readonly>
-                      <select id="districtField" class="form-select mb-2" required>
-                        <!-- <option value="">Select District</option>
-                        <option>Coimbatore</option>
-                        <option>Madurai</option> -->
-                      </select>
-                      <input type="email" id="emailField" class="form-control mb-3"
-                        placeholder="Enter your Email (optional)">
-
-                      <!-- Declaration -->
-                      <div class="alert alert-light border rounded-3 shadow-sm p-3 mb-4" role="alert">
-                        <div class="d-flex align-items-start">
-                          <i class="fa-solid fa-circle-info text-primary fs-4 me-3"></i>
-                          <div>
-                            <h6 class="fw-bold mb-2">Declaration</h6>
-                            <p class="mb-2 small text-muted">
-                              I hereby declare that the information provided in this portal is true and correct to the
-                              best of my knowledge.
-                            </p>
-                            <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="declarationCheck">
-                              <label class="form-check-label small" for="declarationCheck">I agree to the terms</label>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <button class="btn btn-primary w-100 mb-3 next3">Continue</button>
-                    </div>
-
-                  </div>
-                </div>
-
-                <div class="mt-2 text-center"><a href="#" class="backToLogin"><i
-                      class="bi bi-arrow-left-circle me-1"></i> Back to Login</a></div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Requested By:</div>
+                <div id="ackRequestedBy">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Type of user:</div>
+                <div id="ackUserType">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Name of the complainant:</div>
+                <div id="ackName">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Mobile number of the complainant:</div>
+                <div id="ackMobile">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">District:</div>
+                <div id="ackDistrict">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Date:</div>
+                <div id="ackDate">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Issue type:</div>
+                <div id="ackIssueType">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Issue category:</div>
+                <div id="ackIssueCategory">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Issue subcategory:</div>
+                <div id="ackIssueSubCategory">-</div>
+              </div>
+              <div class="ack-row d-flex">
+                <div class="ack-label">Acknowledgement number:</div>
+                <div id="ackNumber">-</div>
               </div>
 
-            </div> <!-- .flipper -->
-          </div> <!-- .flip-container -->
+              <p class="mt-4"><strong>Please note the acknowledgment number for tracking your application
+                  status.</strong></p>
+            </div>
 
+
+          </div>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
         </div>
       </div>
-
-      <!-- RIGHT: brief -->
-      <aside class="brief-panel aos-init aos-animate" data-aos="fade-left">
-        <div>
-          <h3 class="brief-heading">What you can do</h3>
-          <p class="brief-sub">Quick actions &amp; services available to every citizen. Simple steps — faster
-            resolution.</p>
-          <div class="activity-list">
-
-            <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="50">
-              <div class="icon"><i class="bi bi-ticket-perforated"></i></div>
-              <div>
-                <p class="title mb-0">Raise a Grievance</p>
-                <p class="desc mb-0">Create a ticket for service issues, apply corrections or report problems.</p>
-              </div>
-            </div>
-
-            <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-              <div class="icon"><i class="bi bi-check-circle"></i></div>
-              <div>
-                <p class="title mb-0">Track Ticket Status</p>
-                <p class="desc mb-0">Monitor progress of your requests and get timely updates.</p>
-              </div>
-            </div>
-
-            <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="150">
-              <div class="icon"><i class="bi bi-telephone-fill"></i></div>
-              <div>
-                <p class="title mb-0">Helpline &amp; Support</p>
-                <p class="desc mb-0">Access dedicated helpline numbers and escalation options.</p>
-              </div>
-            </div>
-
-            <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
-              <div class="icon"><i class="bi bi-file-earmark-arrow-up"></i></div>
-              <div>
-                <p class="title mb-0">Upload Documents</p>
-                <p class="desc mb-0">Attach supporting documents for faster verification.</p>
-              </div>
-            </div>
-
-            <div class="activity aos-init aos-animate" data-aos="fade-up" data-aos-delay="250">
-              <div class="icon"><i class="bi bi-people"></i></div>
-              <div>
-                <p class="title mb-0">Community Feedback</p>
-                <p class="desc mb-0">Share suggestions and see community responses.</p>
-              </div>
-            </div>
-
-          </div>
-          <div class="brief-cta">
-            <a href="#" class="btn btn-outline-primary w-100"><i class="bi bi-plus me-2"></i>Raise Grievance</a>
-          </div>
-          <div class="mt-3 help-block">
-            <strong>Tip:</strong> Keep your mobile active to receive OTPs. For documents, ensure files are under 1MB for
-            faster upload.
-          </div>
-        </div>
-      </aside>
-
-
-
     </div>
   </div>
 
-  <!-- AOS JS -->
+
+
+  <!-- Hero -->
+  <!-- <section class="text-center py-5" data-aos="fade-up"> -->
+  <!-- <h1 class="fw-bold">Welcome to eSevai Grievance Redressal Portal</h1> -->
+  <!-- <p class="lead">Empowering citizens, ensuring accountability & transparency in governance.</p> -->
+  <!-- </section> -->
+  <section class="vision-section py-5 text-center">
+    <div class="container">
+      <h2 class="vision-title-alt" data-aos="fade-up">
+        Empowering citizens, <span>ensuring accountability</span> & <span>transparency</span> in governance.
+      </h2>
+      <p class="vision-sub mt-3" data-aos="fade-up" data-aos-delay="200">
+        Driving innovation in governance with people-first digital transformation.
+      </p>
+    </div>
+  </section>
+  <!-- Modules -->
+  <section class="container pb-5">
+    <div class="row g-4">
+      <div class="col-md-4 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="100">
+        <a href="citizen-home.html" class="module-link" aria-label="Go to Citizen Login">
+          <div class="module-card">
+            <i class="bi bi-people"></i>
+            <h5>Citizen</h5>
+            <p>Register &amp; track your grievances, requests, and helpline queries.</p>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="200">
+        <a href="esevai-login.html" class="module-link" aria-label="Go to eSevai Operator Login">
+          <div class="module-card">
+            <i class="bi bi-person-badge"></i>
+            <h5>eSevai Operators</h5>
+            <p>Assist citizens in grievance submission and service requests.</p>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="400">
+        <a href="department-login.html" class="module-link" aria-label="Go to Department User Login">
+          <div class="module-card">
+            <i class="bi bi-building"></i>
+            <h5>Department User</h5>
+            <p>Verify, assign, and resolve grievances within departments.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+  <section class="about-section py-5" data-aos="fade-up" id="about">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <!-- Left Side Content -->
+        <div class="col-lg-6 text-start">
+          <section class="vision-section mb-4">
+            <div class="container">
+              <h2 class="vision-title-alt" data-aos="fade-up">
+                About the <span>EDM Grievance Portal</span>
+              </h2>
+            </div>
+          </section>
+          <!-- <h2 class="fw-bold mb-3">About the EDM Grievance Portal</h2> -->
+          <p class="lead">
+            The <strong>EDM Grievance Redressal Portal</strong> is a centralized platform designed to
+            empower citizens, streamline operations, and enhance accountability across all levels of governance.
+            Built on transparency, efficiency, and inclusivity, it ensures timely redressal of grievances and smooth
+            coordination among stakeholders.
+          </p>
+          <ul class="list-unstyled mt-4">
+            <li class="mb-3 d-flex align-items-start">
+              <i class="bi bi-people-fill text-primary fs-4 me-3"></i>
+              <span><strong>Citizen-Centric:</strong> Easy grievance registration and real-time tracking.</span>
+            </li>
+            <li class="mb-3 d-flex align-items-start">
+              <i class="bi bi-headset text-success fs-4 me-3"></i>
+              <span><strong>Efficient Operators:</strong> Seamless support through eSevai operators and
+                helplines.</span>
+            </li>
+            <li class="mb-3 d-flex align-items-start">
+              <i class="bi bi-building text-warning fs-4 me-3"></i>
+              <span><strong>Department Accountability:</strong> Clear workflows and defined responsibility
+                channels.</span>
+            </li>
+            <li class="mb-3 d-flex align-items-start">
+              <i class="bi bi-bar-chart-line text-danger fs-4 me-3"></i>
+              <span><strong>Data-Driven Monitoring:</strong> Insights and analytics for eDMs & TNeGA officials.</span>
+            </li>
+          </ul>
+        </div>
+        <!-- Right Side Graphic -->
+        <div class="col-lg-6 text-center" data-aos="zoom-in">
+          <img src="assets/img/1.png" class="about_img" alt="EDM Portal Illustration"
+            class="img-fluid rounded-4 shadow-lg">
+          <div class="mt-4">
+            <p class="small text-muted">“Complaints and their resolution are fundamental to democracy — ensuring <br>
+              justice and empowerment for every citizen, especially the marginalized.”
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats-section py-5 text-center" id="stats"
+    style="background: linear-gradient(135deg, #f0f7ff, #eaf3ff);">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Stat 1 -->
+        <div class="col-md-3" data-aos="fade-up">
+          <div class="stat-box p-4 rounded-4 shadow-sm bg-white h-100">
+            <i class="bi bi-check-circle-fill text-success fs-1 mb-3"></i>
+            <h2 class="fw-bold">5000+</h2>
+            <p class="mb-0 text-muted">Grievances Resolved</p>
+          </div>
+        </div>
+        <!-- Stat 2 -->
+        <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
+          <div class="stat-box p-4 rounded-4 shadow-sm bg-white h-100">
+            <i class="bi bi-person-badge-fill text-primary fs-1 mb-3"></i>
+            <h2 class="fw-bold">1200+</h2>
+            <p class="mb-0 text-muted">Active Operators</p>
+          </div>
+        </div>
+        <!-- Stat 3 -->
+        <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
+          <div class="stat-box p-4 rounded-4 shadow-sm bg-white h-100">
+            <i class="bi bi-building-fill text-warning fs-1 mb-3"></i>
+            <h2 class="fw-bold">300+</h2>
+            <p class="mb-0 text-muted">Departments Linked</p>
+          </div>
+        </div>
+        <!-- Stat 4 -->
+        <div class="col-md-3" data-aos="fade-up" data-aos-delay="300">
+          <div class="stat-box p-4 rounded-4 shadow-sm bg-white h-100">
+            <i class="bi bi-bar-chart-line-fill text-danger fs-1 mb-3"></i>
+            <h2 class="fw-bold">99%</h2>
+            <p class="mb-0 text-muted">Resolution Rate</p>
+          </div>
+        </div>
+        <!-- Extra Stat 5 -->
+        <div class="col-md-3" data-aos="fade-up" data-aos-delay="400">
+          <div class="stat-box p-4 rounded-4 shadow-sm bg-white h-100">
+            <i class="bi bi-people-fill text-info fs-1 mb-3"></i>
+            <h2 class="fw-bold">1M+</h2>
+            <p class="mb-0 text-muted">Citizens Empowered</p>
+          </div>
+        </div>
+        <!-- Extra Stat 6 -->
+        <div class="col-md-3" data-aos="fade-up" data-aos-delay="500">
+          <div class="stat-box p-4 rounded-4 shadow-sm bg-white h-100">
+            <i class="bi bi-telephone-inbound-fill text-purple fs-1 mb-3"></i>
+            <h2 class="fw-bold">50K+</h2>
+            <p class="mb-0 text-muted">Helpline Calls Handled</p>
+          </div>
+        </div>
+        <!-- Extra Stat 7 -->
+        <div class="col-md-3" data-aos="fade-up" data-aos-delay="600">
+          <div class="stat-box p-4 rounded-4 shadow-sm bg-white h-100">
+            <i class="bi bi-globe2 text-dark fs-1 mb-3"></i>
+            <h2 class="fw-bold">Statewide</h2>
+            <p class="mb-0 text-muted">TNeGA Monitoring Coverage</p>
+          </div>
+        </div>
+        <!-- Extra Stat 8 -->
+        <div class="col-md-3" data-aos="fade-up" data-aos-delay="700">
+          <div class="stat-box p-4 rounded-4 shadow-sm bg-white h-100">
+            <i class="bi bi-speedometer2 text-success fs-1 mb-3"></i>
+            <h2 class="fw-bold">24x7</h2>
+            <p class="mb-0 text-muted">Portal Availability</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Call to Action -->
+  <section class="cta-section" data-aos="fade-up">
+    <h2 class="fw-bold mb-3">Ready to Submit Your Grievance?</h2>
+    <p class="mb-4">Join thousands of citizens who have benefitted from faster grievance redressal.</p>
+    <a href="#" class="btn btn-light btn-lg">Get Started</a>
+  </section>
+
+  <footer class="footer-section text-light pt-5 mt-2">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Brand -->
+        <div class="col-md-4">
+          <h4 class="fw-bold mb-3">EDM Grievance Portal</h4>
+          <p class="small mb-3">A unified grievance redressal platform built to empower citizens, ensure faster
+            resolutions, and enhance transparency in governance.</p>
+          <p class="small fst-italic">“Empowering Citizens • Enabling Governance”</p>
+        </div>
+        <!-- Quick Links -->
+        <div class="col-md-2">
+          <h6 class="fw-bold mb-3">Quick Links</h6>
+          <ul class="list-unstyled footer-links">
+            <li><a href="index.html"><i class="bi bi-arrow-right-short"></i> Home</a></li>
+            <li><a href="about.html"><i class="bi bi-arrow-right-short"></i> About Us</a></li>
+            <li><a href="faq.html"><i class="bi bi-arrow-right-short"></i> FAQs</a></li>
+            <li><a href="contact.html"><i class="bi bi-arrow-right-short"></i> Contact</a></li>
+          </ul>
+        </div>
+        <!-- Resources -->
+        <div class="col-md-3">
+          <h6 class="fw-bold mb-3">Resources</h6>
+          <ul class="list-unstyled footer-links">
+            <li><a href="#"><i class="bi bi-shield-check"></i> Privacy Policy</a></li>
+            <li><a href="#"><i class="bi bi-file-text"></i> Terms & Conditions</a></li>
+            <li><a href="#"><i class="bi bi-book"></i> User Guide</a></li>
+            <li><a href="#"><i class="bi bi-headset"></i> Support</a></li>
+          </ul>
+        </div>
+        <!-- Social & Visitors -->
+        <div class="col-md-3">
+          <h6 class="fw-bold mb-3">Connect with Us</h6>
+          <div class="d-flex gap-3 mb-3">
+            <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="social-btn"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="social-btn"><i class="bi bi-linkedin"></i></a>
+            <a href="#" class="social-btn"><i class="bi bi-youtube"></i></a>
+          </div>
+          <span class="badge bg-warning text-dark px-3 py-2">
+            <i class="bi bi-eye"></i> Visitors: <span id="visitorCount">12,345</span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <!-- Bottom Bar -->
+    <div class="footer-bottom mt-5 py-3">
+      <div class="container text-center">
+        <p class="mb-0 small">© 2025 EDM Grievance Portal. All Rights Reserved. | Designed with ❤️ for Citizens of Tamil
+          Nadu</p>
+      </div>
+    </div>
+  </footer>
+  <!-- Back to Top Button -->
+  <button id="backToTop" class="btn btn-primary">
+    <i class="bi bi-arrow-up-circle"></i>
+  </button>
   <script src="assets/js/jquery-3.7.1.min.js"></script>
-  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/global.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <!-- <script src="assets/js/bootstrap.bundle.min.js"></script> -->
   <script src="assets/js/aos.js"></script>
   <script src="assets/js/dataTableUtil.js"></script>
   <script src="assets/js/crypto-js.min.js"></script>
-  <script src="assets/js/global.js"></script>
   <script src="assets/js/encrypt_decrypt.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/toastUtil.js"></script>
   <script src="assets/js/apiConfig.js"></script>
+  <script src="assets/js/globalProfileDropdown.js"></script>
+  <script>AOS.init({ duration: 800, once: true });</script>
+  <script>
+    let lastScrollTop = 0;
+    const subHeader = document.querySelector('.sub-header');
+    const mainHeader = document.querySelector('.main-header');
+    const threshold = 100;
+
+    window.addEventListener("scroll", function () {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+      if (scrollTop > threshold) {
+        if (scrollTop > lastScrollTop) {
+          // Scrolling down
+          subHeader.classList.add("hide");
+          mainHeader.classList.add("compact"); // moves up
+        } else {
+          // Scrolling up
+          subHeader.classList.remove("hide");
+          mainHeader.classList.remove("compact");
+        }
+      } else {
+        // Always show at top
+        subHeader.classList.remove("hide");
+        mainHeader.classList.remove("compact");
+      }
+
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+    }, false);
+
+  </script>
+  <script>
+    $(document).ready(function () {
+      // Show/Hide button on scroll
+      $(window).scroll(function () {
+        if ($(this).scrollTop() > 200) {
+          $('#backToTop').fadeIn();
+        } else {
+          $('#backToTop').fadeOut();
+        }
+      });
+
+      // Smooth scroll to top
+      $('#backToTop').click(function () {
+        $('html, body').animate({ scrollTop: 0 }, 600, "swing");
+        return false;
+      });
+    });
+  </script>
+  <script>
+    $(document).ready(function () {
+      let defaultSize = 16;       // base font size in px
+      let currentStep = 0;        // track steps (-2 to +2)
+      const maxStep = 2;          // allow only 2 steps up/down
+      const stepSize = 2;         // px per step
+
+      function applyFontSize() {
+        let newSize = defaultSize + (currentStep * stepSize);
+        $("body").css("font-size", newSize + "px");
+      }
+
+      // Decrease
+      $("#font-decrease").on("click", function () {
+        if (currentStep > -maxStep) {
+          currentStep--;
+          applyFontSize();
+        }
+      });
+
+      // Increase
+      $("#font-increase").on("click", function () {
+        if (currentStep < maxStep) {
+          currentStep++;
+          applyFontSize();
+        }
+      });
+
+      // Reset
+      $("#font-reset").on("click", function () {
+        currentStep = 0;
+        $("body").css("font-size", defaultSize + "px");
+      });
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Find the Track Status button
+      const trackBtn = document.querySelector('.hero .btn');
+
+      if (trackBtn) {
+        console.log('Track button found:', trackBtn);
+
+        // Force styling
+        trackBtn.style.position = 'relative';
+        trackBtn.style.zIndex = '9999';
+        trackBtn.style.pointerEvents = 'auto';
+        trackBtn.style.cursor = 'pointer';
+
+        // Add click event directly
+        trackBtn.addEventListener('click', function (e) {
+          console.log('Track Status clicked!');
+          // You can keep this for debugging
+        });
+
+        // Make all background elements non-interactive
+        document.querySelectorAll('.hero > .stars, .hero > .shape').forEach(el => {
+          el.style.pointerEvents = 'none';
+        });
+      }
+    });
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', function () {
+        navLinks.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
 
   <script>
-    $(function () {
-      AOS.init({ duration: 420, once: true });
 
-      // ✅ Helpers
-      function isValidMobile(num) {
-        return /^[6-9]\d{9}$/.test(num || "");
-      }
+    function clearModal() {
+      $("#ticketInput").val("");
+      $("#ackCard").addClass("d-none");
+      $("#ackCard div[id^='ack']").text("-");
+      $("#clearTicket, #downloadTicket").addClass("d-none");
+    }
 
-      function isValidEmail(email) {
-        // Basic RFC 5322 compliant pattern (simple version for most cases)
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email || "");
-      }
-
-      function sanitizeInput(str) {
-        return String(str || "").replace(/[<>"'%;()&+]/g, "");
+    // Submit button → API call
+    $("#submitTicket").on("click", function (e) {
+      e.preventDefault();
+      const ticketId = $("#ticketInput").val().trim();
+      if (!ticketId) {
+        alert("Please enter a ticket ID.");
+        return;
       }
 
       const payload = {
         action: "function_call",
-        function_name: "fn_district_list",
-        params: {}
+        function_name: "fn_get_ticket_details",
+        params: { p_ticket_id: ticketId }
       };
-      function loadDistricts() {
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: "POST",
-          data: { data: encryptData(payload) },
-          dataType: 'json',
-          success: function (response) {
-            const decrypted = decryptData(response.data);
-            const $dropdown = $("#districtField");
-            $dropdown.empty().append('<option value="" class="placeholder">--Select District--</option>');
 
-            decrypted.forEach(item => {
-              $dropdown.append(`<option value="${item.id}">${item.district}</option>`);
-            });
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(payload) },
+        dataType: "json",
+        success: function (res) {
+          const decrypted = decryptData(res.data);
+          const raw = decrypted[0]?.fn_get_ticket_details;
 
-          },
-          error: function () {
-            alert('Failed to load districts. Please try again.');
-          }
-        });
-      }
-
-      // Call function on page load
-      loadDistricts();
-      // 👉 Init
-      $(".front-face .screen, .back-face .screen").hide();
-      $(".front-face .screen1, .back-face .screen1").show();
-
-      // 👉 Flip handlers
-      $(document).on("click", ".newRegister", function (e) {
-        e.preventDefault();
-        $(".flip-container").addClass("flipped");
-        $(".back-face .screen").hide();
-        $(".back-face .screen1").show();
-      });
-      $(document).on("click", ".backToLogin", function (e) {
-        e.preventDefault();
-        $(".flip-container").removeClass("flipped");
-        $(".front-face .screen").hide();
-        $(".front-face .screen1").show();
-      });
-
-      $(document).on("input", ".otp-input", function () {
-        const $this = $(this);
-        const value = $this.val();
-
-        if (value.length === 1) {
-          // Move to next input if exists
-          $this.next(".otp-input").focus();
-        }
-      });
-
-      $(document).on("keydown", ".otp-input", function (e) {
-        const $this = $(this);
-
-        if (e.key === "Backspace" && !$this.val()) {
-          $this.prev(".otp-input").focus();
-        }
-
-        if (e.key === "Enter") {
-          const $face = $this.closest(".face, .front-face, .back-face");
-
-          // Check if all OTP boxes are filled
-          const enteredOTP = $face.find(".otp-input").map(function () {
-            return $(this).val();
-          }).get().join("").trim();
-
-          if (enteredOTP.length === 6) {
-            if ($face.hasClass("front-face")) {
-              $("#loginOtpVerifyBtn").trigger("click");
-            } else if ($face.hasClass("back-face")) {
-              $("#registerOtpVerifyBtn").trigger("click");
-            }
-          }
-        }
-      });
-
-      $(document).on("click", "#loginContinueBtn", function (e) {
-        e.preventDefault();
-
-        const $face = $(this).closest(".front-face");
-        const $mobile = $face.find(".mobileInput").first();
-        const mobile = sanitizeInput($mobile.val());
-
-        if (!isValidMobile(mobile)) {
-          $mobile.addClass("is-invalid");
-          showErrorToast("Please enter a valid 10-digit mobile number.");
-          return;
-        }
-        $mobile.removeClass("is-invalid");
-
-        const payload = {
-          action: "function_call",
-          function_name: "fn_citizen_login_by_mobile",
-          params: { p_mobile: mobile }
-        };
-
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: "POST",
-          data: { data: encryptData(payload) },
-          dataType: "json",
-          success: function (res) {
-            if (!res.success) {
-              showErrorToast("Login API failed: " + res.message);
-              return;
-            }
-
-            const decrypted = decryptData(res.data);
-            const apiResponse = JSON.parse(decrypted[0].fn_citizen_login_by_mobile);
-
-            if (apiResponse.status === "error") {
-              showErrorToast(apiResponse.message);
-              // Flip to registration if needed
-              $(".flip-container").addClass("flipped");
-              $(".back-face .screen").hide();
-              $(".back-face .screen1").show().find(".mobileInput").val(mobile);
-              return;
-            }
-
-            showSuccessToast("Mobile verified. Sending OTP...");
-            $face.find(".screen").hide();
-            $face.find(".screen2").fadeIn().find(".mobileInput").val(mobile);
-
-            sendOtp(mobile, $face);
-          },
-          error: function () {
-            showErrorToast("Login API error.");
-          }
-        });
-      });
-
-
-      $(document).on("click", "#registerContinueBtn", function (e) {
-        debugger
-        e.preventDefault();
-
-        const $face = $(this).closest(".back-face");
-        const $mobile = $face.find(".mobileInput").first();
-        const mobile = sanitizeInput($mobile.val());
-
-        if (!isValidMobile(mobile)) {
-          $mobile.addClass("is-invalid");
-          showErrorToast("Please enter a valid 10-digit mobile number.");
-          return;
-        }
-        $mobile.removeClass("is-invalid");
-
-        const payload = {
-          action: "function_call",
-          function_name: "fn_citizen_login_by_mobile",
-          params: { p_mobile: mobile }
-        };
-
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: "POST",
-          data: { data: encryptData(payload) },
-          dataType: "json",
-          success: function (res) {
-            if (!res.success) {
-              showErrorToast("Registration API failed: " + res.message);
-              return;
-            }
-
-            const decrypted = decryptData(res.data);
-            const apiResponse = JSON.parse(decrypted[0].fn_citizen_login_by_mobile);
-
-            // 🔹 If error is MOBILE_NOT_REGISTERED → continue to OTP
-            if (apiResponse.status === "error") {
-              showSuccessToast("Mobile not registered. Sending OTP for registration...");
-            } else {
-              showErrorToast(apiResponse.message);
-              return;
-            }
-
-            // ✅ Always show OTP UI for registration
-            $face.find(".screen").hide();
-            $face.find(".screen2").fadeIn().find(".mobileInput").val(mobile);
-
-            sendOtp(mobile, $face);
-          },
-          error: function () {
-            showErrorToast("Registration API error.");
-          }
-        });
-      });
-
-
-
-      // 👉 Verify OTP (LOGIN)
-      $(document).on("click", "#loginOtpVerifyBtn", function (e) {
-        debugger
-        e.preventDefault();
-        const $face = $(this).closest(".front-face");
-        const mobile = sanitizeInput($face.find(".mobileInput").first().val());
-        const enteredOTP = $face.find(".otp-input").map(function () {
-          return $(this).val();
-        }).get().join("").trim();
-
-        if (enteredOTP.length !== 6) {
-          return showErrorToast("Please enter 6-digit OTP.");
-        }
-
-        showSuccessToast("Verifying OTP...");
-
-        // 🔹 API payload for OTP verification
-        const payload = {
-          action: "function_call",
-          function_name: "fn_user_details_by_mobile",
-          params: {
-            p_mobile: mobile,
-            // p_otp: enteredOTP
-          } // include OTP if backend expects it
-        };
-
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: "POST",
-          data: { data: encryptData(payload) },
-          dataType: "json",
-          success: function (res) {
-            if (!res.success) {
-              return showErrorToast("OTP verification failed: " + (res.message || "Unknown error"));
-            }
-
-            try {
-              const decrypted = decryptData(res.data);
-
-              // Check if it's already an object/array
-              let apiResponse;
-              if (typeof decrypted === "string") {
-                apiResponse = JSON.parse(decrypted);
-              } else {
-                apiResponse = decrypted;
-              }
-
-              if (Array.isArray(apiResponse) && apiResponse.length > 0) {
-                const user = apiResponse[0];
-
-                localStorage.setItem("user_id", user.user_id || "");
-                localStorage.setItem("user_name", user.user_name || "");
-                localStorage.setItem("email", user.email || "");
-                localStorage.setItem("mobile", user.mobile || "");
-                localStorage.setItem("login_id", user.login_id || "");
-                localStorage.setItem("role_id", user.role_id || "");
-                localStorage.setItem("district", user.district || "");
-                localStorage.setItem("district_id", user.district_id || "");
-
-                showSuccessToast("Login successful!");
-                setTimeout(() => window.location.href = "dashboard.html", 1000);
-              } else {
-                showErrorToast("Invalid OTP for Login. No user data found.");
-              }
-            } catch (err) {
-              console.error("Error parsing OTP verification response:", err);
-              showErrorToast("Something went wrong while verifying OTP.");
-            }
-          },
-          error: function () {
-            showErrorToast("OTP verification API error.");
-          }
-        });
-      });
-
-      // 👉 Verify OTP (REGISTER)
-      $(document).on("click", "#registerOtpVerifyBtn", function (e) {
-        e.preventDefault();
-
-        const $face = $(this).closest(".back-face");
-        const mobile = sanitizeInput($face.find(".mobileInput").first().val());
-        const enteredOTP = $face.find(".otp-input").map(function () {
-          return $(this).val();
-        }).get().join("").trim();
-
-        if (enteredOTP.length !== 6) {
-          return showErrorToast("Please enter 6-digit OTP.");
-        }
-
-        // Simulate API verification
-        showSuccessToast("Verifying OTP...");
-
-        setTimeout(function () {
-          if (enteredOTP === "123456") {
-            // ✅ Registration flow
-            showSuccessToast("OTP verified successfully! Proceeding...");
-
-            setTimeout(function () {
-              $face.find(".screen").hide();
-              $face.find(".screen3").fadeIn();
-              $face.find("#mobileField").val(mobile);
-            }, 1200); // small delay so toast is visible
-          } else {
-            showErrorToast("Invalid OTP for Registration.");
+          if (!raw) {
+            alert("No ticket details found.");
             return;
           }
-        }, 1500); // simulate API delay
-      });
 
+          const details = JSON.parse(raw);
+          const td = details.ticket_details || {};
 
-      $(document).on("click", ".next3", function (e) {
-        e.preventDefault();
-        const $face = $(this).closest(".back-face");
+          // ✅ Bind values
+          $("#ackStatus").html(
+            td.status
+              ? `<span class="badge ${td.status === 'In-Progress' ? 'bg-warning text-dark' : td.status === 'Completed' ? 'bg-success' : 'bg-danger'}">${td.status}</span>`
+              : "N/A"
+          );
+          $("#ackRequestedBy").text(td.requested_by || "N/A");
+          $("#ackUserType").text(td.user_type || "N/A");
+          $("#ackName").text(td.complainant_name || "N/A");
+          $("#ackMobile").text(td.complainant_mobile || "N/A");
+          $("#ackDistrict").text(td.district || "N/A");
+          // $("#ackDate").text(td.created_at ? new Date(td.created_at).toLocaleString("en-GB") : "N/A");
+          $("#ackDate").text(
+            td.created_at
+              ? new Date(td.created_at).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric"
+              })
+              : "N/A"
+          );
+          $("#ackIssueType").text(td.issue_type || "N/A");
+          $("#ackIssueCategory").text(td.category || "N/A");
+          $("#ackIssueSubCategory").text(td.subcategory || "N/A");
+          $("#ackNumber").text(td.ticket_id || "N/A");
 
-        const name = sanitizeInput($face.find("#nameField").val());
-        const gender = $face.find("#genderField").val();
-        const mobile = sanitizeInput($face.find("#mobileField").val());
-        const district = $face.find("#districtField").val();
-        const email = sanitizeInput($face.find("#emailField").val());
-
-        if (!name) return showErrorToast("Please enter your name.");
-        if (!gender) return showErrorToast("Please select gender.");
-        if (!district) return showErrorToast("Please select district.");
-        if (email && !isValidEmail(email)) {
-          return showErrorToast("Please enter a valid email address.");
+          // Show acknowledgement card & buttons
+          $("#ackCard").removeClass("d-none");
+          $("#clearTicket, #downloadTicket").removeClass("d-none");
+        },
+        error: function () {
+          alert("Failed to fetch ticket status.");
         }
-        if ($face.find("#declarationCheck").length && !$face.find("#declarationCheck").is(":checked")) {
-          return showErrorToast("Please agree to the declaration.");
-        }
-
-        const registerPayload = {
-          action: "function_call",
-          function_name: "fn_create_citizen_user",
-          params: { p_user_name: name, p_mobile: mobile, p_district: district, p_email: email },
-        };
-
-        $.ajax({
-          url: `${BASE_API_URL}/commonfunction`,
-          method: "POST",
-          data: { data: encryptData(registerPayload) },
-          dataType: "json",
-          success: function (res) {
-            if (res.success) {
-              const regData = decryptData(res.data)[0];
-              localStorage.setItem("userName", regData.name);
-              localStorage.setItem("userId", regData.user_id);
-              localStorage.setItem("userRole", regData.designation || "Citizen");
-              localStorage.setItem("userMobile", mobile);
-
-              showSuccessToast("Registration successful!");
-              // window.location.href = "dashboard.html";
-              localStorage.clear();
-              $(".flip-container").removeClass("flipped");
-              $(".front-face .screen").hide();
-              $(".front-face .screen1").fadeIn();
-            } else {
-              showErrorToast("Registration failed: " + res.message);
-              // window.location.href = "dashboard.html";
-            }
-          },
-          error: function () {
-            showErrorToast("Registration API error. Please try again.");
-            // window.location.href = "dashboard.html";
-          },
-        });
-      });
-
-      // 👉 Remove invalid state
-      $(document).on("input", ".mobileInput", function () {
-        if (isValidMobile($(this).val().trim())) $(this).removeClass("is-invalid");
       });
     });
 
-  </script>
+    // Clear button
+    $("#clearTicket").on("click", function (e) {
+      e.preventDefault();
+      $("#ticketInput").val("");
+      $("#ackCard").addClass("d-none");
+      $("#ackCard div[id^='ack']").text("-");
+      $("#clearTicket, #downloadTicket").addClass("d-none");
+    });
 
+    // Download button → exact UI as PDF
+    $("#downloadTicket").on("click", function (e) {
+      e.preventDefault();
+
+      const { jsPDF } = window.jspdf;
+
+      html2canvas(document.querySelector("#ackCard"), {
+        scale: 2 // better quality
+      }).then(canvas => {
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF("p", "mm", "a4");
+
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        pdf.addImage(imgData, "PNG", 0, 10, pdfWidth, pdfHeight);
+        pdf.save("Acknowledgement.pdf");
+      });
+    });
+
+    $(document).ready(function () {
+      // Using Bootstrap modal events
+      $('#trackStatus').on('hidden.bs.modal', function () {
+        clearModal();
+      });
+
+      // Also clear when close button is clicked (optional - already handled by hidden.bs.modal)
+      $('button[data-bs-dismiss="modal"]').on('click', function () {
+        clearModal();
+      });
+    });
+  </script>
 
 </body>
 
