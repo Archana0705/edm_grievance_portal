@@ -1,0 +1,1596 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EDM Grievance Portal</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/css/aos.css" rel="stylesheet">
+    <link href="assets/css/global.css" rel="stylesheet">
+    <style type="text/css">
+        img.header-logo {
+            background: #fff;
+            border-radius: 100%;
+            padding: 4px;
+        }
+
+        nav.nav-menu {
+            border-radius: 4px 7px;
+            background: #00367a4d;
+            max-width: 50%;
+            margin: 0px auto;
+        }
+
+        /* Back to Top Button */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: none;
+            z-index: 999;
+            width: 55px;
+            /* equal width & height */
+            height: 55px;
+            border-radius: 50%;
+            /* perfect circle */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            /* bigger icon */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #backToTop:hover {
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        img.about_img {
+            width: 100%;
+            border-radius: 7px;
+        }
+
+        a.nav-link.active {
+            /*      color: #004aad;*/
+            color: #ffd700;
+            font-weight: 700;
+        }
+
+        /* Header Logo */
+        .header-logo {
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .header-logo:hover {
+            transform: scale(1.08);
+        }
+
+        /* Header Title */
+        .header-title {
+            font-size: 1.5rem;
+            color: #002b5c;
+            font-weight: 700;
+        }
+
+        /* Nav Menu */
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-menu .nav-link {
+            text-decoration: none;
+            font-weight: 400;
+            /*  color: #333; */
+            color: #f4f4f4;
+            position: relative;
+            padding: 5px 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu .nav-link:hover {
+            /*  color: #004aad;*/
+            color: #ffd700;
+        }
+
+        /* Underline Hover Animation */
+        .nav-menu .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 0;
+            height: 2px;
+            background: #004aad;
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-menu ul {
+                flex-direction: column;
+                gap: 1rem;
+                margin-top: 10px;
+            }
+        }
+    </style>
+    <style>
+        /* Sub Header */
+        .sub-header {
+            /*      background: linear-gradient(90deg, #002b5c, #004080);*/
+            background: #00367a;
+            color: #fff;
+            font-size: 0.9rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1050;
+            /* above main header */
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        .sub-header i {
+            margin-right: 5px;
+            color: #ffd700;
+        }
+
+        .font-btn {
+            background: transparent;
+            border: 1px solid #fff;
+            color: #fff;
+            padding: 2px 8px;
+            margin: 0 1px;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .font-btn:hover {
+            background: #ffd700;
+            color: #002b5c;
+        }
+
+        .access-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            padding: 6px 8px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .access-btn:hover {
+            background: #ffd700;
+            color: #002b5c;
+            transform: scale(1.1);
+        }
+
+        /* Main Header */
+        .main-header {
+            /*      background: #fff;*/
+            background: #004aad;
+            color: #fff;
+            position: fixed;
+            /* was sticky */
+            top: 40px;
+            /* placed under sub-header */
+            left: 0;
+            right: 0;
+            z-index: 1040;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: top 0.4s ease;
+            /* so it slides up when subheader hides */
+        }
+
+        .main-header.compact {
+            top: 0;
+            /* when sub-header hidden */
+        }
+
+        /* Push body content below both headers */
+        body.with-subheader {
+            padding-top: 120px;
+            /* sub-header (40px) + main header (~80px) */
+        }
+
+        .main-header .header-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #fff;
+            text-align: center;
+        }
+
+        .header-logo {
+            height: 55px;
+            transition: transform 0.3s ease;
+        }
+
+        .header-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .sub-header.hide {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+    </style>
+    <style>
+        .stat-box {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+        }
+    </style>
+    <!-- main content -->
+    <style>
+        .hover-shadow:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s;
+        }
+
+        .card h3 {
+            font-weight: 600;
+        }
+
+        .card i {
+            transition: transform 0.3s;
+        }
+
+        .card:hover i {
+            transform: scale(1.2);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f1f3f5;
+        }
+
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            border-left: 4px solid #4e73df;
+            padding-left: 10px;
+        }
+
+        .no-height {
+            height: 0px !important;
+        }
+
+        .ack-card {
+            background: #fff;
+            border: 1px solid #000;
+            border-radius: 8px;
+            padding: 25px 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin: 40px auto;
+            max-width: 850px;
+        }
+
+        .ack-card h5 {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 6px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .ack-label {
+            font-weight: 500;
+            width: 250px;
+        }
+
+        .ack-row {
+            margin-bottom: 10px;
+        }
+    </style>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f4f9ff, #e6f0ff);
+            color: #333;
+        }
+
+        /* Header */
+        header {
+            background: #004aad;
+            color: #fff;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title {
+            flex: 1;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        header img {
+            height: 50px;
+        }
+
+        .spacer {
+            height: 90px;
+        }
+
+        /* pushes body below fixed header */
+        /* Modules */
+        .module-card {
+            background: #fff;
+            border-radius: 1rem;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: .3s;
+            /*      cursor:pointer;*/
+        }
+
+        .module-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .module-card i {
+            font-size: 3rem;
+            color: #004aad;
+            margin-bottom: 1rem;
+        }
+
+        /* About */
+        .about-section {
+            background: #fff;
+            padding: 4rem 2rem;
+        }
+
+        /* Stats */
+        /*    .stats-section { background:#004aad; padding:4rem 2rem; text-align:center; }
+      .stat-box h2 { font-size:2.5rem; font-weight:bold; }*/
+        /* FAQ */
+        .faq-section {
+            background: #f9fbff;
+            padding: 10rem 2rem;
+        }
+
+        /* CTA */
+        .cta-section {
+            background: linear-gradient(135deg, #004aad, #0077ff);
+            color: #fff;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        /* Footer */
+        /*footer { background:#002d72; color:#eee; padding:2rem 1rem; text-align:center; }
+      footer a { color:#fff; text-decoration:none; margin:0 .5rem; }*/
+    </style>
+    <!--  <style>
+      .footer-section a:hover {
+        color: #ffd700 !important;
+      }
+      .footer-bottom {
+        font-size: 0.85rem;
+        opacity: 0.9;
+      }
+      </style> -->
+    <style>
+        .footer-section {
+            background: linear-gradient(135deg, #002b5c, #003d7a);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .footer-links a:hover {
+            color: #ffd700;
+            transform: translateX(4px);
+        }
+
+        .social-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            background: #ffd700;
+            color: #002b5c;
+            transform: scale(1.1);
+        }
+
+        .footer-bottom {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(6px);
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            background: linear-gradient(to right, #004aad, #007bff);
+            color: #fff;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 150px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero .btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 2rem;
+        }
+
+        .hero .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15;
+            background: #fff;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape1 {
+            width: 200px;
+            height: 200px;
+            top: -50px;
+            left: -50px;
+        }
+
+        .shape2 {
+            width: 150px;
+            height: 150px;
+            bottom: -40px;
+            right: -40px;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+    </style>
+    <style>
+        .vision-title-alt {
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 1.4;
+            color: #111;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .vision-title-alt span {
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(90deg, #004fb5, #feb47b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding: 0 4px;
+        }
+
+        .vision-title-alt span::after {
+            content: "";
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgb(255 215 0);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .vision-title-alt:hover span::after {
+            height: 6px;
+            background: rgb(231 195 0 / 82%);
+        }
+
+        .vision-sub {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 750px;
+            margin: 0 auto;
+            font-weight: 500;
+        }
+
+        .active-login {
+            background: #004aad;
+            border: 1px solid #fcfcfc;
+            padding: 6px 16px;
+            border-radius: 4px 7px;
+            list-style: none;
+            margin-right: 10px;
+            transition: all 0.3s ease-in-out;
+            /* smooth animation */
+        }
+
+        .active-login:hover {
+            background: linear-gradient(135deg, #004aad, #007bff);
+            /* gradient blue */
+            transform: translateY(-2px) scale(1.03);
+            /* subtle lift effect */
+            box-shadow: 0 4px 12px rgba(0, 74, 173, 0.3);
+            /* glowing shadow */
+        }
+
+        .stars {
+            background: url(assets/img/stars.svg);
+        }
+
+        .inset-0 {
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+        }
+
+        .absolute {
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sub Header -->
+    <div class="sub-header py-2 px-3 d-flex justify-content-between align-items-center">
+        <div class="d-flex gap-4 align-items-center">
+            <span><i class="bi bi-telephone-fill"></i> +91 98765 43210</span>
+            <span><i class="bi bi-envelope-fill"></i> support@edmportal.in</span>
+        </div>
+        <div class="d-flex gap-3 align-items-center">
+            <!-- Font Size Controls -->
+            <div class="font-controls text-center">
+                <button class="font-btn btn btn-outline-secondary" id="font-decrease">A-</button>
+                <button class="font-btn btn btn-outline-secondary" id="font-reset">A</button>
+                <button class="font-btn btn btn-outline-secondary" id="font-increase">A+</button>
+            </div>
+            <!-- Accessibility -->
+            <div class="access-icons d-flex gap-2">
+                <button class="access-btn" title="High Contrast"><i class="bi bi-circle-half"></i></button>
+                <button class="access-btn" title="Screen Reader"><i class="bi bi-person-hearts"></i></button>
+                <button class="access-btn" title="Text to Speech"><i class="bi bi-volume-up-fill"></i></button>
+            </div>
+        </div>
+    </div>
+    <!-- Main Header -->
+    <!-- <header class="main-header d-flex justify-content-between align-items-center px-4 py-3">
+      <img src="assets/img/logo.png" alt="Logo Left" class="header-logo">
+      <div class="header-title">EDM Portal – Grievance Redressal</div>
+      <img src="assets/img/tnega.png" alt="Logo Right" class="header-logo">
+      </header> -->
+    <header class="main-header d-flex flex-column flex-md-row justify-content-between align-items-center px-4 py-3">
+        <!-- Left Logo -->
+        <img src="assets/img/logo.png" alt="Logo Left" class="header-logo">
+        <!-- Center Title + Nav -->
+        <div class="text-center flex-grow-1">
+            <div class="header-title fw-bold">EDM Portal – Grievance Redressal</div>
+            <!-- Navigation -->
+            <nav class="nav-menu mt-2">
+                <ul class="d-flex justify-content-center gap-4 mb-0">
+                    <li><a href="home.html" class="nav-link"><i class="bi bi-house-door-fill"></i> Home</a></li>
+                </ul>
+            </nav>
+        </div>
+        <img src="assets/img/tnega.png" alt="Logo Right" class="header-logo">
+    </header>
+
+
+
+    <!-- Call to Action -->
+
+    <!-- FAQ -->
+    <section class="faq-section">
+        <div class="container">
+            <section class="vision-section mb-4">
+                <div class="container text-center">
+                    <h2 class="vision-title-alt" data-aos="fade-up">
+                        Help & <span>FAQ</span>
+                    </h2>
+                </div>
+            </section>
+            <!-- <h2 class="text-center fw-bold mb-4" data-aos="fade-up">Help & FAQ</h2> -->
+            <!-- <div class="accordion" id="faqAccordion">
+                <div class="accordion-item" data-aos="fade-up">
+                    <h2 class="accordion-header"><button class="accordion-button" data-bs-toggle="collapse"
+                            data-bs-target="#faq1">How can I register a grievance?</button></h2>
+                    <div id="faq1" class="accordion-collapse collapse show">
+                        <div class="accordion-body">Login as a citizen and submit details via the Citizen module.</div>
+                    </div>
+                </div>
+                <div class="accordion-item" data-aos="fade-up">
+                    <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse"
+                            data-bs-target="#faq2">How can I track my complaint?</button></h2>
+                    <div id="faq2" class="accordion-collapse collapse">
+                        <div class="accordion-body">Use your grievance ID or registered mobile number to track status
+                            anytime.</div>
+                    </div>
+                </div>
+                <div class="accordion-item" data-aos="fade-up">
+                    <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse"
+                            data-bs-target="#faq3">Who resolves grievances?</button></h2>
+                    <div id="faq3" class="accordion-collapse collapse">
+                        <div class="accordion-body">Relevant departments resolve grievances, monitored by operators and
+                            officials.
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+
+            <div class="accordion shadow-sm" id="faqAccordion">
+
+                <!-- FAQ Item 1 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faqCollapseOne" aria-expanded="true" aria-controls="faqCollapseOne">
+                            1. What are the purpose and objectives of the TN eSevai Grievance Portal? 
+                        </button>
+                    </h2>
+                    <div id="faqCollapseOne" class="accordion-collapse collapse show" aria-labelledby="faqHeadingOne"
+                        data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            The TN eSevai Grievance Portal is a two-way communication platform that enables citizens to
+                            register
+                            their grievances related to the delivery of TN eSevai services by TNeGA and have them
+                            resolved
+                            conveniently in one place. They can:
+                            <br /><br />
+
+                            <ul>
+                                <li>File their grievance(s) anytime and from anywhere.</li>
+                                <li>Track their grievance(s) and see the status.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faqCollapseTwo" aria-expanded="false" aria-controls="faqCollapseTwo">
+                            2. Where and how do I lodge a grievance?
+                        </button>
+                    </h2>
+                    <div id="faqCollapseTwo" class="accordion-collapse collapse" aria-labelledby="faqHeadingTwo"
+                        data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p><strong>Follow these steps:</strong></p>
+                            <ul style="list-style-type: disc; padding-left: 20px;">
+                                <li>Sign up on the portal with your mobile number/email ID. Create user credentials if
+                                    you are using
+                                    your email ID.</li>
+                                <li>Log in to the portal with your mobile number, OTP, or user credentials.</li>
+                                <li>Click "File a Grievance".</li>
+                                <li>Describe your grievance and fill in the form to the best of your knowledge.</li>
+                                <li>Click "Submit".</li>
+                                <li>Your grievance will be registered with the concerned department(s), and you will
+                                    receive status
+                                    updates via SMS.</li>
+                            </ul>
+
+                            <br>
+
+                            <p><strong>Go to this website:</strong>
+                                <a href="https://tngis.tnega.org/edm-grievance-portal/index.html" target="_blank">
+                                    https://tngis.tnega.org/edm-grievance-portal/index.html
+                                </a>
+                            </p>
+
+                            <p><strong>And follow these steps:</strong></p>
+                            <ul style="list-style-type: disc; padding-left: 20px;">
+                                <li>If you are reporting a grievance for the first time, click “New User? Register here”
+                                    and enter
+                                    your mobile number.</li>
+                                <li>Otherwise, enter your mobile number in the Citizen Login section.</li>
+                                <li>Enter the OTP you receive via SMS and click “Verify OTP”.</li>
+                                <li>On the Menu tab, click Report Issue.</li>
+                                <li>Select the relevant Type, Category, and Sub-category from the dropdown menu.</li>
+                                <li>Enter all required information, upload supporting documents, and click Submit.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faqCollapseThree" aria-expanded="false" aria-controls="faqCollapseThree">
+                            3. My grievance portal is not working. What are the alternative methods for submitting a
+                            grievance?
+                        </button>
+                    </h2>
+                    <div id="faqCollapseThree" class="accordion-collapse collapse" aria-labelledby="faqHeadingThree"
+                        data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p><strong>You can try one of the following alternatives:</strong></p>
+
+                            <ul style="list-style-type: disc; padding-left: 20px;">
+                                <li>Visit an e-Sevai centre nearest to you and report your grievance.</li>
+                                <li>Call the helpline – Dial <strong>1100</strong>.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingFour">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faqCollapseFour" aria-expanded="false" aria-controls="faqCollapseFour">
+                            4. In what languages can I submit a grievance?
+                        </button>
+                    </h2>
+                    <div id="faqCollapseFour" class="accordion-collapse collapse" aria-labelledby="faqHeadingFour"
+                        data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            You can submit a grievance in Tamil or English.
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- FAQ Item 5 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingFive">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faqCollapseFive" aria-expanded="false" aria-controls="faqCollapseFive">
+                            5. What kind of grievances can I submit?
+                        </button>
+                    </h2>
+                    <div id="faqCollapseFive" class="accordion-collapse collapse" aria-labelledby="faqHeadingFive"
+                        data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p><strong>You can submit grievances of the following types:</strong></p>
+
+                            <ul style="list-style-type: disc; padding-left: 20px;">
+                                <li>e-Sevai centre related</li>
+                                <li>e-Sevai officials related</li>
+                                <li>e-Sevai portals and services</li>
+                            </ul>
+
+                            <p>
+                                You will find relevant categories and sub-categories listed under each of these types
+                                once you select them from the drop-down menu. If your grievance does not fall under any
+                                of the listed categories, you can choose the <strong>Other</strong> option and describe
+                                your grievance in detail.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 6 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingSix">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faqCollapseSix" aria-expanded="false" aria-controls="faqCollapseSix">
+                            6. What are the types of grievances that are not taken up for redress by TNeGA?
+                        </button>
+                    </h2>
+                    <div id="faqCollapseSix" class="accordion-collapse collapse" aria-labelledby="faqHeadingSix"
+                        data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Grievances that are not related to the e-sevai services or the concerned official/centre
+                            through which
+                            are applied
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <!-- FAQ Item 7 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingSeven">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faqCollapseSeven" aria-expanded="false" aria-controls="faqCollapseSeven">
+                            7. What should I do if I forget my login password?
+                        </button>
+                    </h2>
+                    <div id="faqCollapseSeven" class="accordion-collapse collapse" aria-labelledby="faqHeadingSeven"
+                        data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            No login ID or password is required to submit your grievance. You can log in to the portal
+                            by entering
+                            your mobile number and verifying the OTP generated.
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 8 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingEight">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseEight" aria-expanded="false"
+                                aria-controls="faqCollapseEight">
+                                8. What if I do not receive the OTP on my mobile phone?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseEight" class="accordion-collapse collapse" aria-labelledby="faqHeadingEight"
+                            data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>If you do not receive an OTP within 2 minutes of entering your mobile number, click
+                                    on
+                                    <strong>Resend OTP</strong>, which will be enabled on the screen. If that does not
+                                    work, you can use
+                                    our services through our other methods, as listed in the FAQ, "How else can I submit
+                                    a grievance?"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 9 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingNine">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseNine" aria-expanded="false" aria-controls="faqCollapseNine">
+                                9. Can I attach supporting documents/photos/videos to the grievance?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseNine" class="accordion-collapse collapse" aria-labelledby="faqHeadingNine"
+                            data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Yes, you can attach documents or photos up to a file size of 2 MB for each grievance
+                                    reported.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 10 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingTen">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseTen" aria-expanded="false" aria-controls="faqCollapseTen">
+                                10. What happens when I lodge the grievance?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseTen" class="accordion-collapse collapse" aria-labelledby="faqHeadingTen"
+                            data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Your grievance will be auto-assigned to a CM Helpline Agent, e-District manager or
+                                    e-Sevai
+                                    operations Helpdesk based on the type of grievance.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 11 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingEleven">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseEleven" aria-expanded="false"
+                                aria-controls="faqCollapseEleven">
+                                11. Will I receive an acknowledgement after submitting my grievance?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseEleven" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingEleven" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Once you submit your grievance, a window with an acknowledgement receipt will appear
+                                    on your
+                                    screen. You can download the acknowledgement receipt by clicking <strong>'Download
+                                        as PDF'</strong>.
+                                </p>
+                                <p>You will also receive an SMS on the registered mobile number.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 12 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingTwelve">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseTwelve" aria-expanded="false"
+                                aria-controls="faqCollapseTwelve">
+                                12. How do I track my grievance?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseTwelve" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingTwelve" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>You can track the status of your grievance by entering the Acknowledgement number on
+                                    the
+                                    <strong>Track Status</strong> tab.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 13 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingThirteen">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseThirteen" aria-expanded="false"
+                                aria-controls="faqCollapseThirteen">
+                                13. On this portal/the app, can I track the grievance(s) I submitted via any of the
+                                other methods as
+                                well?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseThirteen" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingThirteen" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Your dashboard will reflect the status and history of all grievances that you have
+                                    raised using
+                                    your mobile number. If you had reported a grievance using a different mobile number,
+                                    you will need
+                                    to enter the new mobile number when accessing the login portal.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 14 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingFourteen">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseFourteen" aria-expanded="false"
+                                aria-controls="faqCollapseFourteen">
+                                14. How long will it take to address my grievance?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseFourteen" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingFourteen" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Every category of grievance has a timeline, as outlined in its Service Level
+                                    Agreement (SLA), to
+                                    complete the grievance redressal process. Within that time frame and based on the
+                                    nature of the
+                                    grievance, it will be addressed.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 15 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingFifteen">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseFifteen" aria-expanded="false"
+                                aria-controls="faqCollapseFifteen">
+                                15. After redressal, can the grievance be reopened for further correspondence if it is
+                                not fully
+                                resolved or if I am not satisfied with the redressal?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseFifteen" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingFifteen" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Yes, you can reopen a grievance once it is marked as resolved, without any
+                                    restrictions on the
+                                    number of times the request can be reopened, as long as you have not closed the
+                                    request from the
+                                    login from which it was created.</p>
+                                <p>Click on the <strong>Reopen ticket</strong> and enter the reason for reopening in the
+                                    Comments
+                                    field. Click on <strong>Submit</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 16 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingSixteen">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseSixteen" aria-expanded="false"
+                                aria-controls="faqCollapseSixteen">
+                                16. What action can be taken by me in case of non-redress of my grievance within the
+                                prescribed time?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseSixteen" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingSixteen" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Your dashboard will reflect the status and history of all grievances that you have
+                                    raised using
+                                    your mobile number. If the grievance is not resolved within the time as outlined in
+                                    its Service
+                                    Level Agreement (SLA), automatic escalation to higher officers will be carried out,
+                                    and you can view
+                                    the escalation status in your dashboard.</p>
+                                <p>Alternatively, you can also contact the CM Helpline agent for further assistance.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 17 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingSeventeen">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseSeventeen" aria-expanded="false"
+                                aria-controls="faqCollapseSeventeen">
+                                17. After closing a grievance, can it be reopened?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseSeventeen" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingSeventeen" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Once the grievance is closed by the petitioner, it cannot be reopened. You will have
+                                    to submit a
+                                    new grievance.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 18 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingEighteen">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseEighteen" aria-expanded="false"
+                                aria-controls="faqCollapseEighteen">
+                                18. What if my mobile number has changed from the last time I filed a grievance(s)?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseEighteen" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingEighteen" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>If you are submitting a new grievance, you can register as a New User as listed in
+                                    the FAQ, "Where
+                                    and how do I report a grievance?"</p>
+                                <p>To check the status of an existing grievance, please enter the acknowledgement number
+                                    to view the
+                                    current status on the track status tab without logging in.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 19 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingNineteen">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseNineteen" aria-expanded="false"
+                                aria-controls="faqCollapseNineteen">
+                                19. Can grievances be submitted via post or email?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseNineteen" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingNineteen" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>No, all grievances must be reported through the Citizen Grievance Portal. In the
+                                    event of a portal
+                                    malfunction, you can contact the CM Helpline to report your grievance or visit your
+                                    nearest e-Sevai
+                                    centre.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 20 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingTwenty">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseTwenty" aria-expanded="false"
+                                aria-controls="faqCollapseTwenty">
+                                20. I do not have a smartphone. Can I still file a grievance?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseTwenty" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingTwenty" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>A smartphone is not required. You can use a desktop computer with an internet
+                                    connection for any of
+                                    the online methods. You can also submit a grievance by visiting the nearest e-Sevai
+                                    centre.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 21 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingTwentyOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseTwentyOne" aria-expanded="false"
+                                aria-controls="faqCollapseTwentyOne">
+                                21. Why do I need to log in to use this portal/mobile app?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseTwentyOne" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingTwentyOne" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>This is to verify the authenticity of the user and the nature of the grievance.</p>
+                                <p>It provides you with a unique identity that allows you to track your grievances and
+                                    view their
+                                    status in one place, at any time.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 22 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingTwentyTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseTwentyTwo" aria-expanded="false"
+                                aria-controls="faqCollapseTwentyTwo">
+                                22. Is it necessary to visit the grievance centre or TNeGA to register grievances?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseTwentyTwo" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingTwentyTwo" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>No. You can submit a grievance by yourself by visiting this link: <a
+                                        href="https://tngis.tnega.org/edm-grievance-portal/index.html"
+                                        target="_blank">https://tngis.tnega.org/edm-grievance-portal/index.html</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 23 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingTwentyThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseTwentyThree" aria-expanded="false"
+                                aria-controls="faqCollapseTwentyThree">
+                                23. What should I do if the portal stops responding or displays an error?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseTwentyThree" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingTwentyThree" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p><strong>Try the following:</strong></p>
+                                <ul style="list-style-type: disc; padding-left: 20px;">
+                                    <li>Refresh your browser and re-enter your mobile number.</li>
+                                    <li>Log out of your portal and log in again.</li>
+                                    <li>Try using a different browser.</li>
+                                    <li>Ensure your internet connection is working.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 24 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingTwentyFour">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseTwentyFour" aria-expanded="false"
+                                aria-controls="faqCollapseTwentyFour">
+                                24. Is it mandatory to upload documents with each submission of a grievance?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseTwentyFour" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingTwentyFour" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>No. Only the fields marked with a red asterisk are mandatory. However, suppose a
+                                    document is
+                                    essential to understand the context of your grievance, or is listed as a required
+                                    document to be
+                                    submitted. In that case, you will need to upload the same document along with a
+                                    description of your
+                                    grievance.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 25 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingTwentyFive">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseTwentyFive" aria-expanded="false"
+                                aria-controls="faqCollapseTwentyFive">
+                                25. At what time can I contact the CM Helpline call centre by dialling 1100?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseTwentyFive" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingTwentyFive" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>You may call anytime from 7 am to 10 pm, Monday through Sunday, including Government
+                                    holidays.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 26 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingTwentySix">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseTwentySix" aria-expanded="false"
+                                aria-controls="faqCollapseTwentySix">
+                                26. I have a question that was not answered in this FAQ. What should I do?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseTwentySix" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingTwentySix" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>If you have a grievance that is not addressed here, please call the CM Helpline –
+                                    dial
+                                    <strong>1100</strong>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 27 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingTwentySeven">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqCollapseTwentySeven" aria-expanded="false"
+                                aria-controls="faqCollapseTwentySeven">
+                                27. Is there any mechanism to provide feedback about the quality of the resolution
+                                provided for my
+                                grievance?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseTwentySeven" class="accordion-collapse collapse"
+                            aria-labelledby="faqHeadingTwentySeven" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Yes, you can use the feedback form that pops up at the end of your grievance
+                                    submission or when you
+                                    close a ticket to report your feedback on the quality of resolution provided.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer-section text-light pt-5">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Brand -->
+                <div class="col-md-4">
+                    <h4 class="fw-bold mb-3">EDM Grievance Portal</h4>
+                    <p class="small mb-3">A unified grievance redressal platform built to empower citizens, ensure
+                        faster
+                        resolutions, and enhance transparency in governance.</p>
+                    <p class="small fst-italic">“Empowering Citizens • Enabling Governance”</p>
+                </div>
+                <!-- Quick Links -->
+                <div class="col-md-2">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="index.html"><i class="bi bi-arrow-right-short"></i> Home</a></li>
+                        <li><a href="about.html"><i class="bi bi-arrow-right-short"></i> About Us</a></li>
+                        <li><a href="faq.html"><i class="bi bi-arrow-right-short"></i> FAQs</a></li>
+                        <li><a href="contact.html"><i class="bi bi-arrow-right-short"></i> Contact</a></li>
+                    </ul>
+                </div>
+                <!-- Resources -->
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Resources</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="#"><i class="bi bi-shield-check"></i> Privacy Policy</a></li>
+                        <li><a href="#"><i class="bi bi-file-text"></i> Terms & Conditions</a></li>
+                        <li><a href="#"><i class="bi bi-book"></i> User Guide</a></li>
+                        <li><a href="#"><i class="bi bi-headset"></i> Support</a></li>
+                    </ul>
+                </div>
+                <!-- Social & Visitors -->
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Connect with Us</h6>
+                    <div class="d-flex gap-3 mb-3">
+                        <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-btn"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-btn"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="social-btn"><i class="bi bi-youtube"></i></a>
+                    </div>
+                    <span class="badge bg-warning text-dark px-3 py-2">
+                        <i class="bi bi-eye"></i> Visitors: <span id="visitorCount">12,345</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- Bottom Bar -->
+        <div class="footer-bottom mt-5 py-3">
+            <div class="container text-center">
+                <p class="mb-0 small">© 2025 EDM Grievance Portal. All Rights Reserved. | Designed with ❤️ for Citizens
+                    of Tamil
+                    Nadu</p>
+            </div>
+        </div>
+    </footer>
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="btn btn-primary">
+        <i class="bi bi-arrow-up-circle"></i>
+    </button>
+    <script src="assets/js/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/global.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- <script src="assets/js/bootstrap.bundle.min.js"></script> -->
+    <script src="assets/js/aos.js"></script>
+    <script src="assets/js/dataTableUtil.js"></script>
+    <script src="assets/js/crypto-js.min.js"></script>
+    <script src="assets/js/encrypt_decrypt.js"></script>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/toastUtil.js"></script>
+    <script src="assets/js/apiConfig.js"></script>
+    <script src="assets/js/globalProfileDropdown.js"></script>
+    <script>AOS.init({ duration: 800, once: true });</script>
+    <script>
+        let lastScrollTop = 0;
+        const subHeader = document.querySelector('.sub-header');
+        const mainHeader = document.querySelector('.main-header');
+        const threshold = 100;
+
+        window.addEventListener("scroll", function () {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > threshold) {
+                if (scrollTop > lastScrollTop) {
+                    // Scrolling down
+                    subHeader.classList.add("hide");
+                    mainHeader.classList.add("compact"); // moves up
+                } else {
+                    // Scrolling up
+                    subHeader.classList.remove("hide");
+                    mainHeader.classList.remove("compact");
+                }
+            } else {
+                // Always show at top
+                subHeader.classList.remove("hide");
+                mainHeader.classList.remove("compact");
+            }
+
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        }, false);
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Show/Hide button on scroll
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 200) {
+                    $('#backToTop').fadeIn();
+                } else {
+                    $('#backToTop').fadeOut();
+                }
+            });
+
+            // Smooth scroll to top
+            $('#backToTop').click(function () {
+                $('html, body').animate({ scrollTop: 0 }, 600, "swing");
+                return false;
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            let defaultSize = 16;       // base font size in px
+            let currentStep = 0;        // track steps (-2 to +2)
+            const maxStep = 2;          // allow only 2 steps up/down
+            const stepSize = 2;         // px per step
+
+            function applyFontSize() {
+                let newSize = defaultSize + (currentStep * stepSize);
+                $("body").css("font-size", newSize + "px");
+            }
+
+            // Decrease
+            $("#font-decrease").on("click", function () {
+                if (currentStep > -maxStep) {
+                    currentStep--;
+                    applyFontSize();
+                }
+            });
+
+            // Increase
+            $("#font-increase").on("click", function () {
+                if (currentStep < maxStep) {
+                    currentStep++;
+                    applyFontSize();
+                }
+            });
+
+            // Reset
+            $("#font-reset").on("click", function () {
+                currentStep = 0;
+                $("body").css("font-size", defaultSize + "px");
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Find the Track Status button
+            const trackBtn = document.querySelector('.hero .btn');
+
+            if (trackBtn) {
+                console.log('Track button found:', trackBtn);
+
+                // Force styling
+                trackBtn.style.position = 'relative';
+                trackBtn.style.zIndex = '9999';
+                trackBtn.style.pointerEvents = 'auto';
+                trackBtn.style.cursor = 'pointer';
+
+                // Add click event directly
+                trackBtn.addEventListener('click', function (e) {
+                    console.log('Track Status clicked!');
+                    // You can keep this for debugging
+                });
+
+                // Make all background elements non-interactive
+                document.querySelectorAll('.hero > .stars, .hero > .shape').forEach(el => {
+                    el.style.pointerEvents = 'none';
+                });
+            }
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        function clearModal() {
+            $("#ticketInput").val("");
+            $("#ackCard").addClass("d-none");
+            $("#ackCard div[id^='ack']").text("-");
+            $("#clearTicket, #downloadTicket").addClass("d-none");
+        }
+
+        // Submit button → API call
+        $("#submitTicket").on("click", function (e) {
+            e.preventDefault();
+            const ticketId = $("#ticketInput").val().trim();
+            if (!ticketId) {
+                alert("Please enter a ticket ID.");
+                return;
+            }
+
+            const payload = {
+                action: "function_call",
+                function_name: "fn_get_ticket_details",
+                params: { p_ticket_id: ticketId }
+            };
+
+            $.ajax({
+                url: `${BASE_API_URL}/commonfunction`,
+                method: "POST",
+                data: { data: encryptData(payload) },
+                dataType: "json",
+                success: function (res) {
+                    const decrypted = decryptData(res.data);
+                    const raw = decrypted[0]?.fn_get_ticket_details;
+
+                    if (!raw) {
+                        alert("No ticket details found.");
+                        return;
+                    }
+
+                    const details = JSON.parse(raw);
+                    const td = details.ticket_details || {};
+
+                    // ✅ Bind values
+                    $("#ackStatus").html(
+                        td.status
+                            ? `<span class="badge ${td.status === 'In-Progress' ? 'bg-warning text-dark' : td.status === 'Completed' ? 'bg-success' : 'bg-danger'}">${td.status}</span>`
+                            : "N/A"
+                    );
+                    $("#ackRequestedBy").text(td.requested_by || "N/A");
+                    $("#ackUserType").text(td.user_type || "N/A");
+                    $("#ackName").text(td.complainant_name || "N/A");
+                    $("#ackMobile").text(td.complainant_mobile || "N/A");
+                    $("#ackDistrict").text(td.district || "N/A");
+                    // $("#ackDate").text(td.created_at ? new Date(td.created_at).toLocaleString("en-GB") : "N/A");
+                    $("#ackDate").text(
+                        td.created_at
+                            ? new Date(td.created_at).toLocaleDateString("en-GB", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric"
+                            })
+                            : "N/A"
+                    );
+                    $("#ackIssueType").text(td.issue_type || "N/A");
+                    $("#ackIssueCategory").text(td.category || "N/A");
+                    $("#ackIssueSubCategory").text(td.subcategory || "N/A");
+                    $("#ackNumber").text(td.ticket_id || "N/A");
+
+                    // Show acknowledgement card & buttons
+                    $("#ackCard").removeClass("d-none");
+                    $("#clearTicket, #downloadTicket").removeClass("d-none");
+                },
+                error: function () {
+                    alert("Failed to fetch ticket status.");
+                }
+            });
+        });
+
+        // Clear button
+        $("#clearTicket").on("click", function (e) {
+            e.preventDefault();
+            $("#ticketInput").val("");
+            $("#ackCard").addClass("d-none");
+            $("#ackCard div[id^='ack']").text("-");
+            $("#clearTicket, #downloadTicket").addClass("d-none");
+        });
+
+        // Download button → exact UI as PDF
+        $("#downloadTicket").on("click", function (e) {
+            e.preventDefault();
+
+            const { jsPDF } = window.jspdf;
+
+            html2canvas(document.querySelector("#ackCard"), {
+                scale: 2 // better quality
+            }).then(canvas => {
+                const imgData = canvas.toDataURL("image/png");
+                const pdf = new jsPDF("p", "mm", "a4");
+
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+                pdf.addImage(imgData, "PNG", 0, 10, pdfWidth, pdfHeight);
+                pdf.save("Acknowledgement.pdf");
+            });
+        });
+
+        $(document).ready(function () {
+            // Using Bootstrap modal events
+            $('#trackStatus').on('hidden.bs.modal', function () {
+                clearModal();
+            });
+
+            // Also clear when close button is clicked (optional - already handled by hidden.bs.modal)
+            $('button[data-bs-dismiss="modal"]').on('click', function () {
+                clearModal();
+            });
+        });
+    </script>
+
+</body>
+
+</html>

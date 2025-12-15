@@ -632,7 +632,7 @@
           <li><a href="#home" class="nav-link active"><i class="bi bi-house-door-fill"></i> Home</a></li>
           <li><a href="#about" class="nav-link"><i class="bi bi-info-circle-fill"></i> About</a></li>
           <li><a href="#stats" class="nav-link"><i class="bi bi-bar-chart-fill"></i> Stats</a></li>
-          <li><a href="#faq" class="nav-link"><i class="bi bi-question-circle-fill"></i> FAQ</a></li>
+          <li><a href="landing-faq.html" class="nav-link"><i class="bi bi-question-circle-fill"></i> FAQ</a></li>
         </ul>
       </nav>
     </div>
@@ -795,7 +795,7 @@
       </div>
     </div>
   </section>
-  <section class="about-section py-5" data-aos="fade-up">
+  <section class="about-section py-5" data-aos="fade-up" id="about">
     <div class="container">
       <div class="row align-items-center g-5">
         <!-- Left Side Content -->
@@ -848,18 +848,9 @@
       </div>
     </div>
   </section>
-  <!-- Stats -->
-  <!-- <section class="stats-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-3 stat-box" data-aos="fade-up"><h2>5000+</h2><p>Grievances Resolved</p></div>
-          <div class="col-md-3 stat-box" data-aos="fade-up" data-aos-delay="100"><h2>1200+</h2><p>Active Operators</p></div>
-          <div class="col-md-3 stat-box" data-aos="fade-up" data-aos-delay="200"><h2>300+</h2><p>Departments Linked</p></div>
-          <div class="col-md-3 stat-box" data-aos="fade-up" data-aos-delay="300"><h2>99%</h2><p>Resolution Rate</p></div>
-        </div>
-      </div>
-      </section> -->
-  <section class="stats-section py-5 text-center" style="background: linear-gradient(135deg, #f0f7ff, #eaf3ff);">
+
+  <section class="stats-section py-5 text-center" id="stats"
+    style="background: linear-gradient(135deg, #f0f7ff, #eaf3ff);">
     <div class="container">
       <div class="row g-4">
         <!-- Stat 1 -->
@@ -935,44 +926,8 @@
     <p class="mb-4">Join thousands of citizens who have benefitted from faster grievance redressal.</p>
     <a href="#" class="btn btn-light btn-lg">Get Started</a>
   </section>
-  <!-- FAQ -->
-  <section class="faq-section">
-    <div class="container">
-      <section class="vision-section mb-4">
-        <div class="container text-center">
-          <h2 class="vision-title-alt" data-aos="fade-up">
-            Help & <span>FAQ</span>
-          </h2>
-        </div>
-      </section>
-      <!-- <h2 class="text-center fw-bold mb-4" data-aos="fade-up">Help & FAQ</h2> -->
-      <div class="accordion" id="faqAccordion">
-        <div class="accordion-item" data-aos="fade-up">
-          <h2 class="accordion-header"><button class="accordion-button" data-bs-toggle="collapse"
-              data-bs-target="#faq1">How can I register a grievance?</button></h2>
-          <div id="faq1" class="accordion-collapse collapse show">
-            <div class="accordion-body">Login as a citizen and submit details via the Citizen module.</div>
-          </div>
-        </div>
-        <div class="accordion-item" data-aos="fade-up">
-          <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse"
-              data-bs-target="#faq2">How can I track my complaint?</button></h2>
-          <div id="faq2" class="accordion-collapse collapse">
-            <div class="accordion-body">Use your grievance ID or registered mobile number to track status anytime.</div>
-          </div>
-        </div>
-        <div class="accordion-item" data-aos="fade-up">
-          <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse"
-              data-bs-target="#faq3">Who resolves grievances?</button></h2>
-          <div id="faq3" class="accordion-collapse collapse">
-            <div class="accordion-body">Relevant departments resolve grievances, monitored by operators and officials.
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <footer class="footer-section text-light pt-5">
+
+  <footer class="footer-section text-light pt-5 mt-2">
     <div class="container">
       <div class="row g-4">
         <!-- Brand -->
@@ -1155,8 +1110,19 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', function () {
+        navLinks.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
 
   <script>
+
     function clearModal() {
       $("#ticketInput").val("");
       $("#ackCard").addClass("d-none");
