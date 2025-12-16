@@ -505,12 +505,11 @@
               // Special styling for Aadhaar fields
               fieldHtml = `
                     <div class="mb-3 col-lg-4 aadhaar-input-field">
-                        <label for="${inputId}" class="form-label">
+                        <label for="${inputId}">
                             <i class="fas fa-id-card text-warning me-2"></i>
                             ${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}
                         </label>
                         <input id="${inputId}" type="${f.field_type === 'number' ? 'number' : 'text'}" class="form-control aadhaar-input" 
-                                placeholder="Enter 12-digit Aadhaar number" 
                                 maxlength="12" pattern="[0-9]{12}" 
                                 ${mandatoryAttr} data-param="${dataParam}">
                         <small class="text-muted">Enter your 12-digit Aadhaar number without spaces</small>
@@ -923,7 +922,7 @@
             <div class="card-body">
                 <div class="form-check">
                     <input class="form-check-input aadhaar-consent-checkbox" type="checkbox" id="aadhaarConsent_${prefix}">
-                    <label class="form-check-label" for="aadhaarConsent_${prefix}">
+                    <label for="aadhaarConsent_${prefix}" style="font-weight: smaller;">
                         I hereby voluntarily give my consent to use Aadhaar details furnished herewith for the purposes of addressing eSevai related service requests submitted on this portal. <span class="text-danger">*</span>
                     </label>
                 </div>
