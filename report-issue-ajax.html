@@ -11,7 +11,6 @@
   <link href="assets/font/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/css/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/global.css">
-
   <style>
     html,
     body {
@@ -29,8 +28,6 @@
       transition: all 0.3s;
     }
   </style>
-
-
 </head>
 
 <body>
@@ -286,21 +283,6 @@
     </div>`;
       }
 
-      // Clean up function to remove all CAN Edit related event handlers
-      function cleanupCANEditEventHandlers($container) {
-        if (!$container) return;
-
-        // Remove all namespaced event handlers
-        $container.off('.canedit');
-        $container.off('.canedit-dropdown');
-        $container.off('.canedit-add');
-        $container.off('.canedit-remove');
-
-        // Also remove any global handlers
-        $(document).off('.canedit-remove');
-
-        console.log("Cleaned up CAN Edit event handlers");
-      }
 
       //       function generateDynamicFieldsforSelf(columnsString, prefix, $container, fileInputClass, categoryId = null, subcategoryId = null) {
       //         debugger
@@ -591,7 +573,7 @@
       //           console.log("Initializing CAN Edit functionality");
       //           // Use a longer timeout to ensure DOM is ready
       //           setTimeout(() => {
-      //             initCANEditChangeRequests(prefix, $container);
+      //             initCANEditChangeRequestsForSelf(prefix, $container);
       //           }, 300);
       //         }
       //         // Separate mandatory and optional attachment fields
@@ -726,7 +708,7 @@
       //           console.log("Initializing CAN Edit functionality");
       //           // Use setTimeout to ensure DOM is ready
       //           setTimeout(() => {
-      //             initCANEditChangeRequests(prefix, $container);
+      //             initCANEditChangeRequestsForSelf(prefix, $container);
       //           }, 200);
       //         }
 
@@ -825,9 +807,7 @@
             isCANEdit: isCANEditForSelf
           });
 
-          // ============================================
-          // CONDITION 1: Handle "Enter details of changes required" field
-          // ============================================
+
           if (f.isChangesRequiredFieldForSelf) {
             console.log("This is the changes required field");
 
@@ -1019,7 +999,7 @@
           console.log("Initializing CAN Edit functionality");
           // Use a longer timeout to ensure DOM is ready
           setTimeout(() => {
-            initCANEditChangeRequests(prefix, $container);
+            initCANEditChangeRequestsForSelf(prefix, $container);
           }, 300);
         }
 
@@ -1192,7 +1172,7 @@
           console.log("Initializing CAN Edit functionality");
           // Use setTimeout to ensure DOM is ready
           setTimeout(() => {
-            initCANEditChangeRequests(prefix, $container);
+            initCANEditChangeRequestsForSelf(prefix, $container);
           }, 200);
         }
 
@@ -1434,7 +1414,7 @@
         }
       }
 
-      function initCANEditChangeRequests(prefix, $container) {
+      function initCANEditChangeRequestsForSelf(prefix, $container) {
         debugger;
 
         console.log("=== Initializing CAN Edit Change Requests ===");
@@ -1495,7 +1475,6 @@
           // Show add to list section
           $addToListSection.show();
         });
-
         // Add to list button handler - use namespace
         $container.off('click.canedit-add').on('click.canedit-add', '.btn-add-to-list', function () {
           console.log("Add to list clicked");
@@ -2004,236 +1983,7 @@
           console.log("Dynamic fields generated");
         }, 50);
       });
-      // ------------------ Submit Handler for Self Tab ------------------
-      // $(document).off("click.submitBtnSelf").on("click.submitBtnSelf", "#submitBtn", function (e) {
-      //   e.preventDefault();
 
-      //   let isValid = true;
-      //   const $form = $("#issueForm");
-
-      //   // Validate declaration
-      //   const $declarationCheck = $("#declarationCheck");
-      //   const $declarationError = $("#declarationError");
-
-      //   if (!$declarationCheck.is(':checked')) {
-      //     isValid = false;
-      //     $declarationError.text('You must agree to the declaration to proceed.').show();
-      //   } else {
-      //     $declarationError.hide();
-      //   }
-
-      //   // Validate Aadhaar consent if Aadhaar fields are present
-      //   const $aadhaarConsentCheckbox = $form.find('.aadhaar-consent-checkbox');
-      //   const $aadhaarConsentError = $form.find('.aadhaar-consent-error');
-
-      //   if ($aadhaarConsentCheckbox.length > 0) {
-      //     if (!$aadhaarConsentCheckbox.is(':checked')) {
-      //       isValid = false;
-      //       $aadhaarConsentError.text('You must consent to Aadhaar usage to proceed.').show();
-      //     } else {
-      //       $aadhaarConsentError.hide();
-      //     }
-      //   }
-
-      //   // Validate mandatory fields
-      //   $("#dynamicFieldsContainer [data-mandatory='true']").each(function () {
-      //     if (!$(this).val()?.trim()) {
-      //       isValid = false;
-      //       $(this).addClass("is-invalid");
-      //     } else {
-      //       $(this).removeClass("is-invalid");
-      //     }
-      //   });
-
-      //   // Validate main form fields
-      //   const mandatorySelectors = [
-      //     '#typeSelect',
-      //     '#categorySelect',
-      //     '#subCategorySelect'
-      //   ];
-
-      //   mandatorySelectors.forEach(selector => {
-      //     const $el = $(selector);
-      //     if (!$el.val() || $el.val().trim() === '') {
-      //       isValid = false;
-      //       $el.addClass('is-invalid');
-      //       $el.next('.error-msg').remove();
-      //       $el.after('<span class="error-msg text-danger">This field is required</span>');
-      //     } else {
-      //       $el.removeClass('is-invalid');
-      //       $el.next('.error-msg').remove();
-      //     }
-      //   });
-
-      //   // Validate dynamic fields
-      //   if (!validateDynamicFields('self')) {
-      //     isValid = false;
-      //   }
-
-      //   if (!isValid) {
-      //     return alert("Please fill all mandatory fields");
-      //   }
-
-      //   const sessionId = getSessionId();
-
-      //   // Get user info from localStorage
-      //   const userName = localStorage.getItem("user_name") || "";
-      //   const userMobile = localStorage.getItem("mobile") || "";
-      //   const userEmail = localStorage.getItem("email") || "";
-      //   const userDistrict = localStorage.getItem("district_id") || "";
-
-      //   const params = {
-      //     p_session_id: sessionId,
-      //     p_complainant_name: userName,
-      //     p_mobile: userMobile,
-      //     p_email: userEmail,
-      //     p_district_id: userDistrict,
-      //     p_issue_id: $("#typeSelect").val() || null,
-      //     p_created_by: localStorage.getItem("user_id") || "1",
-      //     p_category_id: $("#categorySelect").val() || null,
-      //     p_subcategory_id: $("#subCategorySelect").val() || null,
-      //     p_relationship: null, // Self submission doesn't have relationship
-      //     p_onbehalf_name: null,
-      //     p_onbehalf_mobile: null,
-      //     p_onbehalf_email: null,
-      //     p_onbehalf_district_id: null
-      //   };
-
-      //   // Collect dynamic fields into single JSON
-      //   let dynamicFields = {};
-      //   $("#dynamicFieldsContainer [data-param]").each(function () {
-      //     const key = $(this).data("param");
-      //     const value = $(this).val()?.trim() || null;
-      //     if (key) dynamicFields[key] = value;
-      //   });
-      //   params["p_dynamic_fields"] = dynamicFields;
-
-      //   // Handle file uploads
-      //   let attachmentArray = [];
-      //   $("#dynamicFieldsContainer .file-wrapper").each(function () {
-      //     const colId = $(this).data("col");
-      //     $(this).find(".file-row").each(function () {
-      //       const fileInput = $(this).find("input[type='file']")[0];
-      //       const file = fileInput?.files[0] || null;
-      //       const desc = $(this).find(".file-description").val()?.trim() || "";
-
-      //       if (file) {
-      //         attachmentArray.push({ col: colId, file, desc });
-      //       }
-      //     });
-      //   });
-
-      //   const formData = new FormData();
-
-      //   // Append main encrypted payload
-      //   formData.append(
-      //     "data",
-      //     encryptData({
-      //       action: "function_call",
-      //       function_name: "fn_citizen_create_ticket_1",
-      //       params,
-      //     })
-      //   );
-
-      //   // Append files for cloud upload
-      //   attachmentArray.forEach((f, index) => {
-      //     formData.append(`file_${index}`, f.file);
-      //     formData.append(`file_${index}_desc`, f.desc);
-      //     formData.append(`file_${index}_col`, f.col);
-      //   });
-
-      //   // AJAX call for ticket creation
-      //   $.ajax({
-      //     url: `${BASE_API_URL}/dynamicparams`,
-      //     method: "POST",
-      //     data: formData,
-      //     contentType: false,
-      //     processData: false,
-      //     beforeSend: function () {
-      //       $("#formLoader").removeClass("d-none");
-      //       $("#submitBtn").prop("disabled", true);
-      //     },
-      //     success: (res) => {
-      //       $("#formLoader").addClass("d-none");
-      //       $("#submitBtn").prop("disabled", false);
-
-      //       try {
-      //         const result = decryptData(res.data);
-      //         const ticketRef = result[0]?.fn_citizen_create_ticket_1 || "N/A";
-      //         alert("Ticket Created Successfully — Ref: " + ticketRef);
-
-      //         // Call fn_acknowledge_download after successful ticket creation
-      //         if (ticketRef !== "N/A") {
-      //           const ackPayload = {
-      //             action: "function_call",
-      //             function_name: "fn_acknowledge_download",
-      //             params: { ticketId: ticketRef }
-      //           };
-
-      //           $.ajax({
-      //             url: `${BASE_API_URL}/commonfunction`,
-      //             method: "POST",
-      //             data: { data: encryptData(ackPayload) },
-      //             beforeSend: () => $("#formLoader").removeClass("d-none"),
-      //             success: function (ackRes) {
-      //               $("#formLoader").addClass("d-none");
-      //               try {
-      //                 const ackDecrypted = decryptData(ackRes.data);
-      //                 const ackDataRaw = ackDecrypted[0]?.fn_acknowledge_download;
-      //                 let ackData = [];
-
-      //                 if (ackDataRaw) {
-      //                   ackData = JSON.parse(ackDataRaw).map(item => item.jsonb_build_object);
-      //                 }
-
-      //                 if (ackData.length > 0) {
-      //                   const d = ackData[0];
-      //                   $("#ackRequestedBy").text(d.Requested_By);
-      //                   $("#ackUserType").text(d.type_user);
-      //                   $("#ackComplainant").text(d.name);
-      //                   $("#ackMobile").text(d.mobile);
-      //                   $("#ackDistrict").text(d.district);
-      //                   $("#ackDate").text(new Date(d.date).toLocaleString());
-      //                   $("#ackIssueType").text(d.issue);
-      //                   $("#ackCategory").text(d.category);
-      //                   $("#ackSubCategory").text(d.subcategory);
-      //                   $("#ackNumber").text(d.acknowledge_numbr);
-      //                 } else {
-      //                   $("#ackCard").html("<p class='text-center text-muted'>No acknowledgement data available.</p>");
-      //                 }
-
-      //                 const successModalEl = document.getElementById('successModal');
-      //                 const successModal = new bootstrap.Modal(successModalEl);
-      //                 successModal.show();
-
-      //                 successModalEl.addEventListener('hidden.bs.modal', () => {
-      //                   location.reload();
-      //                 });
-
-      //               } catch (err) {
-      //                 $("#ackCard").html(`<p class="text-danger text-center">Error parsing acknowledgement.</p>`);
-      //               }
-      //             },
-      //             error: function () {
-      //               $("#formLoader").addClass("d-none");
-      //               $("#ackCard").html(`<p class="text-danger text-center">Failed to load acknowledgement.</p>`);
-      //             }
-      //           });
-      //         }
-
-      //       } catch (err) {
-      //         console.error("Response parse error:", err);
-      //         alert("Ticket created, but could not parse response");
-      //       }
-      //     },
-      //     error: (xhr, status, err) => {
-      //       $("#formLoader").addClass("d-none");
-      //       $("#submitBtn").prop("disabled", false);
-      //       console.error("Submission error:", err, xhr.responseText);
-      //       alert("Submission Failed");
-      //     },
-      //   });
-      // });
       $(document).off("click.submitBtnSelf").on("click.submitBtnSelf", "#submitBtn", function (e) {
         e.preventDefault();
 
