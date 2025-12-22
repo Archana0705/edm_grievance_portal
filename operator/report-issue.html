@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 
@@ -8,7 +7,7 @@
   <title>Enhanced Dashboard</title>
   <!-- Bootstrap CSS -->
 
- <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
   <link href="../assets/font/bootstrap-icons.css" rel="stylesheet">
   <link href="../assets/css/aos.css" rel="stylesheet">
   <link href="../assets/vendor/datatable/css/dataTables.css" rel="stylesheet">
@@ -291,27 +290,27 @@
           </ul>
         </div> -->
         <div id="globalProfileDropdown"><!-- profileDropdown.html -->
-<div class="dropdown">
-    <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
-        <i class="bi bi-person-circle fs-4"></i>
-        <span class="d-none d-lg-inline fw-semibold" id="userName">Ramesh Kumar</span>
-    </button>
-    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-        <li><a class="dropdown-item" href="profile.html">Profile</a></li>
-        <li><a class="dropdown-item signOutBtn" href="#">Logout</a></li>
-    </ul>
-</div></div>
+          <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
+              <i class="bi bi-person-circle fs-4"></i>
+              <span class="d-none d-lg-inline fw-semibold" id="userName">Ramesh Kumar</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+              <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+              <li><a class="dropdown-item signOutBtn" href="#">Logout</a></li>
+            </ul>
+          </div>
+        </div>
 
       </div>
     </div>
   </nav>
   <!-- Sidebar -->
   <div id="sidebar">
-    <a href="dashboard.html" ><i class="bi bi-house"></i><span>Dashboard</span></a>
+    <a href="dashboard.html"><i class="bi bi-house"></i><span>Dashboard</span></a>
     <a href="report-issue.html" class="active"><i class="bi bi-file-earmark-text"></i><span>Report Issue</span></a>
     <a href="profile.html"><i class="bi bi-person"></i><span>Profile</span></a>
-    <a href="track-status.html"><i class="bi bi-person-badge"></i><span>Track Status</span></a> 
-    <a href="faq.html"><i class="bi bi-question-circle"></i><span>FAQ</span></a> 
+    <a href="faq.html"><i class="bi bi-question-circle"></i><span>FAQ</span></a>
   </div>
   <!-- Main Content -->
   <div id="mainContent">
@@ -340,67 +339,75 @@
           <div class="tab-pane fade show active" id="selfPane" role="tabpanel" aria-labelledby="self-tab">
             <!-- ✅ Load self-report.html content here -->
 
-            <div id="selfContent"> 
+            <div id="selfContent">
               <div class="form-section">
-    <!-- Main Form -->
-    <form id="issueForm" class="needs-validation" novalidate="" enctype="multipart/form-data">
-      <div class="row g-3">
-        <!-- Dropdowns -->
-        <div class="mb-3 col-lg-4">
-          <label for="typeSelect">Type <span class="text-danger">*</span></label>
-          <select id="typeSelect" class="form-control" required=""><option value="" class="placeholder">--Select Type--</option><option value="1">eSevai centre related</option><option value="2">eSevai officials related</option><option value="3">eSevai portal and services</option></select>
-        </div>
+                <!-- Main Form -->
+                <form id="issueForm" class="needs-validation" novalidate="" enctype="multipart/form-data">
+                  <div class="row g-3">
+                    <!-- Dropdowns -->
+                    <div class="mb-3 col-lg-4">
+                      <label for="typeSelect">Type <span class="text-danger">*</span></label>
+                      <select id="typeSelect" class="form-control" required="">
+                        <option value="" class="placeholder">--Select Type--</option>
+                        <option value="1">eSevai centre related</option>
+                        <option value="2">eSevai officials related</option>
+                        <option value="3">eSevai portal and services</option>
+                      </select>
+                    </div>
 
-        <div class="mb-3 col-lg-4">
-          <label for="categorySelect">Category <span class="text-danger">*</span></label>
-          <select id="categorySelect" class="form-control" required="">
-            <option value="">Select Category</option>
-          </select>
-        </div>
+                    <div class="mb-3 col-lg-4">
+                      <label for="categorySelect">Category <span class="text-danger">*</span></label>
+                      <select id="categorySelect" class="form-control" required="">
+                        <option value="">Select Category</option>
+                      </select>
+                    </div>
 
-        <div class="mb-3 col-lg-4">
-          <label for="subCategorySelect">Sub-Category <span class="text-danger">*</span></label>
-          <select id="subCategorySelect" class="form-control" required="">
-            <option value="">Select Sub-Category</option>
-          </select>
-        </div>
+                    <div class="mb-3 col-lg-4">
+                      <label for="subCategorySelect">Sub-Category <span class="text-danger">*</span></label>
+                      <select id="subCategorySelect" class="form-control" required="">
+                        <option value="">Select Sub-Category</option>
+                      </select>
+                    </div>
 
-      </div>
-      <!-- Dynamic Form -->
+                  </div>
+                  <!-- Dynamic Form -->
 
-      <div id="dynamicFieldsContainer" class="mt-4"></div>
+                  <div id="dynamicFieldsContainer" class="mt-4"></div>
 
-      <!-- Declaration Component -->
-      <div class="alert alert-light border rounded-3 shadow-sm p-3 mb-4" role="alert">
-        <div class="d-flex align-items-start">
-          <i class="bi bi-info-circle-fill text-primary fs-4 me-3"></i>
-          <div>
-            <h6 class="fw-bold mb-2">Declaration</h6>
-            <p class="mb-2 small text-muted">
-              I hereby declare that the information given above and in the enclosed documents is true to the best of
-              my knowledge and belief and nothing has been concealed therein. I understand that if the information
-              given by me is proved false/not true, I will have to face the punishment as per the law. Also, all the
-              benefits availed by me shall be summarily withdrawn.
-            </p>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="declarationCheck">
-              <label class="form-check-label small" for="declarationCheck">
-                I agree to the terms of this declaration
-              </label>
-            </div>
-            <span class="text-danger small" id="declarationError" style="display:none;"></span>
+                  <!-- Declaration Component -->
+                  <div class="alert alert-light border rounded-3 shadow-sm p-3 mb-4" role="alert">
+                    <div class="d-flex align-items-start">
+                      <i class="bi bi-info-circle-fill text-primary fs-4 me-3"></i>
+                      <div>
+                        <h6 class="fw-bold mb-2">Declaration</h6>
+                        <p class="mb-2 small text-muted">
+                          I hereby declare that the information given above and in the enclosed documents is true to the
+                          best of
+                          my knowledge and belief and nothing has been concealed therein. I understand that if the
+                          information
+                          given by me is proved false/not true, I will have to face the punishment as per the law. Also,
+                          all the
+                          benefits availed by me shall be summarily withdrawn.
+                        </p>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="declarationCheck">
+                          <label class="form-check-label small" for="declarationCheck">
+                            I agree to the terms of this declaration
+                          </label>
+                        </div>
+                        <span class="text-danger small" id="declarationError" style="display:none;"></span>
 
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-4 d-flex align-items-center mt-2">
-        <button type="submit" id="submitBtn" class="btn btn-primary px-4 py-2">
-          <i class="bi bi-send-fill me-2"></i> Submit Issue
-        </button>
-      </div>
-    </form>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 d-flex align-items-center mt-2">
+                    <button type="submit" id="submitBtn" class="btn btn-primary px-4 py-2">
+                      <i class="bi bi-send-fill me-2"></i> Submit Issue
+                    </button>
+                  </div>
+                </form>
 
-  </div>
+              </div>
             </div>
           </div>
           <div class="tab-pane fade" id="behalfPane" role="tabpanel" aria-labelledby="behalf-tab">
@@ -408,93 +415,109 @@
             <div id="behalfContent">
               <div class="card p-4 aos-init aos-animate" data-aos="fade-up">
 
-    <div id="step1" class="">
-      <div class="form-section">
-        <form id="issueForm" class="needs-validation" novalidate="">
-          <div class="row">
-            <div class="mb-3 col-lg-4">
-              <label for="relationshipField">Relationship Type <span class="text-danger">*</span></label>
-              <select id="relationshipField" class="form-select mb-2"><option value="" class="placeholder">--Select Relationship--</option><option value="Children">Children</option><option value="Grandchildren">Grandchildren</option><option value="Grandparents">Grandparents</option><option value="Parents">Parents</option><option value="Siblings">Siblings</option><option value="Spouse">Spouse</option></select>
-            </div>
-            <div class="mb-3 col-lg-4">
-              <label for="citizenName">Citizen Name <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" id="citizenName" placeholder="Enter Citizen Name">
-            </div>
-            <div class="mb-3 col-lg-4">
-              <label for="genderField">Gender <span class="text-danger">*</span></label>
-              <select id="genderField" class="form-select mb-2">
-                <option selected="">Select Gender</option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div class="mb-3 col-lg-4">
-              <label class="form-label">Email</label>
-              <input type="email" id="emailField" class="form-control mb-3" placeholder="Enter your Email">
-            </div>
+                <div id="step1" class="">
+                  <div class="form-section">
+                    <form id="issueForm" class="needs-validation" novalidate="">
+                      <div class="row">
+                        <div class="mb-3 col-lg-4">
+                          <label for="relationshipField">Relationship Type <span class="text-danger">*</span></label>
+                          <select id="relationshipField" class="form-select mb-2">
+                            <option value="" class="placeholder">--Select Relationship--</option>
+                            <option value="Children">Children</option>
+                            <option value="Grandchildren">Grandchildren</option>
+                            <option value="Grandparents">Grandparents</option>
+                            <option value="Parents">Parents</option>
+                            <option value="Siblings">Siblings</option>
+                            <option value="Spouse">Spouse</option>
+                          </select>
+                        </div>
+                        <div class="mb-3 col-lg-4">
+                          <label for="citizenName">Citizen Name <span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" id="citizenName" placeholder="Enter Citizen Name">
+                        </div>
+                        <div class="mb-3 col-lg-4">
+                          <label for="genderField">Gender <span class="text-danger">*</span></label>
+                          <select id="genderField" class="form-select mb-2">
+                            <option selected="">Select Gender</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Other</option>
+                          </select>
+                        </div>
+                        <div class="mb-3 col-lg-4">
+                          <label class="form-label">Email</label>
+                          <input type="email" id="emailField" class="form-control mb-3" placeholder="Enter your Email">
+                        </div>
 
-            <div class="clear-both"></div>
+                        <div class="clear-both"></div>
 
-            <div class="mb-3 col-lg-4">
-              <label for="typeSelectBehalf">Type <span class="text-danger">*</span></label>
+                        <div class="mb-3 col-lg-4">
+                          <label for="typeSelectBehalf">Type <span class="text-danger">*</span></label>
 
-              <select id="typeSelectBehalf" class="form-control" required=""><option value="" class="placeholder">--Select Type--</option><option value="1">eSevai centre related</option><option value="2">eSevai officials related</option><option value="3">eSevai portal and services</option></select>
-            </div>
-            <div class="mb-3 col-lg-4">
-              <label for="categorySelectBehalf">Category <span class="text-danger">*</span></label>
-              <select id="categorySelectBehalf" class="form-control" required="">
-                <option value="">Select Category</option>
-              </select>
-            </div>
-            <div class="mb-3 col-lg-4">
-              <label for="subCategorySelectBehalf">Sub-Category <span class="text-danger">*</span></label>
-              <select id="subCategorySelectBehalf" class="form-control" required="">
-                <option value="">Select Sub-Category</option>
-              </select>
-            </div>
+                          <select id="typeSelectBehalf" class="form-control" required="">
+                            <option value="" class="placeholder">--Select Type--</option>
+                            <option value="1">eSevai centre related</option>
+                            <option value="2">eSevai officials related</option>
+                            <option value="3">eSevai portal and services</option>
+                          </select>
+                        </div>
+                        <div class="mb-3 col-lg-4">
+                          <label for="categorySelectBehalf">Category <span class="text-danger">*</span></label>
+                          <select id="categorySelectBehalf" class="form-control" required="">
+                            <option value="">Select Category</option>
+                          </select>
+                        </div>
+                        <div class="mb-3 col-lg-4">
+                          <label for="subCategorySelectBehalf">Sub-Category <span class="text-danger">*</span></label>
+                          <select id="subCategorySelectBehalf" class="form-control" required="">
+                            <option value="">Select Sub-Category</option>
+                          </select>
+                        </div>
 
-          </div>
-          <!-- Dynamic Form -->
-          <div id="dynamicFieldsContainerBehalf" class="mt-4"></div>
+                      </div>
+                      <!-- Dynamic Form -->
+                      <div id="dynamicFieldsContainerBehalf" class="mt-4"></div>
 
-          <!-- Declaration Component -->
-          <div class="alert alert-light border rounded-3 shadow-sm p-3 mb-4" role="alert">
-            <div class="d-flex align-items-start">
-              <i class="bi bi-info-circle-fill text-primary fs-4 me-3"></i>
-              <div>
-                <h6 class="fw-bold mb-2">Declaration</h6>
-                <p class="mb-2 small text-muted">
-                  I hereby declare that the information given above and in the enclosed documents is true to the best of
-                  my knowledge and belief and nothing has been concealed therein. I understand that if the information
-                  given by me is proved false/not true, I will have to face the punishment as per the law. Also, all the
-                  benefits availed by me shall be summarily withdrawn.
-                </p>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="declarationCheck">
-                  <label class="form-check-label small" for="declarationCheck">
-                    I agree to the terms of this declaration
-                  </label>
+                      <!-- Declaration Component -->
+                      <div class="alert alert-light border rounded-3 shadow-sm p-3 mb-4" role="alert">
+                        <div class="d-flex align-items-start">
+                          <i class="bi bi-info-circle-fill text-primary fs-4 me-3"></i>
+                          <div>
+                            <h6 class="fw-bold mb-2">Declaration</h6>
+                            <p class="mb-2 small text-muted">
+                              I hereby declare that the information given above and in the enclosed documents is true to
+                              the best of
+                              my knowledge and belief and nothing has been concealed therein. I understand that if the
+                              information
+                              given by me is proved false/not true, I will have to face the punishment as per the law.
+                              Also, all the
+                              benefits availed by me shall be summarily withdrawn.
+                            </p>
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="declarationCheck">
+                              <label class="form-check-label small" for="declarationCheck">
+                                I agree to the terms of this declaration
+                              </label>
+                            </div>
+                            <span class="text-danger small" id="declarationError" style="display:none;"></span>
+
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <!-- Submit -->
+                      <div class="col-lg-4 d-flex align-items-center">
+                        <button type="submit" id="submitBtnBehalf" class="btn btn-primary px-4 py-2">
+                          <i class="bi bi-send-fill me-2"></i> Submit Issue
+                        </button>
+                      </div>
+                    </form>
+
+
+                  </div>
                 </div>
-                <span class="text-danger small" id="declarationError" style="display:none;"></span>
-
               </div>
-            </div>
-          </div>
-
-
-          <!-- Submit -->
-          <div class="col-lg-4 d-flex align-items-center">
-            <button type="submit" id="submitBtnBehalf" class="btn btn-primary px-4 py-2">
-              <i class="bi bi-send-fill me-2"></i> Submit Issue
-            </button>
-          </div>
-        </form>
-
-
-      </div>
-    </div>
-  </div>
             </div>
           </div>
         </div>
@@ -510,17 +533,17 @@
 
 
   <script src="../assets/js/jquery-3.7.1.min.js"></script>
-    <script src="../assets/js/global.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <!-- <script src="assets/js/bootstrap.bundle.min.js"></script> -->
-    <script src="../assets/js/aos.js"></script>
-    <script src="../assets/js/dataTableUtil.js"></script>
-    <script src="../assets/js/crypto-js.min.js"></script>
-    <script src="../assets/js/encrypt_decrypt.js"></script>
-    <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="../assets/js/toastUtil.js"></script>
-    <script src="../assets/js/apiConfig.js"></script>
-    <script src="../assets/js/globalProfileDropdown.js"></script>
+  <script src="../assets/js/global.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <!-- <script src="assets/js/bootstrap.bundle.min.js"></script> -->
+  <script src="../assets/js/aos.js"></script>
+  <script src="../assets/js/dataTableUtil.js"></script>
+  <script src="../assets/js/crypto-js.min.js"></script>
+  <script src="../assets/js/encrypt_decrypt.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/toastUtil.js"></script>
+  <script src="../assets/js/apiConfig.js"></script>
+  <script src="../assets/js/globalProfileDropdown.js"></script>
 
   <script>
     // Sidebar toggle
@@ -566,44 +589,44 @@
   </script>
 
 
-<!-- Code injected by live-server -->
-<script>
-	// <![CDATA[  <-- For SVG support
-	if ('WebSocket' in window) {
-		(function () {
-			function refreshCSS() {
-				var sheets = [].slice.call(document.getElementsByTagName("link"));
-				var head = document.getElementsByTagName("head")[0];
-				for (var i = 0; i < sheets.length; ++i) {
-					var elem = sheets[i];
-					var parent = elem.parentElement || head;
-					parent.removeChild(elem);
-					var rel = elem.rel;
-					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
-						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
-					}
-					parent.appendChild(elem);
-				}
-			}
-			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-			var address = protocol + window.location.host + window.location.pathname + '/ws';
-			var socket = new WebSocket(address);
-			socket.onmessage = function (msg) {
-				if (msg.data == 'reload') window.location.reload();
-				else if (msg.data == 'refreshcss') refreshCSS();
-			};
-			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-				console.log('Live reload enabled.');
-				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-			}
-		})();
-	}
-	else {
-		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-	}
-	// ]]>
-</script>
+  <!-- Code injected by live-server -->
+  <script>
+    // <![CDATA[  <-- For SVG support
+    if ('WebSocket' in window) {
+      (function () {
+        function refreshCSS() {
+          var sheets = [].slice.call(document.getElementsByTagName("link"));
+          var head = document.getElementsByTagName("head")[0];
+          for (var i = 0; i < sheets.length; ++i) {
+            var elem = sheets[i];
+            var parent = elem.parentElement || head;
+            parent.removeChild(elem);
+            var rel = elem.rel;
+            if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+              var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+              elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+            }
+            parent.appendChild(elem);
+          }
+        }
+        var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+        var address = protocol + window.location.host + window.location.pathname + '/ws';
+        var socket = new WebSocket(address);
+        socket.onmessage = function (msg) {
+          if (msg.data == 'reload') window.location.reload();
+          else if (msg.data == 'refreshcss') refreshCSS();
+        };
+        if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+          console.log('Live reload enabled.');
+          sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+        }
+      })();
+    }
+    else {
+      console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+    }
+    // ]]>
+  </script>
 </body>
 
 </html>
