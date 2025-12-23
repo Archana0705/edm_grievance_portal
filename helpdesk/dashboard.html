@@ -1318,7 +1318,7 @@
       function fetchTickets() {
         const payload = {
           action: "function_call",
-          function_name: "fn_dashboard_helpdesk_admin_counts",
+          function_name: "fn_dashboard_helpdesk_admin_lead_cms_edm_counts",
           params: { p_user_id: userId },
         };
 
@@ -1331,15 +1331,19 @@
             if (!response?.data) return;
 
             try {
+              debugger;
               const decrypted = decryptData(response.data);
               const parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
-              const counts = JSON.parse(parsed[0]?.fn_dashboard_helpdesk_admin_counts || "{}");
+              const counts = JSON.parse(parsed[0]?.fn_dashboard_helpdesk_admin_lead_cms_edm_counts || "{}");
 
               const updateStats = (prefix, data) => {
                 $(`#${prefix}totalTickets`).text(data.Total || 0);
                 $(`#${prefix}pendingTickets`).text(data.Pending || 0);
                 $(`#${prefix}resolvedTickets`).text(data.Resolved || 0);
                 $(`#${prefix}reopenTickets`).text(data.ReOpened || 0);
+                $(`#${prefix}returnedTickets`).text(data.Returned || 0);
+
+
               };
 
               updateStats("", counts.All || {});
