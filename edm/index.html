@@ -1,12 +1,75 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>EDM Login</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Bootstrap -->
+  <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/css/aos.css" rel="stylesheet">
+  <!-- toastLayout.html -->
+  <link href="../assets/vendor/toastr/toastr.min.css" rel="stylesheet">
+  <div class="toast-container custom_toast">
+    <!-- Error Toast -->
+    <div id="errorToast" class="toast toast-swal-style " style="z-index: 99999999999999" role="alert"
+      aria-live="assertive" aria-atomic="true">
+      <div class="toast-body d-flex justify-content-between align-items-center">
+        <p id="errorMessage" class="mb-0"></p>
+        <button type="button" class="btn-close ms-3" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+
+    <div id="successToast" class="toast toast-swal-style" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-body d-flex justify-content-between align-items-center">
+        <p id="successMessage" class="mb-0"></p>
+        <button type="button" class="btn-close ms-3" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <style type="text/css">
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .toast {
+      min-width: 280px;
+      max-width: 350px;
+      border-radius: 10px;
+      font-size: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      pointer-events: auto;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    #successToast {
+      background-color: #198754 !important;
+      color: #ffffff;
+    }
+
+    #errorToast {
+      background-color: #dc3545 !important;
+      color: #ffffff;
+    }
+
+    /* .btn-close {
+        filter: invert(1);
+    } */
+  </style>
   <style>
     body {
       background: linear-gradient(135deg, #0d47a1, #1976d2);
@@ -16,16 +79,18 @@
       justify-content: center;
       font-family: 'Poppins', sans-serif;
     }
+
     .login-card {
       background: #fff;
       border-radius: 1rem;
       padding: 2.5rem 2rem;
       max-width: 400px;
       width: 100%;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
       position: relative;
       overflow: hidden;
     }
+
     .login-card::before {
       content: "";
       position: absolute;
@@ -37,43 +102,52 @@
       transform: rotate(45deg);
       pointer-events: none;
     }
+
     .login-card h3 {
       font-weight: 700;
       color: #0d47a1;
       margin-bottom: 1.5rem;
       text-align: center;
     }
+
     .form-control {
       border-radius: 50px;
       padding: 12px 20px;
       box-shadow: none !important;
     }
+
     .form-label {
       font-weight: 500;
       font-size: 0.9rem;
     }
+
     .login-btn {
       border-radius: 50px;
       padding: 10px 0;
       font-weight: 600;
       transition: 0.3s;
     }
+
     .login-btn:hover {
       transform: translateY(-2px);
     }
+
     .otp-section {
       display: none;
       margin-top: 15px;
     }
+
     .login-footer {
       text-align: center;
       margin-top: 1.5rem;
       font-size: 0.85rem;
       color: #555;
     }
+
     .icon-input {
       position: relative;
     }
+
     .icon-input i {
       position: absolute;
       top: 50%;
@@ -81,62 +155,231 @@
       transform: translateY(-50%);
       color: #0d47a1;
     }
+
     .icon-input input {
       padding-left: 40px;
     }
   </style>
 </head>
+
 <body>
 
-<div class="login-card" data-aos="fade-up">
-  <h3>EDM Login</h3>
+  <div class="login-card" data-aos="fade-up">
+    <h3>EDM Login</h3>
 
-  <!-- Login Form -->
-  <form id="loginForm">
-    <div class="mb-3 icon-input">
-      <i class="fas fa-user"></i>
-      <input type="text" class="form-control" id="userInput" placeholder="Mobile number or Email" required>
-    </div>
-    <button type="button" class="btn btn-primary w-100 login-btn" id="sendOtpBtn">Send OTP</button>
-
-    <!-- OTP Section -->
-    <div class="otp-section" id="otpSection">
-      <div class="mb-3 icon-input mt-3">
-        <i class="fas fa-key"></i>
-        <input type="text" class="form-control" id="otpInput" placeholder="Enter OTP" required>
+    <!-- Login Form -->
+    <form id="loginForm">
+      <div class="mb-3">
+        <i class="fas fa-user"></i>
+        <input type="text" class="form-control" id="userInput" placeholder="Mobile number or Email" required>
       </div>
-      <button type="submit" class="btn btn-success w-100 login-btn">Login</button>
+      <div class="mb-3">
+        <i class="fas fa-user"></i>
+        <input type="text" class="form-control" id="userPassword" placeholder="Enter Password" required>
+      </div>
+      <button type="button" class="btn btn-primary w-100 login-btn" id="sendOtpBtn">Send OTP</button>
+
+      <!-- OTP Section -->
+      <div class="otp-section" id="otpSection">
+        <div class="mb-3 mt-3">
+          <i class="fas fa-key"></i>
+          <input type="text" class="form-control" id="otpInput" placeholder="Enter OTP" required>
+        </div>
+        <button type="submit" class="btn btn-success w-100 login-btn">Login</button>
+      </div>
+    </form>
+
+    <div class="login-footer">
+      <p>EDMs are mapped to districts by the Helpdesk Lead</p>
     </div>
-  </form>
-
-  <div class="login-footer">
-    <p>EDMs are mapped to districts by the Helpdesk Lead</p>
   </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<script>
-  AOS.init();
+  <script src="../assets/js/jquery-3.7.1.min.js"></script>
+  <script src="../assets/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/aos.js"></script>
+  <script src="../assets/js/dataTableUtil.js"></script>
+  <script src="../assets/js/crypto-js.min.js"></script>
+  <script src="../assets/js/global.js"></script>
+  <script src="../assets/js/encrypt_decrypt.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/toastUtil.js"></script>
+  <script src="../assets/js/apiConfig.js"></script>
 
-  const sendOtpBtn = document.getElementById('sendOtpBtn');
-  const otpSection = document.getElementById('otpSection');
-  const loginForm = document.getElementById('loginForm');
+  <script>
+    AOS.init();
+    window.showSuccessToast = function (message) {
+      const toastElement = document.getElementById('successToast');
+      const toastBody = document.getElementById('successMessage');
 
-  sendOtpBtn.addEventListener('click', () => {
-    // Simulate sending OTP
-    otpSection.style.display = 'block';
-    sendOtpBtn.disabled = true;
-    sendOtpBtn.innerText = "OTP Sent ✅";
-  });
+      if (toastElement && toastBody) {
+        toastBody.textContent = message;
+        const toast = new bootstrap.Toast(toastElement, {
+          autohide: true,
+          delay: 3000
+        });
+        toast.show();
+      } else {
+        console.warn('⚠️ Success toast layout not found in DOM.');
+      }
+    };
 
-  loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    alert('Logged in successfully!');
-    // Here, integrate actual OTP verification and login logic
-    // Redirect to dashboard
-    window.location.href = 'dashboard.html'; 
-  });
-</script>
+    // ✅ Show Error Toast
+    window.showErrorToast = function (message) {
+      const toastElement = document.getElementById('errorToast');
+      const toastBody = document.getElementById('errorMessage');
+
+      if (toastElement && toastBody) {
+        toastBody.textContent = message;
+        const toast = new bootstrap.Toast(toastElement, {
+          autohide: true,
+          delay: 3000
+        });
+        toast.show();
+      } else {
+        console.warn('⚠️ Error toast layout not found in DOM.');
+      }
+    };
+
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const otpSection = document.getElementById('otpSection');
+    const loginForm = document.getElementById('loginForm');
+
+    // 🔹 Global variables to store OTP contact info
+    let contactValue = null;
+    let selectedOtpMethod = null;
+    const forbiddenChars = /[<>\"'&/\\;`]/g;
+    function sanitizeFieldInput(field) {
+      field.addEventListener('input', function () {
+        if (forbiddenChars.test(this.value)) {
+          this.value = this.value.replace(forbiddenChars, '');
+          showErrorToast("Special characters < > \" ' & / \\ ; ` are not allowed.");
+        }
+      });
+    }
+
+    // Attach sanitizer to eSevai ID and OTP inputs
+    sanitizeFieldInput(document.getElementById('userInput'));
+    sanitizeFieldInput(document.getElementById('otpInput'));
+    // ✅ Send OTP Button
+    sendOtpBtn.addEventListener('click', () => {
+      debugger;
+      const userInput = (document.getElementById('userInput').value.trim());
+      const userPassword = (document.getElementById('userPassword').value.trim());
+
+      if (!userInput) {
+        showErrorToast("Please enter Mobile number or Email.");
+        return;
+      }
+
+      // 🔹 API call to send OTP
+      const payload = {
+        action: "function_call",
+        function_name: "fn_edm_login_by_mobile",
+        params: {
+          p_operator_id: userInput,
+          p_mobile: userPassword,
+
+        }
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(payload) },
+        dataType: "json",
+        success: function (res) {
+          if (!res.success) {
+            showErrorToast("Login API failed: " + (res.message || "Unknown error"));
+            return;
+          }
+
+          const decrypted = decryptData(res.data);
+          const apiResponse = JSON.parse(decrypted[0].fn_edm_login_by_mobile);
+
+          if (apiResponse.status === "error") {
+            showErrorToast(apiResponse.message || "Invalid eSevai ID.");
+            return;
+          }
+
+          // ✅ Show OTP input section
+          otpSection.style.display = 'block';
+          sendOtpBtn.disabled = true;
+          sendOtpBtn.innerText = "OTP Sent ✅";
+          showSuccessToast(apiResponse.message);
+        },
+        error: function () {
+          showErrorToast("Login API error. Please try again.");
+        }
+      });
+    });
+
+    // ✅ OTP Verification & Login
+    loginForm.addEventListener('submit', (e) => {
+      debugger
+      e.preventDefault();
+
+      const otpInput = document.getElementById('otpInput').value.trim();
+      const userInput = document.getElementById('userInput').value.trim();
+
+      if (otpInput.length !== 6) {
+        showErrorToast("Please enter a valid 6-digit OTP.");
+        return;
+      }
+
+      // 🔹 API call for verifying OTP & login
+      const payload = {
+        action: "function_call",
+        function_name: "fn_user_details_by_mobile_email_1", // ✅ unchanged
+        params: {
+          p_mobile: userInput
+        }
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(payload) },
+        dataType: "json",
+        success: function (res) {
+          if (!res.success) {
+            showErrorToast("Login verification failed: " + (res.message || "Unknown error"));
+            return;
+          }
+
+          const decrypted = decryptData(res.data);
+          console.log("Decrypted:", decrypted);
+
+          // decrypted itself contains the array of user details
+          const apiResponse = Array.isArray(decrypted) ? decrypted : JSON.parse(decrypted);
+
+          if (!Array.isArray(apiResponse) || apiResponse.length === 0) {
+            showErrorToast("Invalid user details.");
+            return;
+          }
+
+          const user = apiResponse[0];
+
+          // ✅ Store user details in localStorage
+          localStorage.setItem("user_id", user.user_id);
+          localStorage.setItem("operator_id", user.operator_id);
+          localStorage.setItem("user_name", user.user_name);
+          localStorage.setItem("email", user.email);
+          localStorage.setItem("mobile", user.mobile);
+          localStorage.setItem("role_id", user.role_id);
+          localStorage.setItem("district", user.district);
+
+          showSuccessToast("Login successful!");
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1500);
+
+        },
+        error: function () {
+          showErrorToast("Login API error. Please try again.");
+        }
+      });
+    });
+  </script>
 </body>
+
 </html>

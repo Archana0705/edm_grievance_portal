@@ -244,10 +244,10 @@
       <span>Dashboard</span>
     </a>
     <!-- My Tickets -->
-    <!-- <a href="my-tickets.html">
-        <i class="bi bi-ticket-detailed"></i>
-        <span>My Tickets</span>
-        </a> -->
+    <a href="my-tickets.html">
+      <i class="bi bi-ticket-detailed"></i>
+      <span>My Tickets</span>
+    </a>
     <!-- Helpdesk Admin -->
     <!-- <a href="helpdesk-admin.html">
         <i class="bi bi-shield-lock"></i>
@@ -1342,8 +1342,6 @@
                 $(`#${prefix}resolvedTickets`).text(data.Resolved || 0);
                 $(`#${prefix}reopenTickets`).text(data.ReOpened || 0);
                 $(`#${prefix}returnedTickets`).text(data.Returned || 0);
-
-
               };
 
               updateStats("", counts.All || {});
