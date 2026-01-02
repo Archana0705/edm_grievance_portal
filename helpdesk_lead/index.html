@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,47 +15,90 @@
       align-items: center;
       height: 100vh;
     }
+
     .login-card {
       max-width: 400px;
       width: 100%;
       padding: 2rem;
       border-radius: 1rem;
       background: #fff;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
+
     .login-card h3 {
       font-weight: 600;
       margin-bottom: 1.5rem;
       text-align: center;
     }
+
     .form-check-label {
       font-size: 0.9rem;
     }
+
     .forgot-link {
       float: right;
       font-size: 0.9rem;
       text-decoration: none;
     }
+
+    .password-input-group {
+      position: relative;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #6c757d;
+      cursor: pointer;
+      z-index: 5;
+    }
   </style>
 </head>
+
 <body>
+
+  <!-- Toast Container -->
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto">Notification</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">Action completed.</div>
+    </div>
+  </div>
 
   <div class="login-card">
     <div class="text-center mb-3">
       <i class="bi bi-shield-lock" style="font-size: 3rem; color: #0d6efd;"></i>
     </div>
     <h3>Helpdesk Lead Login</h3>
-    <form>
+    <form id="loginForm">
       <!-- Username / Email -->
       <div class="mb-3">
         <label for="username" class="form-label">Username / Email</label>
-        <input type="text" class="form-control" id="username" placeholder="Enter your username or email">
+        <input type="text" class="form-control" id="username" placeholder="Enter your username or email" required>
+        <div class="invalid-feedback">
+          Please enter a valid username or email.
+        </div>
       </div>
 
       <!-- Password -->
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" placeholder="Enter your password">
+        <div class="password-input-group">
+          <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+          <button type="button" class="password-toggle" id="togglePwd">
+            <i class="bi bi-eye"></i>
+          </button>
+        </div>
+        <div class="invalid-feedback">
+          Password must be at least 6 characters.
+        </div>
       </div>
 
       <!-- Remember me + Forgot Password -->
@@ -68,11 +112,253 @@
 
       <!-- Login Button -->
       <div class="d-grid">
-        <a href="dashboard.html" class="btn btn-primary">Login</a>
+        <button type="submit" class="btn btn-primary">Login</button>
       </div>
     </form>
   </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Scripts -->
+  <script src="../assets/js/jquery-3.7.1.min.js"></script>
+  <script src="../assets/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/aos.js"></script>
+  <script src="../assets/js/dataTableUtil.js"></script>
+  <script src="../assets/js/crypto-js.min.js"></script>
+  <script src="../assets/js/global.js"></script>
+  <script src="../assets/js/encrypt_decrypt.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/toastUtil.js"></script>
+  <script src="../assets/js/apiConfig.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Initialize AOS
+      if (typeof AOS !== 'undefined') {
+        AOS.init({ duration: 800, once: true });
+      }
+
+      // Toast functionality
+      const toastEl = document.getElementById('liveToast');
+      const showToast = (msg = "Action completed.", type = "info") => {
+        if (toastEl) {
+          const toastBody = toastEl.querySelector('.toast-body');
+          const toastHeader = toastEl.querySelector('.toast-header strong');
+
+          if (toastBody) toastBody.textContent = msg;
+          if (toastHeader) {
+            if (type === "error") {
+              toastHeader.textContent = "Error";
+              toastEl.classList.add('bg-danger', 'text-white');
+            } else if (type === "success") {
+              toastHeader.textContent = "Success";
+              toastEl.classList.add('bg-success', 'text-white');
+            } else {
+              toastHeader.textContent = "Notification";
+              toastEl.classList.remove('bg-danger', 'bg-success', 'text-white');
+            }
+          }
+
+          const toast = new bootstrap.Toast(toastEl, { delay: 2200 });
+          toast.show();
+        }
+      };
+
+      const showSuccessToast = (msg) => showToast(msg, "success");
+      const showErrorToast = (msg) => showToast(msg, "error");
+
+      // Toggle password visibility
+      const passwordInput = document.getElementById("password");
+      const toggleBtn = document.getElementById("togglePwd");
+
+      if (toggleBtn && passwordInput) {
+        toggleBtn.addEventListener("click", function () {
+          if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleBtn.innerHTML = '<i class="bi bi-eye-slash"></i>';
+          } else {
+            passwordInput.type = "password";
+            toggleBtn.innerHTML = '<i class="bi bi-eye"></i>';
+          }
+        });
+      }
+
+      // Form validation and submission
+      const loginForm = document.getElementById('loginForm');
+
+      if (loginForm) {
+        loginForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+
+          const username = document.getElementById('username').value.trim();
+          const password = document.getElementById('password').value.trim();
+          let valid = true;
+
+          // Username/Email validation
+          if (!username) {
+            document.getElementById('username').classList.add('is-invalid');
+            valid = false;
+          } else {
+            document.getElementById('username').classList.remove('is-invalid');
+          }
+
+          // Password validation
+          if (password.length < 6) {
+            document.getElementById('password').classList.add('is-invalid');
+            valid = false;
+          } else {
+            document.getElementById('password').classList.remove('is-invalid');
+          }
+
+          if (!valid) {
+            showErrorToast("Please fill in all fields correctly.");
+            return;
+          }
+
+          // Create payload based on input type (email or mobile)
+          let payload = {};
+
+          // Check if input is mobile number (Indian format)
+          const mobileRegex = /^[6-9]\d{9}$/;
+          if (mobileRegex.test(username)) {
+            payload = {
+              action: "function_call",
+              function_name: "fn_helpdesk_login_by_mobile",
+              params: {
+                mobile: username,
+                password: password,
+              }
+            };
+          } else {
+            // Assume it's email
+            payload = {
+              action: "function_call",
+              function_name: "fn_helpdesk_login_by_email",
+              params: {
+                email: username,
+                password: password,
+              }
+            };
+          }
+
+          // AJAX call for login
+          $.ajax({
+            url: `${BASE_API_URL}/commonfunction`,
+            method: "POST",
+            data: { data: encryptData(payload) },
+            dataType: "json",
+            success: function (res) {
+              if (!res || !res.success || !res.data) {
+                showErrorToast("Login API returned invalid response.");
+                return;
+              }
+
+              try {
+                // Decrypt response
+                const decrypted = decryptData(res.data);
+                let parsed;
+
+                // Parse the response
+                if (typeof decrypted === "string") {
+                  try {
+                    parsed = JSON.parse(decrypted);
+                  } catch (err) {
+                    showErrorToast("Invalid login response format.");
+                    console.error("JSON parse error:", err);
+                    return;
+                  }
+                } else if (typeof decrypted === "object") {
+                  parsed = decrypted;
+                } else {
+                  showErrorToast("Unexpected login response type.");
+                  return;
+                }
+
+                // Check response structure
+                if (!parsed || !parsed.length) {
+                  showErrorToast("Invalid login response structure.");
+                  return;
+                }
+
+                // Get the appropriate function response based on login method
+                const functionName = payload.function_name;
+                if (!parsed[0][functionName]) {
+                  showErrorToast("Invalid login response.");
+                  return;
+                }
+
+                // Parse the inner stringified JSON
+                const apiResponse = JSON.parse(parsed[0][functionName]);
+
+                if (apiResponse.status === "success") {
+                  showSuccessToast("Login successful!");
+
+                  // Store user data in localStorage
+                  localStorage.setItem("helpdesk_email", apiResponse.email || "");
+                  localStorage.setItem("helpdesk_mobile", apiResponse.mobile || "");
+                  localStorage.setItem("helpdesk_role_id", apiResponse.role_id || "");
+                  localStorage.setItem("helpdesk_user_id", apiResponse.user_id || "");
+                  localStorage.setItem("helpdesk_district", apiResponse.district || "");
+                  localStorage.setItem("helpdesk_user_name", apiResponse.user_name || "");
+                  localStorage.setItem("role", apiResponse.role || "");
+
+                  // Store the whole object as JSON
+                  localStorage.setItem("helpdesk_user_data", JSON.stringify(apiResponse));
+
+                  // Redirect to dashboard
+                  setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                  }, 1500);
+                } else {
+                  showErrorToast(apiResponse.message || "Login failed. Please check credentials.");
+                }
+
+              } catch (err) {
+                showErrorToast("Error processing login response.");
+                console.error("Login parse error:", err);
+              }
+            },
+            error: function (xhr, status, error) {
+              showErrorToast("Login API error. Please try again.");
+              console.error("AJAX Error:", error);
+            }
+          });
+        });
+      }
+
+      // Check if user is already logged in
+      const userData = localStorage.getItem("helpdesk_user_data");
+      if (userData) {
+        try {
+          const parsedData = JSON.parse(userData);
+          if (parsedData && parsedData.user_id) {
+            // Auto-fill username if "Remember Me" was checked
+            const rememberMe = localStorage.getItem("helpdesk_remember_me");
+            if (rememberMe === "true") {
+              const usernameField = document.getElementById('username');
+              if (usernameField) {
+                usernameField.value = parsedData.email || parsedData.mobile || "";
+              }
+            }
+          }
+        } catch (e) {
+          console.error("Error parsing saved user data:", e);
+        }
+      }
+
+      // Handle Remember Me checkbox
+      const rememberMeCheckbox = document.getElementById('rememberMe');
+      if (rememberMeCheckbox) {
+        const savedRememberMe = localStorage.getItem("helpdesk_remember_me");
+        if (savedRememberMe === "true") {
+          rememberMeCheckbox.checked = true;
+        }
+
+        rememberMeCheckbox.addEventListener('change', function () {
+          localStorage.setItem("helpdesk_remember_me", this.checked.toString());
+        });
+      }
+    });
+  </script>
+
 </body>
+
 </html>

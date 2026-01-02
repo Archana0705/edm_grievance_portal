@@ -323,13 +323,13 @@
     <!-- Sidebar -->
     <div id="sidebar">
         <!-- Dashboard -->
-        <a href="dashboard.html" class="active">
+        <a href="dashboard.html">
             <i class="bi bi-speedometer2"></i>
             <span>Dashboard</span>
         </a>
 
         <!-- My Tickets -->
-        <a href="my-tickets.html">
+        <a href="my-tickets.html" class="active">
             <i class="bi bi-ticket-detailed"></i>
             <span>My Tickets</span>
         </a>
@@ -759,8 +759,7 @@
             }
         }
 
-
-        // Update the modal click handler
+        // Update the modal click handler - REMOVE OR COMMENT THIS OUT
         document.getElementById('escalateConfirmBtn').addEventListener('click', async () => {
             const note = document.getElementById('escalateNote').value;
             const districtContainer = document.getElementById('districtContainer');
@@ -1515,6 +1514,7 @@
         }
 
         // ============ MODAL HANDLERS ============
+
         // ============ MODAL HANDLERS ============
 
         let modalsInitialized = false;
@@ -1522,14 +1522,25 @@
         function initializeModals() {
             if (modalsInitialized) return;
 
+            // Use event delegation for modal buttons
+            document.addEventListener('click', function (e) {
+                if (e.target && e.target.id === 'escalateConfirmBtn') {
+                    handleEscalateButton();
+                }
+                if (e.target && e.target.id === 'resolveConfirmBtn') {
+                    handleResolveButton();
+                }
+                if (e.target && e.target.id === 'closeConfirmBtn') {
+                    handleCloseButton();
+                }
+                if (e.target && e.target.id === 'reassignConfirmBtn') {
+                    handleReassignButton();
+                }
+            });
+
             // Forward modal
             const escalateModal = document.getElementById('escalateModal');
             if (escalateModal) {
-                // Remove existing event listeners first
-                const escalateBtn = document.getElementById('escalateConfirmBtn');
-                const newEscalateBtn = escalateBtn.cloneNode(true);
-                escalateBtn.parentNode.replaceChild(newEscalateBtn, escalateBtn);
-
                 escalateModal.addEventListener('show.bs.modal', async () => {
                     await populateAgentDropdowns();
 
@@ -1570,69 +1581,170 @@
                     if (agentDropdown) {
                         agentDropdown.value = '';
                     }
-
-                    // Reset EDM agents container
-                    const edmAgentsContainer = document.getElementById('edmAgentsContainer');
-                    if (edmAgentsContainer) {
-                        edmAgentsContainer.style.display = 'none';
-                    }
-                });
-
-                // Add single event listener for the forward button
-                document.getElementById('escalateConfirmBtn').addEventListener('click', async () => {
-                    const assignTo = document.getElementById('agentDropdown').value;
-                    const note = document.getElementById('escalateNote').value;
-                    const districtContainer = document.getElementById('districtContainer');
-                    let districtId = null;
-
-                    // Check if district selection is required (for EDM)
-                    if (districtContainer && districtContainer.style.display === 'block') {
-                        const districtSelect = document.getElementById('districtSelect');
-                        districtId = districtSelect.value;
-
-                        if (!districtId) {
-                            showToast('Please select a district', 'warning');
-                            return;
-                        }
-                    }
-
-                    if (!assignTo) {
-                        showToast('Please select an agent to forward to', 'warning');
-                        return;
-                    }
-
-                    if (!note.trim()) {
-                        showToast('Please enter a forward note', 'warning');
-                        return;
-                    }
-
-                    // Check if EDM is selected but no district
-                    const selectedOption = document.getElementById('agentDropdown').options[document.getElementById('agentDropdown').selectedIndex];
-                    const isSpecialEdm = selectedOption ? selectedOption.dataset.isSpecialEdm === "true" : false;
-
-                    if (isSpecialEdm && !districtId) {
-                        showToast('Please select a district for EDM agent', 'warning');
-                        return;
-                    }
-
-                    const success = await escalateTicket(currentTicketId, assignTo, note, districtId);
-                    if (success) {
-                        showToast('Ticket forwarded successfully!', 'success');
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('escalateModal'));
-                        if (modal) {
-                            modal.hide();
-                        }
-                        setTimeout(() => loadTicketData(), 1000);
-                    } else {
-                        showToast('Failed to forward ticket', 'danger');
-                    }
                 });
             }
 
-            // ... rest of your initializeModals function ...
+            // Reassign modal
+            const reassignModal = document.getElementById('reassignModal');
+            if (reassignModal) {
+                reassignModal.addEventListener('show.bs.modal', async () => {
+                    await populateAgentDropdowns();
+                });
+            }
 
             modalsInitialized = true;
         }
+
+        // Separate handler functions
+        async function handleEscalateButton() {
+            const assignTo = document.getElementById('agentDropdown').value;
+            const note = document.getElementById('escalateNote').value;
+            const districtContainer = document.getElementById('districtContainer');
+            const edmAgentsContainer = document.getElementById('edmAgentsContainer');
+
+            // Check what type of agent is selected
+            const agentDropdown = document.getElementById('agentDropdown');
+            const selectedOption = agentDropdown.options[agentDropdown.selectedIndex];
+            const isSpecialEdm = selectedOption ? selectedOption.dataset.isSpecialEdm === "true" : false;
+
+            let districtId = null;
+
+            if (isSpecialEdm) {
+                // For EDM agents, validate district and EDM agent selection
+                if (districtContainer && districtContainer.style.display === 'block') {
+                    const districtSelect = document.getElementById('districtSelect');
+                    districtId = districtSelect.value;
+
+                    if (!districtId) {
+                        showToast('Please select a district', 'warning');
+                        return;
+                    }
+
+                    if (edmAgentsContainer && edmAgentsContainer.style.display === 'block') {
+                        const edmAgentsSelect = document.getElementById('edmAgentsSelect');
+                        const edmAgentId = edmAgentsSelect.value;
+
+                        if (!edmAgentId) {
+                            showToast('Please select an EDM agent', 'warning');
+                            return;
+                        }
+
+                        // Check if "No EDM agents available" is selected
+                        if (edmAgentsSelect.options[edmAgentsSelect.selectedIndex].text.includes('No EDM agents available')) {
+                            showToast('No EDM agents available for selected district', 'warning');
+                            return;
+                        }
+                    } else {
+                        showToast('Please wait for EDM agents to load', 'warning');
+                        return;
+                    }
+                } else {
+                    showToast('Please select a district', 'warning');
+                    return;
+                }
+            } else {
+                // For non-EDM agents, validate agent selection
+                const agentId = agentDropdown.value;
+                if (!agentId) {
+                    showToast('Please select an agent', 'warning');
+                    return;
+                }
+            }
+
+            if (!note.trim()) {
+                showToast('Please enter a forward note', 'warning');
+                return;
+            }
+
+            const success = await escalateTicket(currentTicketId, note, districtId);
+            if (success) {
+                showToast('Ticket forwarded successfully!', 'success');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('escalateModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                setTimeout(() => loadTicketData(), 1000);
+            } else {
+                showToast('Failed to forward ticket', 'danger');
+            }
+        }
+
+        async function handleResolveButton() {
+            const note = document.getElementById('resolveNote').value;
+
+            if (!note.trim()) {
+                showToast('Please enter a return note', 'warning');
+                return;
+            }
+
+            const success = await returnTicket(currentTicketId, note);
+            if (success) {
+                showToast('Ticket returned successfully!', 'success');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('resolveModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                setTimeout(() => loadTicketData(), 1000);
+            } else {
+                showToast('Failed to return ticket', 'danger');
+            }
+        }
+
+        async function handleCloseButton() {
+            const note = document.getElementById('closeNote').value;
+            const status = document.getElementById('closeStatus').value;
+
+            if (!note.trim()) {
+                showToast('Please enter a closing note', 'warning');
+                return;
+            }
+
+            if (!status) {
+                showToast('Please select a resolution status', 'warning');
+                return;
+            }
+
+            const success = await closeTicket(currentTicketId, note, status);
+            if (success) {
+                showToast('Ticket closed successfully!', 'success');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('closeModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                setTimeout(() => loadTicketData(), 1000);
+            } else {
+                showToast('Failed to close ticket', 'danger');
+            }
+        }
+
+        async function handleReassignButton() {
+            const assignTo = document.getElementById('reassignSelect').value;
+            const note = document.getElementById('reassignNote').value;
+
+            if (!assignTo) {
+                showToast('Please select an agent to reassign to', 'warning');
+                return;
+            }
+
+            if (!note.trim()) {
+                showToast('Please enter a reassign note', 'warning');
+                return;
+            }
+
+            const success = await reassignTicket(currentTicketId, assignTo, note);
+            if (success) {
+                showToast('Ticket reassigned successfully!', 'success');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('reassignModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                setTimeout(() => loadTicketData(), 1000);
+            } else {
+                showToast('Failed to reassign ticket', 'danger');
+            }
+        }
+
+        // ============ MAIN LOAD FUNCTION ============
 
         // ============ MAIN LOAD FUNCTION ============
 
@@ -1662,7 +1774,11 @@
                     throw new Error('Failed to load ticket details');
                 }
                 renderTicketDetails(ticketDetails);
-                initializeModals();
+
+                // Initialize modals only once
+                if (!modalsInitialized) {
+                    initializeModals();
+                }
             } catch (error) {
                 console.error('Error loading ticket:', error);
                 document.getElementById('mainContent').innerHTML = `

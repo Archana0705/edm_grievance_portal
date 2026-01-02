@@ -6,9 +6,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Helpdesk - My Tickets</title>
   <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- DataTables CSS -->
+  <link href="../assets/vendor/datatable/css/dataTables.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/vendor/datatable/dataTables.bootstrap5.min.css">
   <style>
+    #myTab li .nav-link.active {
+      background: #182848;
+      color: #fff;
+      border-radius: 4px 7px;
+    }
+
+    #myTab li .nav-link {
+      color: #182848;
+      border-radius: 4px 7px;
+      border: 1px solid #182848;
+    }
+
+    ul#myTab {
+      border-bottom: 0;
+    }
+
     body {
       background: #f9f9fb;
     }
@@ -29,6 +48,14 @@
 
     .ticket-table th {
       background: #f1f3f6;
+    }
+
+    .stat-card {
+      transition: transform 0.2s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
     }
   </style>
   <style>
@@ -226,7 +253,8 @@
       <span class="fw-bold ms-3 fs-5">EDM Dashboard</span>
       <div class="ms-auto d-flex align-items-center gap-3">
         <span id="currentDateTime" class="me-3"></span>
-        <div class="dropdown">
+        <div id="globalProfileDropdown"></div>
+        <!-- <div class="dropdown">
           <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
             <i class="bi bi-person-circle fs-4"></i> <span class="d-none d-lg-inline fw-semibold">John</span>
           </button>
@@ -234,20 +262,20 @@
             <li><a class="dropdown-item" href="profile.html">Profile</a></li>
             <li><a class="dropdown-item" href="index.html">Logout</a></li>
           </ul>
-        </div>
+        </div> -->
       </div>
     </div>
   </nav>
   <!-- Sidebar -->
   <div id="sidebar">
     <!-- Dashboard -->
-    <a href="dashboard.html" class="active">
+    <a href="dashboard.html">
       <i class="bi bi-speedometer2"></i>
       <span>Dashboard</span>
     </a>
 
     <!-- My Tickets -->
-    <a href="my-tickets.html">
+    <a href="my-tickets.html" class="active">
       <i class="bi bi-ticket-detailed"></i>
       <span>My Tickets</span>
     </a>
@@ -270,116 +298,435 @@
       <!-- Header -->
       <div class="d-flex justify-content-between align-items-center page-header">
         <h3><i class="bi bi-ticket-detailed text-primary me-2"></i>My Tickets</h3>
-        <button class="btn btn-sm btn-outline-primary">
+        <button class="btn btn-sm btn-outline-primary" id="exportReportBtn">
           <i class="bi bi-download"></i> Export Report
         </button>
       </div>
 
-      <!-- Filters -->
-      <div class="card mb-4">
-        <div class="card-body filter-bar">
-          <div class="row g-3 align-items-end">
-            <div class="col-md-3">
-              <label class="form-label">Status</label>
-              <select class="form-select">
-                <option value="">All</option>
-                <option>Pending</option>
-                <option>In-Progress</option>
-                <option>Resolved</option>
-                <option>Closed</option>
-                <option>Escalated</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label class="form-label">Priority</label>
-              <select class="form-select">
-                <option value="">All</option>
-                <option>Low</option>
-                <option>Medium</option>
-                <option>High</option>
-                <option>Critical</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label class="form-label">Date Range</label>
-              <input type="date" class="form-control">
-            </div>
-            <div class="col-md-3 text-end">
-              <button class="btn btn-primary"><i class="bi bi-search"></i> Apply</button>
-              <button class="btn btn-light"><i class="bi bi-arrow-repeat"></i> Reset</button>
-            </div>
+      <!-- Statistics Cards -->
+      <div class="row g-4 mb-4">
+        <div class="col-md-3">
+          <div class="card text-center p-3 shadow stat-card">
+            <h5 class="text-muted">Total Tickets</h5>
+            <h3 class="text-primary" id="totalTickets">0</h3>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center p-3 shadow stat-card">
+            <h5 class="text-muted">Pending</h5>
+            <h3 class="text-warning" id="pendingTickets">0</h3>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center p-3 shadow stat-card">
+            <h5 class="text-muted">Resolved</h5>
+            <h3 class="text-success" id="resolvedTickets">0</h3>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center p-3 shadow stat-card">
+            <h5 class="text-muted">Re-open</h5>
+            <h3 class="text-danger" id="reopenTickets">0</h3>
           </div>
         </div>
       </div>
 
-      <!-- Tickets Table -->
-      <div class="card">
-        <div class="card-body">
-          <table class="table table-bordered table-hover ticket-table align-middle">
-            <thead>
-              <tr>
-                <th><input type="checkbox"></th>
-                <th>Ticket ID</th>
-                <th>Subject</th>
-                <th>Department</th>
-                <th>Priority</th>
-                <th>Status</th>
-                <th>Created</th>
-                <th>Last Updated</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><input type="checkbox"></td>
-                <td>#TCK1234</td>
-                <td>Password reset issue</td>
-                <td>IT Support</td>
-                <td><span class="badge bg-danger">Critical</span></td>
-                <td><span class="badge bg-warning text-dark">In-Progress</span></td>
-                <td>2025-08-25</td>
-                <td>2025-08-28</td>
-                <td>
-                  <button data-bs-toggle="modal" data-bs-target=".ticketModal" class="btn btn-sm btn-outline-primary"><i
-                      class="bi bi-eye"></i></button>
-                  <!--  <button class="btn btn-sm btn-outline-warning"><i class="bi bi-arrow-up-circle"></i></button>
-                <button class="btn btn-sm btn-outline-success"><i class="bi bi-check2-circle"></i></button> -->
-                </td>
-              </tr>
-              <tr>
-                <td><input type="checkbox"></td>
-                <td>#TCK1235</td>
-                <td>Access card not working</td>
-                <td>Facilities</td>
-                <td><span class="badge bg-info text-dark">Medium</span></td>
-                <td><span class="badge bg-secondary">Pending</span></td>
-                <td>2025-08-27</td>
-                <td>2025-08-28</td>
-                <td>
-                  <button data-bs-toggle="modal" data-bs-target=".ticketModal" class="btn btn-sm btn-outline-primary"><i
-                      class="bi bi-eye"></i></button>
-                  <!--  <button class="btn btn-sm btn-outline-warning"><i class="bi bi-arrow-up-circle"></i></button>
-                <button class="btn btn-sm btn-outline-success"><i class="bi bi-check2-circle"></i></button> -->
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <!-- Main Tabs -->
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button"
+            role="tab" aria-controls="all-tab-pane" aria-selected="true">
+            <i class="bi bi-collection me-1"></i> All
+          </button>
+        </li>
+        <li class="nav-item mx-2" role="presentation">
+          <button class="nav-link" id="citizen-tab" data-bs-toggle="tab" data-bs-target="#citizen-tab-pane"
+            type="button" role="tab" aria-controls="citizen-tab-pane" aria-selected="false">
+            <i class="bi bi-person me-1"></i> Citizen
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="operator-tab" data-bs-toggle="tab" data-bs-target="#operator-tab-pane"
+            type="button" role="tab" aria-controls="operator-tab-pane" aria-selected="false">
+            <i class="bi bi-pc-display me-1"></i> e-Sevai Operator
+          </button>
+        </li>
+        <li class="nav-item mx-2" role="presentation">
+          <button class="nav-link" id="department-tab" data-bs-toggle="tab" data-bs-target="#department-tab-pane"
+            type="button" role="tab" aria-controls="department-tab-pane" aria-selected="false">
+            <i class="bi bi-building me-1"></i> Department
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="edm-tab" data-bs-toggle="tab" data-bs-target="#edm-tab-pane" type="button"
+            role="tab" aria-controls="edm-tab-pane" aria-selected="false">
+            <i class="bi bi-gear me-1"></i> EDM
+          </button>
+        </li>
+        <li class="nav-item mx-2" role="presentation">
+          <button class="nav-link" id="cm-helpline-tab" data-bs-toggle="tab" data-bs-target="#cm-helpline-tab-pane"
+            type="button" role="tab" aria-controls="cm-helpline-tab-pane" aria-selected="false">
+            <i class="bi bi-telephone me-1"></i> CM Helpline
+          </button>
+        </li>
+      </ul>
+
+      <!-- Tab Content -->
+      <div class="tab-content mt-3" id="myTabContent">
+        <!-- All Tab -->
+        <div class="tab-pane fade show active" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
+          <!-- Filters for All -->
+          <div class="card mb-4">
+            <div class="card-body filter-bar">
+              <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                  <label class="form-label">Status</label>
+                  <select class="form-select" id="allStatusFilter">
+                    <option value="">All</option>
+                    <option value="In-Progress">In-Progress</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Resolved">Resolved</option>
+                    <option value="Closed">Closed</option>
+                    <option value="Returned">Returned</option>
+                    <option value="Re-Opened">Re-Opened</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Date Range</label>
+                  <div class="input-group">
+                    <input type="date" class="form-control" id="allFromDate">
+                    <span class="input-group-text">to</span>
+                    <input type="date" class="form-control" id="allToDate">
+                  </div>
+                </div>
+                <div class="col-md-5 text-end">
+                  <button class="btn btn-primary" id="allApplyFilterBtn"><i class="bi bi-search"></i> Apply</button>
+                  <button class="btn btn-light" id="allResetFilterBtn"><i class="bi bi-arrow-repeat"></i> Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- All Tickets Table -->
+          <div class="card">
+            <div class="card-body">
+              <table id="allTable" class="table table-bordered table-striped align-middle">
+                <thead>
+                  <tr>
+                    <th>Ticket ID</th>
+                    <th>Created On</th>
+                    <th>Category</th>
+                    <th>Sub Category</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="7" class="text-center text-muted">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
 
-        <!-- Bulk Actions -->
-        <div class="card-footer d-flex justify-content-between">
-          <div>
-            <button class="btn btn-sm btn-success"><i class="bi bi-check2-all"></i> Resolve Selected</button>
+        <!-- Citizen Tab -->
+        <div class="tab-pane fade" id="citizen-tab-pane" role="tabpanel" aria-labelledby="citizen-tab" tabindex="0">
+          <!-- Filters for Citizen -->
+          <div class="card mb-4">
+            <div class="card-body filter-bar">
+              <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                  <label class="form-label">Status</label>
+                  <select class="form-select" id="citizenStatusFilter">
+                    <option value="">All</option>
+                    <option value="In-Progress">In-Progress</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Resolved">Resolved</option>
+                    <option value="Closed">Closed</option>
+                    <option value="Returned">Returned</option>
+                    <option value="Re-Opened">Re-Opened</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Date Range</label>
+                  <div class="input-group">
+                    <input type="date" class="form-control" id="citizenFromDate">
+                    <span class="input-group-text">to</span>
+                    <input type="date" class="form-control" id="citizenToDate">
+                  </div>
+                </div>
+                <div class="col-md-5 text-end">
+                  <button class="btn btn-primary" id="citizenApplyFilterBtn"><i class="bi bi-search"></i> Apply</button>
+                  <button class="btn btn-light" id="citizenResetFilterBtn"><i class="bi bi-arrow-repeat"></i>
+                    Reset</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <nav>
-            <ul class="pagination pagination-sm mb-0">
-              <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
-              <li class="page-item active"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
-          </nav>
+
+          <!-- Citizen Tickets Table -->
+          <div class="card">
+            <div class="card-body">
+              <table id="citizenTable" class="table table-bordered table-striped align-middle">
+                <thead>
+                  <tr>
+                    <th>Ticket ID</th>
+                    <th>Created On</th>
+                    <th>Category</th>
+                    <th>Sub Category</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="6" class="text-center text-muted">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- e-Sevai Operator Tab -->
+        <div class="tab-pane fade" id="operator-tab-pane" role="tabpanel" aria-labelledby="operator-tab" tabindex="0">
+          <!-- Filters for Operator -->
+          <div class="card mb-4">
+            <div class="card-body filter-bar">
+              <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                  <label class="form-label">Status</label>
+                  <select class="form-select" id="operatorStatusFilter">
+                    <option value="">All</option>
+                    <option value="In-Progress">In-Progress</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Resolved">Resolved</option>
+                    <option value="Closed">Closed</option>
+                    <option value="Returned">Returned</option>
+                    <option value="Re-Opened">Re-Opened</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Date Range</label>
+                  <div class="input-group">
+                    <input type="date" class="form-control" id="operatorFromDate">
+                    <span class="input-group-text">to</span>
+                    <input type="date" class="form-control" id="operatorToDate">
+                  </div>
+                </div>
+                <div class="col-md-5 text-end">
+                  <button class="btn btn-primary" id="operatorApplyFilterBtn"><i class="bi bi-search"></i>
+                    Apply</button>
+                  <button class="btn btn-light" id="operatorResetFilterBtn"><i class="bi bi-arrow-repeat"></i>
+                    Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Operator Tickets Table -->
+          <div class="card">
+            <div class="card-body">
+              <table id="operatorTable" class="table table-bordered table-striped align-middle">
+                <thead>
+                  <tr>
+                    <th>Ticket ID</th>
+                    <th>Created On</th>
+                    <th>Category</th>
+                    <th>Sub Category</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="6" class="text-center text-muted">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Department Tab -->
+        <div class="tab-pane fade" id="department-tab-pane" role="tabpanel" aria-labelledby="department-tab"
+          tabindex="0">
+          <!-- Filters for Department -->
+          <div class="card mb-4">
+            <div class="card-body filter-bar">
+              <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                  <label class="form-label">Status</label>
+                  <select class="form-select" id="departmentStatusFilter">
+                    <option value="">All</option>
+                    <option value="In-Progress">In-Progress</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Resolved">Resolved</option>
+                    <option value="Closed">Closed</option>
+                    <option value="Returned">Returned</option>
+                    <option value="Re-Opened">Re-Opened</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Date Range</label>
+                  <div class="input-group">
+                    <input type="date" class="form-control" id="departmentFromDate">
+                    <span class="input-group-text">to</span>
+                    <input type="date" class="form-control" id="departmentToDate">
+                  </div>
+                </div>
+                <div class="col-md-5 text-end">
+                  <button class="btn btn-primary" id="departmentApplyFilterBtn"><i class="bi bi-search"></i>
+                    Apply</button>
+                  <button class="btn btn-light" id="departmentResetFilterBtn"><i class="bi bi-arrow-repeat"></i>
+                    Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Department Tickets Table -->
+          <div class="card">
+            <div class="card-body">
+              <table id="departmentTable" class="table table-bordered table-striped align-middle">
+                <thead>
+                  <tr>
+                    <th>Ticket ID</th>
+                    <th>Created On</th>
+                    <th>Category</th>
+                    <th>Sub Category</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="6" class="text-center text-muted">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- EDM Tab -->
+        <div class="tab-pane fade" id="edm-tab-pane" role="tabpanel" aria-labelledby="edm-tab" tabindex="0">
+          <!-- Filters for EDM -->
+          <div class="card mb-4">
+            <div class="card-body filter-bar">
+              <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                  <label class="form-label">Status</label>
+                  <select class="form-select" id="edmStatusFilter">
+                    <option value="">All</option>
+                    <option value="In-Progress">In-Progress</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Resolved">Resolved</option>
+                    <option value="Closed">Closed</option>
+                    <option value="Returned">Returned</option>
+                    <option value="Re-Opened">Re-Opened</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Date Range</label>
+                  <div class="input-group">
+                    <input type="date" class="form-control" id="edmFromDate">
+                    <span class="input-group-text">to</span>
+                    <input type="date" class="form-control" id="edmToDate">
+                  </div>
+                </div>
+                <div class="col-md-5 text-end">
+                  <button class="btn btn-primary" id="edmApplyFilterBtn"><i class="bi bi-search"></i> Apply</button>
+                  <button class="btn btn-light" id="edmResetFilterBtn"><i class="bi bi-arrow-repeat"></i> Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- EDM Tickets Table -->
+          <div class="card">
+            <div class="card-body">
+              <table id="edmTable" class="table table-bordered table-striped align-middle">
+                <thead>
+                  <tr>
+                    <th>Ticket ID</th>
+                    <th>Created On</th>
+                    <th>Category</th>
+                    <th>Sub Category</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="6" class="text-center text-muted">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- CM Helpline Tab -->
+        <div class="tab-pane fade" id="cm-helpline-tab-pane" role="tabpanel" aria-labelledby="cm-helpline-tab"
+          tabindex="0">
+          <!-- Filters for CM Helpline -->
+          <div class="card mb-4">
+            <div class="card-body filter-bar">
+              <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                  <label class="form-label">Status</label>
+                  <select class="form-select" id="cmStatusFilter">
+                    <option value="">All</option>
+                    <option value="In-Progress">In-Progress</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Resolved">Resolved</option>
+                    <option value="Closed">Closed</option>
+                    <option value="Returned">Returned</option>
+                    <option value="Re-Opened">Re-Opened</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Date Range</label>
+                  <div class="input-group">
+                    <input type="date" class="form-control" id="cmFromDate">
+                    <span class="input-group-text">to</span>
+                    <input type="date" class="form-control" id="cmToDate">
+                  </div>
+                </div>
+                <div class="col-md-5 text-end">
+                  <button class="btn btn-primary" id="cmApplyFilterBtn"><i class="bi bi-search"></i> Apply</button>
+                  <button class="btn btn-light" id="cmResetFilterBtn"><i class="bi bi-arrow-repeat"></i> Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CM Helpline Tickets Table -->
+          <div class="card">
+            <div class="card-body">
+              <table id="cmTable" class="table table-bordered table-striped align-middle">
+                <thead>
+                  <tr>
+                    <th>Ticket ID</th>
+                    <th>Created On</th>
+                    <th>Category</th>
+                    <th>Sub Category</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="6" class="text-center text-muted">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -389,75 +736,21 @@
     &copy; 2025 My Dashboard. All rights reserved.
   </footer>
 
-  <div class="modal fade ticketModal" id="" tabindex="-1">
+  <div class="modal fade" id="ticketModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Ticket #TCK12345 - Login issue with eSevai portal</h5>
-          <span class="badge bg-warning text-dark ms-2">Pending</span>
+          <h5 class="modal-title" id="ticketModalTitle">Ticket Details</h5>
+          <span class="badge ms-2" id="ticketStatus"></span>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body">
 
-          <!-- User Info -->
-          <h6>User Information</h6>
-          <div class="ticket-info mb-3">
-            <p><strong>Name:</strong> Rajesh Kumar</p>
-            <p><strong>Email:</strong> rajesh@example.com</p>
-            <p><strong>Contact:</strong> +91 9876543210</p>
-            <p><strong>District:</strong> Chennai</p>
-          </div>
-
-          <!-- Ticket Info -->
-          <h6>Ticket Information</h6>
-          <div class="ticket-info mb-3">
-            <p><strong>Description:</strong> Unable to login to eSevai portal since yesterday. Getting error “Invalid
-              credentials”.</p>
-            <p><strong>Date Created:</strong> 2025-08-20</p>
-            <p><strong>Assigned Agent:</strong> John Doe</p>
-            <p><strong>SLA Due:</strong> 24 hrs</p>
-          </div>
-
-          <!-- Update Section -->
-          <!-- <h6>Update Ticket</h6>
-        <div class="ticket-info mb-3">
-          <div class="mb-3">
-            <label class="form-label">Status</label>
-            <select class="form-select">
-              <option>Pending</option>
-              <option>In Progress</option>
-              <option>Resolved</option>
-              <option>Escalated</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Priority</label>
-            <select class="form-select">
-              <option>Low</option>
-              <option>Medium</option>
-              <option selected>High</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Notes / Comments</label>
-            <textarea class="form-control" rows="3" placeholder="Enter your updates here..."></textarea>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Attachments</label>
-            <input type="file" class="form-control">
-          </div>
-        </div> -->
-
-          <!-- Escalation Section -->
-          <!--  <h6>Escalation</h6>
-        <div class="ticket-info mb-3 text-center">
-          <button class="btn btn-outline-danger">🚨 Escalate to Helpdesk Lead</button>
-        </div> -->
-
+        <div class="modal-body" id="ticketModalBody">
+          <p class="text-center">Loading...</p>
         </div>
+
         <div class="modal-footer">
-          <!-- <button class="btn btn-success">💾 Save Changes</button> -->
-          <a href="ticket-view.html" class="btn btn-primary">
+          <a href="ticket-view.html" id="viewFullTicket" class="btn btn-primary">
             <i class="bi bi-box-arrow-up-right"></i> View Full Ticket
           </a>
           <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -465,43 +758,521 @@
       </div>
     </div>
   </div>
-
+  </div>
+  <!-- jQuery and DataTables -->
+  <script src="../assets/js/jquery-3.7.1.min.js"></script>
   <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="../assets/js/dataTableUtil.js"></script>
+  <!-- Crypto and Encryption -->
+  <script src="../assets/js/crypto-js.min.js"></script>
+  <script src="../assets/js/encrypt_decrypt.js"></script>
+  <!-- API Config -->
+  <script src="../assets/js/apiConfig.js"></script>
+  <!-- Toast Utility -->
+  <script src="../assets/js/toastUtil.js"></script>
+  <script src="../assets/js/global.js"></script>
+  <script src="../assets/js/globalProfileDropdown.js"></script>
+
   <script>
-    // Sidebar toggle
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const sidebar = document.getElementById('sidebar');
+    // Global variables
+    let loadedTabs = {};
+    const userId = localStorage.getItem("user_id") || localStorage.getItem("helpdesk_user_id") || 0;
 
-    sidebarToggle.addEventListener('click', () => {
-      if (window.innerWidth < 992) {
-        // Mobile: slide in/out
-        sidebar.classList.toggle('show');
-      } else {
-        // Desktop: collapse sidebar
-        document.body.classList.toggle('sidebar-collapsed');
-      }
-    });
+    // Format date
+    // Format date - handles "04-12-2025 18:22" format
+    function formatDate(dateStr) {
+      if (!dateStr) return 'N/A';
 
-    // Close mobile sidebar when clicking outside
-    document.addEventListener('click', function (e) {
-      if (window.innerWidth < 992) {
-        if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
-          sidebar.classList.remove('show');
+      // Try to parse your format: "DD-MM-YYYY HH:mm"
+      try {
+        const parts = dateStr.split(' ');
+        const datePart = parts[0];
+        const timePart = parts[1] || '';
+
+        const [day, month, year] = datePart.split('-');
+
+        if (day && month && year) {
+          const date = new Date(year, month - 1, day);
+          if (isNaN(date.getTime())) return dateStr;
+
+          let formatted = date.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+          });
+
+          if (timePart) {
+            formatted += ` ${timePart}`;
+          }
+
+          return formatted;
         }
+      } catch (e) {
+        console.warn("Date parsing failed:", e);
       }
+
+      // Fallback to original parsing
+      try {
+        const date = new Date(dateStr);
+        if (isNaN(date.getTime())) return dateStr;
+        return date.toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        });
+      } catch (e) {
+        return dateStr;
+      }
+    }
+
+    function formatDateTime(dateStr) {
+      if (!dateStr) return "N/A";
+      const date = new Date(dateStr);
+      if (isNaN(date)) return dateStr;
+      return date.toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true
+      });
+    }
+
+    // Get status badge class
+    function getStatusBadgeClass(status) {
+      switch (status?.toLowerCase()) {
+        case 'pending':
+          return 'bg-secondary';
+        case 'in-progress':
+          return 'bg-info text-dark';
+        case 'resolved':
+          return 'bg-success';
+        case 'closed':
+          return 'bg-dark';
+        case 'escalated':
+          return 'bg-danger';
+        case 'returned':
+          return 'bg-warning text-dark';
+        case 're-opened':
+          return 'bg-primary';
+        default:
+          return 'bg-secondary';
+      }
+    }
+
+    // ============================ Dashboard Counts ============================
+    function fetchDashboardCounts() {
+      const payload = {
+        action: "function_call",
+        function_name: "fn_dashboard_helpdesk_admin_lead_cms_edm_counts",
+        params: { p_user_id: userId }
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(payload) },
+        dataType: "json",
+        success: function (response) {
+          if (!response?.data) return;
+
+          try {
+            debugger;
+            const decrypted = decryptData(response.data);
+            const parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
+            const counts = JSON.parse(parsed[0]?.fn_dashboard_helpdesk_admin_lead_cms_edm_counts || "{}");
+
+            const updateStats = (prefix, data) => {
+              $(`#${prefix}totalTickets`).text(data.Total || 0);
+              $(`#${prefix}pendingTickets`).text(data.Pending || 0);
+              $(`#${prefix}resolvedTickets`).text(data.Resolved || 0);
+              $(`#${prefix}reopenTickets`).text(data.ReOpened || 0);
+              $(`#${prefix}returnedTickets`).text(data.Returned || 0);
+            };
+
+            updateStats("", counts.All || {});
+            updateStats("EDM", counts.EDM || {});
+            updateStats("Citizen", counts.Citizen || {});
+            updateStats("Operator", counts.Operator || {});
+            updateStats("Department", counts.Department || {});
+            updateStats("CM_Helpline", counts.CM_Helpline || {});
+          } catch (err) {
+            console.error("Error parsing counts:", err);
+          }
+        },
+        error: (err) => console.error("Error fetching tickets:", err),
+      });
+
+
+    }
+
+    // ============================ Load Tickets Data ============================
+    function loadRequestsData(p_table, status = "All", forceReload = false, filters = {}) {
+      if (loadedTabs[p_table] && !forceReload) return;
+
+      const $table = $(`#${p_table}`);
+      const $tbody = $table.find("tbody");
+      $tbody.html(`<tr><td colspan="6" class="text-center text-muted">Loading...</td></tr>`);
+
+      const payload = {
+        action: "function_call",
+        function_name: "fn_helpdesk_admin_lead_cms_edm_view_requests",
+        params: {
+          p_user_id: userId,
+          p_table: getTableNumber(p_table),
+          p_status: status === "All" ? null : status,
+        }
+      };
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(payload) },
+        dataType: "json",
+        success: function (response) {
+          $tbody.empty();
+          try {
+            const decrypted = decryptData(response.data);
+            const parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
+
+            let tickets = [];
+
+            // Debug: Log the parsed response
+            console.log("Parsed response:", parsed);
+
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              // The response is an array with one object containing the fn_helpdesk_admin_lead_cms_edm_view_requests key
+              const responseData = parsed[0];
+
+              if (responseData.fn_helpdesk_admin_lead_cms_edm_view_requests) {
+                // The data is a JSON string inside the key
+                const jsonString = responseData.fn_helpdesk_admin_lead_cms_edm_view_requests;
+
+                // Parse the JSON string to get the actual array
+                try {
+                  tickets = JSON.parse(jsonString);
+                  console.log("Parsed tickets:", tickets);
+                } catch (e) {
+                  console.error("Error parsing JSON string:", e, "String:", jsonString);
+                }
+              }
+            }
+
+            if (!tickets.length || !Array.isArray(tickets)) {
+              const columnCount = p_table === 'allTable' ? 7 : 6;
+              $tbody.html(`<tr><td colspan="${columnCount}" class="text-center text-muted">No tickets found</td></tr>`);
+              return;
+            }
+
+            // Sort by date (newest first)
+            tickets.sort((a, b) => {
+              const dateA = a.CreatedDate ? new Date(a.CreatedDate.split('-').reverse().join('-')) : new Date(0);
+              const dateB = b.CreatedDate ? new Date(b.CreatedDate.split('-').reverse().join('-')) : new Date(0);
+              return dateB - dateA;
+            });
+
+            const isAllTable = p_table === 'allTable';
+            const columnCount = isAllTable ? 7 : 6;
+
+            tickets.forEach(ticket => {
+              $tbody.append(`
+                        <tr>
+                            <td>${ticket.TicketId || "-"}</td>
+                            <td>${formatDate(ticket.CreatedDate)}</td>
+                            <td>${ticket.Category || "-"}</td>
+                            <td>${ticket.Subcategory || "-"}</td>
+                            ${isAllTable ? `<td>${ticket.TypeOfUser || ticket.Type || "Self"}</td>` : ''}
+                            <td><span class="badge ${getStatusBadgeClass(ticket.Status)}">${ticket.Status || "-"}</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary viewTicketBtn" data-ticketid="${ticket.TicketId}">
+                                    <i class="bi bi-eye"></i> View
+                                </button>
+                            </td>
+                        </tr>
+                    `);
+            });
+
+            // Initialize DataTable
+            if ($.fn.DataTable.isDataTable(`#${p_table}`)) {
+              $(`#${p_table}`).DataTable().destroy();
+            }
+
+            // Initialize new DataTable
+            setTimeout(() => {
+              $(`#${p_table}`).DataTable({
+                responsive: true,
+                order: [[1, "desc"]], // Sort by second column (Created On)
+                pageLength: 10,
+                lengthMenu: [5, 10, 25, 50],
+                language: {
+                  emptyTable: "No tickets found",
+                  info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                  infoEmpty: "Showing 0 to 0 of 0 entries",
+                  infoFiltered: "(filtered from _MAX_ total entries)",
+                  lengthMenu: "Show _MENU_ entries",
+                  loadingRecords: "Loading...",
+                  processing: "Processing...",
+                  search: "Search:",
+                  zeroRecords: "No matching records found",
+                  paginate: {
+                    first: "First",
+                    last: "Last",
+                    next: "Next",
+                    previous: "Previous"
+                  }
+                }
+              });
+            }, 100);
+
+            loadedTabs[p_table] = true;
+
+          } catch (err) {
+            console.error("Data parsing failed:", err);
+            const columnCount = p_table === 'allTable' ? 7 : 6;
+            $tbody.html(`<tr><td colspan="${columnCount}" class="text-center text-danger">Error parsing data: ${err.message}</td></tr>`);
+          }
+        },
+        error: (xhr, status, error) => {
+          console.error("AJAX error:", status, error);
+          const columnCount = p_table === 'allTable' ? 7 : 6;
+          $tbody.html(`<tr><td colspan="${columnCount}" class="text-center text-danger">Error loading data</td></tr>`);
+          showErrorToast("Failed to load tickets.");
+        }
+      });
+    }
+    // ============================ Get Table Number ============================
+    function getTableNumber(tableId) {
+      const tableMap = {
+        'allTable': null,       // All
+        'citizenTable': '1',   // Citizen
+        'operatorTable': '2',  // e-Sevai Operator
+        'departmentTable': '4', // Department
+        'edmTable': '5',       // EDM
+        'cmTable': '6'         // CM Helpline
+      };
+      return tableMap[tableId] || '1';
+    }
+
+    // ============================ View Ticket Details ============================
+
+    $(document).on("click", ".viewTicketBtn", function () {
+      debugger
+      const ticketId = $(this).data("ticketid");
+      if (!ticketId) return;
+
+      const payload = {
+        action: "function_call",
+        function_name: "fn_get_ticket_details",
+        params: { p_ticket_id: ticketId },
+      };
+
+      $("#ticketModalBody").html("<p class='text-center'>Loading details...</p>");
+      $("#ticketModal").modal("show");
+
+      $.ajax({
+        url: `${BASE_API_URL}/commonfunction`,
+        method: "POST",
+        data: { data: encryptData(payload) },
+        dataType: "json",
+        success: function (response) {
+          try {
+            if (!response?.data) {
+              $("#ticketModalBody").html("<p class='text-center text-danger'>No details found.</p>");
+              return;
+            }
+
+            const decrypted = decryptData(response.data);
+            const parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
+            const jsonString = parsed[0]?.fn_get_ticket_details;
+            const detailsObj = JSON.parse(jsonString);
+
+            const t = detailsObj.ticket_details || {};
+            const g = detailsObj.grievance_details || {};
+            const timeline = detailsObj.progress_timeline || [];
+            const attachments = detailsObj.attachments || [];
+
+            // Header
+            $("#ticketModalTitle").text(`Ticket #${t.ticket_id || "-"}`);
+            $("#ticketStatus")
+              .text(t.status || "Unknown")
+              .removeClass()
+              .addClass(`badge ${t.status === "In-Progress"
+                ? "bg-warning text-dark"
+                : t.status === "Closed"
+                  ? "bg-success"
+                  : "bg-secondary"
+                }`);
+
+            // Body content
+            let timelineHtml = timeline
+              .map(
+                (item) => `
+          <div class="border rounded p-2 mb-2">
+            <p class="mb-1"><strong>${item.role_name || "User"}:</strong> ${item.notes || "-"}</p>
+            <small class="text-muted">From: ${item.from_status || "-"} → To: ${item.to_status || "-"}</small><br>
+            <small class="text-muted">Time: ${item.start_time || "-"}</small>
+          </div>
+        `
+              )
+              .join("");
+
+            $("#ticketModalBody").html(`
+                  <h6>User Information</h6>
+                  <p><strong>Name:</strong> ${t.complainant_name || "-"}</p>
+                  <p><strong>Email:</strong> ${t.complainant_email || "-"}</p>
+                  <p><strong>Contact:</strong> ${t.complainant_mobile || "-"}</p>
+                  <p><strong>District:</strong> ${t.district || "-"}</p>
+
+                  <h6>Ticket Information</h6>
+                  <p><strong>Category:</strong> ${t.category || "-"}</p>
+                  <p><strong>Subcategory:</strong> ${t.subcategory || "-"}</p>
+                  <p><strong>Issue Type:</strong> ${t.issue_type || "-"}</p>
+                  <p><strong>Priority:</strong> ${t.priority || "-"}</p>
+                  <p><strong>Description:</strong> ${g.Description || t.remarks || "-"}</p>
+                  <p><strong>Created On:</strong> ${new Date(t.created_at).toLocaleString()}</p>
+
+                  <h6>Grievance Details</h6>
+                  <p><strong>CAN Number:</strong> ${g.CAN_Number || "-"}</p>
+                  <p><strong>Application Number:</strong> ${t.ticket_id || "-"}</p>
+                  <p><strong>Supporting Doc:</strong> 
+                    ${attachments && attachments.file_name
+                ? `<a href="${attachments.file_path}" target="_blank" download>
+                            ${attachments.file_name}
+                          </a>`
+                : "-"
+              }
+                  </p>
+                  <h6>Progress Timeline</h6>
+                  ${timelineHtml || "<p>No updates available.</p>"}
+                `);
+
+            // Full ticket link
+            $("#viewFullTicket").attr("href", `ticket-view.html?id=${t.ticket_id}`);
+          } catch (err) {
+            console.error("Error parsing ticket details:", err);
+            $("#ticketModalBody").html("<p class='text-center text-danger'>Error loading details.</p>");
+          }
+        },
+        error: () => $("#ticketModalBody").html("<p class='text-center text-danger'>Failed to load ticket details.</p>"),
+      });
     });
 
-    // Display current date and time
-    function updateDateTime() {
-      const now = new Date();
-      const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
-      const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      document.getElementById('currentDateTime').textContent = now.toLocaleDateString(undefined, options) + ' ' + timeString;
+    // ============================ Filter Functions ============================
+    function getTabFilters(tabName) {
+      return {
+        status: $(`#${tabName}StatusFilter`).val() || null,
+        fromDate: $(`#${tabName}FromDate`).val() || null,
+        toDate: $(`#${tabName}ToDate`).val() || null
+      };
     }
-    setInterval(updateDateTime, 1000);
-    updateDateTime();
+
+    function resetTabFilters(tabName, tableId) {
+      $(`#${tabName}StatusFilter`).val('');
+      $(`#${tabName}FromDate`).val('');
+      $(`#${tabName}ToDate`).val('');
+      loadRequestsData(tableId, "All", true, {});
+    }
+
+    function applyTabFilters(tabName, tableId) {
+      const filters = getTabFilters(tabName);
+      loadRequestsData(tableId, filters.status || "All", true, filters);
+    }
+
+    // ============================ Initialize Page ============================
+    $(document).ready(function () {
+      // Initialize date pickers (default: last 30 days)
+      const today = new Date().toISOString().split('T')[0];
+      const lastMonth = new Date();
+      lastMonth.setMonth(lastMonth.getMonth() - 1);
+      const lastMonthStr = lastMonth.toISOString().split('T')[0];
+
+      // Set default dates for all filters
+      $('input[id$="FromDate"]').val(lastMonthStr);
+      $('input[id$="ToDate"]').val(today);
+
+      // Fetch dashboard counts
+      if (userId) {
+        fetchDashboardCounts();
+      }
+
+      // Event listeners for filter buttons
+      const tabConfig = {
+        'all': { tableId: 'allTable' },
+        'citizen': { tableId: 'citizenTable' },
+        'operator': { tableId: 'operatorTable' },
+        'department': { tableId: 'departmentTable' },
+        'edm': { tableId: 'edmTable' },
+        'cm': { tableId: 'cmTable' }
+      };
+
+      // Setup event listeners for each tab
+      Object.keys(tabConfig).forEach(tabName => {
+        $(`#${tabName}ApplyFilterBtn`).on('click', () => {
+          const config = tabConfig[tabName];
+          applyTabFilters(tabName, config.tableId);
+        });
+
+        $(`#${tabName}ResetFilterBtn`).on('click', () => {
+          const config = tabConfig[tabName];
+          resetTabFilters(tabName, config.tableId);
+        });
+      });
+
+      // Export button
+      $('#exportReportBtn').on('click', function () {
+        showSuccessToast('Export functionality would be implemented here');
+      });
+
+      // Detect tab change
+      $("button[data-bs-toggle='tab']").on("shown.bs.tab", function (e) {
+        const target = $(e.target).attr("id");
+        const tabName = target.replace('-tab', '');
+
+        if (tabConfig[tabName]) {
+          const config = tabConfig[tabName];
+          const filters = getTabFilters(tabName);
+          loadRequestsData(config.tableId, filters.status || "All", false, filters);
+        }
+      });
+
+      // Initial load - load All tab
+      loadRequestsData('allTable', "All", false, getTabFilters('all'));
+
+      // Sidebar toggle
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const sidebar = document.getElementById('sidebar');
+
+      sidebarToggle.addEventListener('click', () => {
+        if (window.innerWidth < 992) {
+          sidebar.classList.toggle('show');
+        } else {
+          document.body.classList.toggle('sidebar-collapsed');
+        }
+      });
+
+      // Close mobile sidebar when clicking outside
+      document.addEventListener('click', function (e) {
+        if (window.innerWidth < 992) {
+          if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+            sidebar.classList.remove('show');
+          }
+        }
+      });
+
+      // Display current date and time
+      function updateDateTime() {
+        const now = new Date();
+        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('currentDateTime').textContent = now.toLocaleDateString(undefined, options) + ' ' + timeString;
+      }
+      setInterval(updateDateTime, 1000);
+      updateDateTime();
+    });
   </script>
 </body>
 

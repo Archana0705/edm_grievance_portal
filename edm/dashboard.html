@@ -292,7 +292,6 @@
   <!-- Sidebar -->
   <div id="sidebar">
     <a href="dashboard.html" class="active"><i class="bi bi-speedometer2"></i><span>Dashboard</span></a>
-    <a href="dashboard_1.html"><i class="bi bi-speedometer2"></i><span>Dashboard</span></a>
     <a href="my-tickets.html"><i class="bi bi-person-plus"></i><span>My Tickets</span></a>
     <a href="raise-ticket-self.html"><i class="bi bi-person-plus"></i><span>Raise Issue</span></a>
     <!-- <a href="report.html"><i class="bi bi-file-earmark-text"></i><span>Report</span></a> -->
@@ -391,16 +390,7 @@
       </div>
     </div>
 
-    <!-- Escalation Alert Bar -->
-    <div class="escalation-bar mb-3" data-aos="fade-up" id="escalationBar" style="display: none;">
-      <i class="bi bi-exclamation-triangle-fill fs-5"></i>
-      <div class="me-auto">
-        <strong><span id="escalatedCount">0</span> escalated tickets</strong> require attention.
-      </div>
-      <button class="btn btn-outline-danger btn-sm" id="viewEscalatedBtn">
-        <i class="bi bi-arrow-up-right-square me-1"></i> View Escalated
-      </button>
-    </div>
+
 
     <!-- Parent Tabs -->
     <ul class="nav nav-tabs mb-3" id="parentTabs" role="tablist" data-aos="fade-up">
@@ -440,22 +430,18 @@
           <li class="nav-item">
             <button class="nav-link" data-bs-toggle="pill" data-bs-target="#selfSendBack">Send-Back</button>
           </li>
-          <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#selfEscalate">Escalated</button>
-          </li>
+
         </ul>
 
         <div class="tab-content mt-3">
-          <!-- Legend -->
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <span class="badge bg-danger">High Priority</span>
             <span class="badge bg-warning text-dark">Medium Priority</span>
             <span class="badge bg-success">Low Priority</span>
             <span class="badge bg-warning text-dark">48+ hrs Old</span>
             <span class="badge bg-info text-dark">Escalated</span>
-          </div>
+          </div> -->
 
-          <!-- Self New Tab -->
           <div class="tab-pane fade show active" id="selfNew">
             <div class="table-responsive">
               <table class="table table-striped table-hover align-middle text-center" id="selfNewTable"
@@ -476,7 +462,6 @@
             </div>
           </div>
 
-          <!-- Self Open Tab -->
           <div class="tab-pane fade" id="selfOpen">
             <div class="table-responsive">
               <table class="table table-striped table-hover align-middle text-center" id="selfOpenTable"
@@ -581,27 +566,10 @@
             </div>
           </div>
 
-          <!-- Self Escalated Tab -->
-          <div class="tab-pane fade" id="selfEscalate">
-            <div class="table-responsive">
-              <table class="table table-striped table-hover align-middle text-center" id="selfEscalatedTable"
-                style="width:100%">
-                <thead class="table-dark">
-                  <tr>
-                    <th>View</th>
-                    <th>Ticket ID</th>
-                    <th>Category</th>
-                    <th>Sub Category</th>
-                    <th>Created Date</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-          </div>
+
         </div>
+
+
       </div>
 
       <!-- On-Behalf Tickets -->
@@ -626,20 +594,18 @@
           <li class="nav-item">
             <button class="nav-link" data-bs-toggle="pill" data-bs-target="#behalfSendBack">Send-Back</button>
           </li>
-          <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#behalfEscalate">Escalated</button>
-          </li>
+
         </ul>
 
         <div class="tab-content mt-3">
           <!-- Legend -->
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <span class="badge bg-danger">High Priority</span>
             <span class="badge bg-warning text-dark">Medium Priority</span>
             <span class="badge bg-success">Low Priority</span>
             <span class="badge bg-warning text-dark">48+ hrs Old</span>
             <span class="badge bg-info text-dark">Escalated</span>
-          </div>
+          </div> -->
 
           <!-- Behalf New Tab -->
           <div class="tab-pane fade show active" id="behalfNew">
@@ -767,26 +733,7 @@
             </div>
           </div>
 
-          <!-- Behalf Escalated Tab -->
-          <div class="tab-pane fade" id="behalfEscalate">
-            <div class="table-responsive">
-              <table class="table table-striped table-hover align-middle text-center" id="behalfEscalatedTable"
-                style="width:100%">
-                <thead class="table-dark">
-                  <tr>
-                    <th>View</th>
-                    <th>Ticket ID</th>
-                    <th>Category</th>
-                    <th>Sub Category</th>
-                    <th>Created Date</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-          </div>
+
         </div>
       </div>
     </div>
@@ -813,7 +760,6 @@
           <ul class="timeline" id="ticketTimeline"></ul>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-danger escalate-btn" id="escalateTicketBtn">Escalate</button>
           <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
@@ -916,14 +862,6 @@
               $("#overallInProgressCount").text(data.OverallTickets?.InProgress || 0);
               $("#overallClosedCount").text(data.OverallTickets?.Closed || 0);
 
-              // Update Escalation Bar
-              const escalatedCount = data.EscalatedTickets || 0;
-              $("#escalatedCount").text(escalatedCount);
-              if (escalatedCount > 0) {
-                $("#escalationBar").show();
-              } else {
-                $("#escalationBar").hide();
-              }
 
             } catch (err) {
               console.error("Error parsing EDM dashboard data:", err);
@@ -1020,7 +958,6 @@
           case "closed": return "bg-secondary";
           case "reopened": return "bg-primary";
           case "send-back": return "bg-danger";
-          case "escalated": return "bg-info text-dark";
           default: return "bg-info text-dark";
         }
       }
@@ -1137,7 +1074,6 @@
                     <span class="badge ${getStatusBadgeClass(data.Status)} status-badge">
                       ${data.Status || 'N/A'}
                     </span>
-                    ${data.Escalated === 'Yes' ? '<i class="bi bi-flag-fill text-danger ms-1" title="Escalated"></i>' : ''}
                   </td>
                 </tr>`;
             }).join("");
@@ -1156,7 +1092,6 @@
         'selfReopened': { status: 'Reopened', tableId: 'selfReopenedTable' },
         'selfResolved': { status: 'Resolved', tableId: 'selfResolvedTable' },
         'selfSendBack': { status: 'Send-Back', tableId: 'selfSendBackTable' },
-        'selfEscalate': { status: 'Escalated', tableId: 'selfEscalatedTable' }
       };
 
       const behalfTabMap = {
@@ -1166,7 +1101,6 @@
         'behalfReopened': { status: 'Reopened', tableId: 'behalfReopenedTable' },
         'behalfResolved': { status: 'Resolved', tableId: 'behalfResolvedTable' },
         'behalfSendBack': { status: 'Send-Back', tableId: 'behalfSendBackTable' },
-        'behalfEscalate': { status: 'Escalated', tableId: 'behalfEscalatedTable' }
       };
 
       // Handle tab changes for Self tickets
@@ -1221,7 +1155,6 @@
           <tr><th>Created Date</th><td>${formatDateTime(ticketData.CreatedDate)}</td></tr>
           <tr><th>Priority</th><td><span class="badge ${getPriorityBadgeClass(ticketData.Priority)}">${ticketData.Priority || 'N/A'}</span></td></tr>
           <tr><th>Status</th><td><span class="badge ${getStatusBadgeClass(ticketData.Status)}">${ticketData.Status || 'N/A'}</span></td></tr>
-          <tr><th>Escalated</th><td>${ticketData.Escalated || 'No'}</td></tr>
           <tr><th>Remarks</th><td>${ticketData.Remarks || 'N/A'}</td></tr>
         `);
 
@@ -1279,10 +1212,7 @@
                 timeline.forEach(item => {
                   $timeline.append(`
                     <li class="timeline-item">
-                      <div class="timeline-icon bg-primary">
-                        <i class="bi bi-clock-history text-white"></i>
-                      </div>
-                      <div class="timeline-content">
+                       <div class="timeline-content">
                         <h6 class="mb-1">${item.notes || 'Update'}</h6>
                         <small class="text-muted">
                           ${item.role_name || 'N/A'} → ${item.to_status || 'N/A'} <br>

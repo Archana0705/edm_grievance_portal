@@ -1356,6 +1356,8 @@
           },
           error: (err) => console.error("Error fetching tickets:", err),
         });
+
+
       }
 
       // ============================ view ticket modal ============================
@@ -1524,7 +1526,7 @@
             data: {
               data: encryptData({
                 action: "function_call",
-                function_name: "fn_helpdesk_admin_view_requests",
+                function_name: "fn_helpdesk_admin_lead_cms_edm_view_requests",
                 params: { p_user_id: userId, p_table, p_status: status === "All" ? null : status }
               })
             },
@@ -1534,7 +1536,7 @@
               try {
                 const decrypted = decryptData(response.data);
                 const parsed = typeof decrypted === "string" ? JSON.parse(decrypted) : decrypted;
-                const rows = JSON.parse(parsed[0]?.fn_helpdesk_admin_view_requests || "[]");
+                const rows = JSON.parse(parsed[0]?.fn_helpdesk_admin_lead_cms_edm_view_requests || "[]");
 
                 if (!rows.length) {
                   $tbody.html(`<tr><td colspan="7" class="text-center text-muted">No tickets found</td></tr>`);
