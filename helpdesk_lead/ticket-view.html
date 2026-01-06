@@ -1,0 +1,2431 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ticket Details - Helpdesk Lead</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/css/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/global.css">
+
+    <style>
+        body {
+            background-color: #f9f9fb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .page-header {
+            border-bottom: 2px solid #eee;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .ticket-meta {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .action-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .comment-box {
+            margin-top: 15px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* Timeline Styles */
+        .timeline {
+            border-left: 3px solid #4b6cb7;
+            margin-left: 20px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -28px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4b6cb7;
+        }
+
+        .timeline-item-first::before {
+            background: #28a745;
+        }
+
+        .timeline-item-last::before {
+            background: #6c757d;
+        }
+
+        .timeline-content {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 3px solid #dee2e6;
+        }
+
+        /* Header */
+        nav.navbar {
+            background: linear-gradient(90deg, #4b6cb7, #182848);
+            color: #fff;
+            z-index: 1000;
+            padding: 0.4rem 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        nav.navbar .navbar-brand,
+        nav.navbar .btn,
+        nav.navbar span {
+            color: #fff;
+        }
+
+        nav.navbar .btn-light {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: #fff;
+        }
+
+        nav.navbar .btn-light:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Sidebar */
+        #sidebar {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 220px;
+            height: calc(100% - 70px);
+            background: #fff;
+            padding-top: 1rem;
+            transition: all 0.3s;
+            overflow-y: auto;
+            border-right: 1px solid #e0e0e0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+            z-index: 999;
+        }
+
+        #sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #495057;
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 8px;
+            margin: 4px 10px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        #sidebar a:hover {
+            background: #4b6cb7;
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        #sidebar a.active {
+            background: #182848;
+            color: white;
+        }
+
+        #sidebar i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+
+        .sidebar-collapsed #sidebar a {
+            padding: 12px 0px;
+        }
+
+        /* Collapsed sidebar */
+        body.sidebar-collapsed #sidebar {
+            width: 60px;
+        }
+
+        body.sidebar-collapsed #sidebar a span {
+            display: none;
+        }
+
+        body.sidebar-collapsed #sidebar a i {
+            margin-right: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Main content */
+        #mainContent {
+            margin-left: 220px;
+            padding: 30px;
+            flex: 1;
+            transition: all 0.3s;
+            min-height: calc(100vh - 130px);
+        }
+
+        body.sidebar-collapsed #mainContent {
+            margin-left: 60px;
+        }
+
+        /* Footer */
+        footer {
+            background: #fff;
+            text-align: center;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            width: 100%;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+            margin-left: 220px;
+            transition: all 0.3s;
+        }
+
+        body.sidebar-collapsed footer {
+            margin-left: 60px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 992px) {
+            #sidebar {
+                left: -100%;
+                top: 0;
+                width: 220px;
+                height: 100%;
+                border-right: none;
+                box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+                z-index: 9999;
+            }
+
+            #sidebar.show {
+                left: 0;
+            }
+
+            #mainContent {
+                margin-left: 0;
+                padding: 20px 10px;
+            }
+
+            body.sidebar-collapsed #mainContent {
+                margin-left: 0;
+            }
+
+            footer {
+                margin-left: 0 !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #currentDateTime {
+                display: none;
+            }
+
+            .navbar .fw-bold {
+                font-size: 1.1rem;
+            }
+
+            #sidebarToggle {
+                padding: 0.35rem 0.6rem;
+            }
+
+            .dropdown-toggle span {
+                display: none;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+            }
+
+            .ticket-meta .row>div {
+                margin-bottom: 15px;
+            }
+
+            .timeline {
+                margin-left: 10px;
+                padding-left: 15px;
+            }
+
+            .timeline-item::before {
+                left: -18px;
+            }
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-spinner.show {
+            display: flex;
+        }
+
+        .file-upload-container {
+            border: 1px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f8f9fa;
+        }
+
+        .file-upload-container:hover {
+            border-color: #4b6cb7;
+        }
+
+        #fileList .border {
+            transition: all 0.2s;
+        }
+
+        #fileList .border:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="text-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Loading ticket details...</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid d-flex align-items-center">
+            <button class="btn btn-light" id="sidebarToggle">
+                <i class="bi bi-list fs-4"></i>
+            </button>
+            <span class="fw-bold ms-3 fs-5">Helpdesk Lead Dashboard</span>
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <span id="currentDateTime" class="me-3"></span>
+                <div id="globalProfileDropdown"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <!-- Dashboard -->
+        <a href="dashboard.html" class="active">
+            <i class="bi bi-speedometer2"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <!-- My Tickets -->
+        <a href="my-tickets.html">
+            <i class="bi bi-ticket-detailed"></i>
+            <span>My Tickets</span>
+        </a>
+
+        <!-- Helpdesk Admin -->
+        <a href="helpdesk-admin.html">
+            <i class="bi bi-shield-lock"></i>
+            <span>Helpdesk Admin</span>
+        </a>
+
+        <!-- Profile -->
+        <a href="profile.html">
+            <i class="bi bi-person-circle"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent">
+        <!-- Content will be dynamically loaded here -->
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2025 EDM Dashboard. All rights reserved.
+    </footer>
+
+    <!-- MODALS -->
+
+    <!-- Forward/Forward Modal -->
+    <div class="modal fade" id="escalateModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="bi bi-arrow-up-circle"></i> Forward Ticket</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="escalateForm">
+                        <div class="mb-3">
+                            <label class="form-label">Assign To</label>
+                            <select class="form-select" id="agentDropdown" required>
+                                <option value="">Select Agent</option>
+                                <!-- Options will be populated dynamically -->
+                            </select>
+                        </div>
+                        <!-- District dropdown container - initially hidden -->
+                        <div class="mb-3" id="districtContainer" style="display: none;">
+                            <label class="form-label">Select District <span class="text-danger">*</span></label>
+                            <select class="form-select" id="districtSelect">
+                                <option value="">-- Select District --</option>
+                                <!-- District options will be populated dynamically -->
+                            </select>
+                        </div>
+                        <!-- EDM Agents dropdown container - initially hidden -->
+                        <div class="mb-3" id="edmAgentsContainer" style="display: none;">
+                            <label class="form-label">Select EDM Agent <span class="text-danger">*</span></label>
+                            <select class="form-select" id="edmAgentsSelect">
+                                <option value="">-- Select EDM Agent --</option>
+                                <!-- EDM Agent options will be populated dynamically -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Forward Note <span class="text-danger">*</span></label>
+                            <textarea class="form-control" rows="3" id="escalateNote" required
+                                placeholder="Enter forward note..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="escalateConfirmBtn">Forward</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Return/Send Back Modal -->
+    <div class="modal fade" id="resolveModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title"><i class="bi bi-arrow-return-left"></i> Return/Send Back</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="resolveForm">
+                        <div class="mb-3">
+                            <label class="form-label">Return Note</label>
+                            <textarea class="form-control" rows="3" id="resolveNote" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-warning" id="resolveConfirmBtn">Return Ticket</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Close Ticket Modal -->
+    <!-- Close Ticket Modal -->
+    <div class="modal fade" id="closeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title"><i class="bi bi-x-circle"></i> Close Ticket</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="closeForm">
+                        <div class="mb-3">
+                            <label class="form-label">Closing Note <span class="text-danger">*</span></label>
+                            <textarea class="form-control" rows="3" id="closeNote" required
+                                placeholder="Enter closing note..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Resolution Status <span class="text-danger">*</span></label>
+                            <select class="form-select" id="closeStatus" required>
+                                <option value="">Select Status</option>
+                                <option value="Resolved">Resolved</option>
+                                <option value="Cancelled">Cancelled</option>
+                                <option value="Duplicate">Duplicate</option>
+                            </select>
+                        </div>
+                        <!-- File Upload Section -->
+                        <div class="mb-3">
+                            <label class="form-label">Attach Resolution Files (Optional)</label>
+                            <div class="file-upload-container">
+                                <div class="input-group">
+                                    <input type="file" class="form-control" id="closeFiles" multiple
+                                        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.txt,.xls,.xlsx">
+                                    <button class="btn btn-outline-secondary" type="button" id="clearFilesBtn">
+                                        <i class="bi bi-x-circle"></i> Clear
+                                    </button>
+                                </div>
+                                <small class="form-text text-muted">
+                                    Supported formats: PDF, JPG, PNG, DOC, DOCX, TXT, XLS, XLSX. Max 10MB per file.
+                                </small>
+                                <div id="filePreview" class="mt-2" style="display: none;">
+                                    <small class="text-muted">Selected files:</small>
+                                    <div id="fileList" class="mt-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-dark" id="closeConfirmBtn">Close Ticket</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Re-assign Modal -->
+    <!-- Re-assign Modal -->
+    <div class="modal fade" id="reassignModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title"><i class="bi bi-arrow-repeat"></i> Re-assign Ticket</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="reassignForm">
+                        <div class="mb-3">
+                            <label class="form-label">Assign To</label>
+                            <select class="form-select" id="reassignSelect" required>
+                                <option value="">Select Agent</option>
+                            </select>
+                        </div>
+                        <!-- District dropdown container - initially hidden -->
+                        <div class="mb-3" id="reassignDistrictContainer" style="display: none;">
+                            <label class="form-label">Select District <span class="text-danger">*</span></label>
+                            <select class="form-select" id="reassignDistrictSelect">
+                                <option value="">-- Select District --</option>
+                            </select>
+                        </div>
+                        <!-- EDM Agents dropdown container - initially hidden -->
+                        <div class="mb-3" id="reassignEdmAgentsContainer" style="display: none;">
+                            <label class="form-label">Select EDM Agent <span class="text-danger">*</span></label>
+                            <select class="form-select" id="reassignEdmAgentsSelect">
+                                <option value="">-- Select EDM Agent --</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Reassign Note <span class="text-danger">*</span></label>
+                            <textarea class="form-control" rows="3" id="reassignNote" required
+                                placeholder="Enter reassign note..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-info" id="reassignConfirmBtn">Re-assign</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/jquery-3.7.1.min.js"></script>
+    <script src="../assets/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/aos.js"></script>
+    <script src="../assets/js/dataTableUtil.js"></script>
+    <script src="../assets/js/crypto-js.min.js"></script>
+    <script src="../assets/js/global.js"></script>
+    <script src="../assets/js/encrypt_decrypt.js"></script>
+    <script src="../assets/js/toastUtil.js"></script>
+    <script src="../assets/js/apiConfig.js"></script>
+    <script src="../assets/js/html2canvas.min.js"></script>
+    <script src="../assets/js/jspdf.umd.min.js"></script>
+    <script src="../assets/js/downloadPDF.js"></script>
+    <script src="../assets/js/globalProfileDropdown.js"></script>
+
+    <!-- Main Application Script -->
+    <script>
+        // Global variables
+        let currentTicketId = null;
+        let currentTicketData = null;
+        let currentUser = null;
+        const escalateModal = document.getElementById('escalateModal');
+        let modalsInitialized = false;
+
+        // ============ UTILITY FUNCTIONS ============
+
+        function showLoading(show) {
+            const spinner = document.getElementById('loadingSpinner');
+            if (show) {
+                spinner.classList.add('show');
+            } else {
+                spinner.classList.remove('show');
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            if (typeof showCustomToast === 'function') {
+                showCustomToast(message, type);
+            } else {
+                // Fallback toast
+                const toastHtml = `
+          <div class="toast align-items-center text-white bg-${type} border-0" role="alert">
+            <div class="d-flex">
+              <div class="toast-body">${message}</div>
+              <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+          </div>
+        `;
+                const toastContainer = document.getElementById('toastContainer') || (() => {
+                    const container = document.createElement('div');
+                    container.id = 'toastContainer';
+                    container.className = 'position-fixed top-0 end-0 p-3';
+                    container.style.zIndex = '9999';
+                    document.body.appendChild(container);
+                    return container;
+                })();
+
+                toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+                const toastElement = toastContainer.lastElementChild;
+                const toast = new bootstrap.Toast(toastElement);
+                toast.show();
+
+                toastElement.addEventListener('hidden.bs.toast', () => {
+                    toastElement.remove();
+                });
+            }
+        }
+
+        function getUrlParameter(name) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+            const results = regex.exec(window.location.search);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        function formatDateTime(dateString) {
+            if (!dateString || dateString === 'null' || dateString === 'undefined') return '-';
+            try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) return '-';
+                return date.toLocaleString('en-IN', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                });
+            } catch (e) {
+                return '-';
+            }
+        }
+
+        function getStatusBadgeClass(status) {
+            if (!status) return 'bg-secondary';
+            switch (status.toLowerCase()) {
+                case 'open': return 'bg-primary';
+                case 'in-progress':
+                case 'in progress': return 'bg-warning text-dark';
+                case 'resolved': return 'bg-success';
+                case 'closed': return 'bg-secondary';
+                case 'escalated': return 'bg-danger';
+                case 'pending': return 'bg-info';
+                default: return 'bg-secondary';
+            }
+        }
+
+        function getPriorityBadgeClass(priority) {
+            if (!priority) return 'bg-secondary';
+            switch (priority.toLowerCase()) {
+                case 'high': return 'bg-danger';
+                case 'medium': return 'bg-warning text-dark';
+                case 'low': return 'bg-info';
+                default: return 'bg-secondary';
+            }
+        }
+
+        function getUserId() {
+            // Get user ID from localStorage or session
+            return localStorage.getItem('helpdesk_user_id') || sessionStorage.getItem('helpdesk_user_id') || 1;
+        }
+
+        function getUserName() {
+            return localStorage.getItem('helpdesk_user_name') || sessionStorage.getItem('user_name') || 'User';
+        }
+
+        // ============ API FUNCTIONS ============
+
+        async function fetchTicketDetails(ticketId) {
+            try {
+                const payload = {
+                    action: "function_call",
+                    function_name: "fn_get_ticket_details",
+                    params: { p_ticket_id: ticketId },
+                };
+
+                const response = await $.ajax({
+                    url: `${BASE_API_URL}/commonfunction`,
+                    method: "POST",
+                    data: { data: encryptData(payload) },
+                    dataType: "json",
+                    beforeSend: () => showLoading(true)
+                });
+
+                if (!response?.data) {
+                    throw new Error('No data received from server');
+                }
+
+                const decrypted = decryptData(response.data);
+                const parsed = typeof decrypted === 'string' ? JSON.parse(decrypted) : decrypted;
+                const jsonString = parsed[0]?.fn_get_ticket_details;
+
+                if (!jsonString) {
+                    throw new Error('Invalid response format');
+                }
+
+                const detailsObj = JSON.parse(jsonString);
+                return detailsObj;
+
+            } catch (error) {
+                console.error('Error fetching ticket details:', error);
+                throw error;
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function updateTicketStatus(ticketId, status, priority, comment) {
+            try {
+                const payload = {
+                    action: "function_call",
+                    function_name: "fn_update_ticket_status",
+                    params: {
+                        p_ticket_id: ticketId,
+                        p_status: status || null,
+                        p_priority: priority || null,
+                        p_comments: comment || null,
+                        p_updated_by: getUserId()
+                    }
+                };
+
+                const response = await $.ajax({
+                    url: `${BASE_API_URL}/commonfunction`,
+                    method: "POST",
+                    data: { data: encryptData(payload) },
+                    dataType: "json",
+                    beforeSend: () => showLoading(true)
+                });
+
+                if (response?.success) {
+                    return { success: true, message: 'Ticket updated successfully!' };
+                } else {
+                    throw new Error(response?.message || 'Update failed');
+                }
+            } catch (error) {
+                console.error('Error updating ticket:', error);
+                return { success: false, message: error.message || 'Failed to update ticket' };
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function escalateTicket(ticketId, note, districtId = null) {
+            try {
+                let actualAssignedTo;
+                let finalNote = note;
+
+                // Get the selected EDM agent
+                const edmAgentsSelect = document.getElementById('edmAgentsSelect');
+                const edmAgentId = edmAgentsSelect ? edmAgentsSelect.value : null;
+
+                if (edmAgentId) {
+                    // Use the selected EDM agent
+                    actualAssignedTo = edmAgentId;
+
+                    // Add district info to note
+                    const selectedOption = edmAgentsSelect.options[edmAgentsSelect.selectedIndex];
+                    const districtName = selectedOption?.dataset.districtName || `District ${districtId}`;
+                    if (districtName) {
+                        finalNote = note + ` (District: ${districtName})`;
+                    }
+                } else {
+                    // For non-EDM agents, use the agent dropdown
+                    const agentDropdown = document.getElementById('agentDropdown');
+                    actualAssignedTo = agentDropdown ? agentDropdown.value : null;
+
+                    if (!actualAssignedTo) {
+                        throw new Error('No agent selected');
+                    }
+                }
+
+                const payload = {
+                    action: "function_call",
+                    function_name: "fn_common_forward_ticket",
+                    params: {
+                        p_ticket_id: ticketId,
+                        p_assigned_to: actualAssignedTo,
+                        p_user: getUserId(),
+                        p_notes: finalNote,
+                    }
+                };
+
+                console.log('Forwarding payload:', payload);
+
+                const response = await $.ajax({
+                    url: `${BASE_API_URL}/commonfunction`,
+                    method: "POST",
+                    data: { data: encryptData(payload) },
+                    dataType: "json",
+                    beforeSend: () => showLoading(true)
+                });
+
+                console.log('Forward response:', response);
+                return response?.success || false;
+            } catch (error) {
+                console.error('Error escalating ticket:', error);
+                showToast(error.message || 'Failed to escalate ticket', 'danger');
+                return false;
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function returnTicket(ticketId, note) {
+            try {
+                const payload = {
+                    action: "function_call",
+                    function_name: "fn_common_return_ticket",
+                    params: {
+                        p_ticket_id: ticketId,
+                        p_returned_by: getUserId(),
+                        p_return_notes: note,
+                    }
+                };
+
+                const response = await $.ajax({
+                    url: `${BASE_API_URL}/commonfunction`,
+                    method: "POST",
+                    data: { data: encryptData(payload) },
+                    dataType: "json",
+                    beforeSend: () => showLoading(true)
+                });
+
+                return response?.success || false;
+            } catch (error) {
+                console.error('Error returning ticket:', error);
+                return false;
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        let selectedFiles = [];
+
+        function initializeFileUpload() {
+            const fileInput = document.getElementById('closeFiles');
+            const filePreview = document.getElementById('filePreview');
+            const fileList = document.getElementById('fileList');
+            const clearFilesBtn = document.getElementById('clearFilesBtn');
+
+            if (fileInput) {
+                // Handle file selection
+                fileInput.addEventListener('change', function (e) {
+                    const files = Array.from(e.target.files);
+                    const previousCount = selectedFiles.length;
+
+                    // Process new files
+                    files.forEach((file) => {
+                        // Check for duplicate files
+                        const isDuplicate = selectedFiles.some(f =>
+                            f.name === file.name && f.size === file.size && f.lastModified === file.lastModified
+                        );
+
+                        if (isDuplicate) {
+                            showToast(`File "${file.name}" is already selected`, 'warning');
+                            return;
+                        }
+
+                        // Validate file size (10MB limit)
+                        if (file.size > 10 * 1024 * 1024) {
+                            showToast(`File "${file.name}" exceeds 10MB limit`, 'warning');
+                            return;
+                        }
+
+                        // Validate file type
+                        const fileName = file.name.toLowerCase();
+                        const allowedExtensions = ['.pdf', '.jpg', '.jpeg', '.png', '.doc', '.docx', '.txt', '.xls', '.xlsx', '.zip'];
+                        const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+
+                        if (!hasValidExtension) {
+                            showToast(`File "${file.name}" has unsupported format. Allowed: ${allowedExtensions.join(', ')}`, 'warning');
+                            return;
+                        }
+
+                        selectedFiles.push(file);
+                    });
+
+                    // Show success message if files were added
+                    if (selectedFiles.length > previousCount) {
+                        const addedCount = selectedFiles.length - previousCount;
+                        showToast(`${addedCount} file(s) added`, 'success');
+                    }
+
+                    // Update file preview
+                    updateFilePreview();
+
+                    // Show/hide preview
+                    if (selectedFiles.length > 0) {
+                        filePreview.style.display = 'block';
+                    } else {
+                        filePreview.style.display = 'none';
+                    }
+                });
+            }
+
+            // Clear all files
+            if (clearFilesBtn) {
+                clearFilesBtn.addEventListener('click', function () {
+                    if (selectedFiles.length > 0) {
+                        document.getElementById('closeFiles').value = '';
+                        selectedFiles = [];
+                        document.getElementById('fileList').innerHTML = '';
+                        document.getElementById('filePreview').style.display = 'none';
+                        showToast('All files cleared', 'info');
+                    }
+                });
+            }
+        }
+
+        function updateFilePreview() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+
+            // Render all files
+            selectedFiles.forEach((file, idx) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'd-flex justify-content-between align-items-center mb-1 p-2 border rounded';
+                fileItem.innerHTML = `
+            <div class="d-flex align-items-center flex-grow-1">
+                ${getFileIcon(file.name)}
+                <div class="ms-2 flex-grow-1">
+                    <div class="small text-truncate" style="max-width: 250px;" title="${file.name}">
+                        ${file.name}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.75rem;">
+                        ${formatFileSize(file.size)}
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="removeFile(${idx})" title="Remove file">
+                <i class="bi bi-trash"></i>
+            </button>
+        `;
+                fileList.appendChild(fileItem);
+            });
+
+            // Show total count
+            if (selectedFiles.length > 0) {
+                const totalCount = document.createElement('div');
+                totalCount.className = 'small text-muted mt-2';
+                totalCount.innerHTML = `<i class="bi bi-info-circle"></i> Total: ${selectedFiles.length} file(s), ${formatFileSize(selectedFiles.reduce((sum, file) => sum + file.size, 0))}`;
+                fileList.appendChild(totalCount);
+            }
+        }
+
+        function getFileIcon(fileName) {
+            const ext = fileName.split('.').pop().toLowerCase();
+
+            switch (ext) {
+                case 'pdf':
+                    return '<i class="bi bi-file-pdf text-danger fs-5"></i>';
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                case 'gif':
+                case 'bmp':
+                    return '<i class="bi bi-file-image text-success fs-5"></i>';
+                case 'doc':
+                case 'docx':
+                    return '<i class="bi bi-file-word text-primary fs-5"></i>';
+                case 'xls':
+                case 'xlsx':
+                    return '<i class="bi bi-file-excel text-success fs-5"></i>';
+                case 'txt':
+                    return '<i class="bi bi-file-text text-secondary fs-5"></i>';
+                case 'zip':
+                case 'rar':
+                case '7z':
+                    return '<i class="bi bi-file-zip text-warning fs-5"></i>';
+                default:
+                    return '<i class="bi bi-file-earmark fs-5"></i>';
+            }
+        }
+
+        function removeFile(index) {
+            const removedFile = selectedFiles[index];
+            selectedFiles.splice(index, 1);
+
+            // Update file preview
+            updateFilePreview();
+
+            // Hide preview if no files left
+            if (selectedFiles.length === 0) {
+                document.getElementById('filePreview').style.display = 'none';
+            }
+
+            showToast(`Removed: ${removedFile.name}`, 'info');
+        }
+
+        // ============ ENHANCED CLOSE TICKET FUNCTION ============
+
+        async function closeTicket(ticketId, note, status, files = []) {
+            try {
+                let filesJson = null;
+
+                if (files && files.length > 0) {
+                    // Prepare files array in the required format
+                    const fileData = files.map(file => ({
+                        file_name: file.file_name,
+                        file_path: file.file_path,
+                        mime_type: getMimeTypeFromExtension(file.file_name)
+                    }));
+
+                    filesJson = JSON.stringify(fileData);
+                }
+
+                const payload = {
+                    action: "function_call",
+                    function_name: "fn_common_resolve_ticket",
+                    params: {
+                        p_ticket_id: ticketId,
+                        p_closing_notes: note,
+                        p_final_status: status,
+                        p_closed_by: getUserId(),
+                        p_files: filesJson || null
+                    }
+                };
+
+                console.log('Closing ticket with payload:', payload);
+
+                const response = await $.ajax({
+                    url: `${BASE_API_URL}/commonfunction`,
+                    method: "POST",
+                    data: { data: encryptData(payload) },
+                    dataType: "json",
+                    beforeSend: () => showLoading(true)
+                });
+
+                console.log('Close ticket response:', response);
+
+                // Parse the response
+                if (response?.data) {
+                    const decrypted = decryptData(response.data);
+                    const parsed = typeof decrypted === 'string' ? JSON.parse(decrypted) : decrypted;
+                    const result = parsed?.[0]?.fn_common_resolve_ticket;
+
+                    if (result && (result.success === true || result.success === "true" || result.status === "success")) {
+                        return {
+                            success: true,
+                            message: result.message || 'Ticket closed successfully!'
+                        };
+                    } else {
+                        const errorMsg = result?.message || result?.error || response?.message || 'Failed to close ticket';
+                        throw new Error(errorMsg);
+                    }
+                } else if (response?.success === true || response?.success === "true") {
+                    return {
+                        success: true,
+                        message: response.message || 'Ticket closed successfully!'
+                    };
+                } else {
+                    throw new Error(response?.message || response?.error || 'Failed to close ticket');
+                }
+            } catch (error) {
+                console.error('Error closing ticket:', error);
+                return {
+                    success: false,
+                    message: error.message || 'Failed to close ticket. Please try again.'
+                };
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function getMimeTypeFromExtension(fileName) {
+            const ext = fileName.split('.').pop().toLowerCase();
+
+            const mimeTypes = {
+                'pdf': 'application/pdf',
+                'jpg': 'image/jpeg',
+                'jpeg': 'image/jpeg',
+                'png': 'image/png',
+                'gif': 'image/gif',
+                'bmp': 'image/bmp',
+                'doc': 'application/msword',
+                'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'xls': 'application/vnd.ms-excel',
+                'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'txt': 'text/plain',
+                'zip': 'application/zip',
+                'rar': 'application/x-rar-compressed',
+                '7z': 'application/x-7z-compressed'
+            };
+
+            return mimeTypes[ext] || 'application/octet-stream';
+        }
+
+        // ============ UPLOAD FILES TO SERVER ============
+
+        async function uploadFilesToServer(files, ticketId) {
+            if (!files || files.length === 0) {
+                return [];
+            }
+
+            const uploadedFiles = [];
+
+            // Since there's no separate upload API, we need to upload files differently
+            // This assumes you have a file upload mechanism already in place
+            // If not, you'll need to implement file upload functionality
+
+            // For now, let's simulate the file upload process
+            // In reality, you would need to:
+            // 1. Upload each file to a server endpoint that saves them
+            // 2. Get back the file_path for each uploaded file
+            // 3. Then call fn_common_resolve_ticket with the file paths
+
+            showToast(`Note: ${files.length} file(s) selected. File upload functionality needs to be implemented.`, 'warning');
+
+            // This is a placeholder - you need to implement actual file upload
+            // Example structure of what should be returned:
+            /*
+            return [
+                {
+                    file_name: "report1.pdf",
+                    file_path: "/uploads/tickets/report1.pdf",
+                    mime_type: "application/pdf"
+                },
+                {
+                    file_name: "image1.jpg",
+                    file_path: "/uploads/tickets/image1.jpg",
+                    mime_type: "image/jpeg"
+                }
+            ];
+            */
+
+            // For demo purposes, creating dummy file paths
+            files.forEach((file, index) => {
+                const timestamp = Date.now();
+                const safeFileName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
+
+                uploadedFiles.push({
+                    file_name: safeFileName,
+                    file_path: `/uploads/tickets/${timestamp}_${index}_${safeFileName}`,
+                    mime_type: getMimeTypeFromExtension(file.name)
+                });
+            });
+
+            return uploadedFiles;
+        }
+
+        async function reassignTicket(ticketId, assignedTo, note) {
+            try {
+                const payload = {
+                    action: "function_call",
+                    function_name: "fn_common_reassign_ticket",
+                    params: {
+                        p_ticket_id: ticketId,
+                        p_assigned_to: assignedTo,
+                        p_notes: note,
+                        p_reassigned_by: getUserId()
+                    }
+                };
+
+                const response = await $.ajax({
+                    url: `${BASE_API_URL}/commonfunction`,
+                    method: "POST",
+                    data: { data: encryptData(payload) },
+                    dataType: "json",
+                    beforeSend: () => showLoading(true)
+                });
+
+                if (response?.success === true || response?.success === "true") {
+                    return { success: true, message: 'Ticket reassigned successfully!' };
+                } else {
+                    throw new Error(response?.message || 'Failed to reassign ticket');
+                }
+            } catch (error) {
+                console.error('Error reassigning ticket:', error);
+                return { success: false, message: error.message || 'Failed to reassign ticket' };
+            } finally {
+                showLoading(false);
+            }
+        }
+        async function getAvailableAgents() {
+            try {
+                const payload = {
+                    action: "function_call",
+                    function_name: "fn_forward_to",
+                    params: {
+                        p_user_id: getUserId(),
+                    }
+                };
+
+                const response = await $.ajax({
+                    url: `${BASE_API_URL}/commonfunction`,
+                    method: "POST",
+                    data: { data: encryptData(payload) },
+                    dataType: "json"
+                });
+
+                if (response?.data) {
+                    const decrypted = decryptData(response.data);
+                    const parsed = typeof decrypted === 'string'
+                        ? JSON.parse(decrypted)
+                        : decrypted;
+
+                    // 🔑 extract fn_forward_to & parse again
+                    const agents = parsed?.[0]?.fn_forward_to
+                        ? JSON.parse(parsed[0].fn_forward_to)
+                        : [];
+
+                    // Check if EDM is in the agents list
+                    const edmAgent = agents.find(agent =>
+                        agent.user_id === "EDM" ||
+                        agent.user_name?.includes("eDM") ||
+                        agent.user_name?.includes("e-District Manager")
+                    );
+
+                    // If EDM is found, fetch districts and EDM agents
+                    if (edmAgent) {
+                        return await getEDMAgentsWithDistricts(agents, edmAgent);
+                    }
+
+                    return agents;
+                }
+                return [];
+            } catch (error) {
+                console.error('Error fetching agents:', error);
+                return [];
+            }
+        }
+
+        async function getEDMAgentsWithDistricts(baseAgents, edmAgent) {
+            try {
+                // Fetch districts
+                const districtsResponse = await $.ajax({
+                    url: `${BASE_API_URL}/commonfunction`,
+                    method: "POST",
+                    data: {
+                        data: encryptData({
+                            action: "function_call",
+                            function_name: "fn_district_list",
+                            params: {}
+                        })
+                    },
+                    dataType: 'json'
+                });
+
+                const districts = decryptData(districtsResponse.data) || [];
+
+                if (!Array.isArray(districts) || districts.length === 0) {
+                    return baseAgents;
+                }
+
+                // Create a special EDM option that will trigger district selection
+                const specialEDMAgent = {
+                    ...edmAgent,
+                    is_special_edm: true,
+                    districts: districts,
+                    user_name: `${edmAgent.user_name} (Select District)`,
+                    original_name: edmAgent.user_name
+                };
+
+                // Return all agents with the special EDM agent
+                return baseAgents.map(agent =>
+                    (agent.user_id === "EDM" || agent.user_name?.includes("eDM") || agent.user_name?.includes("e-District Manager"))
+                        ? specialEDMAgent
+                        : agent
+                );
+
+            } catch (error) {
+                console.error('Error fetching districts:', error);
+                return baseAgents;
+            }
+        }
+
+        // Function to get EDM agents for a specific district
+        async function getEDMAgentsForDistrict(districtId) {
+            try {
+                const payload = {
+                    action: "function_call",
+                    function_name: "fn_forward_to_edm",
+                    params: {
+                        p_ticket_district: parseInt(districtId)
+                    }
+                };
+
+                const response = await $.ajax({
+                    url: `${BASE_API_URL}/commonfunction`,
+                    method: "POST",
+                    data: { data: encryptData(payload) },
+                    dataType: "json"
+                });
+
+                if (response?.data) {
+                    const decrypted = decryptData(response.data);
+                    const parsed = typeof decrypted === 'string'
+                        ? JSON.parse(decrypted)
+                        : decrypted;
+
+                    // Parse the fn_forward_to_edm result
+                    const edmAgents = parsed?.[0]?.fn_forward_to_edm
+                        ? JSON.parse(parsed[0].fn_forward_to_edm)
+                        : [];
+
+                    return edmAgents;
+                }
+                return [];
+            } catch (error) {
+                console.error('Error fetching EDM agents for district:', error);
+                return [];
+            }
+        }
+        // ============ HELPER FUNCTIONS ============
+
+        async function populateAgentDropdowns() {
+            const agents = await getAvailableAgents();
+            const selects = ['agentDropdown', 'reassignSelect'];
+
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (select) {
+                    // Clear existing options
+                    select.innerHTML = '<option value="">Select Agent</option>';
+
+                    agents.forEach(agent => {
+                        const option = document.createElement('option');
+                        option.value = agent.user_id; // This should be "EDM" for EDM agent
+
+                        // Store additional data as data attributes for EDM
+                        if (agent.is_special_edm) {
+                            option.dataset.isSpecialEdm = "true";
+                            option.dataset.districts = JSON.stringify(agent.districts || []);
+                            option.dataset.originalName = agent.original_name || agent.user_name;
+                        }
+
+                        // Set display text
+                        let displayText = agent.user_name || 'Unknown Agent';
+
+                        // Add department and role if available
+                        if (agent.department) {
+                            displayText += ` - ${agent.department}`;
+                        }
+                        if (agent.role) {
+                            displayText += ` (${agent.role})`;
+                        }
+
+                        option.textContent = displayText;
+                        select.appendChild(option);
+                    });
+                }
+            });
+        }
+
+        function handleAgentSelectionChange(event) {
+            const selectedOption = event.target.options[event.target.selectedIndex];
+            const isSpecialEdm = selectedOption.dataset.isSpecialEdm === "true";
+            const districtContainer = document.getElementById('districtContainer');
+            const districtSelect = document.getElementById('districtSelect');
+            const edmAgentsContainer = document.getElementById('edmAgentsContainer');
+            const edmAgentsSelect = document.getElementById('edmAgentsSelect');
+            const escalateNote = document.getElementById('escalateNote');
+
+            if (districtContainer && districtSelect && edmAgentsContainer && edmAgentsSelect) {
+                if (isSpecialEdm) {
+                    // Show district container, hide EDM agents container
+                    districtContainer.style.display = 'block';
+                    edmAgentsContainer.style.display = 'none';
+
+                    // Clear EDM agents dropdown
+                    edmAgentsSelect.innerHTML = '<option value="">-- Select EDM Agent --</option>';
+                    edmAgentsSelect.required = false;
+                    edmAgentsSelect.disabled = true;
+
+                    // Parse and populate districts
+                    const districts = JSON.parse(selectedOption.dataset.districts || '[]');
+                    districtSelect.innerHTML = '<option value="">-- Select District --</option>';
+
+                    if (districts.length > 0) {
+                        districts.forEach(district => {
+                            const option = document.createElement('option');
+                            option.value = district.id;
+                            option.textContent = district.district || district.name || `District ${district.id}`;
+                            districtSelect.appendChild(option);
+                        });
+
+                        // Make district selection required
+                        districtSelect.required = true;
+                        districtSelect.disabled = false;
+
+                        // Add event listener for district change
+                        districtSelect.removeEventListener('change', handleDistrictChange);
+                        districtSelect.addEventListener('change', handleDistrictChange);
+                    } else {
+                        districtSelect.innerHTML = '<option value="">No districts available</option>';
+                        districtSelect.disabled = true;
+                    }
+
+                    // Update note placeholder
+                    if (escalateNote) {
+                        escalateNote.placeholder = "Enter forward note...";
+                    }
+                } else {
+                    // Hide both district and EDM agents containers
+                    districtContainer.style.display = 'none';
+                    edmAgentsContainer.style.display = 'none';
+                    districtSelect.required = false;
+                    districtSelect.disabled = true;
+                    edmAgentsSelect.required = false;
+                    edmAgentsSelect.disabled = true;
+
+                    // Reset note placeholder
+                    if (escalateNote) {
+                        escalateNote.placeholder = "Enter forward note...";
+                    }
+                }
+            }
+        }
+
+        async function handleDistrictChange(event) {
+            const districtId = event.target.value;
+            const edmAgentsContainer = document.getElementById('edmAgentsContainer');
+            const edmAgentsSelect = document.getElementById('edmAgentsSelect');
+            const escalateNote = document.getElementById('escalateNote');
+
+            if (!districtId) {
+                // Hide EDM agents container if no district selected
+                edmAgentsContainer.style.display = 'none';
+                edmAgentsSelect.required = false;
+                edmAgentsSelect.disabled = true;
+                edmAgentsSelect.innerHTML = '<option value="">-- Select EDM Agent --</option>';
+                return;
+            }
+
+            // Show loading in EDM agents dropdown
+            edmAgentsSelect.innerHTML = '<option value="">Loading EDM agents...</option>';
+            edmAgentsSelect.disabled = true;
+
+            try {
+                // Fetch EDM agents for the selected district
+                const edmAgents = await getEDMAgentsForDistrict(districtId);
+
+                // Populate EDM agents dropdown
+                edmAgentsSelect.innerHTML = '<option value="">-- Select EDM Agent --</option>';
+
+                if (edmAgents.length > 0) {
+                    edmAgents.forEach(agent => {
+                        const option = document.createElement('option');
+                        option.value = agent.user_id;
+
+                        // Display text: agent name + role/department if available
+                        let displayText = agent.user_name || `EDM Agent ${agent.user_id}`;
+                        if (agent.role || agent.department) {
+                            displayText += ` (${agent.role || agent.department})`;
+                        }
+
+                        option.textContent = displayText;
+
+                        // Store additional info as data attributes
+                        if (agent.district_name) {
+                            option.dataset.districtName = agent.district_name;
+                        }
+
+                        edmAgentsSelect.appendChild(option);
+                    });
+
+                    // Show and enable EDM agents dropdown
+                    edmAgentsContainer.style.display = 'block';
+                    edmAgentsSelect.required = true;
+                    edmAgentsSelect.disabled = false;
+
+                    // Update note placeholder with district info
+                    if (escalateNote) {
+                        const districtName = edmAgents[0]?.district_name || `District ${districtId}`;
+                        escalateNote.placeholder = `Enter forward note for ${districtName}...`;
+                    }
+                } else {
+                    // No EDM agents available for this district
+                    edmAgentsSelect.innerHTML = '<option value="">No EDM agents available for this district</option>';
+                    edmAgentsContainer.style.display = 'block';
+                    edmAgentsSelect.required = true;
+                    edmAgentsSelect.disabled = true;
+
+                    // Update note placeholder
+                    if (escalateNote) {
+                        escalateNote.placeholder = "Enter forward note...";
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading EDM agents:', error);
+                edmAgentsSelect.innerHTML = '<option value="">Error loading EDM agents</option>';
+                edmAgentsContainer.style.display = 'block';
+                edmAgentsSelect.required = true;
+                edmAgentsSelect.disabled = true;
+            }
+        }
+
+
+        // ============ RENDER FUNCTIONS ============
+
+        function renderTicketDetails(details) {
+            const t = details.ticket_details || {};
+            const g = details.grievance_details || {};
+            const timeline = Array.isArray(details.progress_timeline) ? details.progress_timeline : [];
+            const attachments = Array.isArray(details.attachments) ? details.attachments : [];
+            const fileUrl = `${window.BASE_UPLOAD_URL}`;
+            // Store current data
+            currentTicketData = details;
+            currentTicketId = t.ticket_id;
+
+
+            const mainContent = document.getElementById('mainContent');
+            mainContent.innerHTML = `
+        <div class="container py-4">
+          <!-- Page Header -->
+          <div class="page-header d-flex justify-content-between align-items-center">
+            <h3><i class="bi bi-ticket-detailed me-2"></i> Ticket #${t.ticket_id || '-'}</h3>
+            <div>
+              <a href="dashboard.html" class="btn btn-outline-secondary btn-sm me-2">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+              </a>
+              <button type="button" class="btn btn-outline-primary btn-sm" id="refreshBtn">
+                <i class="bi bi-arrow-clockwise"></i> Refresh
+              </button>
+            </div>
+          </div>
+
+          <!-- Ticket Meta -->
+          <div class="ticket-meta">
+            <div class="row mb-3">
+              <div class="col-md-8">
+                <h4>${t.ticket_id || 'No Subject'}</h4>
+                <div class="d-flex flex-wrap gap-2 mb-2">
+                  <span class="badge ${getStatusBadgeClass(t.status)} fs-6 px-3 py-2">${t.status || 'Unknown'}</span>
+                  <span class="badge ${getPriorityBadgeClass(t.priority)} fs-6 px-3 py-2">${t.priority || 'Normal'}</span>
+                </div>
+              </div>
+              <div class="col-md-4 text-md-end">
+                <p class="mb-1"><strong><i class="bi bi-calendar-plus"></i> Created:</strong> ${formatDateTime(t.created_at)}</p>
+                <p class="mb-1"><strong><i class="bi bi-calendar-check"></i> Updated:</strong> ${formatDateTime(t.updated_at || t.created_at)}</p>
+                ${t.resolution_due_date ? `<p class="mb-1"><strong><i class="bi bi-clock"></i> Due:</strong> ${formatDateTime(t.resolution_due_date)}</p>` : ''}
+              </div>
+            </div>
+            
+            <div class="row mt-3">
+              <div class="col-md-6">
+                <p><strong><i class="bi bi-person-check"></i> Assigned To:</strong> ${t.assigned_to_name || 'Not Assigned'}</p>
+                <p><strong><i class="bi bi-tags"></i> Category:</strong> ${t.category || '-'}</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong><i class="bi bi-exclamation-octagon"></i> Issue Type:</strong> ${t.issue_type || '-'}</p>
+                <p><strong><i class="bi bi-tag"></i> Subcategory:</strong> ${t.subcategory || '-'}</p>
+              </div>
+            </div>
+            
+            <hr>
+            
+            <!-- User Information -->
+            <div class="row mt-3">
+              <div class="col-12">
+                <h5><i class="bi bi-person-circle me-2"></i> User Information</h5>
+                <div class="row bg-light p-3 rounded">
+                  <div class="col-md-3 mb-2">
+                    <strong>Name:</strong><br>
+                    <span class="text-primary">${t.complainant_name || '-'}</span>
+                  </div>
+                  <div class="col-md-3 mb-2">
+                    <strong>User Type:</strong><br>
+                    <span>${t.user_type || '-'}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Description -->
+            <div class="mt-4">
+              <h5><i class="bi bi-chat-text me-2"></i> Description</h5>
+              <div class="alert alert-light border p-3">
+                ${g.p_description_of_complaint || 'No description provided.'}
+              </div>
+            </div>
+            
+            <!-- Grievance Details -->
+            ${g.CAN_Number || g.application_number ? `
+            <div class="mt-4">
+              <h5><i class="bi bi-file-earmark-text me-2"></i> Grievance Details</h5>
+              <div class="row bg-light p-3 rounded">
+                ${g.CAN_Number ? `
+                <div class="col-md-4 mb-2">
+                  <strong>CAN Number:</strong><br>
+                  <span class="text-primary">${g.CAN_Number}</span>
+                </div>
+                ` : ''}
+                ${g.application_number ? `
+                <div class="col-md-4 mb-2">
+                  <strong>Application Number:</strong><br>
+                  <span class="text-primary">${g.application_number}</span>
+                </div>
+                ` : ''}
+                ${g.application_date ? `
+                <div class="col-md-4 mb-2">
+                  <strong>Application Date:</strong><br>
+                  <span>${formatDateTime(g.application_date)}</span>
+                </div>
+                ` : ''}
+              </div>
+            </div>
+            ` : ''}
+            
+            <!-- Attachments -->
+            ${attachments.length > 0 ? `
+            <div class="mt-4">
+              <h5><i class="bi bi-paperclip me-2"></i> Attachments (${attachments.length})</h5>
+              <div class="row">
+                ${attachments.map((file, index) => `
+                  <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                          <i class="bi bi-file-earmark me-2 fs-4 text-primary"></i>
+                          <h6 class="card-title mb-0 text-truncate">${file.file_name || `Attachment ${index + 1}`}</h6>
+                        </div>
+                        ${file.file_type ? `<span class="badge bg-secondary">${file.file_type}</span>` : ''}
+                        ${file.file_size ? `<small class="text-muted d-block mt-1">${formatFileSize(file.file_size)}</small>` : ''}
+                        ${file.uploaded_at ? `<small class="text-muted d-block">${formatDateTime(file.uploaded_at)}</small>` : ''}
+                      </div>
+                      <div class="card-footer bg-transparent border-top-0">
+                        <a href="${fileUrl + file.file_name || '#'}" target="_blank" class="btn btn-sm btn-outline-primary w-100">
+                          <i class="bi bi-download"></i> Download
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            ` : ''}
+          </div>
+
+          <!-- Action Box -->
+          <div class="action-box">
+            <form id="ticketActionForm">
+              <!-- Action Buttons -->
+              <div class="action-buttons">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#escalateModal">
+                  <i class="bi bi-arrow-up-circle"></i> Forward
+                </button>
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#resolveModal">
+                  <i class="bi bi-arrow-return-left"></i> Return/Send Back
+                </button>
+                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#closeModal">
+                  <i class="bi bi-x-circle"></i> Close
+                </button>
+                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#reassignModal">
+                  <i class="bi bi-arrow-repeat"></i> Re-Assign
+                </button>
+              </div>
+            </form>
+
+            <!-- Progress Timeline -->
+            <div class="comment-box mt-4">
+              <h5><i class="bi bi-clock-history me-2"></i> Progress Timeline</h5>
+              ${timeline.length > 0 ? `
+                <div class="timeline mt-3">
+                  ${timeline.map((item, index) => `
+                    <div class="timeline-item ${index === 0 ? 'timeline-item-first' : ''} ${index === timeline.length - 1 ? 'timeline-item-last' : ''}">
+                      <div class="timeline-content">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                          <strong class="text-primary">${item.role_name || 'System'}</strong>
+                          <small class="text-muted">${formatDateTime(item.start_time)}</small>
+                        </div>
+                        <p class="mb-2">${item.notes || 'No notes provided'}</p>
+                        <div class="d-flex gap-3 align-items-center">
+                          <div>
+                            <small class="text-muted">To:</small>
+                            <span class="badge ${getStatusBadgeClass(item.to_status)} ms-1">${item.to_status || '-'}</span>
+                          </div>
+                        </div>
+                        ${item.action_by_name ? `<small class="text-muted d-block mt-1"><i class="bi bi-person"></i> By: ${item.action_by_name}</small>` : ''}
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : `
+                <div class="alert alert-info">
+                  <i class="bi bi-info-circle"></i> No timeline updates available.
+                </div>
+              `}
+            </div>
+          </div>
+        </div>
+      `;
+
+            // Add event listeners
+            document.getElementById('refreshBtn')?.addEventListener('click', () => loadTicketData());
+
+            // Initialize tooltips
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // ============ MODAL HANDLERS ============
+
+        function initializeModals() {
+            if (modalsInitialized) return;
+
+            // ============ FORWARD MODAL ============
+            if (escalateModal) {
+                escalateModal.addEventListener('show.bs.modal', async () => {
+                    await populateAgentDropdowns();
+
+                    // Add event listener for agent selection change
+                    const agentDropdown = document.getElementById('agentDropdown');
+                    if (agentDropdown) {
+                        agentDropdown.removeEventListener('change', handleAgentSelectionChange);
+                        agentDropdown.addEventListener('change', handleAgentSelectionChange);
+                    }
+                });
+
+                // Add event listener for the forward button
+                document.getElementById('escalateConfirmBtn').addEventListener('click', async () => {
+                    const note = document.getElementById('escalateNote').value;
+                    const districtContainer = document.getElementById('districtContainer');
+                    const edmAgentsContainer = document.getElementById('edmAgentsContainer');
+
+                    // Check what type of agent is selected
+                    const agentDropdown = document.getElementById('agentDropdown');
+                    const selectedOption = agentDropdown.options[agentDropdown.selectedIndex];
+                    const isSpecialEdm = selectedOption.dataset.isSpecialEdm === "true";
+
+                    let districtId = null;
+
+                    if (isSpecialEdm) {
+                        // For EDM agents, validate district and EDM agent selection
+                        if (districtContainer.style.display === 'block') {
+                            const districtSelect = document.getElementById('districtSelect');
+                            districtId = districtSelect.value;
+
+                            if (!districtId) {
+                                showToast('Please select a district', 'warning');
+                                return;
+                            }
+
+                            if (edmAgentsContainer.style.display === 'block') {
+                                const edmAgentsSelect = document.getElementById('edmAgentsSelect');
+                                const edmAgentId = edmAgentsSelect.value;
+
+                                if (!edmAgentId) {
+                                    showToast('Please select an EDM agent', 'warning');
+                                    return;
+                                }
+
+                                // Check if "No EDM agents available" is selected
+                                if (edmAgentsSelect.options[edmAgentsSelect.selectedIndex].text.includes('No EDM agents available')) {
+                                    showToast('No EDM agents available for selected district', 'warning');
+                                    return;
+                                }
+                            } else {
+                                showToast('Please wait for EDM agents to load', 'warning');
+                                return;
+                            }
+                        } else {
+                            showToast('Please select a district', 'warning');
+                            return;
+                        }
+                    } else {
+                        // For non-EDM agents, validate agent selection
+                        const agentId = agentDropdown.value;
+                        if (!agentId) {
+                            showToast('Please select an agent', 'warning');
+                            return;
+                        }
+                    }
+
+                    if (!note.trim()) {
+                        showToast('Please enter a forward note', 'warning');
+                        return;
+                    }
+
+                    const success = await escalateTicket(currentTicketId, note, districtId);
+                    if (success) {
+                        showToast('Ticket forwarded successfully!', 'success');
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('escalateModal'));
+                        if (modal) {
+                            modal.hide();
+                        }
+                        window.location.href = 'dashboard.html';
+                        setTimeout(() => loadTicketData(), 1000);
+                    } else {
+                        showToast('Failed to forward ticket', 'danger');
+                    }
+                });
+
+                // Reset when modal closes
+                escalateModal.addEventListener('hidden.bs.modal', () => {
+                    // Hide all containers
+                    const districtContainer = document.getElementById('districtContainer');
+                    const edmAgentsContainer = document.getElementById('edmAgentsContainer');
+
+                    if (districtContainer) {
+                        districtContainer.style.display = 'none';
+                    }
+
+                    if (edmAgentsContainer) {
+                        edmAgentsContainer.style.display = 'none';
+                    }
+
+                    // Reset district select
+                    const districtSelect = document.getElementById('districtSelect');
+                    if (districtSelect) {
+                        districtSelect.innerHTML = '<option value="">-- Select District --</option>';
+                        districtSelect.required = false;
+                        districtSelect.disabled = true;
+                        districtSelect.value = '';
+                    }
+
+                    // Reset EDM agents select
+                    const edmAgentsSelect = document.getElementById('edmAgentsSelect');
+                    if (edmAgentsSelect) {
+                        edmAgentsSelect.innerHTML = '<option value="">-- Select EDM Agent --</option>';
+                        edmAgentsSelect.required = false;
+                        edmAgentsSelect.disabled = true;
+                        edmAgentsSelect.value = '';
+                    }
+
+                    // Reset note
+                    const escalateNote = document.getElementById('escalateNote');
+                    if (escalateNote) {
+                        escalateNote.value = '';
+                        escalateNote.placeholder = "Enter forward note...";
+                    }
+
+                    // Reset agent dropdown
+                    const agentDropdown = document.getElementById('agentDropdown');
+                    if (agentDropdown) {
+                        agentDropdown.value = '';
+                    }
+                });
+            }
+
+            // ============ RETURN TICKET MODAL ============
+            const resolveModal = document.getElementById('resolveModal');
+            if (resolveModal) {
+                // Add event listener for the return/send back button
+                document.getElementById('resolveConfirmBtn').addEventListener('click', async () => {
+                    const note = document.getElementById('resolveNote').value;
+
+                    if (!note.trim()) {
+                        showToast('Please enter a return note', 'warning');
+                        return;
+                    }
+
+                    const success = await returnTicket(currentTicketId, note);
+                    if (success) {
+                        showToast('Ticket returned successfully!', 'success');
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('resolveModal'));
+                        if (modal) {
+                            modal.hide();
+                        }
+                        window.location.href = 'dashboard.html';
+                        setTimeout(() => loadTicketData(), 1000);
+                    } else {
+                        showToast('Failed to return ticket', 'danger');
+                    }
+                });
+
+                // Reset form when modal closes
+                resolveModal.addEventListener('hidden.bs.modal', () => {
+                    document.getElementById('resolveNote').value = '';
+                });
+            }
+
+            async function uploadFiles(files, ticketId) {
+                try {
+                    const formData = new FormData();
+
+                    // Append each file to FormData
+                    files.forEach(file => {
+                        formData.append('files[]', file);
+                    });
+
+                    // Append ticket ID if needed
+                    formData.append('ticketId', ticketId);
+
+                    const response = await fetch('/upload-files-endpoint', { // Replace with your actual endpoint
+                        method: 'POST',
+                        body: formData,
+                        // Don't set Content-Type header - FormData sets it automatically with boundary
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Failed to upload files');
+                    }
+
+                    return data.uploadedFiles || []; // Return array of uploaded file info
+                } catch (error) {
+                    console.error('Error uploading files:', error);
+                    throw error; // Re-throw to be caught in the calling function
+                }
+            }
+
+            // ============ CLOSE TICKET MODAL ============
+            const closeModal = document.getElementById('closeModal');
+            if (closeModal) {
+                // Initialize file upload when modal opens
+                closeModal.addEventListener('show.bs.modal', () => {
+                    // Reset file selection
+                    selectedFiles = [];
+                    document.getElementById('closeFiles').value = '';
+                    document.getElementById('fileList').innerHTML = '';
+                    document.getElementById('filePreview').style.display = 'none';
+
+                    // Initialize file upload handlers
+                    initializeFileUpload();
+                });
+
+                // Add event listener for the close ticket button
+                document.getElementById('closeConfirmBtn').addEventListener('click', async () => {
+                    debugger
+                    const note = document.getElementById('closeNote').value;
+                    const status = document.getElementById('closeStatus').value;
+
+                    if (!note.trim()) {
+                        showToast('Please enter a closing note', 'warning');
+                        return;
+                    }
+
+                    if (!status) {
+                        showToast('Please select a resolution status', 'warning');
+                        return;
+                    }
+
+                    // Confirm before closing with files
+                    let confirmationMessage = 'Are you sure you want to close this ticket?';
+                    if (selectedFiles.length > 0) {
+                        confirmationMessage = `Are you sure you want to close this ticket with ${selectedFiles.length} attached file(s)?`;
+                    }
+
+                    if (!confirm(confirmationMessage)) {
+                        return;
+                    }
+
+                    showLoading(true);
+
+                    try {
+                        let uploadedFiles = [];
+
+                        // Upload files if any selected
+                        if (selectedFiles.length > 0) {
+                            uploadedFiles = await uploadFiles(selectedFiles, currentTicketId);
+                        }
+
+                        // Close the ticket with uploaded files
+                        const result = await closeTicket(currentTicketId, note, status, uploadedFiles);
+
+                        if (result.success) {
+                            showToast(result.message, 'success');
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('closeModal'));
+                            if (modal) {
+                                modal.hide();
+                            }
+
+                            // Reset form
+                            resetCloseModal();
+
+                            setTimeout(() => loadTicketData(), 1000);
+                        } else {
+                            showToast(result.message, 'danger');
+                        }
+                    } catch (error) {
+                        console.error('Error in close ticket process:', error);
+                        showToast('An error occurred while closing the ticket', 'danger');
+                    } finally {
+                        showLoading(false);
+                    }
+                });
+
+                // Reset form when modal closes
+                closeModal.addEventListener('hidden.bs.modal', () => {
+                    resetCloseModal();
+                });
+            }
+
+            async function populateReassignDropdowns() {
+                const agents = await getAvailableAgents();
+                const select = document.getElementById('reassignSelect');
+
+                if (select) {
+                    // Clear existing options
+                    select.innerHTML = '<option value="">Select Agent</option>';
+
+                    agents.forEach(agent => {
+                        const option = document.createElement('option');
+                        option.value = agent.user_id;
+
+                        // Store additional data as data attributes for EDM
+                        if (agent.is_special_edm) {
+                            option.dataset.isSpecialEdm = "true";
+                            option.dataset.districts = JSON.stringify(agent.districts || []);
+                            option.dataset.originalName = agent.original_name || agent.user_name;
+                        }
+
+                        // Set display text
+                        let displayText = agent.user_name || 'Unknown Agent';
+
+                        // Add department and role if available
+                        if (agent.department) {
+                            displayText += ` - ${agent.department}`;
+                        }
+                        if (agent.role) {
+                            displayText += ` (${agent.role})`;
+                        }
+
+                        option.textContent = displayText;
+                        select.appendChild(option);
+                    });
+                }
+            }
+
+            function handleReassignAgentSelectionChange(event) {
+                const selectedOption = event.target.options[event.target.selectedIndex];
+                const isSpecialEdm = selectedOption.dataset.isSpecialEdm === "true";
+                const reassignDistrictContainer = document.getElementById('reassignDistrictContainer');
+                const reassignDistrictSelect = document.getElementById('reassignDistrictSelect');
+                const reassignEdmAgentsContainer = document.getElementById('reassignEdmAgentsContainer');
+                const reassignEdmAgentsSelect = document.getElementById('reassignEdmAgentsSelect');
+                const reassignNote = document.getElementById('reassignNote');
+
+                if (reassignDistrictContainer && reassignDistrictSelect && reassignEdmAgentsContainer && reassignEdmAgentsSelect) {
+                    if (isSpecialEdm) {
+                        // Show district container, hide EDM agents container
+                        reassignDistrictContainer.style.display = 'block';
+                        reassignEdmAgentsContainer.style.display = 'none';
+
+                        // Clear EDM agents dropdown
+                        reassignEdmAgentsSelect.innerHTML = '<option value="">-- Select EDM Agent --</option>';
+                        reassignEdmAgentsSelect.required = false;
+                        reassignEdmAgentsSelect.disabled = true;
+
+                        // Parse and populate districts
+                        const districts = JSON.parse(selectedOption.dataset.districts || '[]');
+                        reassignDistrictSelect.innerHTML = '<option value="">-- Select District --</option>';
+
+                        if (districts.length > 0) {
+                            districts.forEach(district => {
+                                const option = document.createElement('option');
+                                option.value = district.id;
+                                option.textContent = district.district || district.name || `District ${district.id}`;
+                                reassignDistrictSelect.appendChild(option);
+                            });
+
+                            // Make district selection required
+                            reassignDistrictSelect.required = true;
+                            reassignDistrictSelect.disabled = false;
+
+                            // Add event listener for district change
+                            reassignDistrictSelect.removeEventListener('change', handleReassignDistrictChange);
+                            reassignDistrictSelect.addEventListener('change', handleReassignDistrictChange);
+                        } else {
+                            reassignDistrictSelect.innerHTML = '<option value="">No districts available</option>';
+                            reassignDistrictSelect.disabled = true;
+                        }
+
+                        // Update note placeholder
+                        if (reassignNote) {
+                            reassignNote.placeholder = "Enter reassign note...";
+                        }
+                    } else {
+                        // Hide both district and EDM agents containers
+                        reassignDistrictContainer.style.display = 'none';
+                        reassignEdmAgentsContainer.style.display = 'none';
+                        reassignDistrictSelect.required = false;
+                        reassignDistrictSelect.disabled = true;
+                        reassignEdmAgentsSelect.required = false;
+                        reassignEdmAgentsSelect.disabled = true;
+
+                        // Reset note placeholder
+                        if (reassignNote) {
+                            reassignNote.placeholder = "Enter reassign note...";
+                        }
+                    }
+                }
+            }
+
+            async function handleReassignDistrictChange(event) {
+                const districtId = event.target.value;
+                const reassignEdmAgentsContainer = document.getElementById('reassignEdmAgentsContainer');
+                const reassignEdmAgentsSelect = document.getElementById('reassignEdmAgentsSelect');
+                const reassignNote = document.getElementById('reassignNote');
+
+                if (!districtId) {
+                    // Hide EDM agents container if no district selected
+                    reassignEdmAgentsContainer.style.display = 'none';
+                    reassignEdmAgentsSelect.required = false;
+                    reassignEdmAgentsSelect.disabled = true;
+                    reassignEdmAgentsSelect.innerHTML = '<option value="">-- Select EDM Agent --</option>';
+                    return;
+                }
+
+                // Show loading in EDM agents dropdown
+                reassignEdmAgentsSelect.innerHTML = '<option value="">Loading EDM agents...</option>';
+                reassignEdmAgentsSelect.disabled = true;
+
+                try {
+                    // Fetch EDM agents for the selected district
+                    const edmAgents = await getEDMAgentsForDistrict(districtId);
+
+                    // Populate EDM agents dropdown
+                    reassignEdmAgentsSelect.innerHTML = '<option value="">-- Select EDM Agent --</option>';
+
+                    if (edmAgents.length > 0) {
+                        edmAgents.forEach(agent => {
+                            const option = document.createElement('option');
+                            option.value = agent.user_id;
+
+                            // Display text: agent name + role/department if available
+                            let displayText = agent.user_name || `EDM Agent ${agent.user_id}`;
+                            if (agent.role || agent.department) {
+                                displayText += ` (${agent.role || agent.department})`;
+                            }
+
+                            option.textContent = displayText;
+
+                            // Store additional info as data attributes
+                            if (agent.district_name) {
+                                option.dataset.districtName = agent.district_name;
+                            }
+
+                            reassignEdmAgentsSelect.appendChild(option);
+                        });
+
+                        // Show and enable EDM agents dropdown
+                        reassignEdmAgentsContainer.style.display = 'block';
+                        reassignEdmAgentsSelect.required = true;
+                        reassignEdmAgentsSelect.disabled = false;
+
+                        // Update note placeholder with district info
+                        if (reassignNote) {
+                            const districtName = edmAgents[0]?.district_name || `District ${districtId}`;
+                            reassignNote.placeholder = `Enter reassign note for ${districtName}...`;
+                        }
+                    } else {
+                        // No EDM agents available for this district
+                        reassignEdmAgentsSelect.innerHTML = '<option value="">No EDM agents available for this district</option>';
+                        reassignEdmAgentsContainer.style.display = 'block';
+                        reassignEdmAgentsSelect.required = true;
+                        reassignEdmAgentsSelect.disabled = true;
+
+                        // Update note placeholder
+                        if (reassignNote) {
+                            reassignNote.placeholder = "Enter reassign note...";
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading EDM agents:', error);
+                    reassignEdmAgentsSelect.innerHTML = '<option value="">Error loading EDM agents</option>';
+                    reassignEdmAgentsContainer.style.display = 'block';
+                    reassignEdmAgentsSelect.required = true;
+                    reassignEdmAgentsSelect.disabled = true;
+                }
+            }
+
+            // ============ RE-ASSIGN MODAL ============
+            const reassignModal = document.getElementById('reassignModal');
+            if (reassignModal) {
+                // Populate agents when modal opens
+                reassignModal.addEventListener('show.bs.modal', async () => {
+                    await populateReassignDropdowns();
+
+                    // Add event listener for agent selection change
+                    const reassignSelect = document.getElementById('reassignSelect');
+                    if (reassignSelect) {
+                        reassignSelect.removeEventListener('change', handleReassignAgentSelectionChange);
+                        reassignSelect.addEventListener('change', handleReassignAgentSelectionChange);
+                    }
+                });
+
+                // Add event listener for the re-assign button
+                document.getElementById('reassignConfirmBtn').addEventListener('click', async () => {
+                    const note = document.getElementById('reassignNote').value;
+                    const reassignDistrictContainer = document.getElementById('reassignDistrictContainer');
+                    const reassignEdmAgentsContainer = document.getElementById('reassignEdmAgentsContainer');
+
+                    // Check what type of agent is selected
+                    const reassignSelect = document.getElementById('reassignSelect');
+                    const selectedOption = reassignSelect.options[reassignSelect.selectedIndex];
+                    const isSpecialEdm = selectedOption.dataset.isSpecialEdm === "true";
+
+                    let assignedTo = null;
+                    let districtId = null;
+
+                    if (isSpecialEdm) {
+                        // For EDM agents, validate district and EDM agent selection
+                        if (reassignDistrictContainer.style.display === 'block') {
+                            const reassignDistrictSelect = document.getElementById('reassignDistrictSelect');
+                            districtId = reassignDistrictSelect.value;
+
+                            if (!districtId) {
+                                showToast('Please select a district', 'warning');
+                                return;
+                            }
+
+                            if (reassignEdmAgentsContainer.style.display === 'block') {
+                                const reassignEdmAgentsSelect = document.getElementById('reassignEdmAgentsSelect');
+                                const edmAgentId = reassignEdmAgentsSelect.value;
+
+                                if (!edmAgentId) {
+                                    showToast('Please select an EDM agent', 'warning');
+                                    return;
+                                }
+
+                                // Check if "No EDM agents available" is selected
+                                if (reassignEdmAgentsSelect.options[reassignEdmAgentsSelect.selectedIndex].text.includes('No EDM agents available')) {
+                                    showToast('No EDM agents available for selected district', 'warning');
+                                    return;
+                                }
+
+                                assignedTo = edmAgentId;
+                            } else {
+                                showToast('Please wait for EDM agents to load', 'warning');
+                                return;
+                            }
+                        } else {
+                            showToast('Please select a district', 'warning');
+                            return;
+                        }
+                    } else {
+                        // For non-EDM agents, validate agent selection
+                        assignedTo = reassignSelect.value;
+                        if (!assignedTo) {
+                            showToast('Please select an agent to re-assign to', 'warning');
+                            return;
+                        }
+                    }
+
+                    if (!note.trim()) {
+                        showToast('Please enter a re-assignment note', 'warning');
+                        return;
+                    }
+
+                    const success = await reassignTicket(currentTicketId, assignedTo, note);
+                    if (success) {
+                        showToast('Ticket re-assigned successfully!', 'success');
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('reassignModal'));
+                        if (modal) {
+                            modal.hide();
+                        }
+                        // Navigate to dashboard after success
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1500);
+                    } else {
+                        showToast('Failed to re-assign ticket', 'danger');
+                    }
+                });
+
+                // Reset form when modal closes
+                reassignModal.addEventListener('hidden.bs.modal', () => {
+                    // Hide all containers
+                    const reassignDistrictContainer = document.getElementById('reassignDistrictContainer');
+                    const reassignEdmAgentsContainer = document.getElementById('reassignEdmAgentsContainer');
+
+                    if (reassignDistrictContainer) {
+                        reassignDistrictContainer.style.display = 'none';
+                    }
+
+                    if (reassignEdmAgentsContainer) {
+                        reassignEdmAgentsContainer.style.display = 'none';
+                    }
+
+                    // Reset district select
+                    const reassignDistrictSelect = document.getElementById('reassignDistrictSelect');
+                    if (reassignDistrictSelect) {
+                        reassignDistrictSelect.innerHTML = '<option value="">-- Select District --</option>';
+                        reassignDistrictSelect.required = false;
+                        reassignDistrictSelect.disabled = true;
+                        reassignDistrictSelect.value = '';
+                    }
+
+                    // Reset EDM agents select
+                    const reassignEdmAgentsSelect = document.getElementById('reassignEdmAgentsSelect');
+                    if (reassignEdmAgentsSelect) {
+                        reassignEdmAgentsSelect.innerHTML = '<option value="">-- Select EDM Agent --</option>';
+                        reassignEdmAgentsSelect.required = false;
+                        reassignEdmAgentsSelect.disabled = true;
+                        reassignEdmAgentsSelect.value = '';
+                    }
+
+                    // Reset note
+                    const reassignNote = document.getElementById('reassignNote');
+                    if (reassignNote) {
+                        reassignNote.value = '';
+                        reassignNote.placeholder = "Enter reassign note...";
+                    }
+
+                    // Reset agent dropdown
+                    const reassignSelect = document.getElementById('reassignSelect');
+                    if (reassignSelect) {
+                        reassignSelect.value = '';
+                    }
+                });
+            }
+
+            modalsInitialized = true;
+        }
+
+        // ============ MAIN LOAD FUNCTION ============
+
+        async function loadTicketData() {
+            const ticketId = getUrlParameter('id');
+
+            if (!ticketId) {
+                document.getElementById('mainContent').innerHTML = `
+          <div class="container py-4">
+            <div class="alert alert-danger">
+              <h4><i class="bi bi-exclamation-triangle"></i> Error</h4>
+              <p>No ticket ID specified. Please select a ticket from the dashboard.</p>
+              <a href="dashboard.html" class="btn btn-outline-danger">
+                <i class="bi bi-arrow-left"></i> Go to Dashboard
+              </a>
+            </div>
+          </div>
+        `;
+                return;
+            }
+
+            currentTicketId = ticketId;
+
+            try {
+                const ticketDetails = await fetchTicketDetails(ticketId);
+                if (!ticketDetails) {
+                    throw new Error('Failed to load ticket details');
+                }
+                renderTicketDetails(ticketDetails);
+                initializeModals();
+            } catch (error) {
+                console.error('Error loading ticket:', error);
+                document.getElementById('mainContent').innerHTML = `
+          <div class="container py-4">
+            <div class="alert alert-danger">
+              <h4><i class="bi bi-exclamation-triangle"></i> Error Loading Ticket</h4>
+              <p>Failed to load ticket details. Please try again.</p>
+              <p class="text-muted small">Error: ${error.message}</p>
+              <div class="mt-3">
+                <a href="dashboard.html" class="btn btn-outline-danger me-2">
+                  <i class="bi bi-arrow-left"></i> Go to Dashboard
+                </a>
+                <button class="btn btn-prixmary" onclick="loadTicketData()">
+                  <i class="bi bi-arrow-clockwise"></i> Retry
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+            }
+        }
+
+        // ============ INITIALIZATION ============
+
+        $(document).ready(function () {
+            // Initialize sidebar
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+
+            sidebarToggle.addEventListener('click', () => {
+                if (window.innerWidth < 992) {
+                    sidebar.classList.toggle('show');
+                } else {
+                    document.body.classList.toggle('sidebar-collapsed');
+                }
+            });
+
+            // Close mobile sidebar when clicking outside
+            document.addEventListener('click', function (e) {
+                if (window.innerWidth < 992) {
+                    if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+                        sidebar.classList.remove('show');
+                    }
+                }
+            });
+
+            // Display current date and time
+            function updateDateTime() {
+                const now = new Date();
+                const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+                const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const dateTimeString = now.toLocaleDateString(undefined, options) + ' ' + timeString;
+                document.getElementById('currentDateTime').textContent = dateTimeString;
+            }
+
+            setInterval(updateDateTime, 1000);
+            updateDateTime();
+
+            // Global AJAX error handler
+            // $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
+            //     showLoading(false);
+            //     console.error('AJAX Error:', settings.url, thrownError);
+
+            //     if (jqxhr.status === 401) {
+            //         showToast('Session expired. Please login again.', 'warning');
+            //         setTimeout(() => window.location.href = 'index.html', 2000);
+            //     } else if (jqxhr.status === 0) {
+            //         showToast('Network error. Please check your internet connection.', 'danger');
+            //     } else if (jqxhr.status === 500) {
+            //         showToast('Server error. Please try again later.', 'danger');
+            //     }
+            // });
+
+            // Load ticket data
+            loadTicketData();
+        });
+    </script>
+</body>
+
+</html>

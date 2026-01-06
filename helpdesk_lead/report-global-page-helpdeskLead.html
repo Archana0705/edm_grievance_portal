@@ -11,14 +11,7 @@
   <link href="../assets/font/bootstrap-icons.css" rel="stylesheet">
   <link href="../assets/css/aos.css" rel="stylesheet">
 
-
-
   <style>
-    .card_wraps {
-      max-width: 450px;
-      margin: 0px auto;
-    }
-
     html,
     body {
       height: 100%;
@@ -26,6 +19,10 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f1f3f6;
       color: #333;
+    }
+
+    .form-check-input[type=checkbox] {
+      border-color: black;
     }
 
     body {
@@ -271,52 +268,6 @@
       z-index: 2000;
     }
   </style>
-  <style>
-    body {
-      background: #f8f9fb;
-      font-family: "Segoe UI", sans-serif;
-    }
-
-    .profile-header {
-      background: linear-gradient(135deg, #4e73df, #224abe);
-      color: #fff;
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
-    }
-
-    .profile-avatar {
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      border: 4px solid #fff;
-      object-fit: cover;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .info-card {
-      border: none;
-      border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      transition: transform 0.3s ease;
-    }
-
-    .info-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .info-card i {
-      font-size: 1.8rem;
-      color: #4e73df;
-    }
-
-    .section-title {
-      font-weight: 600;
-      margin-bottom: 15px;
-      border-left: 4px solid #4e73df;
-      padding-left: 10px;
-    }
-  </style>
   <!-- page css -->
 </head>
 
@@ -331,14 +282,14 @@
       <div class="ms-auto d-flex align-items-center gap-3">
         <span id="currentDateTime" class="me-3"></span>
         <!-- <div class="dropdown">
-            <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
+          <button class="btn btn-light dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
             <i class="bi bi-person-circle fs-4"></i> <span class="d-none d-lg-inline fw-semibold">John</span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-              <li><a class="dropdown-item" href="profile.html">Profile</a></li>
-              <li><a class="dropdown-item" href="index.html">Logout</a></li>
-            </ul>
-          </div> -->
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+            <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+            <li><a class="dropdown-item" href="index.html">Logout</a></li>
+          </ul>
+        </div> -->
         <div id="globalProfileDropdown"></div>
 
       </div>
@@ -347,131 +298,58 @@
   <!-- Sidebar -->
   <div id="sidebar">
     <a href="dashboard.html"><i class="bi bi-house"></i><span>Dashboard</span></a>
-    <a href="report-global-page.html"><i class="bi bi-file-earmark-text"></i><span>Report Issue</span></a> <a
-      href="profile.html" class="active"><i class="bi bi-person"></i><span>Profile</span></a>
+    <a href="report-global-page.html" class="active"><i class="bi bi-file-earmark-text"></i><span>Report
+        Issue</span></a>
+    <a href="profile.html"><i class="bi bi-person"></i><span>Profile</span></a>
     <a href="faq.html"><i class="bi bi-question-circle"></i><span>FAQ</span></a>
   </div>
   <!-- Main Content -->
   <div id="mainContent">
     <div class="container">
-      <!-- Profile Header -->
-      <div class="profile-header text-center mb-5" data-aos="fade-up">
-        <h3 class="fw-bold" id="userName"></h3>
-        <p class="mb-1"><i class="bi bi-geo-alt-fill me-2"></i><span id="districtVal"></span></p>
-      </div>
+      <h2 class="page-title"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i> Report an Issue
+      </h2>
+      <div class="mt-4">
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs" id="reportTabs" role="tablist">
+          <li class=" nav-item" role="presentation">
+            <button class="nav-link active" id="self-tab" data-bs-toggle="tab" data-bs-target="#selfPane" type="button"
+              role="tab">
+              Report for Self
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="behalf-tab" data-bs-toggle="tab" data-bs-target="#behalfPane" type="button"
+              role="tab">
+              Report on Behalf
+            </button>
+          </li>
+        </ul>
 
-      <!-- Profile Details -->
-      <div class="row g-4 card_wraps">
-        <div class="col-lg-12" data-aos="fade-right">
-          <div class="card info-card p-3">
-            <div class="d-flex align-items-center mb-2">
-              <i class="bi bi-person-badge me-3"></i>
-              <h6 class="mb-0 fw-semibold">Personal Information</h6>
-            </div>
+        <!-- Tab Panes -->
+        <div class="tab-content mt-3" id="reportTabsContent">
+          <div class="tab-pane fade show active" id="selfPane" role="tabpanel" aria-labelledby="self-tab">
+            <!-- ✅ Load self-report.html content here -->
 
-            <div class="row">
-              <div class="col-md-12">
-                <p><strong>Email:</strong> <span id="emailVal"></span></p>
-              </div>
-              <div class="col-md-12">
-                <p><strong>Mobile:</strong> <span id="mobileVal"></span></p>
-              </div>
-            </div>
-
+            <div id="selfContent"> </div>
+          </div>
+          <div class="tab-pane fade" id="behalfPane" role="tabpanel" aria-labelledby="behalf-tab">
+            <!-- ✅ Load behalf-report.html content here -->
+            <div id="behalfContent"></div>
           </div>
         </div>
 
-        <!-- <div class="col-lg-4" data-aos="fade-up">
-      <div class="card info-card p-3">
-        <div class="d-flex align-items-center mb-2">
-          <i class="bi bi-shield-lock me-3"></i>
-          <h6 class="mb-0 fw-semibold">Account Settings</h6>
-        </div>
-        <p><a href="#" class="text-decoration-none"><i class="bi bi-key me-2"></i> Change Password</a></p>
-        <p><a href="#" class="text-decoration-none"><i class="bi bi-bell me-2"></i> Notification Preferences</a></p>
-        <p><a href="#" class="text-decoration-none"><i class="bi bi-shield-check me-2"></i> Privacy Settings</a></p>
-      </div>
-    </div> -->
-
-        <!-- <div class="col-lg-6" data-aos="fade-left">
-      <div class="card info-card p-3">
-        <div class="d-flex align-items-center mb-2">
-          <i class="bi bi-clock-history me-3"></i>
-          <h6 class="mb-0 fw-semibold">Recent Activities</h6>
-        </div>
-        <ul class="list-unstyled small">
-          <li><i class="bi bi-check-circle-fill text-success me-2"></i> Submitted water issue request</li>
-          <li><i class="bi bi-hourglass-split text-warning me-2"></i> Road repair request pending</li>
-          <li><i class="bi bi-check-circle-fill text-success me-2"></i> Profile updated successfully</li>
-        </ul>
-      </div>
-    </div> -->
       </div>
 
-      <!-- Request History -->
-      <!-- <div class="mt-5" data-aos="fade-up">
-    <h5 class="section-title">Request History</h5>
-    <div class="table-responsive">
-      <table class="table table-hover align-middle">
-        <thead class="table-light">
-          <tr>
-            <th>#</th>
-            <th>Issue</th>
-            <th>Status</th>
-            <th>Date</th>
-            <th>Remarks</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>01</td>
-            <td><i class="bi bi-droplet-half me-2 text-info"></i>Water Supply</td>
-            <td><span class="badge bg-success">Resolved</span></td>
-            <td>20 Aug 2025</td>
-            <td>Issue fixed within 24 hrs</td>
-          </tr>
-          <tr>
-            <td>02</td>
-            <td><i class="bi bi-signpost-2 me-2 text-warning"></i>Road Damage</td>
-            <td><span class="badge bg-warning text-dark">Pending</span></td>
-            <td>18 Aug 2025</td>
-            <td>Pothole reported near main road</td>
-          </tr>
-          <tr>
-            <td>03</td>
-            <td><i class="bi bi-lightning me-2 text-danger"></i>Electricity</td>
-            <td><span class="badge bg-info">In Progress</span></td>
-            <td>15 Aug 2025</td>
-            <td>Frequent power cuts</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div> -->
     </div>
   </div>
   <!-- Footer -->
   <footer>
     &copy; 2025 My Dashboard. All rights reserved.
   </footer>
-  <!-- Toast -->
-  <div class="toast-container">
-    <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive"
-      aria-atomic="true">
-      <div class="d-flex">
-        <div class="toast-body">
-          <i class="bi bi-check-circle-fill me-2"></i> Issue submitted successfully!
-        </div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-          aria-label="Close"></button>
-      </div>
-    </div>
-  </div>
-  <!-- Bootstrap JS -->
 
 
   <script src="../assets/js/jquery-3.7.1.min.js"></script>
-  <!-- <script src="../assets/js/bootstrap.bundle.min.js"></script> -->
+  <!-- <script src="assets/js/bootstrap.bundle.min.js"></script> -->
   <script src="../assets/js/aos.js"></script>
   <script src="../assets/js/dataTableUtil.js"></script>
   <script src="../assets/js/crypto-js.min.js"></script>
@@ -481,10 +359,11 @@
   <script src="../assets/js/toastUtil.js"></script>
   <script src="../assets/js/apiConfig.js"></script>
   <script src="../assets/js/globalProfileDropdown.js"></script>
+  <script src="../assets/js/html2canvas.min.js"></script>
+  <script src="../assets/js/jspdf.umd.min.js"></script>
+  <script src="../assets/js/downloadPDF.js"></script>
 
-  <script>
-    AOS.init({ duration: 900, once: true });
-  </script>
+
   <script>
     // Sidebar toggle
     const sidebarToggle = document.getElementById('sidebarToggle');
@@ -521,20 +400,13 @@
   </script>
 
   <script>
+    // Dynamically load your existing separate pages into the tabs
     $(function () {
-      // get from localStorage
-      const email = localStorage.getItem("helpdesk_email");
-      const mobile = localStorage.getItem("helpdesk_mobile");
-      const district = localStorage.getItem("helpdesk_district");
-      const userName = localStorage.getItem("helpdesk_user_name");
-
-      // bind values to HTML
-      if (email) $("#emailVal").text(email);
-      if (mobile) $("#mobileVal").text("+91 " + mobile);
-      if (district) $("#districtVal").text(district);
-      if (userName) $("#userName").text(userName);
+      $("#selfContent").load("report-issue-ajax-helpdeskLead.html");
+      $("#behalfContent").load("raise-ticket-behalf-helpdeskLead.html");
     });
   </script>
+
 
 </body>
 

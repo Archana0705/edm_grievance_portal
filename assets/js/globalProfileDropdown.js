@@ -1,4 +1,5 @@
 function loadPartial(path, callback, targetSelector = 'body') {
+    debugger
     try {
         const currentScript = document.currentScript ||
             document.querySelector('script[src*="main.js"]');
@@ -28,10 +29,12 @@ const usernameKeyMap = {
     "helpdesk": "helpdesk_user_name",
     "user": "user_name",
     "admin": "admin_name",
-    "eSevai Operations Helpdesk": "helpdesk_user_name" // your specific role
+    "eSevai Operations Helpdesk": "helpdesk_user_name",
+    "eSevai Operations Helpdesk Lead": "helpdesk_user_name"
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    debugger
     loadPartial('assets/partials/profileDropdown.html', () => {
         const role = localStorage.getItem("role") || "user";
 
