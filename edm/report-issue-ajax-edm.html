@@ -2254,20 +2254,24 @@
 
         const params = {
           p_session_id: sessionId,
-          p_complainant_name: userName,
+          p_edm_id: roledIdforSelf,
+          p_edm_name: userName,
+          p_for_dept_user_id: null,
+          p_for_dept_user_name: null,
           // p_mobile: userMobile,
           // p_email: userEmail,
-          p_district_id: userDistrict,
-          p_issue_id: $("#typeSelect").val() || null,
-          p_created_by: localStorage.getItem("user_id") || "1",
+          p_district: userDistrict,
+          p_taluk: null,
+          p_issue: $("#typeSelect").val() || null,
           p_category_id: $("#categorySelect").val() || null,
           p_subcategory_id: $("#subCategorySelect").val() || null,
           p_priority_id: null,
-          p_relationship: null,
-          p_onbehalf_name: null,
-          p_onbehalf_mobile: null,
-          p_onbehalf_email: null,
-          p_onbehalf_district_id: null
+          p_created_by: localStorage.getItem("user_id") || "1",
+          // p_relationship: null,
+          // p_onbehalf_name: null,
+          // p_onbehalf_mobile: null,
+          // p_onbehalf_email: null,
+          // p_onbehalf_district_id: null
         };
 
         // Collect dynamic fields into single JSON
@@ -2339,7 +2343,7 @@
           "data",
           encryptData({
             action: "function_call",
-            function_name: "fn_operator_create_ticket_1",
+            function_name: "fn_edm_create_ticket_1",
             params,
           })
         );
@@ -2371,7 +2375,7 @@
 
             try {
               const result = decryptData(res.data);
-              const ticketRef = result[0]?.fn_operator_create_ticket_1 || "N/A";
+              const ticketRef = result[0]?.fn_edm_create_ticket_1 || "N/A";
               alert("Ticket Created Successfully — Ref: " + ticketRef);
 
               // Call fn_acknowledge_download after successful ticket creation

@@ -2415,19 +2415,30 @@
 
         const params = {
           p_session_id: sessionId,
-          p_complainant_name: $("#behalfPane #onbehalfName").val()?.trim() || null,
-          p_mobile: $("#behalfPane #onbehalfMobile").val()?.trim() || null,
-          p_email: $("#behalfPane #onbehalfEmail").val()?.trim() || null,
-          p_district_id: $("#behalfPane #onbehalfDistrict").val() || null,
+          p_edm_id: roleId,
+          p_edm_name: userName,
+          p_for_dept_user_id: null,
+          p_for_dept_user_name: null,
+          p_district: $("#behalfPane #onbehalfDistrict").val() || null,
+          p_taluk: null,
           p_issue_id: $("#behalfPane #typeSelectBehalf").val() || null,
-          p_created_by: localStorage.getItem("user_id") || "1",
           p_category_id: $("#behalfPane #categorySelectBehalf").val() || null,
           p_subcategory_id: $("#behalfPane #subCategorySelectBehalf").val() || null,
-          p_relationship: $("#behalfPane #relationshipField").val() || null,
-          p_onbehalf_name: localStorage.getItem("user_name") || null,
-          p_onbehalf_mobile: localStorage.getItem("mobile") || null,
-          p_onbehalf_email: localStorage.getItem("email") || null,
-          p_onbehalf_district_id: localStorage.getItem("district_id") || null
+          p_priority_id: null,
+          p_created_by: localStorage.getItem("user_id") || "1",
+
+
+          // p_complainant_name: $("#behalfPane #onbehalfName").val()?.trim() || null,
+          // p_mobile: $("#behalfPane #onbehalfMobile").val()?.trim() || null,
+          // p_email: $("#behalfPane #onbehalfEmail").val()?.trim() || null,
+          // p_district_id: $("#behalfPane #onbehalfDistrict").val() || null,
+          // p_relationship: $("#behalfPane #relationshipField").val() || null,
+          // p_onbehalf_name: localStorage.getItem("user_name") || null,
+          // p_onbehalf_mobile: localStorage.getItem("mobile") || null,
+          // p_onbehalf_email: localStorage.getItem("email") || null,
+          // p_onbehalf_district_id: localStorage.getItem("district_id") || null
+
+
         };
 
         // Collect dynamic fields into single JSON
@@ -2497,7 +2508,7 @@
           "data",
           encryptData({
             action: "function_call",
-            function_name: "fn_citizen_create_ticket_1",
+            function_name: "fn_edm_create_ticket_1",
             params,
           })
         );

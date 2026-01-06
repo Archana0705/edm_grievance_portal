@@ -472,6 +472,7 @@
                   <tr>
                     <th>View</th>
                     <th>Ticket ID</th>
+                    <th>Issue Type</th>
                     <th>Category</th>
                     <th>Sub Category</th>
                     <th>Created Date</th>
@@ -997,8 +998,31 @@
       // Format date for display
       function formatDate(dateStr) {
         if (!dateStr) return 'N/A';
-        const dateObj = new Date(dateStr);
+
+        // Handle dd/mm/yyyy format
+        const parseDateString = (str) => {
+          // Try to extract date parts from "dd-mm-yyyy hh:mm" format
+          const match = str.match(/(\d{2})-(\d{2})-(\d{4})\s+(\d{2}):(\d{2})/);
+          if (match) {
+            const [, day, month, year, hour, minute] = match;
+            return new Date(year, month - 1, day, hour, minute);
+          }
+
+          // Try "dd-mm-yyyy" format
+          const simpleMatch = str.match(/(\d{2})-(\d{2})-(\d{4})/);
+          if (simpleMatch) {
+            const [, day, month, year] = simpleMatch;
+            return new Date(year, month - 1, day);
+          }
+
+          // Try parsing with Date constructor as fallback
+          return new Date(str);
+        };
+
+        const dateObj = parseDateString(dateStr);
+
         if (isNaN(dateObj)) return dateStr;
+
         const options = { day: '2-digit', month: 'short', year: 'numeric' };
         return dateObj.toLocaleDateString('en-GB', options);
       }
@@ -1006,8 +1030,31 @@
       // Format datetime for timeline
       function formatDateTime(dateStr) {
         if (!dateStr) return "N/A";
-        const date = new Date(dateStr);
+
+        // Handle dd/mm/yyyy format
+        const parseDateString = (str) => {
+          // Try to extract date parts from "dd-mm-yyyy hh:mm" format
+          const match = str.match(/(\d{2})-(\d{2})-(\d{4})\s+(\d{2}):(\d{2})/);
+          if (match) {
+            const [, day, month, year, hour, minute] = match;
+            return new Date(year, month - 1, day, hour, minute);
+          }
+
+          // Try "dd-mm-yyyy" format
+          const simpleMatch = str.match(/(\d{2})-(\d{2})-(\d{4})/);
+          if (simpleMatch) {
+            const [, day, month, year] = simpleMatch;
+            return new Date(year, month - 1, day);
+          }
+
+          // Try parsing with Date constructor as fallback
+          return new Date(str);
+        };
+
+        const date = parseDateString(dateStr);
+
         if (isNaN(date)) return dateStr;
+
         return date.toLocaleString("en-GB", {
           day: "2-digit",
           month: "2-digit",
@@ -1017,7 +1064,6 @@
           hour12: true
         });
       }
-
       // Load tickets data for EDM
       function loadEDMTicketsData(issueStatus, ticketType, tableId) {
         const userId = localStorage.getItem('user_id');
@@ -1057,20 +1103,69 @@
               const dB = b.jsonb_build_object?.CreatedDate;
               if (!dA || !dB) return 0;
 
-              const dateA = new Date(dA.split(' ')[0].split('-').reverse().join('-') + ' ' + dA.split(' ')[1]);
-              const dateB = new Date(dB.split(' ')[0].split('-').reverse().join('-') + ' ' + dB.split(' ')[1]);
+              // Parse dd/mm/yyyy format
+              const parseDateString = (dateStr) => {
+                if (!dateStr) return new Date(NaN);
+
+                // Try to extract date parts from "dd-mm-yyyy hh:mm" format
+                const match = dateStr.match(/(\d{2})-(\d{2})-(\d{4})\s+(\d{2}):(\d{2})/);
+                if (match) {
+                  const [, day, month, year, hour, minute] = match;
+                  return new Date(year, month - 1, day, hour, minute);
+                }
+
+                // Try "dd-mm-yyyy" format
+                const simpleMatch = dateStr.match(/(\d{2})-(\d{2})-(\d{4})/);
+                if (simpleMatch) {
+                  const [, day, month, year] = simpleMatch;
+                  return new Date(year, month - 1, day);
+                }
+
+                return new Date(NaN);
+              };
+
+              const dateA = parseDateString(dA);
+              const dateB = parseDateString(dB);
+
+              if (isNaN(dateA) || isNaN(dateB)) return 0;
               return dateB - dateA;
             });
+
 
             return parsed.map(entry => {
               const data = entry.jsonb_build_object;
               const isOld = () => {
-                const created = new Date(data.CreatedDate);
+                if (!data.CreatedDate) return false;
+
+                // Parse dd/mm/yyyy format
+                const parseDateString = (dateStr) => {
+                  // Try to extract date parts from "dd-mm-yyyy hh:mm" format
+                  const match = dateStr.match(/(\d{2})-(\d{2})-(\d{4})\s+(\d{2}):(\d{2})/);
+                  if (match) {
+                    const [, day, month, year, hour, minute] = match;
+                    return new Date(year, month - 1, day, hour, minute);
+                  }
+
+                  // Try "dd-mm-yyyy" format
+                  const simpleMatch = dateStr.match(/(\d{2})-(\d{2})-(\d{4})/);
+                  if (simpleMatch) {
+                    const [, day, month, year] = simpleMatch;
+                    return new Date(year, month - 1, day);
+                  }
+
+                  return new Date(NaN);
+                };
+
+                const created = parseDateString(data.CreatedDate);
+
+                if (isNaN(created)) return false;
+
                 const now = new Date();
                 const diffHours = (now - created) / (1000 * 60 * 60);
                 return diffHours > 48;
               };
 
+              console.log(data);
               return `
                 <tr ${isOld() ? 'class="row-danger"' : ''}>
                   <td>
@@ -1081,6 +1176,7 @@
                     </button>
                   </td>
                   <td>${data.TicketId || 'N/A'}</td>
+                  <td>${data.IssueType || 'N/A'}</td>
                   <td>${data.Category || 'N/A'}</td>
                   <td>${data.Subcategory || 'N/A'}</td>
                   <td>
