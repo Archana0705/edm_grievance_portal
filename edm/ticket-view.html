@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Ticket Details - EDM Dashboard</title>
+    <title>Ticket Details - Helpdesk Lead</title>
 
     <!-- Bootstrap CSS -->
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
@@ -292,6 +292,25 @@
         .loading-spinner.show {
             display: flex;
         }
+
+        .file-upload-container {
+            border: 1px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f8f9fa;
+        }
+
+        .file-upload-container:hover {
+            border-color: #4b6cb7;
+        }
+
+        #fileList .border {
+            transition: all 0.2s;
+        }
+
+        #fileList .border:hover {
+            background-color: #f8f9fa;
+        }
     </style>
 </head>
 
@@ -312,7 +331,7 @@
             <button class="btn btn-light" id="sidebarToggle">
                 <i class="bi bi-list fs-4"></i>
             </button>
-            <span class="fw-bold ms-3 fs-5">EDM Dashboard</span>
+            <span class="fw-bold ms-3 fs-5">Helpdesk Lead Dashboard</span>
             <div class="ms-auto d-flex align-items-center gap-3">
                 <span id="currentDateTime" class="me-3"></span>
                 <div id="globalProfileDropdown"></div>
@@ -323,13 +342,13 @@
     <!-- Sidebar -->
     <div id="sidebar">
         <!-- Dashboard -->
-        <a href="dashboard.html">
+        <a href="dashboard.html" class="active">
             <i class="bi bi-speedometer2"></i>
             <span>Dashboard</span>
         </a>
 
         <!-- My Tickets -->
-        <a href="my-tickets.html" class="active">
+        <a href="my-tickets.html">
             <i class="bi bi-ticket-detailed"></i>
             <span>My Tickets</span>
         </a>
@@ -433,6 +452,7 @@
     </div>
 
     <!-- Close Ticket Modal -->
+    <!-- Close Ticket Modal -->
     <div class="modal fade" id="closeModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -444,17 +464,38 @@
                 <div class="modal-body">
                     <form id="closeForm">
                         <div class="mb-3">
-                            <label class="form-label">Closing Note</label>
-                            <textarea class="form-control" rows="3" id="closeNote" required></textarea>
+                            <label class="form-label">Closing Note <span class="text-danger">*</span></label>
+                            <textarea class="form-control" rows="3" id="closeNote" required
+                                placeholder="Enter closing note..."></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Resolution Status</label>
+                            <label class="form-label">Resolution Status <span class="text-danger">*</span></label>
                             <select class="form-select" id="closeStatus" required>
                                 <option value="">Select Status</option>
                                 <option value="Resolved">Resolved</option>
                                 <option value="Cancelled">Cancelled</option>
                                 <option value="Duplicate">Duplicate</option>
                             </select>
+                        </div>
+                        <!-- File Upload Section -->
+                        <div class="mb-3">
+                            <label class="form-label">Attach Resolution Files (Optional)</label>
+                            <div class="file-upload-container">
+                                <div class="input-group">
+                                    <input type="file" class="form-control" id="closeFiles" multiple
+                                        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.txt,.xls,.xlsx">
+                                    <button class="btn btn-outline-secondary" type="button" id="clearFilesBtn">
+                                        <i class="bi bi-x-circle"></i> Clear
+                                    </button>
+                                </div>
+                                <small class="form-text text-muted">
+                                    Supported formats: PDF, JPG, PNG, DOC, DOCX, TXT, XLS, XLSX. Max 10MB per file.
+                                </small>
+                                <div id="filePreview" class="mt-2" style="display: none;">
+                                    <small class="text-muted">Selected files:</small>
+                                    <div id="fileList" class="mt-1"></div>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -466,6 +507,7 @@
         </div>
     </div>
 
+    <!-- Re-assign Modal -->
     <!-- Re-assign Modal -->
     <div class="modal fade" id="reassignModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -482,9 +524,24 @@
                                 <option value="">Select Agent</option>
                             </select>
                         </div>
+                        <!-- District dropdown container - initially hidden -->
+                        <div class="mb-3" id="reassignDistrictContainer" style="display: none;">
+                            <label class="form-label">Select District <span class="text-danger">*</span></label>
+                            <select class="form-select" id="reassignDistrictSelect">
+                                <option value="">-- Select District --</option>
+                            </select>
+                        </div>
+                        <!-- EDM Agents dropdown container - initially hidden -->
+                        <div class="mb-3" id="reassignEdmAgentsContainer" style="display: none;">
+                            <label class="form-label">Select EDM Agent <span class="text-danger">*</span></label>
+                            <select class="form-select" id="reassignEdmAgentsSelect">
+                                <option value="">-- Select EDM Agent --</option>
+                            </select>
+                        </div>
                         <div class="mb-3">
-                            <label class="form-label">Note</label>
-                            <textarea class="form-control" rows="3" id="reassignNote" required></textarea>
+                            <label class="form-label">Reassign Note <span class="text-danger">*</span></label>
+                            <textarea class="form-control" rows="3" id="reassignNote" required
+                                placeholder="Enter reassign note..."></textarea>
                         </div>
                     </form>
                 </div>
@@ -517,6 +574,8 @@
         let currentTicketId = null;
         let currentTicketData = null;
         let currentUser = null;
+        const escalateModal = document.getElementById('escalateModal');
+        let modalsInitialized = false;
 
         // ============ UTILITY FUNCTIONS ============
 
@@ -759,124 +818,6 @@
             }
         }
 
-        // Update the modal click handler - REMOVE OR COMMENT THIS OUT
-        document.getElementById('escalateConfirmBtn').addEventListener('click', async () => {
-            const note = document.getElementById('escalateNote').value;
-            const districtContainer = document.getElementById('districtContainer');
-            const edmAgentsContainer = document.getElementById('edmAgentsContainer');
-
-            // Check what type of agent is selected
-            const agentDropdown = document.getElementById('agentDropdown');
-            const selectedOption = agentDropdown.options[agentDropdown.selectedIndex];
-            const isSpecialEdm = selectedOption.dataset.isSpecialEdm === "true";
-
-            let districtId = null;
-
-            if (isSpecialEdm) {
-                // For EDM agents, validate district and EDM agent selection
-                if (districtContainer.style.display === 'block') {
-                    const districtSelect = document.getElementById('districtSelect');
-                    districtId = districtSelect.value;
-
-                    if (!districtId) {
-                        showToast('Please select a district', 'warning');
-                        return;
-                    }
-
-                    if (edmAgentsContainer.style.display === 'block') {
-                        const edmAgentsSelect = document.getElementById('edmAgentsSelect');
-                        const edmAgentId = edmAgentsSelect.value;
-
-                        if (!edmAgentId) {
-                            showToast('Please select an EDM agent', 'warning');
-                            return;
-                        }
-
-                        // Check if "No EDM agents available" is selected
-                        if (edmAgentsSelect.options[edmAgentsSelect.selectedIndex].text.includes('No EDM agents available')) {
-                            showToast('No EDM agents available for selected district', 'warning');
-                            return;
-                        }
-                    } else {
-                        showToast('Please wait for EDM agents to load', 'warning');
-                        return;
-                    }
-                } else {
-                    showToast('Please select a district', 'warning');
-                    return;
-                }
-            } else {
-                // For non-EDM agents, validate agent selection
-                const agentId = agentDropdown.value;
-                if (!agentId) {
-                    showToast('Please select an agent', 'warning');
-                    return;
-                }
-            }
-
-            if (!note.trim()) {
-                showToast('Please enter a forward note', 'warning');
-                return;
-            }
-
-            const success = await escalateTicket(currentTicketId, note, districtId);
-            if (success) {
-                showToast('Ticket forwarded successfully!', 'success');
-                const modal = bootstrap.Modal.getInstance(document.getElementById('escalateModal'));
-                if (modal) {
-                    modal.hide();
-                }
-                setTimeout(() => loadTicketData(), 1000);
-            } else {
-                showToast('Failed to forward ticket', 'danger');
-            }
-        });
-        // Update the modal reset handler
-        escalateModal.addEventListener('hidden.bs.modal', () => {
-            // Hide all containers
-            const districtContainer = document.getElementById('districtContainer');
-            const edmAgentsContainer = document.getElementById('edmAgentsContainer');
-
-            if (districtContainer) {
-                districtContainer.style.display = 'none';
-            }
-
-            if (edmAgentsContainer) {
-                edmAgentsContainer.style.display = 'none';
-            }
-
-            // Reset district select
-            const districtSelect = document.getElementById('districtSelect');
-            if (districtSelect) {
-                districtSelect.innerHTML = '<option value="">-- Select District --</option>';
-                districtSelect.required = false;
-                districtSelect.disabled = true;
-                districtSelect.value = '';
-            }
-
-            // Reset EDM agents select
-            const edmAgentsSelect = document.getElementById('edmAgentsSelect');
-            if (edmAgentsSelect) {
-                edmAgentsSelect.innerHTML = '<option value="">-- Select EDM Agent --</option>';
-                edmAgentsSelect.required = false;
-                edmAgentsSelect.disabled = true;
-                edmAgentsSelect.value = '';
-            }
-
-            // Reset note
-            const escalateNote = document.getElementById('escalateNote');
-            if (escalateNote) {
-                escalateNote.value = '';
-                escalateNote.placeholder = "Enter forward note...";
-            }
-
-            // Reset agent dropdown
-            const agentDropdown = document.getElementById('agentDropdown');
-            if (agentDropdown) {
-                agentDropdown.value = '';
-            }
-        });
-
         async function returnTicket(ticketId, note) {
             try {
                 const payload = {
@@ -906,8 +847,180 @@
             }
         }
 
-        async function closeTicket(ticketId, note, status) {
+        let selectedFiles = [];
+
+        function initializeFileUpload() {
+            const fileInput = document.getElementById('closeFiles');
+            const filePreview = document.getElementById('filePreview');
+            const fileList = document.getElementById('fileList');
+            const clearFilesBtn = document.getElementById('clearFilesBtn');
+
+            if (fileInput) {
+                // Handle file selection
+                fileInput.addEventListener('change', function (e) {
+                    const files = Array.from(e.target.files);
+                    const previousCount = selectedFiles.length;
+
+                    // Process new files
+                    files.forEach((file) => {
+                        // Check for duplicate files
+                        const isDuplicate = selectedFiles.some(f =>
+                            f.name === file.name && f.size === file.size && f.lastModified === file.lastModified
+                        );
+
+                        if (isDuplicate) {
+                            showToast(`File "${file.name}" is already selected`, 'warning');
+                            return;
+                        }
+
+                        // Validate file size (10MB limit)
+                        if (file.size > 10 * 1024 * 1024) {
+                            showToast(`File "${file.name}" exceeds 10MB limit`, 'warning');
+                            return;
+                        }
+
+                        // Validate file type
+                        const fileName = file.name.toLowerCase();
+                        const allowedExtensions = ['.pdf', '.jpg', '.jpeg', '.png', '.doc', '.docx', '.txt', '.xls', '.xlsx', '.zip'];
+                        const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+
+                        if (!hasValidExtension) {
+                            showToast(`File "${file.name}" has unsupported format. Allowed: ${allowedExtensions.join(', ')}`, 'warning');
+                            return;
+                        }
+
+                        selectedFiles.push(file);
+                    });
+
+                    // Show success message if files were added
+                    if (selectedFiles.length > previousCount) {
+                        const addedCount = selectedFiles.length - previousCount;
+                        showToast(`${addedCount} file(s) added`, 'success');
+                    }
+
+                    // Update file preview
+                    updateFilePreview();
+
+                    // Show/hide preview
+                    if (selectedFiles.length > 0) {
+                        filePreview.style.display = 'block';
+                    } else {
+                        filePreview.style.display = 'none';
+                    }
+                });
+            }
+
+            // Clear all files
+            if (clearFilesBtn) {
+                clearFilesBtn.addEventListener('click', function () {
+                    if (selectedFiles.length > 0) {
+                        document.getElementById('closeFiles').value = '';
+                        selectedFiles = [];
+                        document.getElementById('fileList').innerHTML = '';
+                        document.getElementById('filePreview').style.display = 'none';
+                        showToast('All files cleared', 'info');
+                    }
+                });
+            }
+        }
+
+        function updateFilePreview() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+
+            // Render all files
+            selectedFiles.forEach((file, idx) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'd-flex justify-content-between align-items-center mb-1 p-2 border rounded';
+                fileItem.innerHTML = `
+            <div class="d-flex align-items-center flex-grow-1">
+                ${getFileIcon(file.name)}
+                <div class="ms-2 flex-grow-1">
+                    <div class="small text-truncate" style="max-width: 250px;" title="${file.name}">
+                        ${file.name}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.75rem;">
+                        ${formatFileSize(file.size)}
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="removeFile(${idx})" title="Remove file">
+                <i class="bi bi-trash"></i>
+            </button>
+        `;
+                fileList.appendChild(fileItem);
+            });
+
+            // Show total count
+            if (selectedFiles.length > 0) {
+                const totalCount = document.createElement('div');
+                totalCount.className = 'small text-muted mt-2';
+                totalCount.innerHTML = `<i class="bi bi-info-circle"></i> Total: ${selectedFiles.length} file(s), ${formatFileSize(selectedFiles.reduce((sum, file) => sum + file.size, 0))}`;
+                fileList.appendChild(totalCount);
+            }
+        }
+
+        function getFileIcon(fileName) {
+            const ext = fileName.split('.').pop().toLowerCase();
+
+            switch (ext) {
+                case 'pdf':
+                    return '<i class="bi bi-file-pdf text-danger fs-5"></i>';
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                case 'gif':
+                case 'bmp':
+                    return '<i class="bi bi-file-image text-success fs-5"></i>';
+                case 'doc':
+                case 'docx':
+                    return '<i class="bi bi-file-word text-primary fs-5"></i>';
+                case 'xls':
+                case 'xlsx':
+                    return '<i class="bi bi-file-excel text-success fs-5"></i>';
+                case 'txt':
+                    return '<i class="bi bi-file-text text-secondary fs-5"></i>';
+                case 'zip':
+                case 'rar':
+                case '7z':
+                    return '<i class="bi bi-file-zip text-warning fs-5"></i>';
+                default:
+                    return '<i class="bi bi-file-earmark fs-5"></i>';
+            }
+        }
+
+        function removeFile(index) {
+            const removedFile = selectedFiles[index];
+            selectedFiles.splice(index, 1);
+
+            // Update file preview
+            updateFilePreview();
+
+            // Hide preview if no files left
+            if (selectedFiles.length === 0) {
+                document.getElementById('filePreview').style.display = 'none';
+            }
+
+            showToast(`Removed: ${removedFile.name}`, 'info');
+        }
+
+        // ============ ENHANCED CLOSE TICKET FUNCTION ============
+
+        async function closeTicket(ticketId, note, status, files = []) {
             try {
+                let filesJson = null;
+
+                if (files && files.length > 0) {
+                    // Prepare files array in the required format
+                    const fileData = files.map(file => ({
+                        file_name: file.file_name,
+                        file_path: file.file_path,
+                        mime_type: getMimeTypeFromExtension(file.file_name)
+                    }));
+
+                    filesJson = JSON.stringify(fileData);
+                }
+
                 const payload = {
                     action: "function_call",
                     function_name: "fn_common_resolve_ticket",
@@ -915,9 +1028,12 @@
                         p_ticket_id: ticketId,
                         p_closing_notes: note,
                         p_final_status: status,
-                        p_closed_by: getUserId()
+                        p_closed_by: getUserId(),
+                        p_files: filesJson || null
                     }
                 };
+
+                console.log('Closing ticket with payload:', payload);
 
                 const response = await $.ajax({
                     url: `${BASE_API_URL}/commonfunction`,
@@ -927,13 +1043,116 @@
                     beforeSend: () => showLoading(true)
                 });
 
-                return response?.success || false;
+                console.log('Close ticket response:', response);
+
+                // Parse the response
+                if (response?.data) {
+                    const decrypted = decryptData(response.data);
+                    const parsed = typeof decrypted === 'string' ? JSON.parse(decrypted) : decrypted;
+                    const result = parsed?.[0]?.fn_common_resolve_ticket;
+
+                    if (result && (result.success === true || result.success === "true" || result.status === "success")) {
+                        return {
+                            success: true,
+                            message: result.message || 'Ticket closed successfully!'
+                        };
+                    } else {
+                        const errorMsg = result?.message || result?.error || response?.message || 'Failed to close ticket';
+                        throw new Error(errorMsg);
+                    }
+                } else if (response?.success === true || response?.success === "true") {
+                    return {
+                        success: true,
+                        message: response.message || 'Ticket closed successfully!'
+                    };
+                } else {
+                    throw new Error(response?.message || response?.error || 'Failed to close ticket');
+                }
             } catch (error) {
                 console.error('Error closing ticket:', error);
-                return false;
+                return {
+                    success: false,
+                    message: error.message || 'Failed to close ticket. Please try again.'
+                };
             } finally {
                 showLoading(false);
             }
+        }
+
+        function getMimeTypeFromExtension(fileName) {
+            const ext = fileName.split('.').pop().toLowerCase();
+
+            const mimeTypes = {
+                'pdf': 'application/pdf',
+                'jpg': 'image/jpeg',
+                'jpeg': 'image/jpeg',
+                'png': 'image/png',
+                'gif': 'image/gif',
+                'bmp': 'image/bmp',
+                'doc': 'application/msword',
+                'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'xls': 'application/vnd.ms-excel',
+                'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'txt': 'text/plain',
+                'zip': 'application/zip',
+                'rar': 'application/x-rar-compressed',
+                '7z': 'application/x-7z-compressed'
+            };
+
+            return mimeTypes[ext] || 'application/octet-stream';
+        }
+
+        // ============ UPLOAD FILES TO SERVER ============
+
+        async function uploadFilesToServer(files, ticketId) {
+            if (!files || files.length === 0) {
+                return [];
+            }
+
+            const uploadedFiles = [];
+
+            // Since there's no separate upload API, we need to upload files differently
+            // This assumes you have a file upload mechanism already in place
+            // If not, you'll need to implement file upload functionality
+
+            // For now, let's simulate the file upload process
+            // In reality, you would need to:
+            // 1. Upload each file to a server endpoint that saves them
+            // 2. Get back the file_path for each uploaded file
+            // 3. Then call fn_common_resolve_ticket with the file paths
+
+            showToast(`Note: ${files.length} file(s) selected. File upload functionality needs to be implemented.`, 'warning');
+
+            // This is a placeholder - you need to implement actual file upload
+            // Example structure of what should be returned:
+            /*
+            return [
+                {
+                    file_name: "report1.pdf",
+                    file_path: "/uploads/tickets/report1.pdf",
+                    mime_type: "application/pdf"
+                },
+                {
+                    file_name: "image1.jpg",
+                    file_path: "/uploads/tickets/image1.jpg",
+                    mime_type: "image/jpeg"
+                }
+            ];
+            */
+
+            // For demo purposes, creating dummy file paths
+            files.forEach((file, index) => {
+                const timestamp = Date.now();
+                const safeFileName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
+
+                uploadedFiles.push({
+                    file_name: safeFileName,
+                    file_path: `/uploads/tickets/${timestamp}_${index}_${safeFileName}`,
+                    mime_type: getMimeTypeFromExtension(file.name)
+                });
+            });
+
+            return uploadedFiles;
         }
 
         async function reassignTicket(ticketId, assignedTo, note) {
@@ -957,15 +1176,18 @@
                     beforeSend: () => showLoading(true)
                 });
 
-                return response?.success || false;
+                if (response?.success === true || response?.success === "true") {
+                    return { success: true, message: 'Ticket reassigned successfully!' };
+                } else {
+                    throw new Error(response?.message || 'Failed to reassign ticket');
+                }
             } catch (error) {
                 console.error('Error reassigning ticket:', error);
-                return false;
+                return { success: false, message: error.message || 'Failed to reassign ticket' };
             } finally {
                 showLoading(false);
             }
         }
-
         async function getAvailableAgents() {
             try {
                 const payload = {
@@ -1491,55 +1713,12 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        // ============ EVENT HANDLERS ============
-
-        async function handleSaveUpdate() {
-            const status = document.getElementById('statusSelect')?.value;
-            const priority = document.getElementById('prioritySelect')?.value;
-            const comment = document.getElementById('commentText')?.value;
-
-            if (!status && !priority && !comment) {
-                showToast('Please make at least one change before saving.', 'warning');
-                return;
-            }
-
-            const result = await updateTicketStatus(currentTicketId, status, priority, comment);
-            if (result.success) {
-                showToast(result.message, 'success');
-                // Reload ticket data
-                setTimeout(() => loadTicketData(), 1000);
-            } else {
-                showToast(result.message, 'danger');
-            }
-        }
-
         // ============ MODAL HANDLERS ============
-
-        // ============ MODAL HANDLERS ============
-
-        let modalsInitialized = false;
 
         function initializeModals() {
             if (modalsInitialized) return;
 
-            // Use event delegation for modal buttons
-            document.addEventListener('click', function (e) {
-                if (e.target && e.target.id === 'escalateConfirmBtn') {
-                    handleEscalateButton();
-                }
-                if (e.target && e.target.id === 'resolveConfirmBtn') {
-                    handleResolveButton();
-                }
-                if (e.target && e.target.id === 'closeConfirmBtn') {
-                    handleCloseButton();
-                }
-                if (e.target && e.target.id === 'reassignConfirmBtn') {
-                    handleReassignButton();
-                }
-            });
-
-            // Forward modal
-            const escalateModal = document.getElementById('escalateModal');
+            // ============ FORWARD MODAL ============
             if (escalateModal) {
                 escalateModal.addEventListener('show.bs.modal', async () => {
                     await populateAgentDropdowns();
@@ -1547,18 +1726,97 @@
                     // Add event listener for agent selection change
                     const agentDropdown = document.getElementById('agentDropdown');
                     if (agentDropdown) {
-                        // Remove existing event listener first to avoid duplicates
                         agentDropdown.removeEventListener('change', handleAgentSelectionChange);
                         agentDropdown.addEventListener('change', handleAgentSelectionChange);
                     }
                 });
 
+                // Add event listener for the forward button
+                document.getElementById('escalateConfirmBtn').addEventListener('click', async () => {
+                    const note = document.getElementById('escalateNote').value;
+                    const districtContainer = document.getElementById('districtContainer');
+                    const edmAgentsContainer = document.getElementById('edmAgentsContainer');
+
+                    // Check what type of agent is selected
+                    const agentDropdown = document.getElementById('agentDropdown');
+                    const selectedOption = agentDropdown.options[agentDropdown.selectedIndex];
+                    const isSpecialEdm = selectedOption.dataset.isSpecialEdm === "true";
+
+                    let districtId = null;
+
+                    if (isSpecialEdm) {
+                        // For EDM agents, validate district and EDM agent selection
+                        if (districtContainer.style.display === 'block') {
+                            const districtSelect = document.getElementById('districtSelect');
+                            districtId = districtSelect.value;
+
+                            if (!districtId) {
+                                showToast('Please select a district', 'warning');
+                                return;
+                            }
+
+                            if (edmAgentsContainer.style.display === 'block') {
+                                const edmAgentsSelect = document.getElementById('edmAgentsSelect');
+                                const edmAgentId = edmAgentsSelect.value;
+
+                                if (!edmAgentId) {
+                                    showToast('Please select an EDM agent', 'warning');
+                                    return;
+                                }
+
+                                // Check if "No EDM agents available" is selected
+                                if (edmAgentsSelect.options[edmAgentsSelect.selectedIndex].text.includes('No EDM agents available')) {
+                                    showToast('No EDM agents available for selected district', 'warning');
+                                    return;
+                                }
+                            } else {
+                                showToast('Please wait for EDM agents to load', 'warning');
+                                return;
+                            }
+                        } else {
+                            showToast('Please select a district', 'warning');
+                            return;
+                        }
+                    } else {
+                        // For non-EDM agents, validate agent selection
+                        const agentId = agentDropdown.value;
+                        if (!agentId) {
+                            showToast('Please select an agent', 'warning');
+                            return;
+                        }
+                    }
+
+                    if (!note.trim()) {
+                        showToast('Please enter a forward note', 'warning');
+                        return;
+                    }
+
+                    const success = await escalateTicket(currentTicketId, note, districtId);
+                    if (success) {
+                        showToast('Ticket forwarded successfully!', 'success');
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('escalateModal'));
+                        if (modal) {
+                            modal.hide();
+                        }
+                        window.location.href = 'dashboard.html';
+                        setTimeout(() => loadTicketData(), 1000);
+                    } else {
+                        showToast('Failed to forward ticket', 'danger');
+                    }
+                });
+
                 // Reset when modal closes
                 escalateModal.addEventListener('hidden.bs.modal', () => {
-                    // Hide district container
+                    // Hide all containers
                     const districtContainer = document.getElementById('districtContainer');
+                    const edmAgentsContainer = document.getElementById('edmAgentsContainer');
+
                     if (districtContainer) {
                         districtContainer.style.display = 'none';
+                    }
+
+                    if (edmAgentsContainer) {
+                        edmAgentsContainer.style.display = 'none';
                     }
 
                     // Reset district select
@@ -1566,7 +1824,17 @@
                     if (districtSelect) {
                         districtSelect.innerHTML = '<option value="">-- Select District --</option>';
                         districtSelect.required = false;
+                        districtSelect.disabled = true;
                         districtSelect.value = '';
+                    }
+
+                    // Reset EDM agents select
+                    const edmAgentsSelect = document.getElementById('edmAgentsSelect');
+                    if (edmAgentsSelect) {
+                        edmAgentsSelect.innerHTML = '<option value="">-- Select EDM Agent --</option>';
+                        edmAgentsSelect.required = false;
+                        edmAgentsSelect.disabled = true;
+                        edmAgentsSelect.value = '';
                     }
 
                     // Reset note
@@ -1584,167 +1852,473 @@
                 });
             }
 
-            // Reassign modal
+            // ============ RETURN TICKET MODAL ============
+            const resolveModal = document.getElementById('resolveModal');
+            if (resolveModal) {
+                // Add event listener for the return/send back button
+                document.getElementById('resolveConfirmBtn').addEventListener('click', async () => {
+                    const note = document.getElementById('resolveNote').value;
+
+                    if (!note.trim()) {
+                        showToast('Please enter a return note', 'warning');
+                        return;
+                    }
+
+                    const success = await returnTicket(currentTicketId, note);
+                    if (success) {
+                        showToast('Ticket returned successfully!', 'success');
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('resolveModal'));
+                        if (modal) {
+                            modal.hide();
+                        }
+                        window.location.href = 'dashboard.html';
+                        setTimeout(() => loadTicketData(), 1000);
+                    } else {
+                        showToast('Failed to return ticket', 'danger');
+                    }
+                });
+
+                // Reset form when modal closes
+                resolveModal.addEventListener('hidden.bs.modal', () => {
+                    document.getElementById('resolveNote').value = '';
+                });
+            }
+
+            async function uploadFiles(files, ticketId) {
+                try {
+                    const formData = new FormData();
+
+                    // Append each file to FormData
+                    files.forEach(file => {
+                        formData.append('files[]', file);
+                    });
+
+                    // Append ticket ID if needed
+                    formData.append('ticketId', ticketId);
+
+                    const response = await fetch('/upload-files-endpoint', { // Replace with your actual endpoint
+                        method: 'POST',
+                        body: formData,
+                        // Don't set Content-Type header - FormData sets it automatically with boundary
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Failed to upload files');
+                    }
+
+                    return data.uploadedFiles || []; // Return array of uploaded file info
+                } catch (error) {
+                    console.error('Error uploading files:', error);
+                    throw error; // Re-throw to be caught in the calling function
+                }
+            }
+
+            // ============ CLOSE TICKET MODAL ============
+            const closeModal = document.getElementById('closeModal');
+            if (closeModal) {
+                // Initialize file upload when modal opens
+                closeModal.addEventListener('show.bs.modal', () => {
+                    // Reset file selection
+                    selectedFiles = [];
+                    document.getElementById('closeFiles').value = '';
+                    document.getElementById('fileList').innerHTML = '';
+                    document.getElementById('filePreview').style.display = 'none';
+
+                    // Initialize file upload handlers
+                    initializeFileUpload();
+                });
+
+                // Add event listener for the close ticket button
+                document.getElementById('closeConfirmBtn').addEventListener('click', async () => {
+                    debugger
+                    const note = document.getElementById('closeNote').value;
+                    const status = document.getElementById('closeStatus').value;
+
+                    if (!note.trim()) {
+                        showToast('Please enter a closing note', 'warning');
+                        return;
+                    }
+
+                    if (!status) {
+                        showToast('Please select a resolution status', 'warning');
+                        return;
+                    }
+
+                    // Confirm before closing with files
+                    let confirmationMessage = 'Are you sure you want to close this ticket?';
+                    if (selectedFiles.length > 0) {
+                        confirmationMessage = `Are you sure you want to close this ticket with ${selectedFiles.length} attached file(s)?`;
+                    }
+
+                    if (!confirm(confirmationMessage)) {
+                        return;
+                    }
+
+                    showLoading(true);
+
+                    try {
+                        let uploadedFiles = [];
+
+                        // Upload files if any selected
+                        if (selectedFiles.length > 0) {
+                            uploadedFiles = await uploadFiles(selectedFiles, currentTicketId);
+                        }
+
+                        // Close the ticket with uploaded files
+                        const result = await closeTicket(currentTicketId, note, status, uploadedFiles);
+
+                        if (result.success) {
+                            showToast(result.message, 'success');
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('closeModal'));
+                            if (modal) {
+                                modal.hide();
+                            }
+
+                            // Reset form
+                            resetCloseModal();
+
+                            setTimeout(() => loadTicketData(), 1000);
+                        } else {
+                            showToast(result.message, 'danger');
+                        }
+                    } catch (error) {
+                        console.error('Error in close ticket process:', error);
+                        showToast('An error occurred while closing the ticket', 'danger');
+                    } finally {
+                        showLoading(false);
+                    }
+                });
+
+                // Reset form when modal closes
+                closeModal.addEventListener('hidden.bs.modal', () => {
+                    resetCloseModal();
+                });
+            }
+
+            async function populateReassignDropdowns() {
+                const agents = await getAvailableAgents();
+                const select = document.getElementById('reassignSelect');
+
+                if (select) {
+                    // Clear existing options
+                    select.innerHTML = '<option value="">Select Agent</option>';
+
+                    agents.forEach(agent => {
+                        const option = document.createElement('option');
+                        option.value = agent.user_id;
+
+                        // Store additional data as data attributes for EDM
+                        if (agent.is_special_edm) {
+                            option.dataset.isSpecialEdm = "true";
+                            option.dataset.districts = JSON.stringify(agent.districts || []);
+                            option.dataset.originalName = agent.original_name || agent.user_name;
+                        }
+
+                        // Set display text
+                        let displayText = agent.user_name || 'Unknown Agent';
+
+                        // Add department and role if available
+                        if (agent.department) {
+                            displayText += ` - ${agent.department}`;
+                        }
+                        if (agent.role) {
+                            displayText += ` (${agent.role})`;
+                        }
+
+                        option.textContent = displayText;
+                        select.appendChild(option);
+                    });
+                }
+            }
+
+            function handleReassignAgentSelectionChange(event) {
+                const selectedOption = event.target.options[event.target.selectedIndex];
+                const isSpecialEdm = selectedOption.dataset.isSpecialEdm === "true";
+                const reassignDistrictContainer = document.getElementById('reassignDistrictContainer');
+                const reassignDistrictSelect = document.getElementById('reassignDistrictSelect');
+                const reassignEdmAgentsContainer = document.getElementById('reassignEdmAgentsContainer');
+                const reassignEdmAgentsSelect = document.getElementById('reassignEdmAgentsSelect');
+                const reassignNote = document.getElementById('reassignNote');
+
+                if (reassignDistrictContainer && reassignDistrictSelect && reassignEdmAgentsContainer && reassignEdmAgentsSelect) {
+                    if (isSpecialEdm) {
+                        // Show district container, hide EDM agents container
+                        reassignDistrictContainer.style.display = 'block';
+                        reassignEdmAgentsContainer.style.display = 'none';
+
+                        // Clear EDM agents dropdown
+                        reassignEdmAgentsSelect.innerHTML = '<option value="">-- Select EDM Agent --</option>';
+                        reassignEdmAgentsSelect.required = false;
+                        reassignEdmAgentsSelect.disabled = true;
+
+                        // Parse and populate districts
+                        const districts = JSON.parse(selectedOption.dataset.districts || '[]');
+                        reassignDistrictSelect.innerHTML = '<option value="">-- Select District --</option>';
+
+                        if (districts.length > 0) {
+                            districts.forEach(district => {
+                                const option = document.createElement('option');
+                                option.value = district.id;
+                                option.textContent = district.district || district.name || `District ${district.id}`;
+                                reassignDistrictSelect.appendChild(option);
+                            });
+
+                            // Make district selection required
+                            reassignDistrictSelect.required = true;
+                            reassignDistrictSelect.disabled = false;
+
+                            // Add event listener for district change
+                            reassignDistrictSelect.removeEventListener('change', handleReassignDistrictChange);
+                            reassignDistrictSelect.addEventListener('change', handleReassignDistrictChange);
+                        } else {
+                            reassignDistrictSelect.innerHTML = '<option value="">No districts available</option>';
+                            reassignDistrictSelect.disabled = true;
+                        }
+
+                        // Update note placeholder
+                        if (reassignNote) {
+                            reassignNote.placeholder = "Enter reassign note...";
+                        }
+                    } else {
+                        // Hide both district and EDM agents containers
+                        reassignDistrictContainer.style.display = 'none';
+                        reassignEdmAgentsContainer.style.display = 'none';
+                        reassignDistrictSelect.required = false;
+                        reassignDistrictSelect.disabled = true;
+                        reassignEdmAgentsSelect.required = false;
+                        reassignEdmAgentsSelect.disabled = true;
+
+                        // Reset note placeholder
+                        if (reassignNote) {
+                            reassignNote.placeholder = "Enter reassign note...";
+                        }
+                    }
+                }
+            }
+
+            async function handleReassignDistrictChange(event) {
+                const districtId = event.target.value;
+                const reassignEdmAgentsContainer = document.getElementById('reassignEdmAgentsContainer');
+                const reassignEdmAgentsSelect = document.getElementById('reassignEdmAgentsSelect');
+                const reassignNote = document.getElementById('reassignNote');
+
+                if (!districtId) {
+                    // Hide EDM agents container if no district selected
+                    reassignEdmAgentsContainer.style.display = 'none';
+                    reassignEdmAgentsSelect.required = false;
+                    reassignEdmAgentsSelect.disabled = true;
+                    reassignEdmAgentsSelect.innerHTML = '<option value="">-- Select EDM Agent --</option>';
+                    return;
+                }
+
+                // Show loading in EDM agents dropdown
+                reassignEdmAgentsSelect.innerHTML = '<option value="">Loading EDM agents...</option>';
+                reassignEdmAgentsSelect.disabled = true;
+
+                try {
+                    // Fetch EDM agents for the selected district
+                    const edmAgents = await getEDMAgentsForDistrict(districtId);
+
+                    // Populate EDM agents dropdown
+                    reassignEdmAgentsSelect.innerHTML = '<option value="">-- Select EDM Agent --</option>';
+
+                    if (edmAgents.length > 0) {
+                        edmAgents.forEach(agent => {
+                            const option = document.createElement('option');
+                            option.value = agent.user_id;
+
+                            // Display text: agent name + role/department if available
+                            let displayText = agent.user_name || `EDM Agent ${agent.user_id}`;
+                            if (agent.role || agent.department) {
+                                displayText += ` (${agent.role || agent.department})`;
+                            }
+
+                            option.textContent = displayText;
+
+                            // Store additional info as data attributes
+                            if (agent.district_name) {
+                                option.dataset.districtName = agent.district_name;
+                            }
+
+                            reassignEdmAgentsSelect.appendChild(option);
+                        });
+
+                        // Show and enable EDM agents dropdown
+                        reassignEdmAgentsContainer.style.display = 'block';
+                        reassignEdmAgentsSelect.required = true;
+                        reassignEdmAgentsSelect.disabled = false;
+
+                        // Update note placeholder with district info
+                        if (reassignNote) {
+                            const districtName = edmAgents[0]?.district_name || `District ${districtId}`;
+                            reassignNote.placeholder = `Enter reassign note for ${districtName}...`;
+                        }
+                    } else {
+                        // No EDM agents available for this district
+                        reassignEdmAgentsSelect.innerHTML = '<option value="">No EDM agents available for this district</option>';
+                        reassignEdmAgentsContainer.style.display = 'block';
+                        reassignEdmAgentsSelect.required = true;
+                        reassignEdmAgentsSelect.disabled = true;
+
+                        // Update note placeholder
+                        if (reassignNote) {
+                            reassignNote.placeholder = "Enter reassign note...";
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading EDM agents:', error);
+                    reassignEdmAgentsSelect.innerHTML = '<option value="">Error loading EDM agents</option>';
+                    reassignEdmAgentsContainer.style.display = 'block';
+                    reassignEdmAgentsSelect.required = true;
+                    reassignEdmAgentsSelect.disabled = true;
+                }
+            }
+
+            // ============ RE-ASSIGN MODAL ============
             const reassignModal = document.getElementById('reassignModal');
             if (reassignModal) {
+                // Populate agents when modal opens
                 reassignModal.addEventListener('show.bs.modal', async () => {
-                    await populateAgentDropdowns();
+                    await populateReassignDropdowns();
+
+                    // Add event listener for agent selection change
+                    const reassignSelect = document.getElementById('reassignSelect');
+                    if (reassignSelect) {
+                        reassignSelect.removeEventListener('change', handleReassignAgentSelectionChange);
+                        reassignSelect.addEventListener('change', handleReassignAgentSelectionChange);
+                    }
+                });
+
+                // Add event listener for the re-assign button
+                document.getElementById('reassignConfirmBtn').addEventListener('click', async () => {
+                    const note = document.getElementById('reassignNote').value;
+                    const reassignDistrictContainer = document.getElementById('reassignDistrictContainer');
+                    const reassignEdmAgentsContainer = document.getElementById('reassignEdmAgentsContainer');
+
+                    // Check what type of agent is selected
+                    const reassignSelect = document.getElementById('reassignSelect');
+                    const selectedOption = reassignSelect.options[reassignSelect.selectedIndex];
+                    const isSpecialEdm = selectedOption.dataset.isSpecialEdm === "true";
+
+                    let assignedTo = null;
+                    let districtId = null;
+
+                    if (isSpecialEdm) {
+                        // For EDM agents, validate district and EDM agent selection
+                        if (reassignDistrictContainer.style.display === 'block') {
+                            const reassignDistrictSelect = document.getElementById('reassignDistrictSelect');
+                            districtId = reassignDistrictSelect.value;
+
+                            if (!districtId) {
+                                showToast('Please select a district', 'warning');
+                                return;
+                            }
+
+                            if (reassignEdmAgentsContainer.style.display === 'block') {
+                                const reassignEdmAgentsSelect = document.getElementById('reassignEdmAgentsSelect');
+                                const edmAgentId = reassignEdmAgentsSelect.value;
+
+                                if (!edmAgentId) {
+                                    showToast('Please select an EDM agent', 'warning');
+                                    return;
+                                }
+
+                                // Check if "No EDM agents available" is selected
+                                if (reassignEdmAgentsSelect.options[reassignEdmAgentsSelect.selectedIndex].text.includes('No EDM agents available')) {
+                                    showToast('No EDM agents available for selected district', 'warning');
+                                    return;
+                                }
+
+                                assignedTo = edmAgentId;
+                            } else {
+                                showToast('Please wait for EDM agents to load', 'warning');
+                                return;
+                            }
+                        } else {
+                            showToast('Please select a district', 'warning');
+                            return;
+                        }
+                    } else {
+                        // For non-EDM agents, validate agent selection
+                        assignedTo = reassignSelect.value;
+                        if (!assignedTo) {
+                            showToast('Please select an agent to re-assign to', 'warning');
+                            return;
+                        }
+                    }
+
+                    if (!note.trim()) {
+                        showToast('Please enter a re-assignment note', 'warning');
+                        return;
+                    }
+
+                    const success = await reassignTicket(currentTicketId, assignedTo, note);
+                    if (success) {
+                        showToast('Ticket re-assigned successfully!', 'success');
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('reassignModal'));
+                        if (modal) {
+                            modal.hide();
+                        }
+                        // Navigate to dashboard after success
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1500);
+                    } else {
+                        showToast('Failed to re-assign ticket', 'danger');
+                    }
+                });
+
+                // Reset form when modal closes
+                reassignModal.addEventListener('hidden.bs.modal', () => {
+                    // Hide all containers
+                    const reassignDistrictContainer = document.getElementById('reassignDistrictContainer');
+                    const reassignEdmAgentsContainer = document.getElementById('reassignEdmAgentsContainer');
+
+                    if (reassignDistrictContainer) {
+                        reassignDistrictContainer.style.display = 'none';
+                    }
+
+                    if (reassignEdmAgentsContainer) {
+                        reassignEdmAgentsContainer.style.display = 'none';
+                    }
+
+                    // Reset district select
+                    const reassignDistrictSelect = document.getElementById('reassignDistrictSelect');
+                    if (reassignDistrictSelect) {
+                        reassignDistrictSelect.innerHTML = '<option value="">-- Select District --</option>';
+                        reassignDistrictSelect.required = false;
+                        reassignDistrictSelect.disabled = true;
+                        reassignDistrictSelect.value = '';
+                    }
+
+                    // Reset EDM agents select
+                    const reassignEdmAgentsSelect = document.getElementById('reassignEdmAgentsSelect');
+                    if (reassignEdmAgentsSelect) {
+                        reassignEdmAgentsSelect.innerHTML = '<option value="">-- Select EDM Agent --</option>';
+                        reassignEdmAgentsSelect.required = false;
+                        reassignEdmAgentsSelect.disabled = true;
+                        reassignEdmAgentsSelect.value = '';
+                    }
+
+                    // Reset note
+                    const reassignNote = document.getElementById('reassignNote');
+                    if (reassignNote) {
+                        reassignNote.value = '';
+                        reassignNote.placeholder = "Enter reassign note...";
+                    }
+
+                    // Reset agent dropdown
+                    const reassignSelect = document.getElementById('reassignSelect');
+                    if (reassignSelect) {
+                        reassignSelect.value = '';
+                    }
                 });
             }
 
             modalsInitialized = true;
         }
-
-        // Separate handler functions
-        async function handleEscalateButton() {
-            const assignTo = document.getElementById('agentDropdown').value;
-            const note = document.getElementById('escalateNote').value;
-            const districtContainer = document.getElementById('districtContainer');
-            const edmAgentsContainer = document.getElementById('edmAgentsContainer');
-
-            // Check what type of agent is selected
-            const agentDropdown = document.getElementById('agentDropdown');
-            const selectedOption = agentDropdown.options[agentDropdown.selectedIndex];
-            const isSpecialEdm = selectedOption ? selectedOption.dataset.isSpecialEdm === "true" : false;
-
-            let districtId = null;
-
-            if (isSpecialEdm) {
-                // For EDM agents, validate district and EDM agent selection
-                if (districtContainer && districtContainer.style.display === 'block') {
-                    const districtSelect = document.getElementById('districtSelect');
-                    districtId = districtSelect.value;
-
-                    if (!districtId) {
-                        showToast('Please select a district', 'warning');
-                        return;
-                    }
-
-                    if (edmAgentsContainer && edmAgentsContainer.style.display === 'block') {
-                        const edmAgentsSelect = document.getElementById('edmAgentsSelect');
-                        const edmAgentId = edmAgentsSelect.value;
-
-                        if (!edmAgentId) {
-                            showToast('Please select an EDM agent', 'warning');
-                            return;
-                        }
-
-                        // Check if "No EDM agents available" is selected
-                        if (edmAgentsSelect.options[edmAgentsSelect.selectedIndex].text.includes('No EDM agents available')) {
-                            showToast('No EDM agents available for selected district', 'warning');
-                            return;
-                        }
-                    } else {
-                        showToast('Please wait for EDM agents to load', 'warning');
-                        return;
-                    }
-                } else {
-                    showToast('Please select a district', 'warning');
-                    return;
-                }
-            } else {
-                // For non-EDM agents, validate agent selection
-                const agentId = agentDropdown.value;
-                if (!agentId) {
-                    showToast('Please select an agent', 'warning');
-                    return;
-                }
-            }
-
-            if (!note.trim()) {
-                showToast('Please enter a forward note', 'warning');
-                return;
-            }
-
-            const success = await escalateTicket(currentTicketId, note, districtId);
-            if (success) {
-                showToast('Ticket forwarded successfully!', 'success');
-                const modal = bootstrap.Modal.getInstance(document.getElementById('escalateModal'));
-                if (modal) {
-                    modal.hide();
-                }
-                setTimeout(() => loadTicketData(), 1000);
-            } else {
-                showToast('Failed to forward ticket', 'danger');
-            }
-        }
-
-        async function handleResolveButton() {
-            const note = document.getElementById('resolveNote').value;
-
-            if (!note.trim()) {
-                showToast('Please enter a return note', 'warning');
-                return;
-            }
-
-            const success = await returnTicket(currentTicketId, note);
-            if (success) {
-                showToast('Ticket returned successfully!', 'success');
-                const modal = bootstrap.Modal.getInstance(document.getElementById('resolveModal'));
-                if (modal) {
-                    modal.hide();
-                }
-                setTimeout(() => loadTicketData(), 1000);
-            } else {
-                showToast('Failed to return ticket', 'danger');
-            }
-        }
-
-        async function handleCloseButton() {
-            const note = document.getElementById('closeNote').value;
-            const status = document.getElementById('closeStatus').value;
-
-            if (!note.trim()) {
-                showToast('Please enter a closing note', 'warning');
-                return;
-            }
-
-            if (!status) {
-                showToast('Please select a resolution status', 'warning');
-                return;
-            }
-
-            const success = await closeTicket(currentTicketId, note, status);
-            if (success) {
-                showToast('Ticket closed successfully!', 'success');
-                const modal = bootstrap.Modal.getInstance(document.getElementById('closeModal'));
-                if (modal) {
-                    modal.hide();
-                }
-                setTimeout(() => loadTicketData(), 1000);
-            } else {
-                showToast('Failed to close ticket', 'danger');
-            }
-        }
-
-        async function handleReassignButton() {
-            const assignTo = document.getElementById('reassignSelect').value;
-            const note = document.getElementById('reassignNote').value;
-
-            if (!assignTo) {
-                showToast('Please select an agent to reassign to', 'warning');
-                return;
-            }
-
-            if (!note.trim()) {
-                showToast('Please enter a reassign note', 'warning');
-                return;
-            }
-
-            const success = await reassignTicket(currentTicketId, assignTo, note);
-            if (success) {
-                showToast('Ticket reassigned successfully!', 'success');
-                const modal = bootstrap.Modal.getInstance(document.getElementById('reassignModal'));
-                if (modal) {
-                    modal.hide();
-                }
-                setTimeout(() => loadTicketData(), 1000);
-            } else {
-                showToast('Failed to reassign ticket', 'danger');
-            }
-        }
-
-        // ============ MAIN LOAD FUNCTION ============
 
         // ============ MAIN LOAD FUNCTION ============
 
@@ -1774,11 +2348,7 @@
                     throw new Error('Failed to load ticket details');
                 }
                 renderTicketDetails(ticketDetails);
-
-                // Initialize modals only once
-                if (!modalsInitialized) {
-                    initializeModals();
-                }
+                initializeModals();
             } catch (error) {
                 console.error('Error loading ticket:', error);
                 document.getElementById('mainContent').innerHTML = `
@@ -1791,7 +2361,7 @@
                 <a href="dashboard.html" class="btn btn-outline-danger me-2">
                   <i class="bi bi-arrow-left"></i> Go to Dashboard
                 </a>
-                <button class="btn btn-primary" onclick="loadTicketData()">
+                <button class="btn btn-prixmary" onclick="loadTicketData()">
                   <i class="bi bi-arrow-clockwise"></i> Retry
                 </button>
               </div>
@@ -1838,19 +2408,19 @@
             updateDateTime();
 
             // Global AJAX error handler
-            $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
-                showLoading(false);
-                console.error('AJAX Error:', settings.url, thrownError);
+            // $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
+            //     showLoading(false);
+            //     console.error('AJAX Error:', settings.url, thrownError);
 
-                if (jqxhr.status === 401) {
-                    showToast('Session expired. Please login again.', 'warning');
-                    setTimeout(() => window.location.href = 'index.html', 2000);
-                } else if (jqxhr.status === 0) {
-                    showToast('Network error. Please check your internet connection.', 'danger');
-                } else if (jqxhr.status === 500) {
-                    showToast('Server error. Please try again later.', 'danger');
-                }
-            });
+            //     if (jqxhr.status === 401) {
+            //         showToast('Session expired. Please login again.', 'warning');
+            //         setTimeout(() => window.location.href = 'index.html', 2000);
+            //     } else if (jqxhr.status === 0) {
+            //         showToast('Network error. Please check your internet connection.', 'danger');
+            //     } else if (jqxhr.status === 500) {
+            //         showToast('Server error. Please try again later.', 'danger');
+            //     }
+            // });
 
             // Load ticket data
             loadTicketData();

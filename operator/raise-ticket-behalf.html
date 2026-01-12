@@ -12,55 +12,6 @@
   <link href="assets/css/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/global.css">
 
-
-  <style>
-    body {
-      background: #f9fafb;
-    }
-
-    .card {
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    .step-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #444;
-    }
-
-    .btn-primary {
-      border-radius: 30px;
-      padding: 10px 25px;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .success-check {
-      font-size: 3rem;
-      color: green;
-      display: none;
-      animation: bounceIn 1s forwards;
-    }
-
-    @keyframes bounceIn {
-      0% {
-        transform: scale(0.3);
-        opacity: 0;
-      }
-
-      50% {
-        transform: scale(1.1);
-        opacity: 1;
-      }
-
-      100% {
-        transform: scale(1);
-      }
-    }
-  </style>
   <style>
     html,
     body {
@@ -76,241 +27,6 @@
       flex-direction: column;
       padding-top: 70px;
       transition: all 0.3s;
-    }
-
-    /* Header */
-    nav.navbar {
-      background: linear-gradient(90deg, #4b6cb7, #182848);
-      color: #fff;
-      z-index: 1000;
-      padding: 0.4rem 1rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    nav.navbar .navbar-brand,
-    nav.navbar .btn,
-    nav.navbar span {
-      color: #fff;
-    }
-
-    nav.navbar .btn-light {
-      background: rgba(255, 255, 255, 0.15);
-      border: none;
-      color: #fff;
-    }
-
-    nav.navbar .btn-light:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
-
-    /* Sidebar */
-    #sidebar {
-      position: fixed;
-      top: 70px;
-      left: 0;
-      width: 220px;
-      height: calc(100% - 70px);
-      background: #fff;
-      padding-top: 1rem;
-      transition: all 0.3s;
-      overflow-y: auto;
-      border-right: 1px solid #e0e0e0;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-      z-index: 999;
-    }
-
-    #sidebar a {
-      display: flex;
-      align-items: center;
-      padding: 12px 20px;
-      color: #495057;
-      text-decoration: none;
-      font-weight: 500;
-      border-radius: 8px;
-      margin: 4px 10px;
-      transition: all 0.2s ease-in-out;
-    }
-
-    #sidebar a:hover {
-      background: #4b6cb7;
-      color: #fff;
-      transform: translateX(5px);
-    }
-
-    #sidebar a.active {
-      background: #182848;
-      color: white;
-    }
-
-    #sidebar i {
-      margin-right: 12px;
-      font-size: 1.2rem;
-    }
-
-    .sidebar-collapsed #sidebar a {
-      padding: 12px 0px;
-    }
-
-    /* Collapsed sidebar */
-    body.sidebar-collapsed #sidebar {
-      width: 60px;
-    }
-
-    body.sidebar-collapsed #sidebar a span {
-      display: none;
-    }
-
-    body.sidebar-collapsed #sidebar a i {
-      margin-right: 0;
-      width: 100%;
-      text-align: center;
-    }
-
-    /* Main content */
-    #mainContent {
-      margin-left: 220px;
-      padding: 30px;
-      flex: 1;
-      transition: all 0.3s;
-    }
-
-    body.sidebar-collapsed #mainContent {
-      margin-left: 60px;
-    }
-
-    /* Cards for main content */
-    .card {
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Footer */
-    footer {
-      background: #fff;
-      text-align: center;
-      padding: 15px;
-      border-top: 1px solid #ddd;
-      width: 100%;
-      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    /* Mobile responsiveness */
-    @media (max-width: 992px) {
-      #sidebar {
-        left: -100%;
-        top: 0;
-        width: 220px;
-        height: 100%;
-        border-right: none;
-        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
-        z-index: 9999;
-      }
-
-      #sidebar.show {
-        left: 0;
-      }
-
-      #mainContent {
-        margin-left: 0;
-        padding: 20px 10px;
-      }
-
-      body.sidebar-collapsed #mainContent {
-        margin-left: 0;
-      }
-    }
-
-    @media (max-width: 768px) {
-      #currentDateTime {
-        display: none;
-      }
-
-      .navbar .fw-bold {
-        font-size: 1.1rem;
-      }
-
-      #sidebarToggle {
-        padding: 0.35rem 0.6rem;
-      }
-
-      .dropdown-toggle span {
-        display: none;
-      }
-    }
-  </style>
-  <style>
-    .hover-shadow:hover {
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-      transition: all 0.3s;
-    }
-
-    .card h3 {
-      font-weight: 600;
-    }
-
-    .card i {
-      transition: transform 0.3s;
-    }
-
-    .card:hover i {
-      transform: scale(1.2);
-    }
-
-    .table-hover tbody tr:hover {
-      background-color: #f1f3f5;
-    }
-  </style>
-  <!-- main content -->
-  <!-- page css -->
-  <style>
-    body {
-      background: #f8f9fa;
-    }
-
-    .page-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-
-    .form-section {
-      background: #fff;
-      border-radius: 12px;
-      padding: 2rem;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .form-label {
-      font-weight: 500;
-    }
-
-    .btn-submit {
-      background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-      border: none;
-      color: #fff;
-      font-weight: 600;
-      border-radius: 8px;
-      transition: 0.3s;
-    }
-
-    .btn-submit:hover {
-      transform: scale(1.03);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-  </style>
-  <style>
-    /* Toast positioning */
-    .toast-container {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      z-index: 2000;
     }
   </style>
 </head>
@@ -392,12 +108,12 @@
                   benefits availed by me shall be summarily withdrawn.
                 </p>
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="declarationCheck">
-                  <label class="form-check-label small" for="declarationCheck">
+                  <input class="form-check-input" type="checkbox" id="declarationCheckForBehalf">
+                  <label class="form-check-label small" for="declarationCheckForBehalf">
                     I agree to the terms of this declaration
                   </label>
                 </div>
-                <span class="text-danger small" id="declarationError" style="display:none;"></span>
+                <span class="text-danger small" id="declarationErrorForBehalf" style="display:none;"></span>
 
               </div>
             </div>
@@ -577,8 +293,6 @@
           return val;
         },
         forbiddenChars: /[<>"'&/\\;`]/g,
-        showErrorToast: (msg) => { alert(msg); },
-        showSuccessToast: (msg) => { console.log(msg); },
         formatDate: (str) => {
           if (!str) return "";
           const dateObj = new Date(str);
@@ -611,23 +325,35 @@
         });
       }
 
-      function getNewFileRow(fileInputClass, sno) {
+      function getNewFileRow(fileInputClass, sno, defaultPlaceholder = '', isFirstRow = false) {
+        const placeholder = defaultPlaceholder ? `placeholder="${defaultPlaceholder}"` : 'placeholder="Enter document description"';
+        const readonlyAttr = (defaultPlaceholder && isFirstRow) ? 'readonly' : '';
+        const bgClass = (defaultPlaceholder && isFirstRow) ? 'bg-light' : '';
+
         return `
-<div class="file-row row align-items-center2 mb-2">
-  <div class="col-md-1"><span class="fw-bold file-label">${sno}</span></div>
-  <div class="col-md-4">
-    <input type="text" maxlength="25" class="form-control file-desc" placeholder="Enter document description">
-  </div>
-  <div class="col-md-4 position-relative">
-    <input type="file" class="form-control ${fileInputClass}" accept=".jpg,.jpeg,.png,.pdf" />
-    <span class="upload-status-icon ms-2"></span>
-    <small class="text-muted d-block allowed-note">Allowed: PDF, JPG, PNG — Max 2MB</small>
-  </div>
-  <div class="col-md-3">
-    <button type="button" class="btn btn-danger btn-sm btn-delete-file">Delete</button>
-  </div>
-</div>`;
+    <div class="file-row mb-2">
+        <div class="row align-items-center">
+            <div class="col-md-1">
+                <span class="file-label">${sno}</span>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control form-control-sm file-description ${bgClass}" 
+                       ${placeholder} ${readonlyAttr}>
+            </div>
+            <div class="col-md-4">
+                <input type="file" class="form-control form-control-sm ${fileInputClass}" data-uploaded="false">
+                <div class="upload-status-icon"></div>
+                <small class="allowed-note text-muted" style="display: none;">Allowed: PDF, JPG, PNG — Max 2MB</small>
+            </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-sm btn-outline-danger btn-delete-file">
+                    <i class="fas fa-times"></i> Delete
+                </button>
+            </div>
+        </div>
+    </div>`;
       }
+
 
       function generateDynamicFields(columnsString, prefix, $container, fileInputClass, categoryId = null, subcategoryId = null) {
         $container.empty();
@@ -677,8 +403,9 @@
           const isAadhaarAttachment = isAadhaarField && f.field_type === 'attachment';
 
           // Check if this is "changes required" field
-          const isChangesRequiredField = (f.column_name || '').toLowerCase().includes('details of changes required') ||
-            (f.column_name || '').toLowerCase().includes('changes required') ||
+          const columnNameLower = (f.column_name || '').toLowerCase();
+          const isChangesRequiredField = columnNameLower.includes('details of changes required') ||
+            columnNameLower.includes('changes required') ||
             (f.legacy_code || '').toLowerCase().includes('changes_required');
 
           if (isAadhaarField) hasAadhaarField = true;
@@ -708,16 +435,30 @@
           const dataParam = `p_${colId}`;
           let fieldHtml = '';
 
-          if (f.field_type === 'dropdown' || (f.isChangesRequiredField && isCANEdit)) {
-            if (f.isChangesRequiredField && isCANEdit) {
+          // DEBUG LOG
+          console.log(`Processing field: "${f.column_name}"`, {
+            isChangesRequiredField: f.isChangesRequiredField,
+            field_type: f.field_type,
+            isCANEdit: isCANEdit
+          });
+
+          if (f.isChangesRequiredField) {
+            console.log("This is the changes required field");
+
+            if (isCANEdit) {
+              console.log("CAN Edit is TRUE - Showing as DROPDOWN");
+              // For CAN Edit: Show as special dropdown with change requests
               fieldHtml = `
-                <div class="mb-3 col-lg-4 changes-required-field">
-                    <label for="${inputId}" class="form-label">
-                        <i class="fas fa-edit text-primary me-2"></i>
-                        ${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}
-                    </label>
-                    
-                    <select id="${inputId}" class="form-select changes-required-dropdown" data-param="${dataParam}">
+<div class="mb-3 col-lg-12 changes-required-field">
+    <div class="card border-primary">
+        <div class="card-header bg-primary text-white">
+            <h6 class="mb-0"><i class="fas fa-edit me-2"></i>${f.column_name} <span class="text-danger">*</span></h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Select Change Type</label>
+                    <select class="form-select changes-required-dropdown" data-param="${dataParam}">
                         <option value="">-- Select Change Type --</option>
                         <option value="name_tamil">Name in Tamil</option>
                         <option value="name_english">Name in English</option>
@@ -732,71 +473,103 @@
                     </select>
                     <small class="text-muted">Select what you want to change</small>
                     <div class="error-msg changes-required-error text-danger mt-1" style="display: none;"></div>
+                 </div>                
                 </div>
 
-                <!-- Single card container - will show only one card at a time -->
-                <div id="currentChangeCard_${prefix}" class="current-change-card mt-3">
-                    <!-- Only one card will be shown here at a time -->
-                </div>
+                    <!-- Current change card container -->
+            <div id="currentChangeCard_${prefix}" class="current-change-card mt-3">
+                <!-- Only one card will be shown here at a time -->
+            </div>
 
-                <!-- Container for multiple change requests (when user wants to add more) -->
-                <div id="changeRequestsContainer_${prefix}" class="change-requests-container mt-3" style="display: none;">
-                    <!-- Previously added change requests will be stored here -->
-                </div>
-
-                <!-- Add to List Button - appears when a card is shown -->
-                <div class="mb-3 add-to-list-section" style="display: none;">
-                    <button type="button" class="btn btn-success btn-sm btn-add-to-list" data-prefix="${prefix}">
-                        <i class="fas fa-plus me-1"></i> Add This Change to List
-                    </button>
-                    <small class="text-muted ms-2">Click to save this change and add another</small>
-                </div>
+           
+                 <!-- Add to List Button -->
+            <div class="mb-3 add-to-list-section" style="display: none;">
+                <button type="button" class="btn btn-success btn-sm btn-add-to-list" data-prefix="${prefix}">
+                    <i class="fas fa-plus me-1"></i> Add This Change to List
+                </button>
+                <small class="text-muted ms-2">Click to save this change and add another</small>
+            </div>
 
                 <!-- Show current changes list -->
-                <div id="changesList_${prefix}" class="changes-list-section mt-3" style="display: none;">
-                    <h6 class="border-bottom pb-2">Current Changes:</h6>
-                    <div id="changesListItems_${prefix}" class="changes-list-items">
-                        <!-- List of added changes will appear here -->
+            <div id="changesList_${prefix}" class="changes-list-section mt-4" style="display: none;">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0"><i class="fas fa-list-check me-2"></i>Current Changes:</h6>
                     </div>
-                </div>`;
+                    <div class="card-body">
+                        <div id="changesListItems_${prefix}" class="changes-list-items">
+                            <!-- List of added changes will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container for multiple change requests (hidden, used for storage) -->
+            <div id="changeRequestsContainer_${prefix}" class="change-requests-container" style="display: none;">
+                <!-- Previously added change requests will be stored here -->
+            </div>
+        </div>
+    </div>
+</div>`;
             } else {
-              // Regular dropdown field
+              console.log("CAN Edit is FALSE - Showing as regular TEXTAREA");
+              // For non-CAN Edit: Show as regular textarea
               fieldHtml = `
-                <div class="mb-3 col-lg-4">
-                    <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
-                    <select id="${inputId}" class="form-select" ${mandatoryAttr} data-param="${dataParam}">
-                        <option value="">-- Select --</option>
-                    </select>
-                </div>`;
+<div class="mb-3 col-lg-6">
+    <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+    <textarea id="${inputId}" class="form-control" rows="4" ${mandatoryAttr} data-param="${dataParam}"></textarea>
+</div>`;
             }
-          } else if (f.field_type === 'textarea' || f.field_type === 'long text') {
+          }
+          // ============================================
+          // CONDITION 2: Handle regular dropdown fields (not changes required)
+          // ============================================
+          else if (f.field_type === 'dropdown') {
+            console.log("Regular dropdown field");
             fieldHtml = `
-                <div class="mb-3 col-lg-4">
-                    <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
-                    <textarea id="${inputId}" class="form-control" rows="4" ${mandatoryAttr} data-param="${dataParam}"></textarea>
-                </div>`;
-          } else {
+            <div class="mb-3 col-lg-4">
+                <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+                <select id="${inputId}" class="form-select" ${mandatoryAttr} data-param="${dataParam}">
+                    <option value="">-- Select --</option>
+                </select>
+            </div>`;
+          }
+          // ============================================
+          // CONDITION 3: Handle regular textarea/long text fields (not changes required)
+          // ============================================
+          else if (f.field_type === 'textarea' || f.field_type === 'long text') {
+            console.log("Regular textarea field");
+            fieldHtml = `
+            <div class="mb-3 col-lg-4">
+                <label for="${inputId}">${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+                <textarea id="${inputId}" class="form-control" rows="4" ${mandatoryAttr} data-param="${dataParam}"></textarea>
+            </div>`;
+          }
+          // ============================================
+          // CONDITION 4: Handle other field types (text, number, etc.)
+          // ============================================
+          else {
             // For text input fields
             if (f.isAadhaarField) {
               // Special styling for Aadhaar fields
               fieldHtml = `
                 <div class="mb-3 col-lg-4 aadhaar-input-field">
-                    <label for="${inputId}" class="form-label">
+                    <label for="${inputId}">
                         <i class="fas fa-id-card text-warning me-2"></i>
                         ${f.column_name}${isMandatory ? ' <span class="text-danger">*</span>' : ''}
                     </label>
-                    <input id="${inputId}" type="text" class="form-control aadhaar-input" 
-                            placeholder="Enter 12-digit Aadhaar number" 
+                    <input id="${inputId}" type="${f.field_type === 'number' ? 'number' : 'text'}" class="form-control aadhaar-input" 
                             maxlength="12" pattern="[0-9]{12}" 
                             ${mandatoryAttr} data-param="${dataParam}">
                     <small class="text-muted">Enter your 12-digit Aadhaar number without spaces</small>
                 </div>`;
             } else {
-              // Regular text field
+              // Regular text/number field
+              const inputType = f.field_type === 'number' ? 'number' : 'text';
               fieldHtml = `
                 <div class="mb-3 col-lg-4">
                     <label for="${inputId}">${f.column_name || colId}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
-                    <input id="${inputId}" type="text" class="form-control" ${mandatoryAttr} data-param="${dataParam}">
+                    <input id="${inputId}" type="${inputType}" class="form-control" ${mandatoryAttr} data-param="${dataParam}">
                 </div>`;
             }
           }
@@ -806,12 +579,6 @@
           if (f.field_type === 'dropdown' && !f.isChangesRequiredField) {
             const isDistrict = (f.options_source || '').toLowerCase() === 'district' ||
               (f.column_name || '').toLowerCase().includes('district');
-
-            console.log('Checking if district dropdown:', {
-              field: f.column_name,
-              options_source: f.options_source,
-              isDistrict: isDistrict
-            });
 
             if (isDistrict) {
               console.log('Loading district list for:', inputId);
@@ -828,9 +595,7 @@
                 dataType: 'json',
                 success(res) {
                   try {
-                    console.log('District API response:', res);
                     const districts = decryptData(res.data) || [];
-                    console.log('Decrypted districts:', districts);
 
                     const $select = $(`#${inputId}`);
                     if ($select.length) {
@@ -838,7 +603,6 @@
 
                       if (Array.isArray(districts)) {
                         districts.forEach(d => {
-                          console.log('Adding district option:', d);
                           $select.append(`<option value="${d.id || d.district_id || ''}">${d.district || d.district_name || ''}</option>`);
                         });
                       } else {
@@ -872,18 +636,17 @@
               }
             }
           }
-
-
-          // Add Aadhaar consent immediately after Aadhaar field
-          if (f.isAadhaarField && !f.isAadhaarAttachment) {
-            addAadhaarConsentSection(prefix, $(`#${inputId}`).closest('.aadhaar-input-field'));
-          }
-
-          // populate dropdowns where needed
-          if (f.field_type === 'dropdown' && !f.isChangesRequiredField) {
-            populateDropdown(inputId, f);
-          }
         });
+
+
+        // Add Aadhaar consent immediately after Aadhaar field
+        if (isCANEdit && hasChangesRequiredField) {
+          console.log("Initializing CAN Edit functionality");
+          // Use a longer timeout to ensure DOM is ready
+          setTimeout(() => {
+            initCANEditChangeRequests(prefix, $container);
+          }, 300);
+        }
 
         // Separate mandatory and optional attachment fields
         const mandatoryAttachments = [];
@@ -949,8 +712,6 @@
     </div>`;
 
           $container.append(fieldHtml);
-
-
         });
 
         // Special function for Aadhaar file row with guaranteed placeholder
@@ -963,7 +724,7 @@
             </div>
             <div class="col-md-4">
                 <input type="text" class="form-control form-control-sm file-description" 
-                       placeholder="Aadhaar Card">
+                    placeholder="Aadhaar Card" readonly class="bg-light">
             </div>
             <div class="col-md-4">
                 <input type="file" class="form-control form-control-sm ${fileInputClass}" data-uploaded="false">
@@ -993,32 +754,77 @@
           const dataParam = `p_${colId}`;
 
           const fieldHtml = `
-        <div id="wrapper_${inputId}" class="mb-3 file-wrapper" data-col="${colId}" ${mandatoryAttr} data-param="${dataParam}">
-            <label class="form-label">${f.column_name}</label>
-            <div class="row fw-bold border-bottom pb-2 mb-2">
-                <div class="col-md-1">S No</div>
-                <div class="col-md-4">Attachment Description</div>
-                <div class="col-md-4">Attachment</div>
-                <div class="col-md-3">Actions</div>
-            </div>
-            <div class="file-rows"></div>
-            <div class="mt-2">
-                <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button>
-            </div>
-            <small class="text-muted">Allowed: PDF, JPG, PNG — Max 2MB</small>
-        </div>`;
+    <div id="wrapper_${inputId}" class="mb-3 file-wrapper" data-col="${colId}" ${mandatoryAttr} data-param="${dataParam}">
+        <label class="form-label">${f.column_name}</label>
+        <div class="row fw-bold border-bottom pb-2 mb-2">
+            <div class="col-md-1">S No</div>
+            <div class="col-md-4">Attachment Description</div>
+            <div class="col-md-4">Attachment</div>
+            <div class="col-md-3">Actions</div>
+        </div>
+        <div class="file-rows"></div>
+        <div class="mt-2">
+            <button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button>
+        </div>
+        <small class="text-muted">Allowed: PDF, JPG, PNG — Max 2MB</small>
+    </div>`;
 
           $container.append(fieldHtml);
         });
 
-        // Initialize validations
-        initAadhaarValidation($container);
-        if (isCANEdit && hasChangesRequiredField) {
-          initCANEditChangeRequests(prefix, $container);
+        // ============================================
+        // ADD AADHAAR CONSENT SECTION AT THE END
+        // ============================================
+        if (hasAadhaarField) {
+          // Directly create the consent HTML
+          const consentHtml = `
+<div class="mb-4 col-lg-12 aadhaar-consent-section">
+    <div class="card border-warning">
+        <div class="card-header bg-warning text-dark">
+            <h6 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Aadhaar Consent Declaration</h6>
+        </div>
+        <div class="card-body">
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="aadhaarConsentCheck_${prefix}" name="aadhaarConsentCheck_${prefix}">
+                <label class="form-check-label" for="aadhaarConsentCheck_${prefix}">
+                    I hereby give my consent to use my Aadhaar number for authentication purposes 
+                    as per the Aadhaar (Targeted Delivery of Financial and Other Subsidies, Benefits and Services) Act, 2016.
+                </label>
+            </div>
+            <div class="alert alert-info mb-0">
+                <small>
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Note:</strong> Your Aadhaar information will only be used for authentication 
+                    and verification purposes as permitted by law. We do not store your Aadhaar number 
+                    in our databases.
+                </small>
+            </div>
+        </div>
+    </div>
+</div>`;
+
+          // Append the consent section to the end of the container
+          $container.append(consentHtml);
+
+          console.log("Aadhaar consent section added at the end");
         }
 
-        // initialize file module with Aadhaar card default placeholder
+        // Initialize validations
+        initAadhaarValidation($container);
+
+        // Initialize CAN Edit functionality if needed
+        if (isCANEdit && hasChangesRequiredField) {
+          console.log("Initializing CAN Edit functionality");
+          // Use setTimeout to ensure DOM is ready
+          setTimeout(() => {
+            initCANEditChangeRequests(prefix, $container);
+          }, 200);
+        }
+
+        // Initialize file module
         initFileModule($container, fileInputClass, hasAadhaarField);
+
+        console.log("Field generation complete. isCANEdit:", isCANEdit);
       }
 
       // Enhanced file module to handle Aadhaar card default placeholder
@@ -1110,7 +916,7 @@
           const maxSize = 2 * 1024 * 1024;
 
           if (!allowedTypes.includes(file.type)) {
-            Utils.showErrorToast("Invalid file type! Only PDF, JPEG, and PNG are allowed.");
+            showErrorToast("Invalid file type! Only PDF, JPEG, and PNG are allowed.");
             input.value = "";
             $status.text('✖ Invalid').addClass('text-danger');
             $input.data('uploaded', false);
@@ -1118,7 +924,7 @@
             return;
           }
           if (file.size > maxSize) {
-            Utils.showErrorToast("File size exceeds 2MB limit!");
+            showErrorToast("File size exceeds 2MB limit!");
             input.value = "";
             $status.text('✖ Too large').addClass('text-danger');
             $input.data('uploaded', false);
@@ -1157,7 +963,7 @@
               $status.text('✔ Uploaded').removeClass('text-danger').addClass('text-success');
               $small.hide();
               $input.data('uploaded', true);
-              $wrapper.removeClass('border border-danger rounded p-2'); // Remove validation error styling
+              $wrapper.removeClass('border border-danger rounded p-2');
 
               try {
                 if (res && res.data) {
@@ -1176,7 +982,7 @@
               if (current < MAX_FILE_ROWS) $addBtn.prop('disabled', false);
             },
             error() {
-              Utils.showErrorToast("File upload failed!");
+              showErrorToast("File upload failed!");
               input.value = "";
               $status.text('✖ Failed').removeClass('text-success').addClass('text-danger');
               $input.data('uploaded', false);
@@ -1194,46 +1000,7 @@
         }
       }
 
-      // Updated helper function to accept default placeholder
-      function getNewFileRow(fileInputClass, serialNumber, defaultPlaceholder = '', isFirstRow = false) {
-        const placeholder = defaultPlaceholder ? `placeholder="${defaultPlaceholder}"` : 'placeholder="Enter document description"';
-        const readonlyAttr = (defaultPlaceholder && isFirstRow) ? 'readonly' : '';
-        const bgClass = (defaultPlaceholder && isFirstRow) ? 'bg-light' : '';
 
-        return `
-    <div class="file-row mb-2">
-        <div class="row align-items-center">
-            <div class="col-md-1">
-                <span class="file-label">${serialNumber}</span>
-            </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control form-control-sm file-description ${bgClass}" 
-                       ${placeholder} ${readonlyAttr}>
-            </div>
-            <div class="col-md-4">
-                <input type="file" class="form-control form-control-sm ${fileInputClass}" data-uploaded="false">
-                <div class="upload-status-icon"></div>
-                <small class="allowed-note text-muted" style="display: none;">Allowed: PDF, JPG, PNG — Max 2MB</small>
-            </div>
-            <div class="col-md-3">
-                <button type="button" class="btn btn-sm btn-outline-danger btn-delete-file">
-                    <i class="fas fa-times"></i> Delete
-                </button>
-            </div>
-        </div>
-    </div>`;
-      }
-
-      // Rest of the functions remain the same...
-      // [Previous functions: addAadhaarConsentSection, checkIfCANEdit, populateDropdown, 
-      // initCANEditChangeRequests, addChangeRequestCard, resetChangeSelection, 
-      // validateCurrentChangeCard, updateChangesList, initChangesListRemoval, 
-      // initAadhaarValidation, validateDynamicFields]
-      // Rest of the functions remain the same...
-      // [Previous functions: addAadhaarConsentSection, checkIfCANEdit, populateDropdown, 
-      // initCANEditChangeRequests, addChangeRequestCard, resetChangeSelection, 
-      // validateCurrentChangeCard, updateChangesList, initChangesListRemoval, 
-      // initAadhaarValidation, validateDynamicFields]
       function addAadhaarConsentSection(prefix, $afterElement) {
         // Remove any existing Aadhaar consent section first
         $afterElement.closest('.dynamic-fields-container').find('.aadhaar-consent-section').remove();
@@ -1246,8 +1013,8 @@
             </div>
             <div class="card-body">
                 <div class="form-check">
-                    <input class="form-check-input aadhaar-consent-checkbox" type="checkbox" id="aadhaarConsent_${prefix}">
-                    <label class="form-check-label" for="aadhaarConsent_${prefix}">
+                    <input class="form-check-input aadhaar-consent-checkbox-behalf" type="checkbox" id="aadhaarConsent_${prefix}">
+                    <label for="aadhaarConsent_${prefix}" style="font-weight: smaller;">
                         I hereby voluntarily give my consent to use Aadhaar details furnished herewith for the purposes of addressing eSevai related service requests submitted on this portal. <span class="text-danger">*</span>
                     </label>
                 </div>
@@ -1261,254 +1028,26 @@
         $afterElement.after(aadhaarConsentHtml);
       }
 
-      // Enhanced validation function to include Aadhaar attachment validation
-      function validateDynamicFields(prefix) {
-        let isValid = true;
-        const $container = $(`.dynamic-fields-container`);
-
-        // Validate Aadhaar fields and their attachments
-        $container.find('.aadhaar-input').each(function () {
-          const $aadhaarInput = $(this);
-          const aadhaarValue = $aadhaarInput.val().trim();
-
-          if (aadhaarValue && aadhaarValue.length !== 12) {
-            isValid = false;
-            $aadhaarInput.addClass('is-invalid');
-            Utils.showErrorToast('Please enter a valid 12-digit Aadhaar number');
-          } else if (aadhaarValue) {
-            // If Aadhaar number is provided, check if Aadhaar attachment is uploaded
-            const $aadhaarAttachmentWrapper = $container.find('[data-col="aadhaar_card"]');
-            if ($aadhaarAttachmentWrapper.length > 0) {
-              const hasAadhaarAttachment = $aadhaarAttachmentWrapper.find('input[type="file"][data-uploaded="true"]').length > 0;
-              if (!hasAadhaarAttachment) {
-                isValid = false;
-                Utils.showErrorToast('Aadhaar Card attachment is required when Aadhaar number is provided');
-                $aadhaarAttachmentWrapper.addClass('border border-danger rounded p-2');
-              } else {
-                $aadhaarAttachmentWrapper.removeClass('border border-danger rounded p-2');
-              }
-            }
-          }
-        });
-
-        // Validate Aadhaar consent
-        const $aadhaarConsent = $container.find('.aadhaar-consent-checkbox');
-        if ($aadhaarConsent.length > 0 && !$aadhaarConsent.is(':checked')) {
-          isValid = false;
-          $container.find('.aadhaar-consent-error').text('You must consent to Aadhaar usage to proceed.').show();
-          Utils.showErrorToast('Please consent to Aadhaar usage');
-        }
-
-        // Validate file attachments (general)
-        $container.find('.file-wrapper[data-mandatory="true"]').each(function () {
-          const $wrapper = $(this);
-          const hasUploadedFile = $wrapper.find('input[type="file"][data-uploaded="true"]').length > 0;
-
-          if (!hasUploadedFile) {
-            isValid = false;
-            $wrapper.addClass('border border-danger rounded p-2');
-            Utils.showErrorToast(`Please upload required attachment: ${$wrapper.find('label').text()}`);
-          } else {
-            $wrapper.removeClass('border border-danger rounded p-2');
-          }
-        });
-
-        return isValid;
-      }
-
-      //   // Enhanced file upload module to handle Aadhaar attachment validation
-      //   function initFileModule($container, fileInputClass) {
-      //     const MAX_FILE_ROWS = 3;
-      //     $container.find('.file-wrapper').each(function () {
-      //       const $wrapper = $(this);
-      //       const $rows = $wrapper.find('.file-rows');
-      //       if ($rows.children().length === 0) {
-      //         $rows.append(getNewFileRow(fileInputClass, 1));
-      //         $wrapper.find('.btn-add-file').prop('disabled', true);
-      //       } else {
-      //         const anyUploaded = $wrapper.find(`input[type="file"].${fileInputClass}`).toArray().some(inp => $(inp).data('uploaded') === true);
-      //         $wrapper.find('.btn-add-file').prop('disabled', !anyUploaded);
-      //       }
-      //     });
-
-      //     $container.off('.fileModule');
-
-      //     // ADD ONE ROW (disabled until upload success)
-      //     $container.on('click.fileModule', '.btn-add-file', function (e) {
-      //       e.preventDefault();
-      //       const $addBtn = $(this);
-      //       const $wrapper = $addBtn.closest('.file-wrapper');
-      //       const $rows = $wrapper.find('.file-row');
-
-      //       if ($rows.length >= MAX_FILE_ROWS) {
-      //         alert(`Maximum ${MAX_FILE_ROWS} attachments allowed.`);
-      //         return;
-      //       }
-
-      //       $wrapper.find('.file-rows').append(getNewFileRow(fileInputClass, $rows.length + 1));
-      //       $addBtn.prop('disabled', true);
-      //     });
-
-      //     $container.on('click.fileModule', '.btn-delete-file', function (e) {
-      //       e.preventDefault();
-      //       const $btn = $(this);
-      //       const $wrapper = $btn.closest('.file-wrapper');
-      //       const $addBtn = $wrapper.find('.btn-add-file');
-
-      //       $btn.closest('.file-row').remove();
-
-      //       let $rows = $wrapper.find('.file-row');
-
-      //       if ($rows.length === 0) {
-      //         $addBtn.prop('disabled', false);
-      //         return;
-      //       }
-
-      //       $rows.each((i, el) => $(el).find('.file-label').text(i + 1));
-      //       $addBtn.prop('disabled', false);
-
-      //       // Remove validation styling when files are deleted
-      //       $wrapper.removeClass('border border-danger rounded p-2');
-      //     });
-
-      //     // FILE INPUT CHANGE -> validate & upload
-      //     $container.on('change.fileModule', `input[type="file"].${fileInputClass}`, function (e) {
-      //       const input = this;
-      //       const file = input.files && input.files[0];
-      //       const $input = $(input);
-      //       const $row = $input.closest('.file-row');
-      //       const $wrapper = $input.closest('.file-wrapper');
-      //       const $addBtn = $wrapper.find('.btn-add-file');
-      //       const $status = $row.find('.upload-status-icon');
-      //       const $small = $row.find('.allowed-note');
-
-      //       $status.removeClass('text-success text-danger').text('');
-      //       $small.show();
-
-      //       if (!file) return;
-
-      //       const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"];
-      //       const maxSize = 2 * 1024 * 1024;
-
-      //       if (!allowedTypes.includes(file.type)) {
-      //         Utils.showErrorToast("Invalid file type! Only PDF, JPEG, and PNG are allowed.");
-      //         input.value = "";
-      //         $status.text('✖ Invalid').addClass('text-danger');
-      //         $input.data('uploaded', false);
-      //         $addBtn.prop('disabled', true);
-      //         return;
-      //       }
-      //       if (file.size > maxSize) {
-      //         Utils.showErrorToast("File size exceeds 2MB limit!");
-      //         input.value = "";
-      //         $status.text('✖ Too large').addClass('text-danger');
-      //         $input.data('uploaded', false);
-      //         $addBtn.prop('disabled', true);
-      //         return;
-      //       }
-
-      //       const tempPayload = {
-      //         action: "function_call",
-      //         function_name: "fn_temp_ticket_attachments",
-      //         params: {
-      //           p_session_id: localStorage.getItem("user_id") || "0",
-      //           p_file_name: file.name,
-      //           p_file_path: `/uploads/${file.name}`,
-      //           p_mime_type: file.type,
-      //           p_uploaded_by: localStorage.getItem("user_id") || "0"
-      //         }
-      //       };
-
-      //       const fd = new FormData();
-      //       fd.append("data", encryptData(tempPayload));
-      //       fd.append("file", file);
-
-      //       $status.text('Uploading...');
-
-      //       $.ajax({
-      //         url: `${BASE_API_URL}/commonfunction`,
-      //         method: "POST",
-      //         data: fd,
-      //         processData: false,
-      //         contentType: false,
-      //         dataType: 'json',
-      //         success(res) {
-      //           $status.text('✔ Uploaded').removeClass('text-danger').addClass('text-success');
-      //           $small.hide();
-      //           $input.data('uploaded', true);
-      //           $wrapper.removeClass('border border-danger rounded p-2'); // Remove validation error styling
-
-      //           try {
-      //             if (res && res.data) {
-      //               const dec = decryptData(res.data);
-      //               const uploadedPath = dec && dec[0] && (dec[0].uploaded_path || dec[0].file_path || dec[0].temp_path);
-      //               if (uploadedPath) $input.data('uploaded_path', uploadedPath);
-      //               const tempId = dec && dec[0] && dec[0].temp_attachment_id;
-      //               if (tempId) $input.data('temp_id', tempId);
-      //             }
-      //           } catch (err) {
-      //             // ignore decrypt errors
-      //           }
-
-      //           const current = $wrapper.find('.file-row').length;
-      //           if (current < MAX_FILE_ROWS) $addBtn.prop('disabled', false);
-      //         },
-      //         error() {
-      //           Utils.showErrorToast("File upload failed!");
-      //           input.value = "";
-      //           $status.text('✖ Failed').removeClass('text-success').addClass('text-danger');
-      //           $input.data('uploaded', false);
-      //           $addBtn.prop('disabled', true);
-      //         }
-      //       });
-      //     });
-      //   }
-
-      //   // Helper function to get new file row HTML
-      //   function getNewFileRow(fileInputClass, serialNumber) {
-      //     return `
-      // <div class="file-row mb-2">
-      //     <div class="row align-items-center">
-      //         <div class="col-md-1">
-      //             <span class="file-label">${serialNumber}</span>
-      //         </div>
-      //         <div class="col-md-4">
-      //             <input type="text" class="form-control form-control-sm file-description" placeholder="Enter document description">
-      //         </div>
-      //         <div class="col-md-4">
-      //             <input type="file" class="form-control form-control-sm ${fileInputClass}" data-uploaded="false">
-      //             <div class="upload-status-icon"></div>
-      //             <small class="allowed-note text-muted" style="display: none;">Allowed: PDF, JPG, PNG — Max 2MB</small>
-      //         </div>
-      //         <div class="col-md-3">
-      //             <button type="button" class="btn btn-sm btn-outline-danger btn-delete-file">
-      //                 <i class="fas fa-times"></i> Delete
-      //             </button>
-      //         </div>
-      //     </div>
-      // </div>`;
-      //   }
-
       function checkIfCANEdit(categoryId, subcategoryId) {
-        const categoryName = $("#categorySelectBehalf option:selected").text() ||
-          $("#categorySelect option:selected").text() ||
-          "";
+        // Get current selections
+        const $categorySelectBehalf = $('#categorySelectBehalf');
+        const $subCategorySelectBehalf = $('#subCategorySelectBehalf');
 
-        const subcategoryName = $("#subCategorySelectBehalf option:selected").text() ||
-          $("#subCategorySelect option:selected").text() ||
-          "";
+        const categoryName = $categorySelectBehalf.find('option:selected').text() || "";
+        const subcategoryName = $subCategorySelectBehalf.find('option:selected').text() || "";
 
-        // Check if category contains "CAN" and subcategory contains "edit"
+        console.log("checkIfCANEdit - Category:", categoryName);
+        console.log("checkIfCANEdit - Subcategory:", subcategoryName);
+
+        // Check if category contains "CAN" (case insensitive)
         const isCANCategory = categoryName.toLowerCase().includes('can');
+
+        // Check if subcategory contains "edit" (case insensitive)
         const isEditSubcategory = subcategoryName.toLowerCase().includes('edit');
 
-        console.log('CAN Edit Check:', {
-          categoryName,
-          subcategoryName,
-          isCANCategory,
-          isEditSubcategory,
-          result: isCANCategory && isEditSubcategory
-        });
+        console.log("checkIfCANEdit - isCANCategory:", isCANCategory);
+        console.log("checkIfCANEdit - isEditSubcategory:", isEditSubcategory);
+        console.log("checkIfCANEdit - Final Result:", isCANCategory && isEditSubcategory);
 
         return isCANCategory && isEditSubcategory;
       }
@@ -1526,6 +1065,15 @@
       }
 
       function initCANEditChangeRequests(prefix, $container) {
+        debugger;
+
+        console.log("=== Initializing CAN Edit Change Requests ===");
+
+        // Clean up any previous event handlers to prevent duplicates
+        $container.off('change.canedit-dropdown');
+        $container.off('click.canedit-add');
+        $container.off('click.canedit-remove');
+
         const $dropdown = $container.find('.changes-required-dropdown');
         const $currentCardContainer = $(`#currentChangeCard_${prefix}`);
         const $changeRequestsContainer = $(`#changeRequestsContainer_${prefix}`);
@@ -1536,254 +1084,236 @@
 
         let currentChangeType = null;
 
-        // Handle dropdown change - show relevant card immediately
-        $dropdown.on('change', function () {
+        // Initialize containers to empty state
+        $currentCardContainer.empty();
+        $changeRequestsContainer.empty();
+        $changesListItems.empty();
+        $addToListSection.hide();
+        $changesListSection.hide();
+        $errorMsg.hide();
+
+        if ($dropdown.length) {
+          $dropdown.val('');
+        }
+
+        // Dropdown change handler - use namespace
+        $dropdown.off('change.canedit').on('change.canedit', function () {
+          console.log("Dropdown changed, value:", $(this).val());
           const selectedValue = $(this).val();
 
-          if (!selectedValue) {
-            // Hide everything if no selection
-            $currentCardContainer.empty();
-            $addToListSection.hide();
-            $errorMsg.hide();
-            $dropdown.removeClass('is-invalid');
-            currentChangeType = null;
-            return;
-          }
-
-          // Hide error if selection is valid
+          // Reset everything
+          currentChangeType = null;
+          $currentCardContainer.empty();
           $errorMsg.hide();
           $dropdown.removeClass('is-invalid');
 
-          // Store current change type
+          if (!selectedValue) {
+            console.log("No selection, hiding add to list");
+            $addToListSection.hide();
+            return;
+          }
+
           currentChangeType = selectedValue;
 
-          // Clear current card and show new one
-          $currentCardContainer.empty();
-          addChangeRequestCard(prefix, selectedValue, $currentCardContainer);
+          // Clear and render fresh card
+          addChangeRequestCard(
+            prefix,
+            selectedValue,
+            $currentCardContainer
+          );
 
-          // Show "Add to List" button
+          // Show add to list section
           $addToListSection.show();
+        });
+        // Add to list button handler - use namespace
+        $container.off('click.canedit-add').on('click.canedit-add', '.btn-add-to-list', function () {
+          console.log("Add to list clicked");
 
-          // Show changes list if there are any existing changes
+          if (!currentChangeType) {
+            console.log("No current change type selected");
+            return;
+          }
+
+          const $currentCard = $currentCardContainer.find('.change-request-card');
+          if (!$currentCard.length) {
+            console.log("No current card found");
+            return;
+          }
+
+          // Validate the current card
+          if (!validateCurrentChangeCard(prefix)) {
+            console.log("Validation failed");
+            return;
+          }
+
+          // Get values
+          const $newInput = $currentCard.find('.change-request-input');
+          const newValue = $newInput.is('select') ? $newInput.val() : $newInput.val();
+          const currentValue = $currentCard.find('.current-value-input').val();
+          const reason = $currentCard.find('.reason-input').val();
+
+          console.log("Saving change:", {
+            type: currentChangeType,
+            newValue: newValue,
+            currentValue: currentValue,
+            reason: reason
+          });
+
+          // Clone and save
+          const $saved = $currentCard.clone(true);
+          const cardId = `saved_change_${prefix}_${currentChangeType}_${Date.now()}`;
+          $saved.attr('id', cardId);
+          $changeRequestsContainer.append($saved);
+
+          // Update the list
+          updateChangesList(prefix);
+
+          // Show the list if it has items
           if ($changeRequestsContainer.children().length > 0) {
             $changesListSection.show();
-            updateChangesList(prefix);
           }
+
+          // Reset for next selection
+          $currentCardContainer.empty();
+          $dropdown.val('');
+          $addToListSection.hide();
+          currentChangeType = null;
+
+          console.log("Change saved, ready for next selection");
         });
 
-        // Handle "Add to List" button click
-        $container.on('click', '.btn-add-to-list', function () {
-          if (!currentChangeType) return;
-
-          // Validate current card before adding to list
-          if (validateCurrentChangeCard(prefix)) {
-            // Move the current card to the permanent container
-            const $currentCard = $currentCardContainer.children().first();
-            $changeRequestsContainer.append($currentCard.clone());
-
-            // Show the changes list
-            $changesListSection.show();
-            updateChangesList(prefix);
-
-            // Reset for next selection
-            resetChangeSelection(prefix);
-          }
-        });
-
-        // Initialize remove functionality for saved changes
-        initChangesListRemoval(prefix);
+        // Initialize removal functionality
+        initChangesListRemoval(prefix, $container);
       }
 
       function addChangeRequestCard(prefix, changeType, $container) {
-        const requestId = `current_change_${prefix}_${changeType}`;
+        const requestId = `current_change_${prefix}_${changeType}_${Date.now()}`;
+
         const changeTypes = {
-          'name_tamil': {
-            label: 'Name in Tamil',
-            field: 'text',
-            placeholder: 'Enter new name in Tamil'
-          },
-          'name_english': {
-            label: 'Name in English',
-            field: 'text',
-            placeholder: 'Enter new name in English'
-          },
-          'date_of_birth': {
-            label: 'Date of Birth',
-            field: 'date'
-          },
-          'gender': {
-            label: 'Gender',
-            field: 'select',
-            options: ['Male', 'Female', 'Transgender']
-          },
-          'religion': {
-            label: 'Religion',
-            field: 'select',
-            options: ['Hindu', 'Christian', 'Sikh', 'Buddhist', 'Jain', 'Islam', 'Others', 'Not stated']
-          },
-          'community': {
-            label: 'Community',
-            field: 'select',
-            options: ['OC', 'BC', 'MBC', 'SC', 'ST', 'DNC (Christian)', 'FC', 'BC (Muslim)']
-          },
-          'marital_status': {
-            label: 'Marital Status',
-            field: 'select',
-            options: ['Not married', 'Married', 'Divorced', 'Separated', 'Widow/widower']
-          },
-          'address': {
-            label: 'Address',
-            field: 'textarea',
-            placeholder: 'Enter new address'
-          },
-          'mobile_number': {
-            label: 'Mobile Number',
-            field: 'tel',
-            placeholder: 'Enter new 10-digit mobile number'
-          },
-          'other_details': {
-            label: 'Any Other Details',
-            field: 'textarea',
-            placeholder: 'Enter any other details to be changed'
-          }
+          'name_tamil': { label: 'Name in Tamil', field: 'text' },
+          'name_english': { label: 'Name in English', field: 'text' },
+          'date_of_birth': { label: 'Date of Birth', field: 'date' },
+          'gender': { label: 'Gender', field: 'select', options: ['Male', 'Female', 'Transgender'] },
+          'religion': { label: 'Religion', field: 'select', options: ['Hindu', 'Christian', 'Sikh', 'Buddhist', 'Jain', 'Islam', 'Others', 'Not stated'] },
+          'community': { label: 'Community', field: 'select', options: ['OC', 'BC', 'MBC', 'SC', 'ST', 'DNC (Christian)', 'FC', 'BC (Muslim)'] },
+          'marital_status': { label: 'Marital Status', field: 'select', options: ['Not married', 'Married', 'Divorced', 'Separated', 'Widow/widower'] },
+          'address': { label: 'Address', field: 'textarea' },
+          'mobile_number': { label: 'Mobile Number', field: 'tel' },
+          'other_details': { label: 'Other Details', field: 'textarea' }
         };
 
-        const changeConfig = changeTypes[changeType];
-        if (!changeConfig) return;
+        const cfg = changeTypes[changeType];
+        if (!cfg) return;
 
-        let fieldHtml = '';
+        /* ---------- CURRENT VALUE FIELD ---------- */
+        let currentField = "";
 
-        switch (changeConfig.field) {
-          case 'text':
-            fieldHtml = `
-            <input type="text" class="form-control change-request-input" 
-                   placeholder="${changeConfig.placeholder || ''}" 
-                   data-change-type="${changeType}" required>
-            <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
-            break;
-
-          case 'date':
-            fieldHtml = `
-            <input type="date" class="form-control change-request-input" 
-                   data-change-type="${changeType}" required>
-            <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
-            break;
-
-          case 'select':
-            fieldHtml = `
-            <select class="form-select change-request-input" data-change-type="${changeType}" required>
-                <option value="">-- Select New ${changeConfig.label} --</option>
-                ${changeConfig.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
-            </select>
-            <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
-            break;
-          case 'textarea':
-            fieldHtml = `
-            <textarea class="form-control change-request-input" rows="3" 
-                      placeholder="${changeConfig.placeholder || ''}" 
-                      data-change-type="${changeType}" required></textarea>
-            <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
-            break;
-
-          case 'tel':
-            fieldHtml = `
-            <input type="tel" class="form-control change-request-input" 
-                   placeholder="${changeConfig.placeholder || ''}" 
-                   maxlength="10" pattern="[0-9]{10}"
-                   data-change-type="${changeType}" required>
-            <div class="error-msg text-danger mt-1" style="display: none;"></div>`;
-            break;
+        if (cfg.field === "text" || cfg.field === "tel") {
+          currentField = `<input type="text" class="form-control current-value-input">`;
         }
 
-        const changeRequestHtml = `
-    <div class="change-request-card card mb-3" id="${requestId}" data-change-type="${changeType}">
-        <div class="card-header bg-primary text-white">
-            <h6 class="mb-0"><i class="fas fa-edit me-2"></i>Change: ${changeConfig.label}</h6>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">New Value <span class="text-danger">*</span></label>
-                    ${fieldHtml}
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Current Value (if known)</label>
-                    <input type="text" class="form-control current-value-input" 
-                           placeholder="Enter current value (optional)">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <label class="form-label">Reason for Change <span class="text-danger">*</span></label>
-                    <textarea class="form-control reason-input" rows="2" 
-                              placeholder="Explain why this change is required" required></textarea>
-                    <div class="error-msg text-danger mt-1" style="display: none;"></div>
-                </div>
-            </div>
-        </div>
-    </div>`;
-
-        $container.html(changeRequestHtml);
-      }
-
-      function resetChangeSelection(prefix) {
-        const $dropdown = $(`.changes-required-dropdown`);
-        const $currentCardContainer = $(`#currentChangeCard_${prefix}`);
-        const $addToListSection = $(`.add-to-list-section`);
-
-        $dropdown.val('');
-        $currentCardContainer.empty();
-        $addToListSection.hide();
-      }
-
-      function validateCurrentChangeCard(prefix) {
-        const $currentCard = $(`#currentChangeCard_${prefix} .change-request-card`);
-        let isValid = true;
-
-        const $input = $currentCard.find('.change-request-input');
-        const $reason = $currentCard.find('.reason-input');
-
-        // Validate input field
-        if (!$input.val() || $input.val().trim() === '') {
-          isValid = false;
-          $input.addClass('is-invalid');
-          $input.siblings('.error-msg').text('This field is required').show();
-        } else {
-          $input.removeClass('is-invalid');
-          $input.siblings('.error-msg').hide();
+        if (cfg.field === "date") {
+          currentField = `<input type="date" class="form-control current-value-input">`;
         }
 
-        // Validate reason field
-        if (!$reason.val() || $reason.val().trim() === '') {
-          isValid = false;
-          $reason.addClass('is-invalid');
-          $reason.siblings('.error-msg').text('Reason for change is required').show();
-        } else {
-          $reason.removeClass('is-invalid');
-          $reason.siblings('.error-msg').hide();
+        if (cfg.field === "select") {
+          currentField = `
+      <select class="form-select current-value-input">
+        <option value="">-- Select Current ${cfg.label} --</option>
+        ${cfg.options.map(o => `<option value="${o}">${o}</option>`).join('')}
+      </select>`;
         }
 
-        // Special validation for mobile number
-        if ($input.data('change-type') === 'mobile_number' && $input.val()) {
-          const mobileValue = $input.val().replace(/\D/g, '');
-          if (mobileValue.length !== 10) {
-            isValid = false;
-            $input.addClass('is-invalid');
-            $input.siblings('.error-msg').text('Please enter a valid 10-digit mobile number').show();
-          }
+        if (cfg.field === "textarea") {
+          newField = `<textarea class="form-control change-request-input" required></textarea>`;
         }
 
-        return isValid;
+        /* ---------- NEW VALUE FIELD ---------- */
+        let newField = "";
+
+        if (cfg.field === "text") {
+          newField = `<input type="text" class="form-control change-request-input" required>`;
+        }
+
+        if (cfg.field === "date") {
+          newField = `<input type="date" class="form-control change-request-input" required>`;
+        }
+
+        if (cfg.field === "tel") {
+          newField = `<input type="tel" maxlength="10" class="form-control change-request-input" required>`;
+        }
+
+        if (cfg.field === "select") {
+          newField = `
+      <select class="form-select change-request-input" required>
+        <option value="">-- Select New ${cfg.label} --</option>
+        ${cfg.options.map(o => `<option value="${o}">${o}</option>`).join('')}
+      </select>`;
+        }
+
+        if (cfg.field === "textarea") {
+          newField = `<textarea class="form-control change-request-input" rows="2" required></textarea>`;
+        }
+
+        const html = `
+<div class="change-request-card card mb-3" id="${requestId}" data-change-type="${changeType}">
+  <div class="card-header bg-info text-white">
+    <h6 class="mb-0">${cfg.label} – Change Request</h6>
+  </div>
+  <div class="card-body">
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Current Value</label>
+        ${currentField}
+        <div class="error-current text-danger small" style="display:none"></div>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">New Value <span class="text-danger">*</span></label>
+        ${newField}
+        <div class="error-new text-danger small" style="display:none"></div>
+      </div>
+    </div>
+
+    <label class="form-label">Reason <span class="text-danger">*</span></label>
+    <textarea class="form-control reason-input" rows="2" required></textarea>
+    <div class="error-reason text-danger small" style="display:none"></div>
+
+  </div>
+</div>`;
+
+        // IMPORTANT: replace, not append
+        $container.empty().append(html);
       }
 
       function updateChangesList(prefix) {
+        console.log("=== Updating Changes List ===");
         const $changeRequestsContainer = $(`#changeRequestsContainer_${prefix}`);
         const $changesListItems = $(`#changesListItems_${prefix}`);
+        const $changesListSection = $(`#changesList_${prefix}`);
+
+        console.log("Number of saved cards:", $changeRequestsContainer.children().length);
 
         $changesListItems.empty();
 
+        if ($changeRequestsContainer.children().length === 0) {
+          console.log("No changes to display, hiding list");
+          $changesListSection.hide();
+          return;
+        }
+
         $changeRequestsContainer.find('.change-request-card').each(function (index) {
-          const changeType = $(this).data('change-type');
+          const $card = $(this);
+          const changeType = $card.data('change-type');
+          const cardId = $card.attr('id');
+
+          // Get values
+          const $newInput = $card.find('.change-request-input');
+          const newValue = $newInput.is('select') ? $newInput.find('option:selected').text() : $newInput.val();
+          const currentValue = $card.find('.current-value-input').val();
+          const reason = $card.find('.reason-input').val();
+
           const changeTypes = {
             'name_tamil': 'Name in Tamil',
             'name_english': 'Name in English',
@@ -1798,27 +1328,132 @@
           };
 
           const listItem = `
-        <div class="d-flex justify-content-between align-items-center2 border-bottom pb-2 mb-2">
-            <span>${index + 1}. ${changeTypes[changeType]}</span>
-            <button type="button" class="btn btn-sm btn-outline-danger btn-remove-from-list" data-card-id="${$(this).attr('id')}">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>`;
+<div class="change-list-item mb-3 p-3 border rounded bg-light" data-card-id="${cardId}">
+    <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+            <span class="badge bg-primary me-2">${index + 1}</span>
+            <strong class="me-2">${changeTypes[changeType] || changeType}</strong>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-danger btn-remove-from-list" 
+                data-card-id="${cardId}" title="Remove this change">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="mb-2">
+                <small class="text-muted d-block">Current Value:</small>
+                <div class="fw-bold">${currentValue || 'Not specified'}</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="mb-2">
+                <small class="text-muted d-block">New Value:</small>
+                <div class="fw-bold text-success">${newValue || 'Not specified'}</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="mb-2">
+                <small class="text-muted d-block">Reason:</small>
+                <div class="fw-bold">${reason || 'Not specified'}</div>
+            </div>
+        </div>
+    </div>
+</div>`;
 
           $changesListItems.append(listItem);
         });
+
+        $changesListSection.show();
+        console.log("Changes list updated");
       }
 
-      function initChangesListRemoval(prefix) {
-        $(document).on('click', `.btn-remove-from-list[data-card-id]`, function () {
-          const cardId = $(this).data('card-id');
-          $(`#${cardId}`).remove();
-          updateChangesList(prefix);
+      function resetChangeSelection(prefix) {
+        const $dropdown = $(`.changes-required-dropdown`);
+        const $currentCardContainer = $(`#currentChangeCard_${prefix}`);
+        const $addToListSection = $(`.add-to-list-section`);
 
-          // Hide changes list if no changes left
-          if ($(`#changeRequestsContainer_${prefix}`).children().length === 0) {
-            $(`#changesList_${prefix}`).hide();
+        $dropdown.val('');
+        $currentCardContainer.empty();
+        $addToListSection.hide();
+      }
+
+      function validateCurrentChangeCard(prefix) {
+        const $card = $(`#currentChangeCard_${prefix} .change-request-card`);
+        const $new = $card.find(".change-request-input");
+        const $current = $card.find(".current-value-input");
+        const $reason = $card.find(".reason-input");
+
+        let ok = true;
+
+        // required new value
+        if (!$new.val().trim()) {
+          ok = false;
+          $new.addClass("is-invalid");
+          $card.find(".error-new").text("New value is required").show();
+        } else {
+          $new.removeClass("is-invalid");
+          $card.find(".error-new").hide();
+        }
+
+        // required reason
+        if (!$reason.val().trim()) {
+          ok = false;
+          $reason.addClass("is-invalid");
+          $card.find(".error-reason").text("Reason is required").show();
+        } else {
+          $reason.removeClass("is-invalid");
+          $card.find(".error-reason").hide();
+        }
+
+        // mobile validation
+        if ($new.attr("type") === "tel") {
+          const digits = $new.val().replace(/\D/g, "");
+          if (digits.length !== 10) {
+            ok = false;
+            $new.addClass("is-invalid");
+            $card.find(".error-new").text("Enter valid 10-digit number").show();
           }
+        }
+
+        // ❗ CURRENT ≠ NEW
+        if ($current.val().trim() && $new.val().trim() && $current.val().trim() === $new.val().trim()) {
+          ok = false;
+          $new.addClass("is-invalid");
+          $card.find(".error-new").text("Current value and New value must not be the same").show();
+        }
+
+        return ok;
+      }
+
+      // small helper to avoid injecting raw HTML from user inputs
+      function escapeHtml(unsafe) {
+        return String(unsafe)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function initChangesListRemoval(prefix, $container) {
+        // Clean up previous handlers
+        $container.off('click.canedit-remove');
+
+        // Remove card from list
+        $container.on('click.canedit-remove', '.btn-remove-from-list', function () {
+          const cardId = $(this).data('card-id');
+          console.log("Removing card:", cardId);
+
+          // Remove the card from storage container
+          $(`#${cardId}`).remove();
+
+          // Remove the list item
+          $(`[data-card-id="${cardId}"]`).remove();
+
+          // Update the list
+          updateChangesList(prefix);
         });
       }
 
@@ -1841,7 +1476,7 @@
         });
 
         // Real-time Aadhaar consent validation
-        $container.closest('form').on('change', '.aadhaar-consent-checkbox', function () {
+        $container.closest('form').on('change', '.aadhaar-consent-checkbox-behalf', function () {
           const $error = $(this).closest('.aadhaar-consent-section').find('.aadhaar-consent-error');
           if ($(this).is(':checked')) {
             $error.hide();
@@ -1849,6 +1484,101 @@
             $error.text('You must consent to Aadhaar usage to proceed.').show();
           }
         });
+      }
+
+      // Enhanced validation function to include Aadhaar attachment validation
+      function validateDynamicFields(prefix) {
+        let isValid = true;
+
+        // Use the correct container based on prefix
+        let $container;
+        if (prefix === 'self') {
+          $container = $("#selfPane .dynamic-fields-container");
+        } else if (prefix === 'behalf') {
+          $container = $("#behalfPane .dynamic-fields-container");
+        } else {
+          $container = $(`.dynamic-fields-container`);
+        }
+
+        if ($container.length === 0) {
+          console.warn("No dynamic fields container found for prefix:", prefix);
+          return isValid;
+        }
+
+        // Validate Aadhaar fields and their attachments
+        $container.find('.aadhaar-input').each(function () {
+          const $aadhaarInput = $(this);
+          const aadhaarValue = $aadhaarInput.val().trim();
+
+          if (aadhaarValue && aadhaarValue.length !== 12) {
+            isValid = false;
+            $aadhaarInput.addClass('is-invalid');
+            showErrorToast('Please enter a valid 12-digit Aadhaar number');
+          } else if (aadhaarValue) {
+            $aadhaarInput.removeClass('is-invalid');
+          }
+        });
+
+        // Validate Aadhaar consent
+        const $aadhaarConsent = $container.find('.aadhaar-consent-checkbox-behalf');
+        if ($aadhaarConsent.length > 0 && !$aadhaarConsent.is(':checked')) {
+          isValid = false;
+          $container.find('.aadhaar-consent-error').text('You must consent to Aadhaar usage to proceed.').show();
+          showErrorToast('Please consent to Aadhaar usage');
+        } else {
+          $container.find('.aadhaar-consent-error').hide();
+        }
+
+        // Validate file attachments (general)
+        $container.find('.file-wrapper[data-mandatory="true"]').each(function () {
+          const $wrapper = $(this);
+          let hasUploadedFile = false;
+
+          // Check all file inputs in this wrapper
+          $wrapper.find('input[type="file"]').each(function () {
+            if (this.files && this.files.length > 0) {
+              hasUploadedFile = true;
+            }
+          });
+
+          if (!hasUploadedFile) {
+            isValid = false;
+            $wrapper.addClass('border border-danger rounded p-2');
+
+            // Find or create error message
+            let $errorMsg = $wrapper.find('.file-error-msg');
+            if ($errorMsg.length === 0) {
+              $errorMsg = $('<div class="text-danger mt-1 file-error-msg">Please upload at least one file for this field.</div>');
+              $wrapper.append($errorMsg);
+            } else {
+              $errorMsg.text('Please upload at least one file for this field.').show();
+            }
+
+            showErrorToast(`Please upload required attachment: ${$wrapper.find('label').text()}`);
+          } else {
+            $wrapper.removeClass('border border-danger rounded p-2');
+            $wrapper.find('.file-error-msg').hide();
+          }
+        });
+
+        // Validate mandatory input fields
+        $container.find('[data-mandatory="true"]').each(function () {
+          const $el = $(this);
+
+          // Skip checkboxes and file inputs (handled separately)
+          if ($el.is('input[type="checkbox"]') || $el.is('input[type="file"]') || $el.hasClass('file-wrapper')) {
+            return;
+          }
+
+          if (!$el.val()?.trim()) {
+            isValid = false;
+            $el.addClass('is-invalid');
+          } else {
+            $el.removeClass('is-invalid');
+          }
+        });
+
+        return isValid;
       }
 
       function loadRelationship() {
@@ -1956,47 +1686,485 @@
         // Get category and subcategory info
         const categoryId = $("#behalfPane #categorySelectBehalf").val();
         const subcategoryId = $(this).val();
-        const categoryName = $("#behalfPane #categorySelectBehalf option:selected").text();
-        const subcategoryName = $(this).find('option:selected').text();
+        console.log("Category ID:", categoryId, "Subcategory ID:", subcategoryId);
 
-        console.log('Subcategory Changed:', {
-          categoryId,
-          subcategoryId,
-          categoryName,
-          subcategoryName,
-          isCANEdit: checkIfCANEdit(categoryId, subcategoryId)
-        });
+        // Clear container with loading
+        $container.empty().html('<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Loading form fields...</p></div>');
 
-        generateDynamicFields(columnsString, 'behalf', $container, fileInputClass, categoryId, subcategoryId);
-        initFileModule($container, fileInputClass);
-        initInputValidation($container);
+        // Use a short delay to ensure clearing is complete
+        setTimeout(() => {
+          $container.empty();
+          generateDynamicFields(columnsString, 'self', $container, fileInputClass, categoryId, subcategoryId);
+
+          // Initialize input validation
+          initInputValidation($container);
+
+          console.log("Dynamic fields generated");
+        }, 50);
       });
 
-      // For Self Page (if applicable)
-      $("#subCategorySelect").on("change", function () {
-        const $container = $("#dynamicFieldsContainer");
-        const selected = $(this).find('option:selected');
-        const columnsString = selected.attr('data-columns') || "[]";
-        const fileInputClass = 'fileInput';
 
-        // Get category and subcategory info
-        const categoryId = $("#categorySelect").val();
-        const subcategoryId = $(this).val();
-        const categoryName = $("#categorySelect option:selected").text();
-        const subcategoryName = $(this).find('option:selected').text();
+      // ------------------ Submit Handler for Behalf Pane ------------------
+      // $(document).off("click.submitBtnBehalf").on("click.submitBtnBehalf", "#submitBtnBehalf", function (e) {
+      //   debugger
+      //   e.preventDefault();
 
-        console.log('Self Subcategory Changed:', {
-          categoryId,
-          subcategoryId,
-          categoryName,
-          subcategoryName,
-          isCANEdit: checkIfCANEdit(categoryId, subcategoryId)
-        });
+      //   let isValid = true;
+      //   const $behalfPane = $("#behalfPane");
+      //   const $form = $("#issueForm");
+      //   const $dynamicContainer = $("#dynamicFieldsContainer");
 
-        generateDynamicFields(columnsString, 'self', $container, fileInputClass, categoryId, subcategoryId);
-        initFileModule($container, fileInputClass);
-        initInputValidation($container);
-      });
+      //   // Validate declaration
+      //   const $declarationCheckForBehalf = $("#declarationCheckForBehalf");
+      //   const $declarationErrorForBehalf = $("#declarationErrorForBehalf");
+
+      //   if (!$declarationCheckForBehalf.is(':checked')) {
+      //     isValid = false;
+      //     $declarationErrorForBehalf.text('You must agree to the declaration to proceed.').show();
+      //   } else {
+      //     $declarationErrorForBehalf.hide();
+      //   }
+
+      //   // Validate Aadhaar consent if Aadhaar fields are present
+      //   // Look for the checkbox in both formats
+      //   let $aadhaarConsentCheckbox = $form.find('.aadhaar-consent-checkbox-behalf');
+
+      //   // If not found with class, try to find by ID pattern
+      //   if ($aadhaarConsentCheckbox.length === 0) {
+      //     $aadhaarConsentCheckbox = $form.find('input[id*="aadhaar_consent"]');
+      //   }
+
+      //   // If still not found, try another pattern
+      //   if ($aadhaarConsentCheckbox.length === 0) {
+      //     $aadhaarConsentCheckbox = $form.find('input[id*="aadhaarConsentCheck"]');
+      //   }
+
+      //   const $aadhaarConsentError = $form.find('.aadhaar-consent-error');
+
+      //   // Debug: Check what we found
+      //   console.log("Aadhaar consent checkbox found:", $aadhaarConsentCheckbox.length);
+      //   console.log("Aadhaar consent checkbox checked:", $aadhaarConsentCheckbox.is(':checked'));
+
+      //   if ($aadhaarConsentCheckbox.length > 0) {
+      //     if (!$aadhaarConsentCheckbox.is(':checked')) {
+      //       isValid = false;
+
+      //       // Show error message - find or create error element
+      //       if ($aadhaarConsentError.length === 0) {
+      //         // Create error message near the consent section
+      //         $aadhaarConsentCheckbox.closest('.aadhaar-consent-section').find('.card-body').append(
+      //           '<div class="alert alert-danger mt-2 aadhaar-consent-error">You must consent to Aadhaar usage to proceed.</div>'
+      //         );
+      //       } else {
+      //         $aadhaarConsentError.text('You must consent to Aadhaar usage to proceed.').show();
+      //       }
+
+      //       // Scroll to the consent section
+      //       $aadhaarConsentCheckbox.closest('.aadhaar-consent-section')[0]?.scrollIntoView({
+      //         behavior: 'smooth',
+      //         block: 'center'
+      //       });
+      //     } else {
+      //       $aadhaarConsentError.hide();
+      //     }
+      //   }
+
+      //   // SPECIAL VALIDATION FOR CHANGES REQUIRED FIELD (CAN EDIT)
+      //   const $changesRequiredField = $dynamicContainer.find('.changes-required-field');
+
+      //   if ($changesRequiredField.length > 0) {
+      //     // Check if this is CAN Edit mode (dropdown exists)
+      //     const $changesRequiredDropdown = $dynamicContainer.find('.changes-required-dropdown');
+      //     if ($changesRequiredDropdown.length > 0) {
+      //       // CAN Edit mode - check if changes have been added
+      //       const $changesListItems = $dynamicContainer.find('.changes-list-items');
+      //       const hasChangesInList = $changesListItems.children().length > 0;
+
+      //       if (!hasChangesInList) {
+      //         isValid = false;
+      //         // Highlight the dropdown or show error
+      //         $changesRequiredDropdown.addClass('is-invalid');
+      //         const $errorContainer = $dynamicContainer.find('.changes-required-error');
+      //         if ($errorContainer.length) {
+      //           $errorContainer.text('Please add at least one change request to the list.').show();
+      //         }
+      //       } else {
+      //         $changesRequiredDropdown.removeClass('is-invalid');
+      //         $dynamicContainer.find('.changes-required-error').hide();
+      //       }
+      //     } else {
+      //       // Non-CAN Edit mode - regular textarea validation
+      //       const $changesRequiredTextarea = $dynamicContainer.find('textarea[data-param*="changes"]');
+      //       if ($changesRequiredTextarea.length > 0 && $changesRequiredTextarea.is('[data-mandatory="true"]')) {
+      //         if (!$changesRequiredTextarea.val()?.trim()) {
+      //           isValid = false;
+      //           $changesRequiredTextarea.addClass('is-invalid');
+      //         } else {
+      //           $changesRequiredTextarea.removeClass('is-invalid');
+      //         }
+      //       }
+      //     }
+      //   }
+
+      //   // VALIDATE MANDATORY FILE UPLOAD FIELDS
+      //   $dynamicContainer.find('.file-wrapper[data-mandatory="true"]').each(function () {
+      //     const $fileWrapper = $(this);
+      //     let hasFile = false;
+
+      //     // Check if any file is uploaded in this wrapper
+      //     $(this).find('input[type="file"]').each(function () {
+      //       if (this.files && this.files.length > 0) {
+      //         hasFile = true;
+      //       }
+      //     });
+
+      //     if (!hasFile) {
+      //       isValid = false;
+
+      //       // Highlight the file wrapper
+      //       $fileWrapper.addClass('border-danger border-2');
+
+      //       // Find or create error message
+      //       let $errorMsg = $fileWrapper.find('.file-error-msg');
+      //       if ($errorMsg.length === 0) {
+      //         $errorMsg = $('<div class="text-danger mt-1 file-error-msg">Please upload at least one file for this field.</div>');
+      //         $fileWrapper.append($errorMsg);
+      //       } else {
+      //         $errorMsg.text('Please upload at least one file for this field.').show();
+      //       }
+      //     } else {
+      //       $fileWrapper.removeClass('border-danger border-2');
+      //       $fileWrapper.find('.file-error-msg').hide();
+      //     }
+      //   });
+
+      //   // Validate other mandatory fields (but skip changes required dropdown for CAN Edit)
+      //   $("#dynamicFieldsContainer [data-mandatory='true']").each(function () {
+      //     const $el = $(this);
+
+      //     // Skip validation for changes required dropdown in CAN Edit mode
+      //     if ($el.hasClass('changes-required-dropdown')) {
+      //       return;
+      //     }
+
+      //     // Skip validation for changes required textarea in non-CAN Edit mode (already handled above)
+      //     if ($el.is('textarea') && ($el.attr('id') || '').includes('changes')) {
+      //       return;
+      //     }
+
+      //     // Skip validation for Aadhaar consent checkbox (handled separately)
+      //     if ($el.is('input[type="checkbox"]') && ($el.attr('id') || '').includes('aadhaar')) {
+      //       return;
+      //     }
+
+      //     // Skip validation for file inputs (handled separately above)
+      //     if ($el.is('input[type="file"]')) {
+      //       return;
+      //     }
+
+      //     // Skip validation for file wrapper divs (handled separately above)
+      //     if ($el.hasClass('file-wrapper')) {
+      //       return;
+      //     }
+
+      //     if (!$el.val()?.trim()) {
+      //       isValid = false;
+      //       $el.addClass("is-invalid");
+
+      //       // Scroll to first error
+      //       if (isValid === false) {
+      //         $el[0]?.scrollIntoView({
+      //           behavior: 'smooth',
+      //           block: 'center'
+      //         });
+      //       }
+      //     } else {
+      //       $el.removeClass("is-invalid");
+      //     }
+      //   });
+
+      //   // Validate main form fields
+      //   const mandatorySelectors = [
+      //     '#relationshipField',
+      //     '#typeSelectBehalf',
+      //     '#categorySelectBehalf',
+      //     '#subCategorySelectBehalf'
+      //   ];
+
+      //   mandatorySelectors.forEach(selector => {
+      //     const $el = $("#behalfPane " + selector);
+      //     if (!$el.val() || $el.val().trim() === '') {
+      //       isValid = false;
+      //       $el.addClass('is-invalid');
+      //       $el.next('.error-msg').remove();
+      //       $el.after('<span class="error-msg text-danger">This field is required</span>');
+      //     } else {
+      //       $el.removeClass('is-invalid');
+      //       $el.next('.error-msg').remove();
+      //     }
+      //   });
+
+      //   // Validate dynamic fields
+      //   if (!validateDynamicFields('behalf')) {
+      //     isValid = false;
+      //   }
+
+      //   if (!isValid) {
+      //     // More specific error message
+      //     const errorMessages = [];
+
+      //     if (!$declarationCheckForBehalf.is(':checked')) {
+      //       errorMessages.push('• You must agree to the declaration');
+      //     }
+
+      //     if ($aadhaarConsentCheckbox.length > 0 && !$aadhaarConsentCheckbox.is(':checked')) {
+      //       errorMessages.push('• You must consent to Aadhaar usage');
+      //     }
+
+      //     // Check for empty mandatory file uploads
+      //     $dynamicContainer.find('.file-wrapper[data-mandatory="true"]').each(function () {
+      //       let hasFile = false;
+      //       $(this).find('input[type="file"]').each(function () {
+      //         if (this.files && this.files.length > 0) {
+      //           hasFile = true;
+      //         }
+      //       });
+
+      //       if (!hasFile) {
+      //         const label = $(this).find('label').text().replace('*', '').trim();
+      //         errorMessages.push('• Please upload file for: ' + label);
+      //       }
+      //     });
+
+      //     // Check for empty mandatory text fields
+      //     const emptyFields = [];
+      //     $("#dynamicFieldsContainer [data-mandatory='true']").each(function () {
+      //       const $el = $(this);
+
+      //       // Skip checkboxes and file inputs
+      //       if ($el.is('input[type="checkbox"]') || $el.is('input[type="file"]') || $el.hasClass('file-wrapper')) {
+      //         return;
+      //       }
+
+      //       if (!$el.val()?.trim()) {
+      //         const label = $el.closest('.mb-3').find('label').text() || 'Field';
+      //         emptyFields.push(label.trim());
+      //       }
+      //     });
+
+      //     if (emptyFields.length > 0) {
+      //       errorMessages.push('• Please fill all required fields: ' + emptyFields.join(', '));
+      //     }
+
+      //     // Show specific error messages
+      //     if (errorMessages.length > 0) {
+      //       showErrorToast("Please complete the following:\n\n" + errorMessages.join('\n'));
+      //     } else {
+      //       showErrorToast("Please fill all mandatory fields");
+      //     }
+      //     return;
+      //   }
+
+      //   // ============================================
+      //   // PREPARE FORM DATA
+      //   // ============================================
+      //   const sessionId = getSessionId();
+
+      //   // Get user info from localStorage
+      //   const userName = localStorage.getItem("user_name") || "";
+      //   const userMobile = localStorage.getItem("mobile") || "";
+      //   const userEmail = localStorage.getItem("email") || "";
+      //   const userDistrict = localStorage.getItem("district_id") || "";
+
+      //   const params = {
+      //     p_session_id: sessionId,
+      //     p_complainant_name: $("#behalfPane #onbehalfName").val()?.trim() || null,
+      //     p_mobile: $("#behalfPane #onbehalfMobile").val()?.trim() || null,
+      //     p_email: $("#behalfPane #onbehalfEmail").val()?.trim() || null,
+      //     p_district_id: $("#behalfPane #onbehalfDistrict").val() || null,
+      //     p_issue_id: $("#behalfPane #typeSelectBehalf").val() || null,
+      //     p_created_by: localStorage.getItem("user_id") || "1",
+      //     p_category_id: $("#behalfPane #categorySelectBehalf").val() || null,
+      //     p_subcategory_id: $("#behalfPane #subCategorySelectBehalf").val() || null,
+      //     p_relationship: $("#behalfPane #relationshipField").val() || null,
+      //     p_onbehalf_name: localStorage.getItem("user_name") || null,
+      //     p_onbehalf_mobile: localStorage.getItem("mobile") || null,
+      //     p_onbehalf_email: localStorage.getItem("email") || null,
+      //     p_onbehalf_district_id: localStorage.getItem("district_id") || null
+      //   };
+
+      //   // Collect dynamic fields into single JSON
+      //   let dynamicFields = {};
+      //   $("#behalfPane #dynamicFieldsContainerBehalf [data-param]").each(function () {
+      //     const $el = $(this);
+      //     const key = $el.data("param");
+
+      //     // Skip changes required dropdown for CAN Edit (handled separately)
+      //     if ($el.hasClass('changes-required-dropdown')) {
+      //       return;
+      //     }
+
+      //     let value = $el.val()?.trim() || null;
+      //     if (key && value !== null) {
+      //       dynamicFields[key] = value;
+      //     }
+      //   });
+      //   // Handle changes required field for CAN Edit
+      //   const $changesRequiredDropdown = $dynamicContainer.find('.changes-required-dropdown');
+      //   if ($changesRequiredDropdown.length > 0) {
+      //     // Get the parameter name from the dropdown
+      //     const changesParam = $changesRequiredDropdown.data('param');
+      //     if (changesParam) {
+      //       // Collect all changes from the list
+      //       const changesList = [];
+      //       $dynamicContainer.find('.changes-list-items .change-item').each(function () {
+      //         const changeType = $(this).find('.change-type').text();
+      //         const changeDetails = $(this).find('.change-details').text();
+
+      //         if (changeType && changeDetails) {
+      //           changesList.push(`${changeType}: ${changeDetails}`);
+      //         }
+      //       });
+
+      //       if (changesList.length > 0) {
+      //         dynamicFields[changesParam] = changesList.join('\n');
+      //       }
+      //     }
+      //   }
+
+      //   // Debug log to see what's being collected
+      //   console.log("Dynamic fields collected:", dynamicFields);
+
+      //   params["p_dynamic_fields"] = dynamicFields;
+
+      //   // Handle file uploads
+      //   let attachmentArray = [];
+      //   $("#behalfPane #dynamicFieldsContainerBehalf .file-wrapper").each(function () {
+      //     const colId = $(this).data("col");
+      //     $(this).find(".file-row").each(function () {
+      //       const fileInput = $(this).find("input[type='file']")[0];
+      //       const file = fileInput?.files[0] || null;
+      //       const desc = $(this).find(".file-description").val()?.trim() || "";
+
+      //       if (file) {
+      //         attachmentArray.push({ col: colId, file, desc });
+      //       }
+      //     });
+      //   });
+
+      //   const formData = new FormData();
+
+      //   // Append main encrypted payload
+      //   formData.append(
+      //     "data",
+      //     encryptData({
+      //       action: "function_call",
+      //       function_name: "fn_operator_create_ticket_1",
+      //       params,
+      //     })
+      //   );
+
+      //   // Append files for cloud upload
+      //   attachmentArray.forEach((f, index) => {
+      //     formData.append(`file_${index}`, f.file);
+      //     formData.append(`file_${index}_desc`, f.desc);
+      //     formData.append(`file_${index}_col`, f.col);
+      //   });
+
+      //   // AJAX call for ticket creation
+      //   $.ajax({
+      //     url: `${BASE_API_URL}/dynamicparams`,
+      //     method: "POST",
+      //     data: formData,
+      //     contentType: false,
+      //     processData: false,
+      //     beforeSend: function () {
+      //       $("#behalfPane #formLoader").removeClass("d-none");
+      //       $("#behalfPane #submitBtnBehalf").prop("disabled", true);
+      //     },
+      //     success: (res) => {
+      //       $("#behalfPane #formLoader").addClass("d-none");
+      //       $("#behalfPane #submitBtnBehalf").prop("disabled", false);
+
+      //       try {
+      //         const result = decryptData(res.data);
+      //         const ticketRef = result[0]?.fn_operator_create_ticket_1 || "N/A";
+      //         alert("Ticket Created Successfully — Ref: " + ticketRef);
+
+      //         // Call fn_acknowledge_download after successful ticket creation
+      //         if (ticketRef !== "N/A") {
+      //           const ackPayload = {
+      //             action: "function_call",
+      //             function_name: "fn_acknowledge_download",
+      //             params: { ticketId: ticketRef }
+      //           };
+
+      //           $.ajax({
+
+      //             url: `${BASE_API_URL}/commonfunction`,
+      //             method: "POST",
+      //             data: { data: encryptData(ackPayload) },
+      //             beforeSend: () => $("#behalfPane #formLoader").removeClass("d-none"),
+      //             success: function (ackRes) {
+      //               $("#behalfPane #formLoader").addClass("d-none");
+      //               try {
+      //                 const ackDecrypted = decryptData(ackRes.data);
+      //                 const ackDataRaw = ackDecrypted[0]?.fn_acknowledge_download;
+      //                 let ackData = [];
+
+      //                 if (ackDataRaw) {
+      //                   ackData = JSON.parse(ackDataRaw).map(item => item.jsonb_build_object);
+      //                 }
+
+      //                 if (ackData.length > 0) {
+      //                   const d = ackData[0];
+      //                   $("#behalfPane #ackRequestedBy").text(d.Requested_By);
+      //                   $("#behalfPane #ackUserType").text(d.type_user);
+      //                   $("#behalfPane #ackComplainant").text(d.name);
+      //                   $("#behalfPane #ackMobile").text(d.mobile);
+      //                   $("#behalfPane #ackDistrict").text(d.district);
+      //                   $("#behalfPane #ackDate").text(new Date(d.date).toLocaleString());
+      //                   $("#behalfPane #ackIssueType").text(d.issue);
+      //                   $("#behalfPane #ackCategory").text(d.category);
+      //                   $("#behalfPane #ackSubCategory").text(d.subcategory);
+      //                   $("#behalfPane #ackNumber").text(d.acknowledge_numbr);
+      //                 } else {
+      //                   $("#behalfPane #ackCard").html("<p class='text-center text-muted'>No acknowledgement data available.</p>");
+      //                 }
+
+      //                 const successModalEl = document.getElementById('behalfSuccessModal');
+      //                 const successModal = new bootstrap.Modal(successModalEl);
+      //                 successModal.show();
+
+      //                 successModalEl.addEventListener('hidden.bs.modal', () => {
+      //                   location.reload();
+      //                 });
+
+      //               } catch (err) {
+      //                 $("#behalfPane #ackCard").html(`<p class="text-danger text-center">Error parsing acknowledgement.</p>`);
+      //               }
+      //             },
+      //             error: function () {
+      //               $("#behalfPane #formLoader").addClass("d-none");
+      //               $("#behalfPane #ackCard").html(`<p class="text-danger text-center">Failed to load acknowledgement.</p>`);
+      //             }
+      //           });
+      //         }
+
+      //       } catch (err) {
+      //         console.error("Response parse error:", err);
+      //         alert("Ticket created, but could not parse response");
+      //       }
+      //     },
+      //     error: (xhr, status, err) => {
+      //       $("#behalfPane #formLoader").addClass("d-none");
+      //       $("#behalfPane #submitBtnBehalf").prop("disabled", false);
+      //       console.error("Submission error:", err, xhr.responseText);
+      //       alert("Submission Failed");
+      //     },
+      //   });
+      // });
+
       // ------------------ Submit Handler for Behalf Pane ------------------
       $(document).off("click.submitBtnBehalf").on("click.submitBtnBehalf", "#submitBtnBehalf", function (e) {
         debugger
@@ -2004,30 +2172,155 @@
 
         let isValid = true;
         const $behalfPane = $("#behalfPane");
+        const $form = $("#issueForm");
+
+        // Get the correct dynamic fields container for behalf
+        const $dynamicContainer = $behalfPane.find("#dynamicFieldsContainerBehalf");
+
+        // Validate declaration
+        const $declarationCheckForBehalf = $("#declarationCheckForBehalf");
+        const $declarationErrorForBehalf = $("#declarationErrorForBehalf");
+
+        if (!$declarationCheckForBehalf.is(':checked')) {
+          isValid = false;
+          $declarationErrorForBehalf.text('You must agree to the declaration to proceed.').show();
+        } else {
+          $declarationErrorForBehalf.hide();
+        }
+
         // Validate Aadhaar consent if Aadhaar fields are present
-        const $aadhaarConsentCheckbox = $behalfPane.find('.aadhaar-consent-checkbox');
-        const $aadhaarConsentError = $behalfPane.find('.aadhaar-consent-error');
+        const $aadhaarConsentCheckbox = $dynamicContainer.find('.aadhaar-consent-section input[type="checkbox"]');
+
+        // Debug: Check what we found
+        console.log("Aadhaar consent checkbox found:", $aadhaarConsentCheckbox.length);
+        console.log("Aadhaar consent checkbox checked:", $aadhaarConsentCheckbox.is(':checked'));
 
         if ($aadhaarConsentCheckbox.length > 0) {
           if (!$aadhaarConsentCheckbox.is(':checked')) {
             isValid = false;
-            $aadhaarConsentError.text('You must consent to Aadhaar usage to proceed.').show();
+
+            // Show error message
+            const $errorContainer = $dynamicContainer.find('.aadhaar-consent-error');
+            if ($errorContainer.length > 0) {
+              $errorContainer.text('You must consent to Aadhaar usage to proceed.').show();
+            } else {
+              // Create error message if not exists
+              $aadhaarConsentCheckbox.closest('.aadhaar-consent-section').find('.card-body').append(
+                '<div class="alert alert-danger mt-2 aadhaar-consent-error">You must consent to Aadhaar usage to proceed.</div>'
+              );
+            }
           } else {
-            $aadhaarConsentError.hide();
+            $dynamicContainer.find('.aadhaar-consent-error').hide();
           }
         }
 
-        // Validate mandatory fields
-        $("#behalfPane #dynamicFieldsContainerBehalf [data-mandatory='true']").each(function () {
-          if (!$(this).val()?.trim()) {
-            isValid = false;
-            $(this).addClass("is-invalid");
+        // SPECIAL VALIDATION FOR CHANGES REQUIRED FIELD (CAN EDIT)
+        const $changesRequiredField = $dynamicContainer.find('.changes-required-field');
+
+        if ($changesRequiredField.length > 0) {
+          // Check if this is CAN Edit mode (dropdown exists)
+          const $changesRequiredDropdown = $dynamicContainer.find('.changes-required-dropdown');
+          if ($changesRequiredDropdown.length > 0) {
+            // CAN Edit mode - check if changes have been added
+            const $changesListItems = $dynamicContainer.find('.changes-list-items');
+            const hasChangesInList = $changesListItems.children().length > 0;
+
+            if (!hasChangesInList) {
+              isValid = false;
+              // Highlight the dropdown or show error
+              $changesRequiredDropdown.addClass('is-invalid');
+              const $errorContainer = $dynamicContainer.find('.changes-required-error');
+              if ($errorContainer.length) {
+                $errorContainer.text('Please add at least one change request to the list.').show();
+              }
+            } else {
+              $changesRequiredDropdown.removeClass('is-invalid');
+              $dynamicContainer.find('.changes-required-error').hide();
+            }
           } else {
-            $(this).removeClass("is-invalid");
+            // Non-CAN Edit mode - regular textarea validation
+            const $changesRequiredTextarea = $dynamicContainer.find('textarea[data-param*="changes"]');
+            if ($changesRequiredTextarea.length > 0 && $changesRequiredTextarea.is('[data-mandatory="true"]')) {
+              if (!$changesRequiredTextarea.val()?.trim()) {
+                isValid = false;
+                $changesRequiredTextarea.addClass('is-invalid');
+              } else {
+                $changesRequiredTextarea.removeClass('is-invalid');
+              }
+            }
+          }
+        }
+
+        // VALIDATE MANDATORY FILE UPLOAD FIELDS
+        $dynamicContainer.find('.file-wrapper[data-mandatory="true"]').each(function () {
+          const $fileWrapper = $(this);
+          let hasFile = false;
+
+          // Check if any file is uploaded in this wrapper
+          $(this).find('input[type="file"]').each(function () {
+            if (this.files && this.files.length > 0) {
+              hasFile = true;
+            }
+          });
+
+          if (!hasFile) {
+            isValid = false;
+
+            // Highlight the file wrapper
+            $fileWrapper.addClass('border-danger border-2');
+
+            // Find or create error message
+            let $errorMsg = $fileWrapper.find('.file-error-msg');
+            if ($errorMsg.length === 0) {
+              $errorMsg = $('<div class="text-danger mt-1 file-error-msg">Please upload at least one file for this field.</div>');
+              $fileWrapper.append($errorMsg);
+            } else {
+              $errorMsg.text('Please upload at least one file for this field.').show();
+            }
+          } else {
+            $fileWrapper.removeClass('border-danger border-2');
+            $fileWrapper.find('.file-error-msg').hide();
           }
         });
 
-        // Validate main form fields
+        // Validate other mandatory fields (but skip changes required dropdown for CAN Edit)
+        $dynamicContainer.find('[data-mandatory="true"]').each(function () {
+          const $el = $(this);
+
+          // Skip validation for changes required dropdown in CAN Edit mode
+          if ($el.hasClass('changes-required-dropdown')) {
+            return;
+          }
+
+          // Skip validation for changes required textarea in non-CAN Edit mode (already handled above)
+          if ($el.is('textarea') && ($el.attr('id') || '').includes('changes')) {
+            return;
+          }
+
+          // Skip validation for Aadhaar consent checkbox (handled separately)
+          if ($el.is('input[type="checkbox"]') && ($el.attr('id') || '').includes('aadhaar')) {
+            return;
+          }
+
+          // Skip validation for file inputs (handled separately above)
+          if ($el.is('input[type="file"]')) {
+            return;
+          }
+
+          // Skip validation for file wrapper divs (handled separately above)
+          if ($el.hasClass('file-wrapper')) {
+            return;
+          }
+
+          if (!$el.val()?.trim()) {
+            isValid = false;
+            $el.addClass("is-invalid");
+          } else {
+            $el.removeClass("is-invalid");
+          }
+        });
+
+        // Validate main form fields in behalf pane
         const mandatorySelectors = [
           '#relationshipField',
           '#typeSelectBehalf',
@@ -2036,7 +2329,7 @@
         ];
 
         mandatorySelectors.forEach(selector => {
-          const $el = $("#behalfPane " + selector);
+          const $el = $behalfPane.find(selector);
           if (!$el.val() || $el.val().trim() === '') {
             isValid = false;
             $el.addClass('is-invalid');
@@ -2048,46 +2341,150 @@
           }
         });
 
-        if (!isValid) {
-          return alert("Please fill all mandatory fields");
+        // Validate dynamic fields using the prefix-specific function
+        if (!validateDynamicFields('behalf')) {
+          isValid = false;
         }
 
+        if (!isValid) {
+          // More specific error message
+          const errorMessages = [];
+
+          if (!$declarationCheckForBehalf.is(':checked')) {
+            errorMessages.push('• You must agree to the declaration');
+          }
+
+          if ($aadhaarConsentCheckbox.length > 0 && !$aadhaarConsentCheckbox.is(':checked')) {
+            errorMessages.push('• You must consent to Aadhaar usage');
+          }
+
+          // Check for empty mandatory file uploads
+          $dynamicContainer.find('.file-wrapper[data-mandatory="true"]').each(function () {
+            let hasFile = false;
+            $(this).find('input[type="file"]').each(function () {
+              if (this.files && this.files.length > 0) {
+                hasFile = true;
+              }
+            });
+
+            if (!hasFile) {
+              const label = $(this).find('label').text().replace('*', '').trim();
+              errorMessages.push('• Please upload file for: ' + label);
+            }
+          });
+
+          // Check for empty mandatory text fields
+          const emptyFields = [];
+          $dynamicContainer.find('[data-mandatory="true"]').each(function () {
+            const $el = $(this);
+
+            // Skip checkboxes and file inputs
+            if ($el.is('input[type="checkbox"]') || $el.is('input[type="file"]') || $el.hasClass('file-wrapper')) {
+              return;
+            }
+
+            if (!$el.val()?.trim()) {
+              const label = $el.closest('.mb-3').find('label').text() || 'Field';
+              emptyFields.push(label.trim());
+            }
+          });
+
+          if (emptyFields.length > 0) {
+            errorMessages.push('• Please fill all required fields: ' + emptyFields.join(', '));
+          }
+
+          // Show specific error messages
+          if (errorMessages.length > 0) {
+            alert("Please complete the following:\n\n" + errorMessages.join('\n'));
+          } else {
+            alert("Please fill all mandatory fields");
+          }
+          return;
+        }
+
+        // ============================================
+        // PREPARE FORM DATA
+        // ============================================
         const sessionId = getSessionId();
+
+        // Get user info from localStorage
+        const userName = localStorage.getItem("user_name") || "";
+        const userMobile = localStorage.getItem("mobile") || "";
+        const userEmail = localStorage.getItem("email") || "";
+        const userDistrict = localStorage.getItem("district") || "";
 
         const params = {
           p_session_id: sessionId,
-          p_complainant_name: $("#behalfPane #onbehalfName").val()?.trim() || null,
-          p_mobile: $("#behalfPane #onbehalfMobile").val()?.trim() || null,
-          p_email: $("#behalfPane #onbehalfEmail").val()?.trim() || null,
-          p_district_id: $("#behalfPane #onbehalfDistrict").val() || null,
+          p_complainant_name: userName,
+          // p_mobile: $("#behalfPane #onbehalfMobile").val()?.trim() || null,
+          // p_email: $("#behalfPane #onbehalfEmail").val()?.trim() || null,
+          // p_district_id: $("#behalfPane #onbehalfDistrict").val() || null,
+          p_district_id: userDistrict,
           p_issue_id: $("#behalfPane #typeSelectBehalf").val() || null,
           p_created_by: localStorage.getItem("user_id") || "1",
           p_category_id: $("#behalfPane #categorySelectBehalf").val() || null,
           p_subcategory_id: $("#behalfPane #subCategorySelectBehalf").val() || null,
+          p_priority_id: null,
           p_relationship: $("#behalfPane #relationshipField").val() || null,
           p_onbehalf_name: localStorage.getItem("user_name") || null,
-          p_onbehalf_mobile: localStorage.getItem("mobile") || null,
-          p_onbehalf_email: localStorage.getItem("email") || null,
-          p_onbehalf_district_id: localStorage.getItem("district_id") || null
+          p_onbehalf_mobile: $("#behalfPane #onbehalfMobile").val()?.trim() || null,
+          p_onbehalf_email: $("#behalfPane #onbehalfEmail").val()?.trim() || null,
+          p_onbehalf_district_id: $("#behalfPane #onbehalfDistrict").val() || null,
         };
 
         // Collect dynamic fields into single JSON
         let dynamicFields = {};
-        $("#behalfPane #dynamicFieldsContainerBehalf [data-param]").each(function () {
-          const key = $(this).data("param");
-          const value = $(this).val()?.trim() || null;
-          if (key) dynamicFields[key] = value;
+        $dynamicContainer.find('[data-param]').each(function () {
+          const $el = $(this);
+          const key = $el.data("param");
+
+          // Skip changes required dropdown for CAN Edit (handled separately)
+          if ($el.hasClass('changes-required-dropdown')) {
+            return;
+          }
+
+          let value = $el.val()?.trim() || null;
+          if (key && value !== null) {
+            dynamicFields[key] = value;
+          }
         });
+
+        // Handle changes required field for CAN Edit
+        const $changesRequiredDropdown = $dynamicContainer.find('.changes-required-dropdown');
+        if ($changesRequiredDropdown.length > 0) {
+          // Get the parameter name from the dropdown
+          const changesParam = $changesRequiredDropdown.data('param');
+          if (changesParam) {
+            // Collect all changes from the list
+            const changesList = [];
+            $dynamicContainer.find('.changes-list-items .change-item').each(function () {
+              const changeType = $(this).find('.change-type').text();
+              const changeDetails = $(this).find('.change-details').text();
+
+              if (changeType && changeDetails) {
+                changesList.push(`${changeType}: ${changeDetails}`);
+              }
+            });
+
+            if (changesList.length > 0) {
+              dynamicFields[changesParam] = changesList.join('\n');
+            }
+          }
+        }
+
+        // Debug log to see what's being collected
+        console.log("Dynamic fields collected:", dynamicFields);
+
         params["p_dynamic_fields"] = dynamicFields;
 
         // Handle file uploads
         let attachmentArray = [];
-        $("#behalfPane #dynamicFieldsContainerBehalf .file-wrapper").each(function () {
+        $dynamicContainer.find('.file-wrapper').each(function () {
           const colId = $(this).data("col");
           $(this).find(".file-row").each(function () {
             const fileInput = $(this).find("input[type='file']")[0];
             const file = fileInput?.files[0] || null;
-            const desc = $(this).find(".file-desc").val()?.trim() || "";
+            const desc = $(this).find(".file-description").val()?.trim() || "";
 
             if (file) {
               attachmentArray.push({ col: colId, file, desc });
@@ -2102,7 +2499,7 @@
           "data",
           encryptData({
             action: "function_call",
-            function_name: "fn_citizen_create_ticket_1",
+            function_name: "fn_operator_create_ticket_1",
             params,
           })
         );
@@ -2131,7 +2528,7 @@
 
             try {
               const result = decryptData(res.data);
-              const ticketRef = result[0]?.fn_citizen_create_ticket_1 || "N/A";
+              const ticketRef = result[0]?.fn_operator_create_ticket_1 || "N/A";
               alert("Ticket Created Successfully — Ref: " + ticketRef);
 
               // Call fn_acknowledge_download after successful ticket creation
@@ -2143,7 +2540,6 @@
                 };
 
                 $.ajax({
-
                   url: `${BASE_API_URL}/commonfunction`,
                   method: "POST",
                   data: { data: encryptData(ackPayload) },
@@ -2207,7 +2603,6 @@
           },
         });
       });
-
       // ------------------ PDF Download for Behalf Pane ------------------
       $(document).on('click', '#behalfSuccessModal .download-pdf', function () {
         debugger

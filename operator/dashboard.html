@@ -769,7 +769,7 @@
                       <thead>
                         <tr>
 
-                          <th>Acknowledgement Id</th>
+                          <th>Ticket Id</th>
                           <th>Category</th>
                           <th>Sub Category</th>
                           <th>Status</th>
@@ -789,7 +789,7 @@
                       <thead>
                         <tr>
                           <th>View</th>
-                          <th>Acknowledgement Id</th>
+                          <th>Ticket Id</th>
                           <th>Category</th>
                           <th>Sub Category</th>
                           <th>Status</th>
@@ -810,7 +810,7 @@
                       <thead>operator/index.html
                         <tr>
                           <th>View</th>
-                          <th>Acknowledgement Id</th>
+                          <th>Ticket Id</th>
                           <th>Category</th>
                           <th>Sub Category</th>
                           <th>Status</th>
@@ -829,7 +829,7 @@
                       <thead>
                         <tr>
                           <th>View</th>
-                          <th>Acknowledgement Id</th>
+                          <th>Ticket Id</th>
                           <th>Category</th>
                           <th>Sub Category</th>
                           <th>Status</th>
@@ -848,7 +848,7 @@
                       <thead>
                         <tr>
                           <th>View</th>
-                          <th>Acknowledgement Id</th>
+                          <th>Ticket Id</th>
                           <th>Category</th>
                           <th>Sub Category</th>
                           <th>Status</th>
@@ -867,7 +867,7 @@
                       <thead>
                         <tr>
                           <th>View</th>
-                          <th>Acknowledgement Id</th>
+                          <th>Ticket Id</th>
                           <th>Category</th>
                           <th>Sub Category</th>
                           <th>Status</th>
@@ -933,7 +933,7 @@
                     <thead>
                       <tr>
 
-                        <th>Acknowledgement Id</th>
+                        <th>Ticket Id</th>
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Status</th>
@@ -952,7 +952,7 @@
                     <thead>
                       <tr>
                         <th>View</th>
-                        <th>Acknowledgement Id</th>
+                        <th>Ticket Id</th>
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Status</th>
@@ -971,7 +971,7 @@
                     <thead>
                       <tr>
                         <th>View</th>
-                        <th>Acknowledgement Id</th>
+                        <th>Ticket Id</th>
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Status</th>
@@ -990,7 +990,7 @@
                     <thead>
                       <tr>
                         <th>View</th>
-                        <th>Acknowledgement Id</th>
+                        <th>Ticket Id</th>
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Status</th>
@@ -1009,7 +1009,7 @@
                     <thead>
                       <tr>
                         <th>View</th>
-                        <th>Acknowledgement Id</th>
+                        <th>Ticket Id</th>
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Status</th>
@@ -1028,7 +1028,7 @@
                     <thead>
                       <tr>
                         <th>View</th>
-                        <th>Acknowledgement Id</th>
+                        <th>Ticket Id</th>
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Status</th>
@@ -1173,20 +1173,21 @@
               $("#overallTicketsCard .kpi-meta span").eq(4).text(data.OverallTickets.Closed);
 
               // --- Bind Self Tickets --- tab count value
-              $("#allCount").eq(0).text(data.SelfTickets.Total);
-              $("#inProgressCount").eq(0).text(data.SelfTickets.InProgress);
-              $("#returnedCount").eq(1).text(data.SelfTickets.Returned);
-              $("#resolvedCount").eq(2).text(data.SelfTickets.Resolved);
-              $("#reopenedCount").eq(3).text(data.SelfTickets.ReOpened);
-              $("#closedCount").eq(4).text(data.SelfTickets.Closed);
+              $("#allCount").text(data.SelfTickets.Total);
+              $("#inProgressCount").text(data.SelfTickets.InProgress);
+              $("#returnedCount").text(data.SelfTickets.Returned);
+              $("#resolvedCount").text(data.SelfTickets.Resolved);
+              $("#reopenedCount").text(data.SelfTickets.ReOpened);
+              $("#closedCount").text(data.SelfTickets.Closed);
 
               // --- Bind On-Behalf Tickets --- tab count value  
-              $("#behalfallCount").eq(0).text(data.OnBehalfTickets.Total);
-              $("#behalfinProgressCount").eq(0).text(data.OnBehalfTickets.InProgress);
-              $("#behalfreturnedCount").eq(1).text(data.OnBehalfTickets.Returned);
-              $("#behalfresolvedCount").eq(2).text(data.OnBehalfTickets.Resolved);
-              $("#behalfreopenedCount").eq(3).text(data.OnBehalfTickets.ReOpened);
-              $("#behalfclosedCount").eq(4).text(data.OnBehalfTickets.Closed);
+              // --- Bind On-Behalf Tickets --- tab count value  
+              $("#behalfallCount").text(data.OnBehalfTickets.Total);
+              $("#behalfinProgressCount").text(data.OnBehalfTickets.InProgress);
+              $("#behalfreturnedCount").text(data.OnBehalfTickets.Returned);  // Remove .eq(1)
+              $("#behalfresolvedCount").text(data.OnBehalfTickets.Resolved);   // Remove .eq(2)
+              $("#behalfreopenedCount").text(data.OnBehalfTickets.ReOpened);   // Remove .eq(3)
+              $("#behalfclosedCount").text(data.OnBehalfTickets.Closed);       // Remove .eq(4)
 
 
             } catch (err) {
@@ -1468,7 +1469,12 @@
         }
 
         // Attach a click handler to all tables
-        $(document).on("click", "table tbody tr", function () {
+        $(document).on("click", "table tbody tr", function (e) {
+          if ($(e.target).is('button, a, input, select, textarea') ||
+            $(e.target).closest('button, a, input, select, textarea').length) {
+            return;
+          }
+
           const status = $(this).find("td:last").text().trim(); // last column is Status
           const tableId = $(this).closest("table").attr("id");  // which table was clicked
 
@@ -1591,10 +1597,11 @@
           });
         }
 
-        $(document).on("click", ".viewTicketBtn", function () {
+        $(document).on("click", ".viewTicketBtn", function (e) {
+          e.stopPropagation();
           const ticketId = $(this).data("ticketid");
           if (!ticketId) {
-            return showErrorToast("Acknowledgement ID not found.");
+            return showErrorToast("Ticket ID not found.");
           }
 
           const payload = {
@@ -1629,14 +1636,15 @@
                 const ticketDetails = rawData.ticket_details || {};
                 const attachments = rawData.attachments || [];
                 const timeline = rawData.progress_timeline || [];
+                const remarks =
+                  timeline.length > 0 ? timeline[0].notes : "N/A";
 
                 // Basic Details Table
                 const $table = $("#ticketDetailsTable");
                 $table.empty();
                 $table.append(`
-                <tr><th>Acknowledgement ID</th><td>${ticketDetails.ticket_id || 'N/A'}</td></tr>
-                <tr><th>Name</th><td>${ticketDetails.operator_name || 'N/A'}</td></tr>
-                <tr><th>Email</th><td>${ticketDetails.complainant_email || 'N/A'}</td></tr>
+                <tr><th>Ticket ID</th><td>${ticketDetails.ticket_id || 'N/A'}</td></tr>
+                <tr><th>Name</th><td>${ticketDetails.complainant_name || 'N/A'}</td></tr>
                 <tr><th>Mobile</th><td>${ticketDetails.complainant_mobile || 'N/A'}</td></tr>
                 <tr><th>District</th><td>${ticketDetails.district || 'N/A'}</td></tr>
                 <tr><th>Created Date</th><td>${formatDateTime(ticketDetails.created_at)}</td></tr>
@@ -1644,7 +1652,7 @@
                 <tr><th>Subcategory</th><td>${ticketDetails.subcategory || 'N/A'}</td></tr>
                 <tr><th>Priority</th><td>${ticketDetails.priority || 'N/A'}</td></tr>
                 <tr><th>Status</th><td>${ticketDetails.status || 'N/A'}</td></tr>
-                <tr><th>Remarks</th><td>${ticketDetails.remarks || 'N/A'}</td></tr>
+                <tr><th>Remarks</th><td>${remarks || 'N/A'}</td></tr>
             `);
 
                 // Timeline
