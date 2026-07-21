@@ -1150,27 +1150,25 @@
               const dataStr = parsed[0].fn_dashboard_citizen_edmopr_counts;
               const data = JSON.parse(dataStr);
               $("#selfTicketsCard .h3").text(data.SelfTickets.Total);
-              $("#selfTicketsCard .kpi-meta span").eq(0).text(data.SelfTickets.InProgress);
-              $("#selfTicketsCard .kpi-meta span").eq(1).text(data.SelfTickets.Returned);
-              $("#selfTicketsCard .kpi-meta span").eq(2).text(data.SelfTickets.Resolved);
-              $("#selfTicketsCard .kpi-meta span").eq(3).text(data.SelfTickets.ReOpened);
-              $("#selfTicketsCard .kpi-meta span").eq(4).text(data.SelfTickets.Closed);
-
+              $("#selfTicketsCard .kpi-meta span").text(data.SelfTickets.InProgress);
+              $("#selfTicketsCard .kpi-meta span").text(data.SelfTickets.Returned);
+              $("#selfTicketsCard .kpi-meta span").text(data.SelfTickets.Resolved);
+              $("#selfTicketsCard .kpi-meta span").text(data.SelfTickets.ReOpened);
+              $("#selfTicketsCard .kpi-meta span").text(data.SelfTickets.Closed);
               // --- Bind On-Behalf Tickets ---
               $("#onBehalfTicketsCard .h3").text(data.OnBehalfTickets.Total);
-              $("#onBehalfTicketsCard .kpi-meta span").eq(0).text(data.OnBehalfTickets.InProgress);
-              $("#onBehalfTicketsCard .kpi-meta span").eq(1).text(data.OnBehalfTickets.Returned);
-              $("#onBehalfTicketsCard .kpi-meta span").eq(2).text(data.OnBehalfTickets.Resolved);
-              $("#onBehalfTicketsCard .kpi-meta span").eq(3).text(data.OnBehalfTickets.ReOpened);
-              $("#onBehalfTicketsCard .kpi-meta span").eq(4).text(data.OnBehalfTickets.Closed);
-
+              $("#onBehalfTicketsCard .kpi-meta span").text(data.OnBehalfTickets.InProgress);
+              $("#onBehalfTicketsCard .kpi-meta span").text(data.OnBehalfTickets.Returned);
+              $("#onBehalfTicketsCard .kpi-meta span").text(data.OnBehalfTickets.Resolved);
+              $("#onBehalfTicketsCard .kpi-meta span").text(data.OnBehalfTickets.ReOpened);
+              $("#onBehalfTicketsCard .kpi-meta span").text(data.OnBehalfTickets.Closed);
               // --- Bind Overall Tickets ---
               $("#overallTicketsCard .h3").text(data.OverallTickets.Total);
-              $("#overallTicketsCard .kpi-meta span").eq(0).text(data.OverallTickets.InProgress);
-              $("#overallTicketsCard .kpi-meta span").eq(1).text(data.OverallTickets.Returned);
-              $("#overallTicketsCard .kpi-meta span").eq(2).text(data.OverallTickets.Resolved);
-              $("#overallTicketsCard .kpi-meta span").eq(3).text(data.OverallTickets.ReOpened);
-              $("#overallTicketsCard .kpi-meta span").eq(4).text(data.OverallTickets.Closed);
+              $("#overallTicketsCard .kpi-meta span").text(data.OverallTickets.InProgress);
+              $("#overallTicketsCard .kpi-meta span").text(data.OverallTickets.Returned);
+              $("#overallTicketsCard .kpi-meta span").text(data.OverallTickets.Resolved);
+              $("#overallTicketsCard .kpi-meta span").text(data.OverallTickets.ReOpened);
+              $("#overallTicketsCard .kpi-meta span").text(data.OverallTickets.Closed);
 
               // --- Bind Self Tickets --- tab count value
               $("#allCount").text(data.SelfTickets.Total);

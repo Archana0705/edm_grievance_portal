@@ -1188,6 +1188,7 @@
                 showLoading(false);
             }
         }
+
         async function getAvailableAgents() {
             try {
                 const payload = {
@@ -1895,6 +1896,19 @@
 
                     // Append ticket ID if needed
                     formData.append('ticketId', ticketId);
+
+
+                    // const tempPayload = {
+                    //     action: "function_call",
+                    //     function_name: "fn_temp_ticket_attachments",
+                    //     params: {
+                    //         p_session_id: sessionId,
+                    //         p_file_name: file.name,
+                    //         p_file_path: `/uploads/${file.name}`,
+                    //         p_mime_type: file.type,
+                    //         p_uploaded_by: localStorage.getItem("user_id") || "0"
+                    //     }
+                    // };
 
                     const response = await fetch('/upload-files-endpoint', { // Replace with your actual endpoint
                         method: 'POST',

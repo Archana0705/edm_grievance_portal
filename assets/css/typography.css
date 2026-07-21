@@ -1,0 +1,268 @@
+/* ==========================================================================
+   E-Sevai Portal — Premium Typography System
+   Display: Space Grotesk | Headings: Sora | Sub: Outfit
+   Body: DM Sans | UI: Manrope | Accent: Exo 2
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Exo+2:wght@500;600;700&family=Manrope:wght@500;600;700;800&family=Outfit:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&family=Sora:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Font families */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-heading: 'Sora', system-ui, sans-serif;
+  --font-subheading: 'Outfit', system-ui, sans-serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-ui: 'Manrope', system-ui, sans-serif;
+  --font-accent: 'Exo 2', system-ui, sans-serif;
+
+  /* Type scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: clamp(1.375rem, 2.5vw, 1.75rem);
+  --text-3xl: clamp(1.625rem, 3.5vw, 2.25rem);
+  --text-4xl: clamp(2rem, 4.5vw, 3rem);
+  --text-hero: clamp(2.5rem, 6vw, 4.25rem);
+
+  /* Line heights */
+  --leading-tight: 1.1;
+  --leading-snug: 1.25;
+  --leading-normal: 1.5;
+  --leading-body: 1.65;
+  --leading-relaxed: 1.75;
+
+  /* Letter spacing */
+  --tracking-tighter: -0.04em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
+  --tracking-wider: 0.08em;
+  --tracking-widest: 0.12em;
+}
+
+/* --- Base rendering --- */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-size: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-normal);
+}
+
+/* --- Heading hierarchy --- */
+h1, .h1, .type-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-hero);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tighter);
+}
+
+h2, .h2, .type-heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--text-3xl);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+}
+
+h3, .h3 {
+  font-family: var(--font-subheading);
+  font-weight: 600;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+}
+
+h4, .h4, h5, .h5, h6, .h6 {
+  font-family: var(--font-subheading);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+}
+
+h4, .h4 { font-size: var(--text-xl); }
+h5, .h5 { font-size: var(--text-lg); }
+h6, .h6 { font-size: var(--text-base); }
+
+p, .lead {
+  font-family: var(--font-body);
+  line-height: var(--leading-body);
+}
+
+.lead {
+  font-size: var(--text-lg);
+  font-weight: 400;
+}
+
+/* --- UI elements --- */
+button,
+.btn,
+input,
+select,
+textarea,
+.font-btn,
+.access-btn,
+.nav-toggle {
+  font-family: var(--font-ui);
+}
+
+.nav-link,
+.navbar-brand,
+.nav-menu .nav-link {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+}
+
+.btn,
+.btn-glow {
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+}
+
+.btn-glow-primary,
+.btn-cta {
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: var(--text-sm);
+}
+
+/* --- Accent / futuristic labels --- */
+.section-label,
+.hero-badge,
+.module-tag,
+.marquee-item,
+.loader-text {
+  font-family: var(--font-accent);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+}
+
+/* --- Gradient text utility --- */
+.text-gradient {
+  background: linear-gradient(135deg, #93c5fd, #38bdf8, #22d3ee, #e0f2fe);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: typeGradientShift 8s ease infinite;
+}
+
+.text-gradient-hero {
+  background: linear-gradient(120deg, #dbeafe 0%, #60a5fa 20%, #38bdf8 45%, #22d3ee 70%, #e0f2fe 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: typeGradientShift 5s linear infinite, typeReveal 1s ease both;
+}
+
+/* --- Animated text reveal --- */
+.type-reveal {
+  animation: typeReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.type-reveal-delay-1 { animation-delay: 0.1s; }
+.type-reveal-delay-2 { animation-delay: 0.2s; }
+.type-reveal-delay-3 { animation-delay: 0.35s; }
+
+@keyframes typeReveal {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes typeGradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* --- Form controls --- */
+.form-label {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+}
+
+.form-control {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+}
+
+/* --- Tables & data --- */
+table, .dataTables_wrapper {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+}
+
+/* --- Modal --- */
+.modal-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+}
+
+/* --- Footer --- */
+footer h4, footer h6 {
+  font-family: var(--font-heading);
+  letter-spacing: var(--tracking-tight);
+}
+
+footer p, footer a, footer li {
+  font-family: var(--font-body);
+}
+
+/* --- Bootstrap compatibility --- */
+.navbar, .dropdown-menu, .modal, .card, .alert, .badge {
+  font-family: var(--font-body);
+}
+
+.navbar-brand, .nav-link {
+  font-family: var(--font-ui);
+}
+
+.card-title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+}
+
+/* --- Responsive type tuning --- */
+@media (max-width: 768px) {
+  :root {
+    --leading-body: 1.6;
+  }
+
+  .btn-glow-primary,
+  .btn-cta {
+    letter-spacing: 0.04em;
+    font-size: var(--text-xs);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-gradient,
+  .text-gradient-hero,
+  .type-reveal {
+    animation: none;
+  }
+}

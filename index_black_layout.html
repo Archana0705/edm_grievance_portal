@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E-Sevai Grievance Portal — Register, track, and resolve grievances with transparency and accountability.">
+  <title>E-Sevai Grievance Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/css/aos.css" rel="stylesheet">
+  <link href="assets/css/global.css" rel="stylesheet">
+  <link href="assets/css/index-landing.css" rel="stylesheet">
+</head>
+
+<body class="landing-page with-subheader">
+
+  <!-- Page Loader -->
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <div class="loader-ring"></div>
+    <span class="loader-text">E-Sevai Portal</span>
+    <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+  </div>
+
+  <div class="bg-mesh" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <!-- Sub Header -->
+  <div class="sub-header py-2 px-3 d-flex justify-content-between align-items-center">
+    <div class="d-flex gap-4 align-items-center contact-group">
+      <span class="contact-item"><i class="bi bi-telephone-fill"></i> +91 98765 43210</span>
+      <span class="contact-item d-none d-md-inline"><i class="bi bi-envelope-fill"></i> support@edmportal.in</span>
+    </div>
+    <div class="d-flex gap-3 align-items-center">
+      <div class="font-controls" aria-label="Font size controls">
+        <button type="button" class="font-btn" id="font-decrease" aria-label="Decrease font size">A-</button>
+        <button type="button" class="font-btn" id="font-reset" aria-label="Reset font size">A</button>
+        <button type="button" class="font-btn" id="font-increase" aria-label="Increase font size">A+</button>
+      </div>
+      <div class="access-icons d-flex gap-2" aria-label="Accessibility options">
+        <button type="button" class="access-btn" title="High Contrast"><i class="bi bi-circle-half"></i></button>
+        <button type="button" class="access-btn" title="Screen Reader"><i class="bi bi-person-hearts"></i></button>
+        <button type="button" class="access-btn" title="Text to Speech"><i class="bi bi-volume-up-fill"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Header -->
+  <header class="main-header d-flex align-items-center px-3 px-lg-4">
+    <div class="container-fluid">
+      <div class="d-flex justify-content-between align-items-center header-inner w-100 gap-2">
+        <img src="assets/img/logo.png" alt="E-Sevai Portal logo" class="header-logo">
+        <div class="text-center flex-grow-1 position-relative">
+          <div class="header-title">E-Sevai Grievance Portal</div>
+          <nav class="nav-menu" id="mainNav" aria-label="Main navigation">
+            <ul class="d-flex justify-content-center gap-2 mb-0 flex-wrap">
+              <li><a href="#home" class="nav-link active"><i class="bi bi-house-door-fill"></i> Home</a></li>
+              <li><a href="#about" class="nav-link"><i class="bi bi-info-circle-fill"></i> About</a></li>
+              <li><a href="#stats" class="nav-link"><i class="bi bi-bar-chart-fill"></i> Stats</a></li>
+              <li><a href="landing-faq.html" class="nav-link"><i class="bi bi-question-circle-fill"></i> FAQ</a></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+            <i class="bi bi-list"></i>
+          </button>
+          <img src="assets/img/tnega.png" alt="TNeGA logo" class="header-logo d-none d-md-block">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="home" aria-labelledby="hero-heading">
+    <div class="hero-grid-bg" aria-hidden="true"></div>
+    <div class="hero-blob hero-blob-1" aria-hidden="true"></div>
+    <div class="hero-blob hero-blob-2" aria-hidden="true"></div>
+    <div class="hero-blob hero-blob-3" aria-hidden="true"></div>
+    <div class="stars" aria-hidden="true"></div>
+    <div class="hero-particles" id="heroParticles" aria-hidden="true"></div>
+
+    <div class="container hero-inner">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="pulse-dot"></span>
+          <i class="bi bi-stars"></i> Digital Governance • Citizen First
+        </div>
+        <h1 id="hero-heading" class="type-reveal">
+          <span class="type-reveal type-reveal-delay-1" style="display:block;font-family:var(--font-heading);font-weight:600;font-size:0.35em;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.35em;">Welcome to the</span>
+          <span class="text-gradient-hero hero-typing type-reveal-delay-2" id="heroTyping">Citizen Service Portal</span>
+        </h1>
+        <p class="type-reveal type-reveal-delay-3">Access government services, track applications, and resolve grievances — all in one unified, transparent, AI-ready platform.</p>
+        <div class="hero-actions">
+          <a href="#" data-bs-toggle="modal" data-bs-target="#trackStatus" class="btn-glow btn-glow-primary" id="trackStatusBtn">
+            <i class="bi bi-radar"></i> Track Status
+          </a>
+          <a href="citizen-home.html" class="btn-glow btn-glow-secondary">
+            <i class="bi bi-lightning-charge-fill"></i> File a Grievance
+          </a>
+        </div>
+        <div class="hero-stats-row">
+          <div class="hero-stat">
+            <strong data-count="5000">5000+</strong>
+            <span><i class="bi bi-check2-all"></i> Grievances Resolved</span>
+          </div>
+          <div class="hero-stat">
+            <strong>24×7</strong>
+            <span><i class="bi bi-clock-history"></i> Portal Live</span>
+          </div>
+          <div class="hero-stat">
+            <strong data-count="99">99%</strong>
+            <span><i class="bi bi-graph-up-arrow"></i> Resolution Rate</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="floating-chip floating-chip-1"><i class="bi bi-shield-check"></i> Secure</div>
+        <div class="floating-chip floating-chip-2"><i class="bi bi-lightning"></i> Fast Track</div>
+        <div class="floating-chip floating-chip-3"><i class="bi bi-globe2"></i> Statewide</div>
+        <div class="hero-dashboard">
+          <div class="dashboard-header">
+            <span class="dash-dot red"></span>
+            <span class="dash-dot yellow"></span>
+            <span class="dash-dot green"></span>
+            <span class="ms-2 small text-muted">Portal Dashboard</span>
+          </div>
+          <div class="widget-grid">
+            <div class="widget-card w-purple">
+              <i class="bi bi-ticket-detailed-fill"></i>
+              <strong>5K+</strong>
+              <span>Tickets Resolved</span>
+            </div>
+            <div class="widget-card w-cyan">
+              <i class="bi bi-people-fill"></i>
+              <strong>1M+</strong>
+              <span>Citizens Served</span>
+            </div>
+            <div class="widget-card w-pink">
+              <i class="bi bi-headset"></i>
+              <strong>50K+</strong>
+              <span>Helpline Calls</span>
+            </div>
+            <div class="widget-card w-orange">
+              <i class="bi bi-speedometer2"></i>
+              <strong>99%</strong>
+              <span>Success Rate</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wave Divider -->
+  <div class="wave-divider" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" fill="#0a0a1f">
+      <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,80 L0,80 Z"></path>
+    </svg>
+  </div>
+
+  <!-- Marquee -->
+  <div class="marquee-wrap section-dark">
+    <div class="marquee-track">
+      <span class="marquee-item"><i class="bi bi-shield-lock-fill"></i> Secure & Encrypted</span>
+      <span class="marquee-item"><i class="bi bi-eye-fill"></i> Full Transparency</span>
+      <span class="marquee-item"><i class="bi bi-phone-fill"></i> 24×7 Helpline</span>
+      <span class="marquee-item"><i class="bi bi-geo-alt-fill"></i> Statewide Coverage</span>
+      <span class="marquee-item"><i class="bi bi-graph-up"></i> Real-time Analytics</span>
+      <span class="marquee-item"><i class="bi bi-person-check-fill"></i> Citizen-Centric</span>
+      <span class="marquee-item"><i class="bi bi-shield-lock-fill"></i> Secure & Encrypted</span>
+      <span class="marquee-item"><i class="bi bi-eye-fill"></i> Full Transparency</span>
+      <span class="marquee-item"><i class="bi bi-phone-fill"></i> 24×7 Helpline</span>
+      <span class="marquee-item"><i class="bi bi-geo-alt-fill"></i> Statewide Coverage</span>
+      <span class="marquee-item"><i class="bi bi-graph-up"></i> Real-time Analytics</span>
+      <span class="marquee-item"><i class="bi bi-person-check-fill"></i> Citizen-Centric</span>
+    </div>
+  </div>
+
+  <!-- Track Status Modal -->
+  <div class="modal fade" id="trackStatus" tabindex="-1" aria-labelledby="trackStatusLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="trackStatusLabel"><i class="bi bi-search me-2"></i>Track Grievance Status</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row align-items-end g-3 mb-4">
+            <div class="col-lg-8">
+              <label for="ticketInput" class="form-label fw-semibold">Ticket / Acknowledgement Number</label>
+              <div class="input-group input-group-lg">
+                <span class="input-group-text"><i class="bi bi-file-earmark-text"></i></span>
+                <input type="text" id="ticketInput" class="form-control" placeholder="Enter your ticket ID" autocomplete="off">
+              </div>
+            </div>
+            <div class="col-lg-4 d-flex flex-wrap gap-2">
+              <a href="#" id="submitTicket" class="btn btn-success flex-grow-1 rounded-pill"><i class="bi bi-check-lg me-1"></i> Submit</a>
+              <a href="#" id="clearTicket" class="btn btn-outline-warning d-none rounded-pill"><i class="bi bi-x-lg"></i> Clear</a>
+              <a href="#" id="downloadTicket" class="btn btn-primary d-none rounded-pill"><i class="bi bi-download me-1"></i> Download</a>
+            </div>
+          </div>
+          <div id="ackCard" class="ack-card d-none" role="region" aria-label="Acknowledgement details">
+            <h5><i class="bi bi-patch-check-fill me-2"></i>Acknowledgement</h5>
+            <p class="mb-4 text-muted">We acknowledge the receipt of your grievance with the following details:</p>
+            <div class="ack-row d-flex flex-wrap"><div class="ack-label">Status:</div><div id="ackStatus">-</div></div>
+            <div class="ack-row d-flex flex-wrap"><div class="ack-label">Requested By:</div><div id="ackRequestedBy">-</div></div>
+            <div class="ack-row d-flex flex-wrap"><div class="ack-label">Type of user:</div><div id="ackUserType">-</div></div>
+            <div class="ack-row d-flex flex-wrap"><div class="ack-label">Name of the complainant:</div><div id="ackName">-</div></div>
+            <div class="ack-row d-flex flex-wrap"><div class="ack-label">Mobile number:</div><div id="ackMobile">-</div></div>
+            <div class="ack-row d-flex flex-wrap"><div class="ack-label">District:</div><div id="ackDistrict">-</div></div>
+            <div class="ack-row d-flex flex-wrap"><div class="ack-label">Date:</div><div id="ackDate">-</div></div>
+            <div class="ack-row d-flex flex-wrap"><div class="ack-label">Issue type:</div><div id="ackIssueType">-</div></div>
+            <div class="ack-row d-flex flex-wrap"><div class="ack-label">Issue category:</div><div id="ackIssueCategory">-</div></div>
+            <div class="ack-row d-flex flex-wrap"><div class="ack-label">Issue subcategory:</div><div id="ackIssueSubCategory">-</div></div>
+            <div class="ack-row d-flex flex-wrap"><div class="ack-label">Acknowledgement number:</div><div id="ackNumber">-</div></div>
+            <p class="mt-4 mb-0"><strong>Please note the acknowledgment number for tracking your application status.</strong></p>
+          </div>
+        </div>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vision -->
+  <section class="vision-section section-dark reveal">
+    <div class="section-glow" style="background:var(--purple);left:-10%;top:20%"></div>
+    <div class="container text-center position-relative">
+      <span class="section-label"><i class="bi bi-rocket-takeoff-fill"></i> Our Mission</span>
+      <h2 class="vision-title-alt" data-aos="fade-up">
+        Empowering citizens, <span>ensuring accountability</span> &amp; <span>transparency</span> in governance.
+      </h2>
+      <p class="vision-sub" data-aos="fade-up" data-aos-delay="150">
+        Driving innovation in governance with people-first digital transformation.
+      </p>
+    </div>
+  </section>
+
+  <!-- Portal Modules — Bento Grid -->
+  <section class="modules-section section-dark" aria-labelledby="modules-heading">
+    <div class="section-glow" style="background:var(--pink);right:-5%;top:10%"></div>
+    <div class="container position-relative">
+      <div class="text-center mb-5 reveal">
+        <span class="section-label"><i class="bi bi-grid-3x3-gap-fill"></i> Get Started</span>
+        <h2 id="modules-heading" class="vision-title-alt mb-2">Choose Your Portal</h2>
+        <p class="vision-sub mx-auto">Select your role — each portal is tailored with dedicated workflows &amp; dashboards.</p>
+      </div>
+      <div class="bento-grid">
+        <div class="bento-item featured" data-aos="fade-right" data-aos-delay="100">
+          <a href="citizen-home.html" class="module-link" aria-label="Citizen Login">
+            <div class="module-card">
+              <div class="module-card-glow"></div>
+              <span class="module-tag tag-citizen"><i class="bi bi-person-fill"></i> Public</span>
+              <div class="module-icon-wrap citizen"><i class="bi bi-people-fill"></i></div>
+              <h5>Citizen Portal</h5>
+              <p>Register &amp; track grievances, service requests, and helpline queries with real-time status updates.</p>
+              <div class="card-arrow"><i class="bi bi-arrow-up-right-circle-fill"></i></div>
+            </div>
+          </a>
+        </div>
+        <div class="bento-item" data-aos="fade-up" data-aos-delay="200">
+          <a href="operator/index.html" class="module-link" aria-label="eSevai Operator Login">
+            <div class="module-card">
+              <div class="module-card-glow"></div>
+              <span class="module-tag tag-operator"><i class="bi bi-person-badge"></i> Operator</span>
+              <div class="module-icon-wrap operator"><i class="bi bi-person-badge-fill"></i></div>
+              <h5>eSevai Operators</h5>
+              <p>Assist citizens in grievance submission and service requests at centers.</p>
+              <div class="card-arrow"><i class="bi bi-arrow-up-right-circle-fill"></i></div>
+            </div>
+          </a>
+        </div>
+        <div class="bento-item" data-aos="fade-left" data-aos-delay="300">
+          <a href="edm/index.html" class="module-link" aria-label="EDM Login">
+            <div class="module-card">
+              <div class="module-card-glow"></div>
+              <span class="module-tag tag-edm"><i class="bi bi-building"></i> Admin</span>
+              <div class="module-icon-wrap edm"><i class="bi bi-building-fill"></i></div>
+              <h5>EDM Dashboard</h5>
+              <p>Monitor escalations, review progress, and ensure timely resolution across departments.</p>
+              <div class="card-arrow"><i class="bi bi-arrow-up-right-circle-fill"></i></div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Strip -->
+  <section class="section-dark">
+    <div class="container">
+      <div class="features-strip reveal">
+        <div class="strip-item" data-aos="flip-left" data-aos-delay="0">
+          <i class="bi bi-shield-lock-fill"></i>
+          <strong>Secure Portal</strong>
+          <span>End-to-end encryption</span>
+        </div>
+        <div class="strip-item" data-aos="flip-left" data-aos-delay="100">
+          <i class="bi bi-bell-fill"></i>
+          <strong>Live Alerts</strong>
+          <span>Status notifications</span>
+        </div>
+        <div class="strip-item" data-aos="flip-left" data-aos-delay="200">
+          <i class="bi bi-file-earmark-check-fill"></i>
+          <strong>Digital Records</strong>
+          <span>Paperless workflow</span>
+        </div>
+        <div class="strip-item" data-aos="flip-left" data-aos-delay="300">
+          <i class="bi bi-pie-chart-fill"></i>
+          <strong>Analytics</strong>
+          <span>Data-driven insights</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave-divider flip" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" fill="#050510">
+      <path d="M0,40 C360,0 720,80 1080,40 C1260,20 1380,30 1440,40 L1440,0 L0,0 Z"></path>
+    </svg>
+  </div>
+
+  <!-- About -->
+  <section class="about-section" id="about" aria-labelledby="about-heading">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6 reveal">
+          <span class="section-label"><i class="bi bi-info-circle-fill"></i> About Us</span>
+          <h2 id="about-heading" class="vision-title-alt mb-4">
+            About the <span>E-Sevai Grievance Portal</span>
+          </h2>
+          <p class="lead" style="color:var(--text-muted)">
+            The <strong style="color:var(--cyan)">EDM Grievance Redressal Portal</strong> is a centralized platform designed to
+            empower citizens, streamline operations, and enhance accountability across all levels of governance.
+          </p>
+          <ul class="list-unstyled about-features mt-4">
+            <li class="d-flex align-items-start gap-3">
+              <div class="feature-icon-wrap fi-purple"><i class="bi bi-people-fill"></i></div>
+              <span><strong>Citizen-Centric:</strong> Easy grievance registration and real-time tracking.</span>
+            </li>
+            <li class="d-flex align-items-start gap-3">
+              <div class="feature-icon-wrap fi-green"><i class="bi bi-headset"></i></div>
+              <span><strong>Efficient Operators:</strong> Seamless support through eSevai operators and helplines.</span>
+            </li>
+            <li class="d-flex align-items-start gap-3">
+              <div class="feature-icon-wrap fi-orange"><i class="bi bi-building"></i></div>
+              <span><strong>Department Accountability:</strong> Clear workflows and defined responsibility channels.</span>
+            </li>
+            <li class="d-flex align-items-start gap-3">
+              <div class="feature-icon-wrap fi-pink"><i class="bi bi-bar-chart-line"></i></div>
+              <span><strong>Data-Driven Monitoring:</strong> Insights for eDMs &amp; TNeGA officials.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-6 reveal" data-aos="zoom-in" data-aos-delay="150">
+          <div class="about-visual-wrap">
+            <div class="about-glow-ring" aria-hidden="true"></div>
+            <img src="assets/img/1.png" class="about_img img-fluid" alt="E-Sevai Grievance Portal illustration">
+          </div>
+          <blockquote class="about-quote mt-4">
+            <i class="bi bi-quote text-primary me-2"></i>
+            “Complaints and their resolution are fundamental to democracy — ensuring justice and empowerment for every citizen.”
+          </blockquote>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats-section" id="stats" aria-labelledby="stats-heading">
+    <div class="section-glow" style="background:var(--cyan);left:50%;bottom:0"></div>
+    <div class="container position-relative">
+      <div class="section-heading reveal">
+        <span class="section-label"><i class="bi bi-speedometer2"></i> Impact Metrics</span>
+        <h2 id="stats-heading" class="vision-title-alt">Portal Performance</h2>
+        <p class="vision-sub mx-auto">Real-time metrics reflecting our commitment to citizen service excellence.</p>
+      </div>
+      <div class="stats-bento">
+        <div class="stat-box reveal" data-aos="fade-up">
+          <div class="stat-icon" style="background:rgba(52,211,153,0.15);color:#34d399"><i class="bi bi-check-circle-fill"></i></div>
+          <h2 class="counter" data-target="5000" data-suffix="+">0</h2>
+          <p>Grievances Resolved</p>
+        </div>
+        <div class="stat-box reveal" data-aos="fade-up" data-aos-delay="100">
+          <div class="stat-icon" style="background:rgba(59,130,246,0.15);color:#60a5fa"><i class="bi bi-person-badge-fill"></i></div>
+          <h2 class="counter" data-target="1200" data-suffix="+">0</h2>
+          <p>Active Operators</p>
+        </div>
+        <div class="stat-box reveal" data-aos="fade-up" data-aos-delay="200">
+          <div class="stat-icon" style="background:rgba(249,115,22,0.15);color:#fb923c"><i class="bi bi-building-fill"></i></div>
+          <h2 class="counter" data-target="300" data-suffix="+">0</h2>
+          <p>Departments Linked</p>
+        </div>
+        <div class="stat-box reveal" data-aos="fade-up" data-aos-delay="300">
+          <div class="stat-icon" style="background:rgba(236,72,153,0.15);color:#f472b6"><i class="bi bi-bar-chart-line-fill"></i></div>
+          <h2 class="counter" data-target="99" data-suffix="%">0</h2>
+          <p>Resolution Rate</p>
+        </div>
+        <div class="stat-box reveal" data-aos="fade-up" data-aos-delay="100">
+          <div class="stat-icon" style="background:rgba(34,211,238,0.15);color:#22d3ee"><i class="bi bi-people-fill"></i></div>
+          <h2>1M+</h2>
+          <p>Citizens Empowered</p>
+        </div>
+        <div class="stat-box reveal" data-aos="fade-up" data-aos-delay="200">
+          <div class="stat-icon" style="background:rgba(139,92,246,0.15);color:#a78bfa"><i class="bi bi-telephone-inbound-fill"></i></div>
+          <h2 class="counter" data-target="50" data-suffix="K+">0</h2>
+          <p>Helpline Calls</p>
+        </div>
+        <div class="stat-box reveal" data-aos="fade-up" data-aos-delay="300">
+          <div class="stat-icon" style="background:rgba(251,191,36,0.15);color:#fbbf24"><i class="bi bi-globe2"></i></div>
+          <h2>Statewide</h2>
+          <p>TNeGA Coverage</p>
+        </div>
+        <div class="stat-box reveal" data-aos="fade-up" data-aos-delay="400">
+          <div class="stat-icon" style="background:rgba(52,211,153,0.15);color:#34d399"><i class="bi bi-clock-fill"></i></div>
+          <h2>24×7</h2>
+          <p>Portal Availability</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section reveal" aria-labelledby="cta-heading">
+    <div class="cta-box" data-aos="zoom-in">
+      <span class="section-label justify-content-center d-inline-flex"><i class="bi bi-lightning-charge-fill"></i> Take Action</span>
+      <h2 id="cta-heading" class="mt-3">Ready to Submit Your Grievance?</h2>
+      <p class="mb-4" style="color:var(--text-muted)">Join thousands of citizens benefiting from faster redressal and transparent governance.</p>
+      <a href="citizen-home.html" class="btn-cta">Get Started Now <i class="bi bi-arrow-right"></i></a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer-section text-light pt-5">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-4 footer-brand">
+          <h4 class="fw-bold mb-3">E-Sevai Grievance Portal</h4>
+          <p class="small mb-3" style="color:var(--text-muted)">A unified grievance redressal platform built to empower citizens, ensure faster resolutions, and enhance transparency.</p>
+          <p class="small fst-italic" style="color:var(--cyan)">“Empowering Citizens • Enabling Governance”</p>
+        </div>
+        <div class="col-6 col-md-2">
+          <h6 class="fw-bold mb-3"><i class="bi bi-link-45deg me-1"></i> Quick Links</h6>
+          <ul class="list-unstyled footer-links">
+            <li><a href="index.html"><i class="bi bi-chevron-right"></i> Home</a></li>
+            <li><a href="about.html"><i class="bi bi-chevron-right"></i> About Us</a></li>
+            <li><a href="faq.html"><i class="bi bi-chevron-right"></i> FAQs</a></li>
+            <li><a href="contact.html"><i class="bi bi-chevron-right"></i> Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-3">
+          <h6 class="fw-bold mb-3"><i class="bi bi-folder-fill me-1"></i> Resources</h6>
+          <ul class="list-unstyled footer-links">
+            <li><a href="#"><i class="bi bi-shield-check"></i> Privacy Policy</a></li>
+            <li><a href="#"><i class="bi bi-file-text"></i> Terms &amp; Conditions</a></li>
+            <li><a href="#"><i class="bi bi-book"></i> User Guide</a></li>
+            <li><a href="#"><i class="bi bi-headset"></i> Support</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <h6 class="fw-bold mb-3"><i class="bi bi-share-fill me-1"></i> Connect</h6>
+          <div class="d-flex gap-2 mb-3 flex-wrap">
+            <a href="#" class="social-btn" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="social-btn" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" class="social-btn" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="social-btn" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+            <a href="#" class="social-btn" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+          </div>
+          <span class="badge visitor-badge">
+            <i class="bi bi-eye me-1"></i> Visitors: <span id="visitorCount">12,345</span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom mt-5 py-3">
+      <div class="container text-center">
+        <p class="mb-0 small" style="color:var(--text-muted)">© 2025 E-Sevai Grievance Portal. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <button type="button" id="backToTop" class="btn" aria-label="Back to top">
+    <i class="bi bi-arrow-up"></i>
+  </button>
+
+  <script src="assets/js/jquery-3.7.1.min.js"></script>
+  <script src="assets/js/global.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="assets/js/aos.js"></script>
+  <script src="assets/js/dataTableUtil.js"></script>
+  <script src="assets/js/crypto-js.min.js"></script>
+  <script src="assets/js/encrypt_decrypt.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/toastUtil.js"></script>
+  <script src="assets/js/apiConfig.js"></script>
+  <script src="assets/js/globalProfileDropdown.js"></script>
+  <script>AOS.init({ duration: 900, once: true, offset: 80, easing: 'ease-out-cubic' });</script>
+
+  <script>
+    /* Page loader */
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        document.body.classList.add('loaded');
+      }, 1200);
+    });
+
+    /* Hero particles */
+    (function () {
+      var container = document.getElementById('heroParticles');
+      if (!container) return;
+      for (var i = 0; i < 40; i++) {
+        var p = document.createElement('span');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.top = Math.random() * 100 + '%';
+        p.style.animationDelay = (Math.random() * 8) + 's';
+        p.style.animationDuration = (6 + Math.random() * 6) + 's';
+        if (i % 3 === 0) { p.style.background = '#ec4899'; p.style.boxShadow = '0 0 10px #ec4899'; }
+        if (i % 3 === 1) { p.style.background = '#8b5cf6'; p.style.boxShadow = '0 0 10px #8b5cf6'; }
+        container.appendChild(p);
+      }
+    })();
+
+    /* Scroll reveal */
+    var revealEls = document.querySelectorAll('.reveal');
+    var revealObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          revealObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(function (el) { revealObs.observe(el); });
+
+    /* Counter animation */
+    function animateCounter(el) {
+      var target = parseInt(el.getAttribute('data-target'), 10);
+      var suffix = el.getAttribute('data-suffix') || '';
+      var duration = 2000;
+      var start = 0;
+      var startTime = null;
+      function step(ts) {
+        if (!startTime) startTime = ts;
+        var progress = Math.min((ts - startTime) / duration, 1);
+        var ease = 1 - Math.pow(1 - progress, 3);
+        var val = Math.floor(ease * target);
+        el.textContent = val.toLocaleString() + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = target.toLocaleString() + suffix;
+      }
+      requestAnimationFrame(step);
+    }
+    var counterObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          animateCounter(e.target);
+          counterObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.counter').forEach(function (c) { counterObs.observe(c); });
+
+    /* Card mouse glow */
+    document.querySelectorAll('.module-card').forEach(function (card) {
+      card.addEventListener('mousemove', function (e) {
+        var rect = card.getBoundingClientRect();
+        var x = ((e.clientX - rect.left) / rect.width) * 100;
+        card.style.setProperty('--mouse-x', x + '%');
+      });
+    });
+
+    /* Header scroll */
+    var lastScrollTop = 0;
+    var subHeader = document.querySelector('.sub-header');
+    var mainHeader = document.querySelector('.main-header');
+    var body = document.body;
+    var threshold = 80;
+    window.addEventListener('scroll', function () {
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if (scrollTop > threshold) {
+        mainHeader.classList.add('scrolled');
+        if (scrollTop > lastScrollTop) {
+          subHeader.classList.add('hide');
+          mainHeader.classList.add('compact');
+          body.classList.add('compact-header');
+        } else {
+          subHeader.classList.remove('hide');
+          mainHeader.classList.remove('compact');
+          body.classList.remove('compact-header');
+        }
+      } else {
+        subHeader.classList.remove('hide');
+        mainHeader.classList.remove('compact', 'scrolled');
+        body.classList.remove('compact-header');
+      }
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+    }, { passive: true });
+
+    /* Mobile nav */
+    var navToggle = document.getElementById('navToggle');
+    var mainNav = document.getElementById('mainNav');
+    if (navToggle && mainNav) {
+      navToggle.addEventListener('click', function () {
+        var open = mainNav.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', open);
+        navToggle.innerHTML = open ? '<i class="bi bi-x-lg"></i>' : '<i class="bi bi-list"></i>';
+      });
+      mainNav.querySelectorAll('.nav-link').forEach(function (link) {
+        link.addEventListener('click', function () {
+          mainNav.classList.remove('open');
+          navToggle.setAttribute('aria-expanded', 'false');
+          navToggle.innerHTML = '<i class="bi bi-list"></i>';
+        });
+      });
+    }
+
+    /* Active nav */
+    var sections = document.querySelectorAll('section[id]');
+    var navLinks = document.querySelectorAll('.nav-menu .nav-link[href^="#"]');
+    window.addEventListener('scroll', function () {
+      var current = '';
+      sections.forEach(function (section) {
+        if (window.scrollY >= section.offsetTop - 220) current = section.getAttribute('id');
+      });
+      navLinks.forEach(function (link) {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+      });
+    }, { passive: true });
+  </script>
+
+  <script>
+    $(function () {
+      $(window).on('scroll', function () {
+        $('#backToTop').toggleClass('is-visible', $(this).scrollTop() > 200);
+      });
+      $('#backToTop').on('click', function () {
+        $('html, body').animate({ scrollTop: 0 }, 600, 'swing');
+        return false;
+      });
+    });
+  </script>
+
+  <script>
+    $(function () {
+      var defaultSize = 16, currentStep = 0, maxStep = 2, stepSize = 2;
+      function applyFontSize() { $('body').css('font-size', (defaultSize + currentStep * stepSize) + 'px'); }
+      $('#font-decrease').on('click', function () { if (currentStep > -maxStep) { currentStep--; applyFontSize(); } });
+      $('#font-increase').on('click', function () { if (currentStep < maxStep) { currentStep++; applyFontSize(); } });
+      $('#font-reset').on('click', function () { currentStep = 0; $('body').css('font-size', defaultSize + 'px'); });
+    });
+  </script>
+
+  <script src="assets/js/html2canvas.min.js"></script>
+  <script src="assets/js/jspdf.umd.min.js"></script>
+  <script>
+    function clearModal() {
+      $('#ticketInput').val('');
+      $('#ackCard').addClass('d-none');
+      $('#ackCard div[id^=\'ack\']').text('-');
+      $('#clearTicket, #downloadTicket').addClass('d-none');
+    }
+
+    $('#submitTicket').on('click', function (e) {
+      e.preventDefault();
+      var ticketId = $('#ticketInput').val().trim();
+      if (!ticketId) { alert('Please enter a ticket ID.'); return; }
+      $.ajax({
+        url: BASE_API_URL + '/commonfunction',
+        method: 'POST',
+        data: { data: encryptData({ action: 'function_call', function_name: 'fn_get_ticket_details', params: { p_ticket_id: ticketId } }) },
+        dataType: 'json',
+        success: function (res) {
+          var decrypted = decryptData(res.data);
+          var raw = decrypted[0] && decrypted[0].fn_get_ticket_details;
+          if (!raw) { alert('No ticket details found.'); return; }
+          var td = JSON.parse(raw).ticket_details || {};
+          $('#ackStatus').html(td.status ? '<span class="badge ' + (td.status === 'In-Progress' ? 'bg-warning text-dark' : td.status === 'Completed' ? 'bg-success' : 'bg-danger') + '">' + td.status + '</span>' : 'N/A');
+          $('#ackRequestedBy').text(td.requested_by || 'N/A');
+          $('#ackUserType').text(td.user_type || 'N/A');
+          $('#ackName').text(td.complainant_name || 'N/A');
+          $('#ackMobile').text(td.complainant_mobile || 'N/A');
+          $('#ackDistrict').text(td.district || 'N/A');
+          $('#ackDate').text(td.created_at ? new Date(td.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : 'N/A');
+          $('#ackIssueType').text(td.issue_type || 'N/A');
+          $('#ackIssueCategory').text(td.category || 'N/A');
+          $('#ackIssueSubCategory').text(td.subcategory || 'N/A');
+          $('#ackNumber').text(td.ticket_id || 'N/A');
+          $('#ackCard').removeClass('d-none');
+          $('#clearTicket, #downloadTicket').removeClass('d-none');
+        },
+        error: function () { alert('Failed to fetch ticket status.'); }
+      });
+    });
+
+    $('#clearTicket').on('click', function (e) { e.preventDefault(); clearModal(); });
+    $('#downloadTicket').on('click', function (e) {
+      e.preventDefault();
+      html2canvas(document.querySelector('#ackCard'), { scale: 2 }).then(function (canvas) {
+        var pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
+        var imgData = canvas.toDataURL('image/png');
+        var imgProps = pdf.getImageProperties(imgData);
+        var pdfWidth = pdf.internal.pageSize.getWidth();
+        pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, (imgProps.height * pdfWidth) / imgProps.width);
+        pdf.save('Acknowledgement.pdf');
+      });
+    });
+    $(function () {
+      $('#trackStatus').on('hidden.bs.modal', clearModal);
+      $('button[data-bs-dismiss="modal"]').on('click', clearModal);
+    });
+  </script>
+
+</body>
+
+</html>

@@ -187,17 +187,34 @@
     <script src="../assets/js/html2canvas.min.js"></script>
     <script src="../assets/js/jspdf.umd.min.js"></script>
     <script>
+      (function () {
       // Initialize AOS
       AOS.init();
 
-      // Generate session ID
       function generateSessionId() {
-        return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        const userId = (localStorage.getItem('user_id') || '').trim();
+        if (userId && userId.length <= 20) return userId;
+        return String(Date.now()).slice(-12) + Math.random().toString(36).substr(2, 5);
       }
 
-      // Get or create session ID
+      function normalizeMobile(mobile) {
+        if (!mobile) return null;
+        const digits = String(mobile).replace(/\D/g, '');
+        return digits.length ? digits.slice(-10) : null;
+      }
+
+      function trimToMax(val, maxLen) {
+        if (val == null || val === '') return null;
+        const s = String(val).trim();
+        return s.length > maxLen ? s.slice(0, maxLen) : s;
+      }
+
       function getSessionId() {
         let sessionId = localStorage.getItem('current_session_id');
+        if (sessionId && sessionId.length > 20) {
+          sessionId = null;
+          localStorage.removeItem('current_session_id');
+        }
         if (!sessionId) {
           sessionId = generateSessionId();
           localStorage.setItem('current_session_id', sessionId);
@@ -214,6 +231,115 @@
       const fileInputClass = "file-input-self";
 
       const MAX_FILE_ROWS_SELF = 3;
+
+      const ISSUE_FIELD_MAP = {
+        "1man": { label: "CAN Number", type: "text", required: true },
+        "1opt": { label: "CAN Number", type: "text", required: false },
+        "2man": { label: "Application number", type: "text", required: true },
+        "2opt": { label: "Application number", type: "text", required: false },
+        "3man": { label: "Description of Complaint", type: "textarea", required: true },
+        "3opt": { label: "Description of the issue", type: "textarea", required: false },
+        "4man": { label: "Attachments(Maximum 3 attachments allowed)", type: "file", required: true },
+        "4opt": { label: "Attachments(Maximum 3 attachments allowed)", type: "file", required: false },
+        "6man": { label: "Enter eSevai centre ID", type: "text", required: true },
+        "7man": { label: "Enter eSevai centre ID against whom the grievance is lodged", type: "text", required: true },
+        "8man": { label: "Transaction number", type: "text", required: true },
+        "9man": {
+          label: "Enter reason for ID block",
+          type: "dropdown",
+          required: true,
+          options: [
+            "ID blocked due to Zero transactions",
+            "ID blocked due to overcharging issues",
+            "Don't know"
+          ]
+        },
+        "10opt": { label: "Enter name of official", type: "text", required: false }
+      };
+
+      function decodeHtmlAttr(str) {
+        if (!str) return '';
+        const el = document.createElement('textarea');
+        el.innerHTML = String(str);
+        return el.value;
+      }
+
+      function normalizeColumnsString(str) {
+        let s = decodeHtmlAttr((str || '').trim());
+        if (!s) return '';
+        if (s.includes('|') && !s.includes(',')) {
+          s = s.split('|').map(x => x.trim()).filter(Boolean).join(',');
+        }
+        return s;
+      }
+
+      function isLegacyColumnCodes(str) {
+        const normalized = normalizeColumnsString(str);
+        if (!normalized || normalized === '[]') return false;
+        if (normalized.startsWith('[') || normalized.startsWith('{')) return false;
+        const parts = normalized.split(',').map(c => c.trim()).filter(Boolean);
+        return parts.length > 0 && parts.some(c => ISSUE_FIELD_MAP[c]);
+      }
+
+      function generateDynamicFieldsFromMap(columnsString, prefix, $container, fileInputClass) {
+        $container.empty();
+        const normalized = normalizeColumnsString(columnsString);
+        if (!normalized) {
+          $container.append('<p>No additional fields required for this subcategory.</p>');
+          return;
+        }
+
+        normalized.split(',').map(c => c.trim()).filter(Boolean).forEach((col, index) => {
+          const field = ISSUE_FIELD_MAP[col];
+          if (!field) return;
+
+          const inputId = `field_${prefix}_${col}_${index}`;
+          const wrapperId = `wrapper_${prefix}_${col}_${index}`;
+          const isMandatory = col.endsWith('man');
+          const mandatoryAttr = isMandatory ? 'data-mandatory="true"' : '';
+          const dataParamAttr = `data-param="p${col}"`;
+          const dataColAttr = `data-col="${col}"`;
+
+          if (col === '4opt' || col === '4man') {
+            $container.append(`
+              <div id="${wrapperId}" class="mb-3 file-wrapper" ${dataColAttr} ${mandatoryAttr}>
+                <label class="form-label">${field.label}${isMandatory ? ' <span class="text-danger">*</span>' : ''}</label>
+                <div class="row fw-bold border-bottom pb-2 mb-2">
+                  <div class="col-md-1">S No</div>
+                  <div class="col-md-4">Attachment Description</div>
+                  <div class="col-md-4">Attachment <small class="text-muted text-danger">(max 2MB each)</small></div>
+                  <div class="col-md-3">Actions</div>
+                </div>
+                <div class="file-rows">${getNewFileRowForSelf(fileInputClass, 1)}</div>
+                <div class="mt-2"><button type="button" class="btn btn-primary btn-sm btn-add-file" disabled>Add More</button></div>
+              </div>`);
+            return;
+          }
+
+          if (field.type === 'dropdown') {
+            const optionsHtml = (field.options || []).map(opt => `<option value="${opt}">${opt}</option>`).join('');
+            $container.append(`
+              <div class="mb-3">
+                <label for="${inputId}">${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}</label>
+                <select id="${inputId}" class="form-select" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}>
+                  <option value="">-- Select --</option>${optionsHtml}
+                </select>
+              </div>`);
+          } else if (field.type === 'textarea') {
+            $container.append(`
+              <div class="mb-3">
+                <label for="${inputId}">${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}</label>
+                <textarea id="${inputId}" class="form-control" rows="4" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}></textarea>
+              </div>`);
+          } else {
+            $container.append(`
+              <div class="mb-3">
+                <label for="${inputId}">${field.label}${field.required ? ' <span class="text-danger">*</span>' : ''}</label>
+                <input id="${inputId}" type="text" class="form-control" ${dataColAttr} ${dataParamAttr} ${mandatoryAttr}>
+              </div>`);
+          }
+        });
+      }
 
       const UtilsForSelf = {
         safeVal: (val) => {
@@ -718,8 +844,192 @@
       //         console.log("Field generation complete. isCANEditForSelf:", isCANEditForSelf);
       //       }
 
+      function escapeHtmlAttr(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;')
+          .replace(/</g, '&lt;');
+      }
+
+      function normalizeRelColsPipe(str) {
+        let s = decodeHtmlAttr((str || '').trim());
+        if (!s) return '';
+        if (s.includes(',') && !s.includes('|')) {
+          s = s.split(',').map(x => x.trim()).filter(Boolean).join('|');
+        }
+        return s;
+      }
+
+      function isPopulatedColumnsJson(str) {
+        if (!str || !String(str).trim()) return false;
+        const t = decodeHtmlAttr(String(str).trim());
+        if (!t.startsWith('[') && !t.startsWith('{')) return false;
+        try {
+          const parsed = JSON.parse(t);
+          return Array.isArray(parsed) ? parsed.length > 0 : !!parsed;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      function mergePipeAndColumnsData(pipeRaw, jsonRaw) {
+        if (!jsonRaw || !String(jsonRaw).trim() || String(jsonRaw).trim() === '[]') return null;
+        try {
+          const meta = JSON.parse(decodeHtmlAttr(String(jsonRaw).trim()));
+          if (!Array.isArray(meta) || meta.length === 0) return null;
+          const ids = normalizeRelColsPipe(pipeRaw).split('|').map(s => s.trim()).filter(Boolean);
+          const merged = meta.map((m, idx) => ({
+            column_name: m.column_name || m.name || m.label || `Field ${ids[idx] || idx + 1}`,
+            column_id: ids[idx] ? Number(ids[idx]) : (m.column_id || m.id || null),
+            field_type: m.field_type || m.type || 'text',
+            required: m.required || m.manopt,
+            manopt: m.manopt || m.required,
+            legacy_code: m.legacy_code,
+            values: m.values,
+            options_source: m.options_source
+          }));
+          return JSON.stringify(merged);
+        } catch (e) {
+          console.warn('mergePipeAndColumnsData failed', e);
+          return null;
+        }
+      }
+
+      function resolveSubcategoryColumns(columnsRaw, subcatId, columnsDataRaw) {
+        return new Promise((resolve) => {
+          const pipe = normalizeRelColsPipe(columnsRaw);
+          const dataRaw = decodeHtmlAttr((columnsDataRaw || '').trim());
+
+          const merged = mergePipeAndColumnsData(pipe, dataRaw);
+          if (merged) {
+            resolve(merged);
+            return;
+          }
+
+          if (isPopulatedColumnsJson(dataRaw)) {
+            resolve(decodeHtmlAttr(dataRaw));
+            return;
+          }
+
+          if (isPopulatedColumnsJson(pipe)) {
+            resolve(decodeHtmlAttr(pipe));
+            return;
+          }
+
+          const fetchViaFnRelevantColumns = (relColsPipe) => {
+            const normalizedPipe = normalizeRelColsPipe(relColsPipe);
+            if (!normalizedPipe || normalizedPipe === '[]') {
+              resolve('[]');
+              return;
+            }
+            if (isPopulatedColumnsJson(normalizedPipe)) {
+              resolve(normalizedPipe);
+              return;
+            }
+            $.ajax({
+              url: `${BASE_API_URL}/commonfunction`,
+              method: 'POST',
+              data: {
+                data: encryptData({
+                  action: 'function_call',
+                  function_name: 'fn_relevant_columns',
+                  params: { p_relevant_columns: normalizedPipe }
+                })
+              },
+              dataType: 'json',
+              success(response) {
+                try {
+                  const decrypted = decryptData(response.data);
+                  let jsonStr = null;
+                  if (Array.isArray(decrypted) && decrypted[0] && decrypted[0].fn_relevant_columns) {
+                    jsonStr = decrypted[0].fn_relevant_columns;
+                  } else if (decrypted && decrypted.fn_relevant_columns) {
+                    jsonStr = decrypted.fn_relevant_columns;
+                  } else if (typeof decrypted === 'string') {
+                    jsonStr = decrypted;
+                  } else if (Array.isArray(decrypted)) {
+                    resolve(JSON.stringify(decrypted));
+                    return;
+                  }
+                  resolve(jsonStr || '[]');
+                } catch (e) {
+                  console.error('fn_relevant_columns parse error', e);
+                  resolve('[]');
+                }
+              },
+              error(xhr, status, err) {
+                console.warn('fn_relevant_columns unavailable, using column ids only', status, err);
+                const fallback = normalizedPipe.split('|').filter(Boolean).map(id => ({
+                  column_id: Number(id) || id,
+                  column_name: `Field ${id}`,
+                  field_type: 'text',
+                  manopt: 'optional'
+                }));
+                resolve(fallback.length ? JSON.stringify(fallback) : '[]');
+              }
+            });
+          };
+
+          const fetchSubcategoryRow = (thenResolve) => {
+            if (!subcatId) {
+              thenResolve('[]');
+              return;
+            }
+            $.ajax({
+              url: `${BASE_API_URL}/commonfunction`,
+              method: 'POST',
+              data: {
+                data: encryptData({
+                  action: 'select',
+                  _table_name: 'issue_subcategory',
+                  selected_columns: ['relavant_columns', 'relevant_columns', 'relevant_columns_data', 'relavant_columns_data'],
+                  filter_conditions: { id: subcatId }
+                })
+              },
+              dataType: 'json',
+              success(res) {
+                try {
+                  const decrypted = decryptData(res.data);
+                  const row = Array.isArray(decrypted) ? decrypted[0] : decrypted;
+                  if (!row) {
+                    thenResolve('[]');
+                    return;
+                  }
+                  const rowPipe = row.relavant_columns || row.relevant_columns || '';
+                  const rowData = row.relevant_columns_data || row.relavant_columns_data || '';
+                  const rowMerged = mergePipeAndColumnsData(rowPipe, rowData);
+                  if (rowMerged) {
+                    thenResolve(rowMerged);
+                    return;
+                  }
+                  fetchViaFnRelevantColumns(rowPipe || pipe);
+                } catch (e) {
+                  console.error('Failed to parse subcategory row', e);
+                  fetchViaFnRelevantColumns(pipe);
+                }
+              },
+              error() {
+                fetchViaFnRelevantColumns(pipe);
+              }
+            });
+          };
+
+          if (subcatId) {
+            fetchSubcategoryRow(resolve);
+            return;
+          }
+
+          if (pipe && pipe !== '[]') {
+            fetchViaFnRelevantColumns(pipe);
+            return;
+          }
+
+          resolve('[]');
+        });
+      }
+
       function generateDynamicFieldsforSelf(columnsString, prefix, $container, fileInputClass, categoryId = null, subcategoryId = null) {
-        debugger
         $container.empty();
 
         let fieldsArrayForSelf = [];
@@ -733,7 +1043,7 @@
           if (typeof columnsString === "string") {
             const trimmed = columnsString.trim();
             fieldsArrayForSelf = (trimmed.startsWith('[') || trimmed.startsWith('{')) ? JSON.parse(trimmed) :
-              trimmed.split(',').map(c => ({ legacy_code: c.trim() }));
+              trimmed.split(/[,|]/).map(c => c.trim()).filter(Boolean).map(c => ({ legacy_code: c }));
           } else if (Array.isArray(columnsString)) {
             fieldsArrayForSelf = columnsString;
           }
@@ -1945,9 +2255,12 @@
             const decrypted = decryptData(response.data);
             const $dropdown = $("#subCategorySelect");
             $dropdown.empty().append('<option value="">--Select Sub Category--</option>');
-            decrypted.forEach(item => $dropdown.append(
-              `<option value="${item.id}" data-columns='${item.relevant_columns_data || "[]"}'>${item.issue_name}</option>`
-            ));
+            decrypted.forEach(item => {
+              const cols = item.relavant_columns || item.relevant_columns || '';
+              $dropdown.append(
+                `<option value="${item.id}" data-columns="${escapeHtmlAttr(cols)}">${item.issue_name}</option>`
+              );
+            });
             $("#dynamicFieldsContainer").empty();
           }
         });
@@ -1956,32 +2269,51 @@
       // ------------------ Handle Subcategory Change for Dynamic Fields (Self) ------------------
       // ------------------ Handle Subcategory Change for Dynamic Fields (Self) ------------------
       $("#subCategorySelect").on("change", function () {
-        console.log("=== Subcategory Changed ===");
-
         const $container = $("#dynamicFieldsContainer");
         const selected = $(this).find('option:selected');
-        const columnsString = selected.attr('data-columns') || "[]";
-        const fileInputClass = 'file-input-self';
-
-        // Get category and subcategory info
+        const columnsRaw = selected.attr('data-columns') || '';
+        const subCatText = selected.text().trim();
         const categoryId = $("#categorySelect").val();
         const subcategoryId = $(this).val();
+        const $submitBtn = $("#submitBtn");
 
-        console.log("Category ID:", categoryId, "Subcategory ID:", subcategoryId);
+        $container.empty().show();
 
-        // Clear container with loading
-        $container.empty().html('<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Loading form fields...</p></div>');
+        if (!subcategoryId) {
+          $container.append('<p class="text-muted">Please select a subcategory.</p>');
+          return;
+        }
 
-        // Use a short delay to ensure clearing is complete
-        setTimeout(() => {
-          $container.empty();
-          generateDynamicFieldsforSelf(columnsString, 'self', $container, fileInputClass, categoryId, subcategoryId);
-
-          // Initialize input validation
+        if (isLegacyColumnCodes(columnsRaw)) {
+          generateDynamicFieldsFromMap(columnsRaw, 'self', $container, fileInputClass);
+          initFileModule($container, fileInputClass);
           initInputValidationForSelf($container);
+        } else if (columnsRaw && normalizeColumnsString(columnsRaw)) {
+          $container.html('<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Loading form fields...</p></div>');
+          resolveSubcategoryColumns(columnsRaw, subcategoryId, '').then((columnsString) => {
+            $container.empty();
+            generateDynamicFieldsforSelf(columnsString, 'self', $container, fileInputClass, categoryId, subcategoryId);
+            initInputValidationForSelf($container);
+          });
+        } else {
+          $container.append('<p>No additional fields required for this subcategory.</p>');
+        }
 
-          console.log("Dynamic fields generated");
-        }, 50);
+        if (subCatText === 'eService') {
+          window.open('https://tnedistrict.tn.gov.in/tneda/', '_blank');
+          $container.hide();
+          $submitBtn.prop('disabled', true);
+        } else if (subCatText === 'Grievance') {
+          $submitBtn.prop('disabled', true);
+          $container.append(`
+            <div id="ticketTracking" class="mt-3">
+              <label for="ticketId">Enter Ticket ID:</label>
+              <input type="text" id="ticketId" class="form-control mb-2" placeholder="Enter Ticket ID">
+              <button id="trackBtn" type="button" class="btn btn-primary btn-sm">Track Status</button>
+            </div>`);
+        } else {
+          $submitBtn.prop('disabled', false);
+        }
       });
 
       $(document).off("click.submitBtnSelf").on("click.submitBtnSelf", "#submitBtn", function (e) {
@@ -2253,13 +2585,13 @@
         const userDistrict = localStorage.getItem("district") || "";
 
         const params = {
-          p_session_id: sessionId,
+          p_session_id: trimToMax(sessionId, 20),
           p_complainant_name: userName,
           // p_mobile: userMobile,
           // p_email: userEmail,
-          p_district_id: userDistrict,
+          p_district_id: trimToMax(userDistrict, 20),
           p_issue_id: $("#typeSelect").val() || null,
-          p_created_by: localStorage.getItem("user_id") || "1",
+          p_created_by: trimToMax(localStorage.getItem("user_id") || "1", 20),
           p_category_id: $("#categorySelect").val() || null,
           p_subcategory_id: $("#subCategorySelect").val() || null,
           p_priority_id: null,
@@ -2316,6 +2648,7 @@
         console.log("Dynamic fields collected:", dynamicFields);
 
         params["p_dynamic_fields"] = dynamicFields;
+        Object.assign(params, dynamicFields);
 
         // Handle file uploads
         let attachmentArray = [];
@@ -2324,7 +2657,7 @@
           $(this).find(".file-row").each(function () {
             const fileInput = $(this).find("input[type='file']")[0];
             const file = fileInput?.files[0] || null;
-            const desc = $(this).find(".file-description").val()?.trim() || "";
+            const desc = $(this).find(".file-description, .file-desc").val()?.trim() || "";
 
             if (file) {
               attachmentArray.push({ col: colId, file, desc });
@@ -2466,6 +2799,7 @@
       // Initialize input validation for self form
       initInputValidationForSelf($("#issueForm"));
 
+      })();
     </script>
 </body>
 
